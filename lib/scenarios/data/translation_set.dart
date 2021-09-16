@@ -3,27 +3,27 @@ import 'content_meta_data.dart';
 
 enum TranslationType { text, audio }
 
-class ScenarioTranslation {
+class TranslationSet {
   String language;
-  String scenarioId;
+  bool isPrimary;
   TranslationType type;
   Map<String, String> assets;
   ContentMetaData metaData;
 
-  ScenarioTranslation({
-    required this.scenarioId,
+  TranslationSet({
     required this.language,
     required this.type,
     required this.metaData,
     required this.assets,
+    this.isPrimary = false,
   });
 
-  ScenarioTranslation.fromJson(
+  TranslationSet.fromJson(
     Map<String, dynamic> json, {
     required String id,
   }) : this(
-          scenarioId: json['scenarioId'],
           language: json['language'],
+          isPrimary: json['isPrimary'],
           type: EnumToString.fromString(
                 TranslationType.values,
                 json['type'],
@@ -41,7 +41,7 @@ class ScenarioTranslation {
   Map<String, dynamic> toJson() {
     return {
       'language': language,
-      'scenarioId': scenarioId,
+      'isPrimary': isPrimary,
       'assets': assets,
       'metaData': metaData.toJson(),
     };

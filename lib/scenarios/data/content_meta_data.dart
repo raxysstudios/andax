@@ -1,18 +1,18 @@
-enum ContentStatus { public, unlisted, private }
+enum ContentStatus { public, unlisted, private, pending }
 
 class ContentMetaData {
   String id;
-  String authorId;
+  List<String> contributorsIds;
   DateTime lastUpdateAt;
   int likes;
   ContentStatus status;
 
   ContentMetaData({
     required this.id,
-    required this.authorId,
+    required this.contributorsIds,
     required this.lastUpdateAt,
     this.likes = 0,
-    this.status = ContentStatus.public,
+    this.status = ContentStatus.private,
   });
 
   ContentMetaData.fromJson(
@@ -20,14 +20,14 @@ class ContentMetaData {
     required String id,
   }) : this(
           id: id,
-          authorId: json['authorId'],
+          contributorsIds: json['authorId'],
           lastUpdateAt: json['lastUpdateAt'].toDate(),
           likes: int.parse(json['likes']),
         );
 
   Map<String, dynamic> toJson() {
     return {
-      'authorId': authorId,
+      'contributorsIds': contributorsIds,
       'lastUpdateAt': lastUpdateAt.millisecondsSinceEpoch,
       'likes': likes,
       'status': status,

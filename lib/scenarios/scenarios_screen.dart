@@ -44,31 +44,31 @@ class _ScenariosScreenState extends State<ScenariosScreen> {
               ),
               controller: _refreshController,
               onRefresh: _refreshScenarios,
-              child: ListView(
-                children: [
-                  for (final scenario in _scenarios)
-                    ListTile(
-                      title: Text(
-                        scenario.title,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      subtitle: scenario.description == null
-                          ? null
-                          : Text(scenario.description!),
-                      // onTap: () => Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => PhraseListScreen(
-                      //       chapter: c,
-                      //     ),
-                      //   ),
-                      // ),
-                    )
-                ],
-              ),
+              // child: ListView(
+              //   children: [
+              //     for (final scenario in _scenarios)
+              //       ListTile(
+              //         title: Text(
+              //           scenario.title,
+              //           style: TextStyle(
+              //             fontSize: 18,
+              //             fontWeight: FontWeight.bold,
+              //           ),
+              //         ),
+              //         subtitle: scenario.description == null
+              //             ? null
+              //             : Text(scenario.description!),
+              //         // onTap: () => Navigator.push(
+              //         //   context,
+              //         //   MaterialPageRoute(
+              //         //     builder: (context) => PhraseListScreen(
+              //         //       chapter: c,
+              //         //     ),
+              //         //   ),
+              //         // ),
+              //       )
+              //   ],
+              // ),
             ),
           ),
         ],

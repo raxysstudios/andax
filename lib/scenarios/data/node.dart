@@ -1,44 +1,44 @@
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:andax/utils.dart';
 
-enum ScenarioEnding { win, loss }
+enum EndingType { win, loss }
 
-class NodeChoice {
+class Choice {
   String id;
   String note;
   String targetNodeId;
 
-  NodeChoice({
+  Choice({
     required this.id,
     required this.note,
     required this.targetNodeId,
   });
 }
 
-class ScenarioNode {
+class Node {
   String id;
   String note;
-  ScenarioEnding? ending;
-  List<NodeChoice>? choices;
+  EndingType? endingType;
+  List<Choice>? choices;
 
-  ScenarioNode({
+  Node({
     required this.id,
     required this.note,
-    this.ending,
+    this.endingType,
     this.choices,
   });
 
-  ScenarioNode.fromJson(Map<String, dynamic> json)
+  Node.fromJson(Map<String, dynamic> json)
       : this(
           id: json['id'],
           note: json['note'],
-          ending: EnumToString.fromString(
-            ScenarioEnding.values,
-            json['ending'],
+          endingType: EnumToString.fromString(
+            EndingType.values,
+            json['endingType'],
           ),
-          choices: listFromJson<NodeChoice>(
+          choices: listFromJson<Choice>(
             json['choices'],
-            (j) => NodeChoice(
+            (j) => Choice(
               id: j['id'],
               note: j['note'],
               targetNodeId: j['targetNoteId'],
@@ -50,7 +50,7 @@ class ScenarioNode {
     return {
       'id': id,
       'note': note,
-      'ending': ending,
+      'endingType': endingType,
       'choices': choices?.map(
         (c) => {
           'id': c.id,
