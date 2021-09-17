@@ -1,3 +1,4 @@
+import 'package:andax/settings_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'data/scenario.dart';
@@ -11,13 +12,13 @@ class ScenariosScreen extends StatefulWidget {
 }
 
 class _ScenariosScreenState extends State<ScenariosScreen> {
-  final RefreshController _refreshController = RefreshController(
+  final RefreshController refreshController = RefreshController(
     initialRefresh: true,
   );
-  List<Scenario> _scenarios = [];
+  List<Scenario> scenarios = [];
 
-  Future<void> _refreshScenarios() async {
-    _scenarios = await FirebaseFirestore.instance
+  Future<void> refreshScenarios() async {
+    scenarios = await FirebaseFirestore.instance
         .collection('scenarios')
         .withConverter(
           fromFirestore: (snapshot, _) =>
@@ -26,7 +27,7 @@ class _ScenariosScreenState extends State<ScenariosScreen> {
         )
         .get()
         .then((data) => data.docs.map((d) => d.data()).toList());
-    _refreshController.refreshCompleted();
+    refreshController.refreshCompleted();
   }
 
   @override
@@ -34,6 +35,16 @@ class _ScenariosScreenState extends State<ScenariosScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Scenarios'),
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => SettingsScreen(),
+              ),
+            ),
+            icon: Icon(Icons.settings_outlined),
+          )
+        ],
       ),
       body: Column(
         children: [
@@ -42,8 +53,8 @@ class _ScenariosScreenState extends State<ScenariosScreen> {
               header: MaterialClassicHeader(
                 color: Colors.blue,
               ),
-              controller: _refreshController,
-              onRefresh: _refreshScenarios,
+              controller: refreshController,
+              onRefresh: refreshScenarios,
               // child: ListView(
               //   children: [
               //     for (final scenario in _scenarios)
