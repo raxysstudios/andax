@@ -1,4 +1,3 @@
-import 'dart:async';
 import "dart:math";
 import 'package:andax/scenarios/data/actor.dart';
 import 'package:andax/scenarios/data/node.dart';
@@ -26,7 +25,6 @@ class _PlayScreenState extends State<PlayScreen> {
   late Node currentNode;
   final List<Node> storyline = [];
 
-  Timer? autoAdvance;
   bool isFinished = false;
 
   @override
@@ -43,25 +41,16 @@ class _PlayScreenState extends State<PlayScreen> {
           };
   }
 
-  void advanceStory(Choice choice) {
-    print('ADVANCE ${choice.id}');
+  void advanceStory([Choice? choice]) {
+    if (choice == null) {
+      final choices = currentNode.choices;
+      final index = Random().nextInt(choices!.length);
+      choice = choices[index];
+    }
     setState(() {
-      autoAdvance = null;
       storyline.add(currentNode);
-      currentNode = allNodes[choice.id]!;
-
-      if (currentNode.endingType == null) {
-        final choices = currentNode.choices;
-        if (currentNode.autoChoice && autoAdvance == null) {
-          final index = Random().nextInt(choices!.length);
-          print('AUTO ADVANCE');
-          autoAdvance = Timer(
-            Duration(milliseconds: 250),
-            () => advanceStory(choices[index]),
-          );
-        }
-      } else
-        isFinished = true;
+      currentNode = allNodes[choice!.targetNodeId]!;
+      if (currentNode.endingType != null) isFinished = true;
     });
   }
 
@@ -72,32 +61,38 @@ class _PlayScreenState extends State<PlayScreen> {
 
   Widget buildNode(Node node) {
     final actor = allActors[node.actorId];
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          crossAxisAlignment: actor?.isPlayer ?? false
-              ? CrossAxisAlignment.end
-              : CrossAxisAlignment.start,
-          children: [
-            if (actor != null)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(
-                  getTextTranslation(actor.id),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontStyle: FontStyle.italic,
+    final isPlayer = actor?.isPlayer ?? false;
+    return Padding(
+      padding: isPlayer
+          ? const EdgeInsets.only(left: 32)
+          : const EdgeInsets.only(right: 32),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            crossAxisAlignment:
+                isPlayer ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            children: [
+              if (actor != null &&
+                  (storyline.isNotEmpty && storyline.first.actorId != actor.id))
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Text(
+                    getTextTranslation(actor.id),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontStyle: FontStyle.italic,
+                    ),
                   ),
                 ),
+              Text(
+                getTextTranslation(node.id),
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
               ),
-            Text(
-              getTextTranslation(node.id),
-              style: const TextStyle(
-                fontSize: 16,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -108,18 +103,27 @@ class _PlayScreenState extends State<PlayScreen> {
     return Scaffold(
       body: ListView(
         children: [
-          for (final node in storyline) ...[
-            buildNode(node),
-            const Divider(height: 0),
-          ],
+          for (final node in storyline) buildNode(node),
           buildNode(currentNode),
-          if (currentNode.choices != null && autoAdvance == null)
-            for (final choice in currentNode.choices!)
-              TextButton(
-                onPressed: () => advanceStory(choice),
-                child: Text(getTextTranslation(choice.id)),
+          if (currentNode.choices != null)
+            if (currentNode.autoChoice)
+              IconButton(
+                onPressed: advanceStory,
+                icon: Icon(Icons.check_outlined),
+              )
+            else
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  children: [
+                    for (final choice in currentNode.choices!)
+                      OutlinedButton(
+                        onPressed: () => advanceStory(choice),
+                        child: Text(getTextTranslation(choice.id)),
+                      ),
+                  ],
+                ),
               ),
-          const Divider(height: 0),
           if (isFinished)
             Text(
               currentNode.endingType == EndingType.win
