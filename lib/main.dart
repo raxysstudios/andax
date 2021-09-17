@@ -1,4 +1,5 @@
 import 'package:algolia/algolia.dart';
+import 'package:andax/test_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
@@ -63,7 +64,8 @@ class _AppState extends State<App> {
           future: firebase,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done)
-              return HomeScreen();
+              // return HomeScreen();
+              return TestScreen();
             return Center(
               child: Text('Loading...'),
             );
