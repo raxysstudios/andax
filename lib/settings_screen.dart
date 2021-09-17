@@ -21,14 +21,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: ListView(
         children: [
           if (FirebaseAuth.instance.currentUser == null)
-            ElevatedButton.icon(
-              onPressed: () async {
-                await signIn();
-                setState(() {});
-              },
-              icon: Icon(Icons.person_outlined),
-              label: Text(
-                user?.displayName ?? 'Sign In',
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: ElevatedButton.icon(
+                onPressed: () async {
+                  await signIn();
+                  setState(() {});
+                },
+                icon: const Icon(Icons.person_outlined),
+                label: Text(
+                  user?.displayName ?? 'Sign In',
+                ),
               ),
             )
           else ...[
@@ -36,7 +39,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               leading: CircleAvatar(
                 child: user?.photoURL != null
                     ? Image.network(user!.photoURL!)
-                    : Icon(Icons.account_circle_outlined),
+                    : const Icon(Icons.account_circle_outlined),
               ),
               title: Text(user!.displayName ?? 'Noname'),
               trailing: IconButton(
@@ -44,7 +47,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   await FirebaseAuth.instance.signOut();
                   setState(() {});
                 },
-                icon: Icon(Icons.logout_outlined),
+                icon: const Icon(Icons.logout_outlined),
                 tooltip: "Log out",
               ),
             )
