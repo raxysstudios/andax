@@ -1,4 +1,4 @@
-import "./user";
+export * from "./user";
 
 
 // import * as functions from "firebase-functions";
