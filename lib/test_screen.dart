@@ -25,37 +25,37 @@ class TestScreen extends StatelessWidget {
             autoChoice: true,
           ),
           Node(
-            id: '0',
+            id: '2',
             actorId: 'a1',
             choices: [
               Choice(
-                id: '1',
-                targetNodeId: '2',
+                id: '3',
+                targetNodeId: '4',
               ),
             ],
             autoChoice: true,
           ),
           Node(
-            id: '2',
+            id: '4',
             actorId: 'a2',
             choices: [
               Choice(
-                id: '3',
-                targetNodeId: '5',
+                id: '5',
+                targetNodeId: '6',
               ),
               Choice(
-                id: '4',
-                targetNodeId: '6',
+                id: '7',
+                targetNodeId: '8',
               ),
             ],
           ),
           Node(
-            id: '5',
+            id: '6',
             actorId: 'a1',
             endingType: EndingType.win,
           ),
           Node(
-            id: '6',
+            id: '8',
             actorId: 'a1',
             endingType: EndingType.loss,
           )
@@ -63,7 +63,7 @@ class TestScreen extends StatelessWidget {
         startNodeId: '0',
         actors: [
           Actor(id: 'a1'),
-          Actor(id: 'a2'),
+          Actor(id: 'a2', isPlayer: true),
         ],
         metaData: ContentMetaData(
           id: '',
@@ -82,10 +82,10 @@ class TestScreen extends StatelessWidget {
         assets: {
           '0': 'Hey!',
           '2': 'How are you?',
-          '3': 'Great!',
-          '4': 'Not so well...',
-          '5': 'Good to hear!',
-          '6': 'Oh, I\'m sorry!',
+          '5': 'Great!',
+          '7': 'Not so well...',
+          '6': 'Good to hear!',
+          '8': 'Oh, I\'m sorry!',
           'a1': 'Friend',
           'a2': 'Another friend',
         },
