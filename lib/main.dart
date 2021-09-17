@@ -1,6 +1,9 @@
+import 'package:algolia/algolia.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
+
+late final algolia;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,7 +16,12 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  final Future<FirebaseApp> firebase = Firebase.initializeApp();
+  final Future firebase = Firebase.initializeApp().then((_) {
+    algolia = Algolia.init(
+      applicationId: '4NXJPAZXKE',
+      apiKey: 'aef86c663aa0f382553f4375013c2de2',
+    );
+  });
 
   List<ThemeData> getThemes(BuildContext context) {
     final theme = Theme.of(context);
