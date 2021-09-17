@@ -1,17 +1,17 @@
 import 'package:andax/settings_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'data/scenario.dart';
+import 'scenarios/data/scenario.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class ScenariosScreen extends StatefulWidget {
-  const ScenariosScreen();
+class HomeScreen extends StatefulWidget {
+  const HomeScreen();
 
   @override
-  _ScenariosScreenState createState() => _ScenariosScreenState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _ScenariosScreenState extends State<ScenariosScreen> {
+class _HomeScreenState extends State<HomeScreen> {
   final RefreshController refreshController = RefreshController(
     initialRefresh: true,
   );

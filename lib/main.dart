@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'scenarios/scenarios_screen.dart';
+import 'home_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,7 +55,7 @@ class _AppState extends State<App> {
           future: firebase,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done)
-              return ScenariosScreen();
+              return HomeScreen();
             return Center(
               child: Text('Loading...'),
             );
