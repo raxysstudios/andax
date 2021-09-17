@@ -54,14 +54,16 @@ class _PlayScreenState extends State<PlayScreen> {
     });
   }
 
-  String getTextTranslation(String id, {showError = false}) {
+  String getTextTranslation(String id, {showError = true}) {
     return widget.texts.assets[id] ??
         (showError ? '!!! no translation !!!' : '');
   }
 
-  Widget buildNode(Node node) {
+  Widget buildNode(Node node, int index) {
     final actor = allActors[node.actorId];
     final isPlayer = actor?.isPlayer ?? false;
+    final printActor = actor != null &&
+        (index == 0 || storyline[index - 1].actorId != actor.id);
     return Padding(
       padding: isPlayer
           ? const EdgeInsets.only(left: 32)
@@ -73,12 +75,11 @@ class _PlayScreenState extends State<PlayScreen> {
             crossAxisAlignment:
                 isPlayer ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
-              if (actor != null &&
-                  (storyline.isEmpty || storyline.last.actorId != actor.id))
+              if (printActor)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
-                    getTextTranslation(actor.id),
+                    getTextTranslation(actor!.id),
                     style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       fontStyle: FontStyle.italic,
@@ -103,8 +104,8 @@ class _PlayScreenState extends State<PlayScreen> {
     return Scaffold(
       body: ListView(
         children: [
-          for (final node in storyline) buildNode(node),
-          buildNode(currentNode),
+          for (var i = 0; i < storyline.length; i++) buildNode(storyline[i], i),
+          buildNode(currentNode, storyline.length),
           if (currentNode.choices != null)
             if (currentNode.autoChoice)
               IconButton(
@@ -126,10 +127,15 @@ class _PlayScreenState extends State<PlayScreen> {
                 ),
               ),
           if (isFinished)
-            Text(
-              currentNode.endingType == EndingType.win
-                  ? 'You won! :)'
-                  : 'You lost! :(',
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: Text(
+                  currentNode.endingType == EndingType.win
+                      ? 'You won! :)'
+                      : 'You lost! :(',
+                ),
+              ),
             )
         ],
       ),
