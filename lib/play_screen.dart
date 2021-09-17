@@ -22,7 +22,7 @@ class _PlayScreenState extends State<PlayScreen> {
   late Node currentNode;
   final List<Node> storyline = [];
 
-  Timer? autoMove;
+  Timer? autoAdvance;
   bool isFinished = false;
 
   @override
@@ -36,10 +36,22 @@ class _PlayScreenState extends State<PlayScreen> {
 
   void advanceStory(Choice choice) {
     setState(() {
-      autoMove = null;
+      autoAdvance = null;
       storyline.add(currentNode);
       currentNode = allNodes[choice.id]!;
-      if (currentNode.endingType != null) isFinished = true;
+      
+      if (currentNode.endingType == null) {
+        final choices = currentNode.choices;
+        if (choices != null && choices.length == 1 && autoAdvance == null) {
+          final choice = choices.first;
+          if (getTextTranslation(choice.id).isEmpty)
+            autoAdvance = Timer(
+              Duration(milliseconds: 250),
+              () => advanceStory(choice),
+            );
+        }
+      } else
+        isFinished = true;
     });
   }
 
@@ -52,37 +64,24 @@ class _PlayScreenState extends State<PlayScreen> {
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        for (final node in storyline) Text(getTextTranslation(node.id)),
-        Builder(builder: (context) {
-          final choices = currentNode.choices;
-
-          if (choices != null && choices.length == 1 && autoMove == null) {
-            final choice = choices.first;
-            if (getTextTranslation(choice.id).isEmpty)
-              autoMove = Timer(
-                Duration(milliseconds: 250),
-                () => advanceStory(choice),
-              );
-          }
-          return Column(
-            children: [
-              Text(getTextTranslation(currentNode.id)),
-              if (choices != null && autoMove == null)
-                for (final choice in choices)
-                  TextButton(
-                    onPressed: () => advanceStory(choice),
-                    child: Text(getTextTranslation(choice.id)),
-                  ),
-              const Divider(height: 0),
-              if (isFinished)
-                Text(
-                  currentNode.endingType == EndingType.win
-                      ? 'You won! :)'
-                      : 'You lost! :(',
-                )
-            ],
-          );
-        })
+        for (final node in storyline) ...[
+          Text(getTextTranslation(node.id)),
+          const Divider(height: 0),
+        ],
+        Text(getTextTranslation(currentNode.id)),
+        if (currentNode.choices != null && autoAdvance == null)
+          for (final choice in currentNode.choices!)
+            TextButton(
+              onPressed: () => advanceStory(choice),
+              child: Text(getTextTranslation(choice.id)),
+            ),
+        const Divider(height: 0),
+        if (isFinished)
+          Text(
+            currentNode.endingType == EndingType.win
+                ? 'You won! :)'
+                : 'You lost! :(',
+          )
       ],
     );
   }
