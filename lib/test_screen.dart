@@ -18,7 +18,18 @@ class TestScreen extends StatelessWidget {
             actorId: 'a1',
             choices: [
               Choice(
-                id: '1',
+                id: '0-1',
+                targetNodeId: '1',
+              ),
+            ],
+            autoChoice: true,
+          ),
+          Node(
+            id: '1',
+            actorId: 'a1',
+            choices: [
+              Choice(
+                id: '1-1',
                 targetNodeId: '2',
               ),
             ],
@@ -26,36 +37,25 @@ class TestScreen extends StatelessWidget {
           ),
           Node(
             id: '2',
-            actorId: 'a1',
-            choices: [
-              Choice(
-                id: '3',
-                targetNodeId: '4',
-              ),
-            ],
-            autoChoice: true,
-          ),
-          Node(
-            id: '4',
             actorId: 'a2',
             choices: [
               Choice(
-                id: '5',
-                targetNodeId: '6',
+                id: '2-1',
+                targetNodeId: '3',
               ),
               Choice(
-                id: '7',
-                targetNodeId: '8',
+                id: '2-2',
+                targetNodeId: '4',
               ),
             ],
           ),
           Node(
-            id: '6',
+            id: '3',
             actorId: 'a1',
             endingType: EndingType.win,
           ),
           Node(
-            id: '8',
+            id: '4',
             actorId: 'a1',
             endingType: EndingType.loss,
           )
@@ -81,11 +81,12 @@ class TestScreen extends StatelessWidget {
         ),
         assets: {
           '0': 'Hey!',
-          '2': 'How are you?',
-          '5': 'Great!',
-          '7': 'Not so well...',
-          '6': 'Good to hear!',
-          '8': 'Oh, I\'m sorry!',
+          '1': 'How are you?',
+          '2': 'Something something!',
+          '2-1': 'Great!',
+          '2-2': 'Not so well...',
+          '3': 'Good to hear!',
+          '4': 'Oh, I\'m sorry!',
           'a1': 'Friend',
           'a2': 'Another friend',
         },
