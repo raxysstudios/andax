@@ -44,6 +44,7 @@ class _PlayScreenState extends State<PlayScreen> {
   }
 
   void advanceStory(Choice choice) {
+    print('ADVANCE ${choice.id}');
     setState(() {
       autoAdvance = null;
       storyline.add(currentNode);
@@ -53,6 +54,7 @@ class _PlayScreenState extends State<PlayScreen> {
         final choices = currentNode.choices;
         if (currentNode.autoChoice && autoAdvance == null) {
           final index = Random().nextInt(choices!.length);
+          print('AUTO ADVANCE');
           autoAdvance = Timer(
             Duration(milliseconds: 250),
             () => advanceStory(choices[index]),
@@ -69,18 +71,23 @@ class _PlayScreenState extends State<PlayScreen> {
   }
 
   Widget buildNode(Node node) {
+    final actor = allActors[node.actorId];
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
+          crossAxisAlignment: actor?.isPlayer ?? false
+              ? CrossAxisAlignment.end
+              : CrossAxisAlignment.start,
           children: [
-            if (node.actorId != null)
+            if (actor != null)
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
-                  getTextTranslation(node.actorId!),
+                  getTextTranslation(actor.id),
                   style: const TextStyle(
                     fontWeight: FontWeight.w500,
+                    fontStyle: FontStyle.italic,
                   ),
                 ),
               ),
