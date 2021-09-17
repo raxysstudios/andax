@@ -3,12 +3,19 @@ import 'package:flutter/material.dart';
 import 'scenarios/scenarios_screen.dart';
 
 void main() async {
-  await Firebase.initializeApp();
   WidgetsFlutterBinding.ensureInitialized();
   runApp(App());
+  await Firebase.initializeApp();
 }
 
-class App extends StatelessWidget {
+class App extends StatefulWidget {
+  @override
+  _AppState createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  final Future<FirebaseApp> firebase = Firebase.initializeApp();
+
   List<ThemeData> getThemes(BuildContext context) {
     final theme = Theme.of(context);
     final floatingActionButtonTheme = FloatingActionButtonThemeData(
@@ -44,7 +51,16 @@ class App extends StatelessWidget {
       title: 'Andax',
       theme: themes[0],
       darkTheme: themes[1],
-      home: ScenariosScreen(),
+      home: FutureBuilder(
+          // Initialize FlutterFire:
+          future: firebase,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done)
+              return ScenariosScreen();
+            return Center(
+              child: Text('Loading...'),
+            );
+          }),
     );
   }
 }
