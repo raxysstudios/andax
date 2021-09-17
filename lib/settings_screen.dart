@@ -37,9 +37,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           else ...[
             ListTile(
               leading: CircleAvatar(
-                child: user?.photoURL != null
-                    ? Image.network(user!.photoURL!)
-                    : const Icon(Icons.account_circle_outlined),
+                backgroundImage: user?.photoURL != null
+                    ? NetworkImage(user!.photoURL!)
+                    : null,
               ),
               title: Text(user!.displayName ?? 'Noname'),
               trailing: IconButton(
