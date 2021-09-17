@@ -39,7 +39,7 @@ class _PlayScreenState extends State<PlayScreen> {
       autoAdvance = null;
       storyline.add(currentNode);
       currentNode = allNodes[choice.id]!;
-      
+
       if (currentNode.endingType == null) {
         final choices = currentNode.choices;
         if (choices != null && choices.length == 1 && autoAdvance == null) {
@@ -62,27 +62,29 @@ class _PlayScreenState extends State<PlayScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        for (final node in storyline) ...[
-          Text(getTextTranslation(node.id)),
+    return Scaffold(
+      body: ListView(
+        children: [
+          for (final node in storyline) ...[
+            Text(getTextTranslation(node.id)),
+            const Divider(height: 0),
+          ],
+          Text(getTextTranslation(currentNode.id)),
+          if (currentNode.choices != null && autoAdvance == null)
+            for (final choice in currentNode.choices!)
+              TextButton(
+                onPressed: () => advanceStory(choice),
+                child: Text(getTextTranslation(choice.id)),
+              ),
           const Divider(height: 0),
+          if (isFinished)
+            Text(
+              currentNode.endingType == EndingType.win
+                  ? 'You won! :)'
+                  : 'You lost! :(',
+            )
         ],
-        Text(getTextTranslation(currentNode.id)),
-        if (currentNode.choices != null && autoAdvance == null)
-          for (final choice in currentNode.choices!)
-            TextButton(
-              onPressed: () => advanceStory(choice),
-              child: Text(getTextTranslation(choice.id)),
-            ),
-        const Divider(height: 0),
-        if (isFinished)
-          Text(
-            currentNode.endingType == EndingType.win
-                ? 'You won! :)'
-                : 'You lost! :(',
-          )
-      ],
+      ),
     );
   }
 }
