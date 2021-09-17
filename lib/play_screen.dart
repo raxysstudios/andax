@@ -74,7 +74,7 @@ class _PlayScreenState extends State<PlayScreen> {
                 isPlayer ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
               if (actor != null &&
-                  (storyline.isNotEmpty && storyline.first.actorId != actor.id))
+                  (storyline.isEmpty || storyline.last.actorId != actor.id))
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
@@ -115,6 +115,7 @@ class _PlayScreenState extends State<PlayScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     for (final choice in currentNode.choices!)
                       OutlinedButton(
