@@ -1,55 +1,45 @@
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:andax/utils.dart';
 
+import 'choice.dart';
+
 enum EndingType { win, loss }
-
-class Choice {
-  String id;
-  String targetNodeId;
-
-  Choice({
-    required this.id,
-    required this.targetNodeId,
-  });
-}
 
 class Node {
   String id;
+  String? actorId;
   EndingType? endingType;
   List<Choice>? choices;
+  bool autoChoice;
 
   Node({
     required this.id,
+    this.actorId,
     this.endingType,
     this.choices,
+    this.autoChoice = false,
   });
 
   Node.fromJson(Map<String, dynamic> json)
       : this(
           id: json['id'],
+          actorId: json['actorId'],
           endingType: EnumToString.fromString(
             EndingType.values,
             json['endingType'],
           ),
-          choices: listFromJson<Choice>(
+          choices: listFromJson(
             json['choices'],
-            (j) => Choice(
-              id: j['id'],
-              targetNodeId: j['targetNoteId'],
-            ),
+            (j) => Choice.fromJson(j),
           ),
+          autoChoice: json['autoChoice'],
         );
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'endingType': endingType,
-      'choices': choices?.map(
-        (c) => {
-          'id': c.id,
-          'targetNodeId': c.targetNodeId,
-        },
-      ),
-    };
-  }
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'actorId': actorId,
+        'endingType': endingType,
+        'choices': choices?.map((c) => c.toJson()),
+        'autoChoice': autoChoice,
+      };
 }

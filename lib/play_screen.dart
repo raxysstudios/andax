@@ -1,8 +1,11 @@
 import 'dart:async';
+import "dart:math";
+import 'package:andax/scenarios/data/actor.dart';
 import 'package:andax/scenarios/data/node.dart';
 import 'package:andax/scenarios/data/scenario.dart';
 import 'package:andax/scenarios/data/translation_set.dart';
 import 'package:flutter/material.dart';
+import 'scenarios/data/choice.dart';
 
 class PlayScreen extends StatefulWidget {
   final Scenario scenario;
@@ -19,6 +22,7 @@ class PlayScreen extends StatefulWidget {
 
 class _PlayScreenState extends State<PlayScreen> {
   late final Map<String, Node> allNodes;
+  late final Map<String, Actor> allActors;
   late Node currentNode;
   final List<Node> storyline = [];
 
@@ -32,6 +36,11 @@ class _PlayScreenState extends State<PlayScreen> {
       for (final node in widget.scenario.nodes) node.id: node,
     };
     currentNode = allNodes[widget.scenario.startNodeId]!;
+    allActors = widget.scenario.actors == null
+        ? {}
+        : {
+            for (final actor in widget.scenario.actors!) actor.id: actor,
+          };
   }
 
   void advanceStory(Choice choice) {
@@ -42,13 +51,12 @@ class _PlayScreenState extends State<PlayScreen> {
 
       if (currentNode.endingType == null) {
         final choices = currentNode.choices;
-        if (choices != null && choices.length == 1 && autoAdvance == null) {
-          final choice = choices.first;
-          if (getTextTranslation(choice.id).isEmpty)
-            autoAdvance = Timer(
-              Duration(milliseconds: 250),
-              () => advanceStory(choice),
-            );
+        if (currentNode.autoChoice && autoAdvance == null) {
+          final index = Random().nextInt(choices!.length);
+          autoAdvance = Timer(
+            Duration(milliseconds: 250),
+            () => advanceStory(choices[index]),
+          );
         }
       } else
         isFinished = true;
@@ -60,16 +68,44 @@ class _PlayScreenState extends State<PlayScreen> {
         (showError ? '!!! no translation !!!' : '');
   }
 
+  Widget buildNode(Node node) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            if (node.actorId != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Text(
+                  getTextTranslation(node.actorId!),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            Text(
+              getTextTranslation(node.id),
+              style: const TextStyle(
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
         children: [
           for (final node in storyline) ...[
-            Text(getTextTranslation(node.id)),
+            buildNode(node),
             const Divider(height: 0),
           ],
-          Text(getTextTranslation(currentNode.id)),
+          buildNode(currentNode),
           if (currentNode.choices != null && autoAdvance == null)
             for (final choice in currentNode.choices!)
               TextButton(

@@ -4,9 +4,9 @@ import 'content_meta_data.dart';
 import 'node.dart';
 
 class Scenario {
-  Map<String, Actor>? actors;
   List<Node> nodes;
   String startNodeId;
+  List<Actor>? actors;
   ContentMetaData metaData;
 
   Scenario({
@@ -25,6 +25,10 @@ class Scenario {
             (j) => Node.fromJson(j),
           ),
           startNodeId: json['startNodeId'],
+          actors: listFromJson(
+            json['actors'],
+            (j) => Actor.fromJson(j),
+          ),
           metaData: ContentMetaData.fromJson(
             json['metaData'],
             id: id,
@@ -35,6 +39,7 @@ class Scenario {
     return {
       'startNodeId': startNodeId,
       'nodes': nodes.map((n) => n.toJson()),
+      'actors': actors?.map((a) => a.toJson()),
       'metaData': metaData.toJson(),
     };
   }
