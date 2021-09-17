@@ -23,6 +23,7 @@ class _PlayScreenState extends State<PlayScreen> {
   final List<Node> storyline = [];
 
   Timer? autoMove;
+  bool isFinished = false;
 
   @override
   void initState() {
@@ -38,6 +39,7 @@ class _PlayScreenState extends State<PlayScreen> {
       autoMove = null;
       storyline.add(currentNode);
       currentNode = allNodes[choice.id]!;
+      if (currentNode.endingType != null) isFinished = true;
     });
   }
 
@@ -71,7 +73,13 @@ class _PlayScreenState extends State<PlayScreen> {
                     onPressed: () => advanceStory(choice),
                     child: Text(getTextTranslation(choice.id)),
                   ),
-              Divider(height: 0),
+              const Divider(height: 0),
+              if (isFinished)
+                Text(
+                  currentNode.endingType == EndingType.win
+                      ? 'You won! :)'
+                      : 'You lost! :(',
+                )
             ],
           );
         })
