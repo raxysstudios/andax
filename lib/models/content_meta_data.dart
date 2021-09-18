@@ -22,8 +22,10 @@ class ContentMetaData {
     required String id,
   }) : this(
           id: id,
-          contributorsIds:
-              listFromJson<String>(json['contributorsIds'], (c) => c as String),
+          contributorsIds: listFromJson(
+            json['contributorsIds'],
+            (c) => c as String,
+          ),
           lastUpdateAt: json['lastUpdateAt'].toDate(),
           likes: int.parse(json['likes']),
         );
