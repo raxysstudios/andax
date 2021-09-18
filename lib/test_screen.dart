@@ -1,4 +1,5 @@
 import 'package:andax/scenarios/data/actor.dart';
+import 'package:andax/scenarios/data/translation_asset.dart';
 import 'package:flutter/material.dart';
 import 'play_screen.dart';
 import 'scenarios/data/choice.dart';
@@ -71,26 +72,14 @@ class TestScreen extends StatelessWidget {
           lastUpdateAt: DateTime.fromMillisecondsSinceEpoch(0),
         ),
       ),
-      texts: TranslationSet(
-        language: 'english',
-        type: TranslationType.text,
-        metaData: ContentMetaData(
-          id: '',
-          contributorsIds: [],
-          lastUpdateAt: DateTime.fromMillisecondsSinceEpoch(0),
-        ),
-        assets: {
-          '0': 'Hey!',
-          '1': 'How are you?',
-          '2': 'Something something!',
-          '2-1': 'Great!',
-          '2-2': 'Not so well...',
-          '3': 'Good to hear!',
-          '4': 'Oh, I\'m sorry!',
-          'a1': 'Friend',
-          'a2': 'Another friend',
-        },
-      ),
+      translations: [
+        TranslationAsset(id: '0', text: 'Hello'),
+        TranslationAsset(id: '1', text: 'How are you?'),
+        TranslationAsset(id: '2-1', text: 'Fine, thanks.'),
+        TranslationAsset(id: '2-2', text: 'Ugh, been hard lately.'),
+        TranslationAsset(id: '3', text: 'Good to hear!'),
+        TranslationAsset(id: '4', text: "Oh, I'm sorry"),
+      ],
     );
   }
 }

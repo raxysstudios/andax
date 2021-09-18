@@ -7,14 +7,12 @@ class TranslationSet {
   String language;
   bool isPrimary;
   TranslationType type;
-  Map<String, String> assets;
   ContentMetaData metaData;
 
   TranslationSet({
     required this.language,
     required this.type,
     required this.metaData,
-    required this.assets,
     this.isPrimary = false,
   });
 
@@ -29,9 +27,6 @@ class TranslationSet {
                 json['type'],
               ) ??
               TranslationType.text,
-          assets: Map.castFrom<String, dynamic, String, String>(
-            json['assets'] as Map<String, dynamic>,
-          ),
           metaData: ContentMetaData.fromJson(
             json['metaData'],
             id: id,
@@ -42,7 +37,6 @@ class TranslationSet {
     return {
       'language': language,
       'isPrimary': isPrimary,
-      'assets': assets,
       'metaData': metaData.toJson(),
     };
   }
