@@ -1,13 +1,13 @@
-class Choice {
+class Transition {
   String id;
   String targetNodeId;
 
-  Choice({
+  Transition({
     required this.id,
     required this.targetNodeId,
   });
 
-  Choice.fromJson(Map<String, dynamic> json)
+  Transition.fromJson(Map<String, dynamic> json)
       : this(
           id: json['id'],
           targetNodeId: json['targetNodeId'],

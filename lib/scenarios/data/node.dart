@@ -1,7 +1,6 @@
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:andax/utils.dart';
-
-import 'choice.dart';
+import 'transition.dart';
 
 enum EndingType { win, loss }
 
@@ -9,15 +8,15 @@ class Node {
   String id;
   String? actorId;
   EndingType? endingType;
-  List<Choice>? choices;
-  bool autoChoice;
+  List<Transition>? transitions;
+  bool autoTransition;
 
   Node({
     required this.id,
     this.actorId,
     this.endingType,
-    this.choices,
-    this.autoChoice = false,
+    this.transitions,
+    this.autoTransition = false,
   });
 
   Node.fromJson(Map<String, dynamic> json)
@@ -28,18 +27,18 @@ class Node {
             EndingType.values,
             json['endingType'],
           ),
-          choices: listFromJson(
-            json['choices'],
-            (j) => Choice.fromJson(j),
+          transitions: listFromJson(
+            json['transitions'],
+            (j) => Transition.fromJson(j),
           ),
-          autoChoice: json['autoChoice'],
+          autoTransition: json['autoTransition'],
         );
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'actorId': actorId,
         'endingType': endingType,
-        'choices': choices?.map((c) => c.toJson()),
-        'autoChoice': autoChoice,
+        'choices': transitions?.map((c) => c.toJson()),
+        'autoTransition': autoTransition,
       };
 }
