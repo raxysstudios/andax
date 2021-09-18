@@ -6,7 +6,6 @@ import 'scenarios/data/choice.dart';
 import 'scenarios/data/content_meta_data.dart';
 import 'scenarios/data/node.dart';
 import 'scenarios/data/scenario.dart';
-import 'scenarios/data/translation_set.dart';
 
 class TestScreen extends StatelessWidget {
   @override
@@ -52,11 +51,33 @@ class TestScreen extends StatelessWidget {
           ),
           Node(
             id: '3',
+            actorId: 'a2',
+            choices: [
+              Choice(
+                id: '3-1',
+                targetNodeId: '5',
+              ),
+            ],
+            autoChoice: true,
+          ),
+          Node(
+            id: '4',
+            actorId: 'a2',
+            choices: [
+              Choice(
+                id: '4-1',
+                targetNodeId: '6',
+              ),
+            ],
+            autoChoice: true,
+          ),
+          Node(
+            id: '5',
             actorId: 'a1',
             endingType: EndingType.win,
           ),
           Node(
-            id: '4',
+            id: '6',
             actorId: 'a1',
             endingType: EndingType.loss,
           )
@@ -75,10 +96,21 @@ class TestScreen extends StatelessWidget {
       translations: [
         TranslationAsset(id: '0', text: 'Hello'),
         TranslationAsset(id: '1', text: 'How are you?'),
-        TranslationAsset(id: '2-1', text: 'Fine, thanks.'),
-        TranslationAsset(id: '2-2', text: 'Ugh, been hard lately.'),
-        TranslationAsset(id: '3', text: 'Good to hear!'),
-        TranslationAsset(id: '4', text: "Oh, I'm sorry"),
+        TranslationAsset(id: '2-1', text: 'Fine'),
+        TranslationAsset(id: '2-2', text: 'Ugh'),
+        TranslationAsset(
+          id: '3',
+          text:
+              'Amazing! We"ve just won the hackaton and people liked our project!',
+        ),
+        TranslationAsset(
+          id: '4',
+          text: "Unfortunately, got sick and not feeling good these days.",
+        ),
+        TranslationAsset(id: '5', text: "Great to hear!"),
+        TranslationAsset(id: '6', text: "Oh, I'm sorry."),
+        TranslationAsset(id: 'a1', text: "Friend"),
+        TranslationAsset(id: 'a2', text: "Me"),
       ],
     );
   }

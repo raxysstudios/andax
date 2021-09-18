@@ -1,3 +1,4 @@
+import 'dart:async';
 import "dart:math";
 import 'package:andax/scenarios/data/actor.dart';
 import 'package:andax/scenarios/data/node.dart';
@@ -26,6 +27,7 @@ class _PlayScreenState extends State<PlayScreen> {
   late Node currentNode;
   final List<Node> storyline = [];
 
+  Timer? autoAdvance;
   bool isFinished = false;
 
   @override
@@ -42,19 +44,32 @@ class _PlayScreenState extends State<PlayScreen> {
     actors = {
       for (final actor in widget.scenario.actors) actor.id: actor,
     };
+
+    if (currentNode.autoChoice && currentNode.choices != null)
+      moveAuto(currentNode.choices!);
   }
 
   void advanceStory([Choice? choice]) {
-    if (choice == null) {
-      final choices = currentNode.choices;
-      final index = Random().nextInt(choices!.length);
-      choice = choices[index];
-    }
     setState(() {
+      autoAdvance?.cancel();
       storyline.add(currentNode);
       currentNode = nodes[choice!.targetNodeId]!;
       if (currentNode.endingType != null) isFinished = true;
+      if (currentNode.autoChoice && currentNode.choices != null)
+        moveAuto(currentNode.choices!);
     });
+  }
+
+  void moveAuto(List<Choice> choices) {
+    autoAdvance?.cancel();
+    autoAdvance = Timer(
+      Duration(milliseconds: 500),
+      () {
+        final index = Random().nextInt(choices.length);
+        advanceStory(choices[index]);
+        autoAdvance = null;
+      },
+    );
   }
 
   String getTextTranslation(String id) {
@@ -113,26 +128,20 @@ class _PlayScreenState extends State<PlayScreen> {
         children: [
           for (var i = 0; i < storyline.length; i++) buildNode(storyline[i], i),
           buildNode(currentNode, storyline.length),
-          if (currentNode.choices != null)
-            if (currentNode.autoChoice)
-              IconButton(
-                onPressed: advanceStory,
-                icon: Icon(Icons.check_outlined),
-              )
-            else
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    for (final choice in currentNode.choices!)
-                      OutlinedButton(
-                        onPressed: () => advanceStory(choice),
-                        child: Text(getTextTranslation(choice.id)),
-                      ),
-                  ],
-                ),
+          if (currentNode.choices != null && autoAdvance == null)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  for (final choice in currentNode.choices!)
+                    OutlinedButton(
+                      onPressed: () => advanceStory(choice),
+                      child: Text(getTextTranslation(choice.id)),
+                    ),
+                ],
               ),
+            ),
           if (isFinished)
             Center(
               child: Padding(
