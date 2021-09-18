@@ -1,3 +1,5 @@
+import 'package:andax/widgets/add_new_node.dart';
+import 'package:andax/widgets/node_preview.dart';
 import 'package:flutter/material.dart';
 
 class EditorScreen extends StatefulWidget {
@@ -19,36 +21,30 @@ class _EditorScreenState extends State<EditorScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(51, 51, 51, 100),
-        title: Text(
-          "Dialogue Editor",
-          style: TextStyle(
-              fontSize: 24, color: Color.fromRGBO(189, 189, 189, 100)),
-        ),
-        centerTitle: true,
-        leading: GestureDetector(
-          onTap: () {/* Write listener code here */},
-          child: Icon(
-            Icons.arrow_back_sharp,
-            size: 38.0,
-            color: Color.fromRGBO(189, 189, 189, 100),
-          ),
-        ),
+        title: Text("Dialogue Editor"),
+        // centerTitle: true,
         actions: <Widget>[
           Padding(
             padding: EdgeInsets.only(right: 20.0),
-            child: GestureDetector(
-              onTap: () {},
-              child: Icon(
+            child: IconButton(
+              onPressed: () {
+                print('saving...');
+              },
+              icon: Icon(
                 Icons.save,
                 size: 38.0,
-                color: Color.fromRGBO(189, 189, 189, 100),
               ),
             ),
           ),
         ],
       ),
-      body: ListView(),
+      body: ListView(
+        children: [
+          SizedBox(height: 16),
+          AddNewNode(),
+          NodePreview(text: "Hello my friend", id: 1),
+        ],
+      ),
     );
   }
 }
