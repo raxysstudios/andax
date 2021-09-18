@@ -69,8 +69,8 @@ class _AppState extends State<App> {
           future: firebase,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done)
-              // return HomeScreen();
-              return TestScreen();
+              return HomeScreen();
+            // return TestScreen();
             return Center(
               child: Text('Loading...'),
             );
