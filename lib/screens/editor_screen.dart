@@ -25,12 +25,16 @@ class _EditorScreenState extends State<EditorScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(51, 51, 51, 100),
-        title: Text("Dialogue Editor"),
+        title: Text(
+          "Dialogue Editor",
+          style: TextStyle(
+              fontSize: 24, color: Color.fromRGBO(189, 189, 189, 100)),
+        ),
         centerTitle: true,
         leading: GestureDetector(
           onTap: () {/* Write listener code here */},
           child: Icon(
-            Icons.arrow_back_sharp, // add custom icons also
+            Icons.arrow_back_sharp,
             size: 38.0,
             color: Color.fromRGBO(189, 189, 189, 100),
           ),
@@ -48,6 +52,7 @@ class _EditorScreenState extends State<EditorScreen> {
               )),
         ],
       ),
+      body: ListView(),
     );
   }
 }
