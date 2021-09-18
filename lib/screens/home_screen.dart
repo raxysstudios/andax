@@ -1,3 +1,4 @@
+import 'package:andax/screens/editor_screen.dart';
 import 'package:andax/screens/scenario_info.dart';
 import 'package:andax/screens/settings_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -110,6 +111,17 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add_circle),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EditorScreen(),
+            ),
+          );
+        },
       ),
     );
   }

@@ -1,12 +1,7 @@
-import 'package:andax/screens/settings_screen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../scenarios/data/scenario.dart';
-import 'package:andax/scenarios/data/translation_asset.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class EditorScreen extends StatefulWidget {
-  //final Scenario scenario;
+  // final Scenario scenario;
   // final List<TranslationAsset> translations;
 
   const EditorScreen(//{
@@ -41,15 +36,16 @@ class _EditorScreenState extends State<EditorScreen> {
         ),
         actions: <Widget>[
           Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () {},
-                child: Icon(
-                  Icons.save,
-                  size: 38.0,
-                  color: Color.fromRGBO(189, 189, 189, 100),
-                ),
-              )),
+            padding: EdgeInsets.only(right: 20.0),
+            child: GestureDetector(
+              onTap: () {},
+              child: Icon(
+                Icons.save,
+                size: 38.0,
+                color: Color.fromRGBO(189, 189, 189, 100),
+              ),
+            ),
+          ),
         ],
       ),
       body: ListView(),
