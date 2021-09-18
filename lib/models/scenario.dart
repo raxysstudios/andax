@@ -21,7 +21,7 @@ class Scenario {
     required String id,
   }) : this(
           nodes: listFromJson(
-            json['notes'],
+            json['nodes'],
             (j) => Node.fromJson(j),
           ),
           startNodeId: json['startNodeId'],
