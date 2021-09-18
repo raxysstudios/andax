@@ -1,11 +1,11 @@
-import 'package:andax/scenarios/data/actor.dart';
-import 'package:andax/scenarios/data/translation_asset.dart';
+import 'package:andax/models/actor.dart';
+import 'package:andax/models/translation_asset.dart';
 import 'package:flutter/material.dart';
 import 'play_screen.dart';
-import 'scenarios/data/choice.dart';
-import 'scenarios/data/content_meta_data.dart';
-import 'scenarios/data/node.dart';
-import 'scenarios/data/scenario.dart';
+import '../models/choice.dart';
+import '../models/content_meta_data.dart';
+import '../models/node.dart';
+import '../models/scenario.dart';
 
 class TestScreen extends StatelessWidget {
   @override

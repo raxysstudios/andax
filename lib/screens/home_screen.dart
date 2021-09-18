@@ -1,8 +1,8 @@
-import 'package:andax/settings_screen.dart';
+import 'package:andax/screens/settings_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'scenarios/data/scenario.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import '../models/scenario.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen();

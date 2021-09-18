@@ -1,11 +1,11 @@
 import 'dart:async';
 import "dart:math";
-import 'package:andax/scenarios/data/actor.dart';
-import 'package:andax/scenarios/data/node.dart';
-import 'package:andax/scenarios/data/scenario.dart';
-import 'package:andax/scenarios/data/translation_asset.dart';
+import 'package:andax/models/actor.dart';
+import 'package:andax/models/node.dart';
+import 'package:andax/models/scenario.dart';
+import 'package:andax/models/translation_asset.dart';
 import 'package:flutter/material.dart';
-import 'scenarios/data/choice.dart';
+import '../models/choice.dart';
 
 class PlayScreen extends StatefulWidget {
   final Scenario scenario;

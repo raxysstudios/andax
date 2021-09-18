@@ -1,8 +1,8 @@
 import 'package:algolia/algolia.dart';
-import 'package:andax/test_screen.dart';
+import 'package:andax/screens/test_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
+import 'screens/home_screen.dart';
 
 late final algolia;
 
