@@ -9,8 +9,8 @@ const index = algoliasearch(
     .initIndex("scenarios");
 
 type scenarioRecord = {
-    scenarioId: string;
-    translationId: string;
+    scenarioID: string;
+    translationID: string;
     language: string;
     title: string,
     description:string,
@@ -19,28 +19,28 @@ type scenarioRecord = {
 export const indexScenarios = functions
     .region("europe-central2")
     .firestore.document(
-        "scenarios/{scenarioId}/translations/{translationId}/assets/scenario"
+        "scenarios/{scenarioID}/translations/{translationID}/assets/scenario"
     )
     .onWrite(async (change, context) => {
-      const translationId = context.params.translationId;
-      const scenarioId = context.params.scenarioId;
+      const translationID = context.params.translationId;
+      const scenarioID = context.params.scenarioId;
       if (change.before.exists) {
         await index.deleteBy({
-          filters: "translationId:" + translationId,
+          filters: "translationID:" + translationID,
         });
       }
       if (change.after.exists) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const asset = change.after.data()!;
         const language = await firestore()
-            .doc(`scenarios/${scenarioId}/translations/${translationId}`)
+            .doc(`scenarios/${scenarioID}/translations/${translationID}`)
             .get()
             .then((doc) => doc.data()?.language);
         if (language) {
           await index.saveObject(
             {
-              scenarioId,
-              translationId,
+              scenarioID,
+              translationID,
               language,
               title: asset.title,
               description: asset.description,
