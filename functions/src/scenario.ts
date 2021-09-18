@@ -22,8 +22,8 @@ export const indexScenarios = functions
         "scenarios/{scenarioID}/translations/{translationID}/assets/scenario"
     )
     .onWrite(async (change, context) => {
-      const translationID = context.params.translationId;
-      const scenarioID = context.params.scenarioId;
+      const translationID = context.params.translationID;
+      const scenarioID = context.params.scenarioID;
       if (change.before.exists) {
         await index.deleteBy({
           filters: "translationID:" + translationID,
