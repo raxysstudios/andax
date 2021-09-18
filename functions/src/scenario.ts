@@ -31,22 +31,20 @@ export const indexScenarios = functions
       }
       if (change.after.exists) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const asset = change.after.data()!;
+        const {title, description} = change.after.data()!;
         const language = await firestore()
             .doc(`scenarios/${scenarioID}/translations/${translationID}`)
             .get()
             .then((doc) => doc.data()?.language);
-        if (language) {
-          await index.saveObject(
+        await index.saveObject(
             {
               scenarioID,
               translationID,
               language,
-              title: asset.title,
-              description: asset.description,
+              title,
+              description,
             } as scenarioRecord,
             {autoGenerateObjectIDIfNotExist: true}
-          );
-        }
+        );
       }
     });
