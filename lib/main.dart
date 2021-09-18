@@ -40,14 +40,19 @@ class _AppState extends State<App> {
         scaffoldBackgroundColor: Colors.blueGrey.shade50,
         floatingActionButtonTheme: floatingActionButtonTheme,
         cardTheme: cardTheme,
-        colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.grey),
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          secondary: Colors.grey,
+          brightness: Brightness.light,
+        ),
       ),
       ThemeData(
-        brightness: Brightness.dark,
         toggleableActiveColor: theme.colorScheme.primary,
         floatingActionButtonTheme: floatingActionButtonTheme,
         cardTheme: cardTheme,
-        colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.grey),
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          secondary: Colors.grey,
+          brightness: Brightness.dark,
+        ),
       ),
     ];
   }
@@ -64,8 +69,8 @@ class _AppState extends State<App> {
           future: firebase,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done)
-              // return HomeScreen();
-              return TestScreen();
+              return HomeScreen();
+            // return TestScreen();
             return Center(
               child: Text('Loading...'),
             );

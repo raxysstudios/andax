@@ -21,7 +21,7 @@ class Scenario {
     required String id,
   }) : this(
           nodes: listFromJson(
-            json['notes'],
+            json['nodes'],
             (j) => Node.fromJson(j),
           ),
           startNodeId: json['startNodeId'],
@@ -43,4 +43,16 @@ class Scenario {
       'metaData': metaData.toJson(),
     };
   }
+}
+
+class ScenarioInfo {
+  final String id;
+  final String title;
+  final String description;
+
+  ScenarioInfo({
+    required this.id,
+    required this.title,
+    required this.description,
+  });
 }

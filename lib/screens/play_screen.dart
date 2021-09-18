@@ -9,7 +9,7 @@ import '../models/choice.dart';
 
 class PlayScreen extends StatefulWidget {
   final Scenario scenario;
-  final List<TranslationAsset> translations;
+  final List<MessageAsset> translations;
 
   const PlayScreen({
     required this.scenario,
@@ -22,7 +22,7 @@ class PlayScreen extends StatefulWidget {
 
 class _PlayScreenState extends State<PlayScreen> {
   late final Map<String, Node> nodes;
-  late final Map<String, TranslationAsset> translations;
+  late final Map<String, MessageAsset> translations;
   late final Map<String, Actor> actors;
   late Node currentNode;
   final List<Node> storyline = [];
@@ -38,15 +38,15 @@ class _PlayScreenState extends State<PlayScreen> {
     };
     translations = {
       for (final translation in widget.translations)
-        translation.id: translation,
+        translation.metaData.id: translation,
     };
     currentNode = nodes[widget.scenario.startNodeId]!;
     actors = {
       for (final actor in widget.scenario.actors) actor.id: actor,
     };
 
-    if (currentNode.autoChoice && currentNode.choices != null)
-      moveAuto(currentNode.choices!);
+    if (currentNode.autoTransition && currentNode.transitions != null)
+      moveAuto(currentNode.transitions!);
   }
 
   void advanceStory([Choice? choice]) {
@@ -55,8 +55,8 @@ class _PlayScreenState extends State<PlayScreen> {
       storyline.add(currentNode);
       currentNode = nodes[choice!.targetNodeId]!;
       if (currentNode.endingType != null) isFinished = true;
-      if (currentNode.autoChoice && currentNode.choices != null)
-        moveAuto(currentNode.choices!);
+      if (currentNode.autoTransition && currentNode.transitions != null)
+        moveAuto(currentNode.transitions!);
     });
   }
 
@@ -75,7 +75,7 @@ class _PlayScreenState extends State<PlayScreen> {
   String getTextTranslation(String id) {
     final translation = translations[id];
     if (translation == null) return '!!! no translation !!!';
-    return translation.text ?? '';
+    return translation.text;
   }
 
   Widget buildNode(Node node, int index) {
@@ -83,7 +83,7 @@ class _PlayScreenState extends State<PlayScreen> {
     final translation = translations[node.id];
     if (translation == null) return SizedBox();
 
-    final isPlayer = actor?.isPlayer ?? false;
+    final isPlayer = actor?.type == ActorType.player;
     final printActor = actor != null &&
         (index == 0 || storyline[index - 1].actorId != actor.id);
     return Padding(
@@ -128,13 +128,13 @@ class _PlayScreenState extends State<PlayScreen> {
         children: [
           for (var i = 0; i < storyline.length; i++) buildNode(storyline[i], i),
           buildNode(currentNode, storyline.length),
-          if (currentNode.choices != null && autoAdvance == null)
+          if (currentNode.transitions != null && autoAdvance == null)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  for (final choice in currentNode.choices!)
+                  for (final choice in currentNode.transitions!)
                     OutlinedButton(
                       onPressed: () => advanceStory(choice),
                       child: Text(getTextTranslation(choice.id)),

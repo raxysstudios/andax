@@ -1,20 +1,31 @@
+import 'package:enum_to_string/enum_to_string.dart';
+
+enum ActorType {
+  npc,
+  player,
+}
+
 class Actor {
   String id;
-  bool isPlayer;
+  ActorType type;
 
   Actor({
     required this.id,
-    this.isPlayer = false,
+    this.type = ActorType.npc,
   });
 
   Actor.fromJson(Map<String, dynamic> json)
       : this(
           id: json['id'],
-          isPlayer: json['isPlayer'],
+          type: EnumToString.fromString(
+                ActorType.values,
+                json['type'],
+              ) ??
+              ActorType.npc,
         );
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'isPlayer': isPlayer,
+        'type': type,
       };
 }

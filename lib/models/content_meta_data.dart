@@ -1,3 +1,5 @@
+import 'package:andax/utils.dart';
+
 enum ContentStatus { public, unlisted, private, pending }
 
 class ContentMetaData {
@@ -20,7 +22,8 @@ class ContentMetaData {
     required String id,
   }) : this(
           id: id,
-          contributorsIds: json['authorId'],
+          contributorsIds:
+              listFromJson<String>(json['contributorsIds'], (c) => c as String),
           lastUpdateAt: json['lastUpdateAt'].toDate(),
           likes: int.parse(json['likes']),
         );

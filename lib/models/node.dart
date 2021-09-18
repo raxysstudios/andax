@@ -9,37 +9,39 @@ class Node {
   String id;
   String? actorId;
   EndingType? endingType;
-  List<Choice>? choices;
-  bool autoChoice;
+  List<Choice>? transitions;
+  bool autoTransition;
 
   Node({
     required this.id,
     this.actorId,
     this.endingType,
-    this.choices,
-    this.autoChoice = false,
+    this.transitions,
+    this.autoTransition = false,
   });
 
   Node.fromJson(Map<String, dynamic> json)
       : this(
           id: json['id'],
           actorId: json['actorId'],
-          endingType: EnumToString.fromString(
-            EndingType.values,
-            json['endingType'],
-          ),
-          choices: listFromJson(
-            json['choices'],
+          endingType: json['endingType'] == null
+              ? null
+              : EnumToString.fromString(
+                  EndingType.values,
+                  json['endingType'],
+                ),
+          transitions: listFromJson(
+            json['transitions'],
             (j) => Choice.fromJson(j),
           ),
-          autoChoice: json['autoChoice'],
+          autoTransition: json['autoTransition'] ?? false,
         );
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'actorId': actorId,
         'endingType': endingType,
-        'choices': choices?.map((c) => c.toJson()),
-        'autoChoice': autoChoice,
+        'transitions': transitions?.map((c) => c.toJson()),
+        'autoTransition': autoTransition,
       };
 }
