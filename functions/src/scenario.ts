@@ -23,22 +23,23 @@ export const indexScenarios = functions
     )
     .onWrite(async (change, context) => {
       const translationId = context.params.translationId;
+      const scenarioId = context.params.scenarioId;
       if (change.before.exists) {
         await index.deleteBy({
-          filters: "translationId:" +translationId,
+          filters: "translationId:" + translationId,
         });
       }
       if (change.after.exists) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const asset = change.after.data()!;
         const language = await firestore()
-            .doc(`scenarios/{scenarioId}/translations/${translationId}`)
+            .doc(`scenarios/${scenarioId}/translations/${translationId}`)
             .get()
             .then((doc) => doc.data()?.language);
         if (language) {
           await index.saveObject(
             {
-              scenarioId: context.params.scenarioId,
+              scenarioId,
               translationId,
               language,
               title: asset.title,
