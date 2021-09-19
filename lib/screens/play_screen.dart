@@ -26,6 +26,7 @@ class _PlayScreenState extends State<PlayScreen> {
   late final Map<String, Actor> actors;
   late Node currentNode;
   final List<Node> storyline = [];
+  int totalScore = 0;
 
   Timer? autoAdvance;
   bool isFinished = false;
@@ -53,6 +54,7 @@ class _PlayScreenState extends State<PlayScreen> {
     setState(() {
       autoAdvance?.cancel();
       storyline.add(currentNode);
+      totalScore += transition?.score ?? 0;
       currentNode = nodes[transition!.targetNodeId]!;
       if (currentNode.endingType != null) isFinished = true;
       if (currentNode.autoTransition && currentNode.transitions != null)
@@ -126,6 +128,7 @@ class _PlayScreenState extends State<PlayScreen> {
     return Scaffold(
       body: ListView(
         children: [
+          Center(child: Text('Score: $totalScore')),
           for (var i = 0; i < storyline.length; i++) buildNode(storyline[i], i),
           buildNode(currentNode, storyline.length),
           if (currentNode.transitions != null && autoAdvance == null)
