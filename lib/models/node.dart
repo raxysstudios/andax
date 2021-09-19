@@ -1,7 +1,7 @@
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:andax/utils.dart';
 
-import 'choice.dart';
+import 'transition.dart';
 
 enum EndingType { win, loss }
 
@@ -9,7 +9,7 @@ class Node {
   String id;
   String? actorId;
   EndingType? endingType;
-  List<Choice>? transitions;
+  List<Transition>? transitions;
   bool autoTransition;
 
   Node({
@@ -32,7 +32,7 @@ class Node {
                 ),
           transitions: listFromJson(
             json['transitions'],
-            (j) => Choice.fromJson(j),
+            (j) => Transition.fromJson(j),
           ),
           autoTransition: json['autoTransition'] ?? false,
         );

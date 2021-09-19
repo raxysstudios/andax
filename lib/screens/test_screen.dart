@@ -1,8 +1,7 @@
 import 'package:andax/models/actor.dart';
-import 'package:andax/models/translation_asset.dart';
 import 'package:flutter/material.dart';
 import 'play_screen.dart';
-import '../models/choice.dart';
+import '../models/transition.dart';
 import '../models/content_meta_data.dart';
 import '../models/node.dart';
 import '../models/scenario.dart';
@@ -17,7 +16,7 @@ class TestScreen extends StatelessWidget {
             id: '0',
             actorId: 'a1',
             transitions: [
-              Choice(
+              Transition(
                 id: '0-1',
                 targetNodeId: '1',
               ),
@@ -28,7 +27,7 @@ class TestScreen extends StatelessWidget {
             id: '1',
             actorId: 'a1',
             transitions: [
-              Choice(
+              Transition(
                 id: '1-1',
                 targetNodeId: '2',
               ),
@@ -39,11 +38,11 @@ class TestScreen extends StatelessWidget {
             id: '2',
             actorId: 'a2',
             transitions: [
-              Choice(
+              Transition(
                 id: '2-1',
                 targetNodeId: '3',
               ),
-              Choice(
+              Transition(
                 id: '2-2',
                 targetNodeId: '4',
               ),
@@ -53,7 +52,7 @@ class TestScreen extends StatelessWidget {
             id: '3',
             actorId: 'a2',
             transitions: [
-              Choice(
+              Transition(
                 id: '3-1',
                 targetNodeId: '5',
               ),
@@ -64,7 +63,7 @@ class TestScreen extends StatelessWidget {
             id: '4',
             actorId: 'a2',
             transitions: [
-              Choice(
+              Transition(
                 id: '4-1',
                 targetNodeId: '6',
               ),

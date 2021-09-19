@@ -5,7 +5,7 @@ import 'package:andax/models/node.dart';
 import 'package:andax/models/scenario.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:flutter/material.dart';
-import '../models/choice.dart';
+import '../models/transition.dart';
 
 class PlayScreen extends StatefulWidget {
   final Scenario scenario;
@@ -49,24 +49,24 @@ class _PlayScreenState extends State<PlayScreen> {
       moveAuto(currentNode.transitions!);
   }
 
-  void advanceStory([Choice? choice]) {
+  void advanceStory([Transition? transition]) {
     setState(() {
       autoAdvance?.cancel();
       storyline.add(currentNode);
-      currentNode = nodes[choice!.targetNodeId]!;
+      currentNode = nodes[transition!.targetNodeId]!;
       if (currentNode.endingType != null) isFinished = true;
       if (currentNode.autoTransition && currentNode.transitions != null)
         moveAuto(currentNode.transitions!);
     });
   }
 
-  void moveAuto(List<Choice> choices) {
+  void moveAuto(List<Transition> transition) {
     autoAdvance?.cancel();
     autoAdvance = Timer(
       Duration(milliseconds: 500),
       () {
-        final index = Random().nextInt(choices.length);
-        advanceStory(choices[index]);
+        final index = Random().nextInt(transition.length);
+        advanceStory(transition[index]);
         autoAdvance = null;
       },
     );
@@ -134,10 +134,10 @@ class _PlayScreenState extends State<PlayScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  for (final choice in currentNode.transitions!)
+                  for (final transition in currentNode.transitions!)
                     OutlinedButton(
-                      onPressed: () => advanceStory(choice),
-                      child: Text(getTextTranslation(choice.id)),
+                      onPressed: () => advanceStory(transition),
+                      child: Text(getTextTranslation(transition.id)),
                     ),
                 ],
               ),
