@@ -2,9 +2,9 @@ import 'package:andax/models/content_meta_data.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 
 enum AssetType {
-  Message,
-  Scenario,
-  Actor,
+  message,
+  scenario,
+  actor,
 }
 
 abstract class TranslationAsset {
@@ -25,18 +25,18 @@ abstract class TranslationAsset {
       json['assetType'],
     );
     switch (type) {
-      case AssetType.Message:
+      case AssetType.message:
         return MessageTranslation(
           text: json['text'],
           audioUrl: json['audioUrl'],
           metaData: ContentMetaData.fromJson(json['metaData'], id: id),
         );
-      case AssetType.Actor:
+      case AssetType.actor:
         return ActorTranslation(
           name: json['name'],
           metaData: ContentMetaData.fromJson(json['metaData'], id: id),
         );
-      case AssetType.Scenario:
+      case AssetType.scenario:
         return ScenarioTranslation(
           title: json['title'],
           description: json['description'],
@@ -70,7 +70,7 @@ class ScenarioTranslation extends TranslationAsset {
     required this.title,
     this.description,
     required ContentMetaData metaData,
-  }) : super(metaData: metaData, assetType: AssetType.Scenario);
+  }) : super(metaData: metaData, assetType: AssetType.scenario);
 
   Map<String, dynamic> toJson() {
     return super.toJson()
@@ -89,7 +89,7 @@ class MessageTranslation extends TranslationAsset {
     this.text,
     this.audioUrl,
     required ContentMetaData metaData,
-  }) : super(metaData: metaData, assetType: AssetType.Message);
+  }) : super(metaData: metaData, assetType: AssetType.message);
 
   Map<String, dynamic> toJson() {
     return super.toJson()
@@ -106,7 +106,7 @@ class ActorTranslation extends TranslationAsset {
   const ActorTranslation({
     required this.name,
     required ContentMetaData metaData,
-  }) : super(metaData: metaData, assetType: AssetType.Message);
+  }) : super(metaData: metaData, assetType: AssetType.message);
 
   Map<String, dynamic> toJson() {
     return super.toJson()
