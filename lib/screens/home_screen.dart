@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Expanded(
             child: SmartRefresher(
-              header: MaterialClassicHeader(
+              header: const MaterialClassicHeader(
                 color: Colors.blue,
               ),
               controller: refreshController,
@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ListTile(
                       title: Text(
                         scenario.title,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
@@ -92,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add_outlined
+        child: const Icon(Icons.add_outlined),
         onPressed: () => Navigator.push(
           context,
           MaterialPageRoute(
