@@ -32,11 +32,23 @@ class _NodeCardState extends State<NodeCard> {
       (t) => t.text,
     );
     if (text.isEmpty) return SizedBox();
+    if (actor == null)
+      return Column(
+        children: [
+          Divider(),
+          Text(
+            text,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 14,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+          Divider(),
+        ],
+      );
 
-    final isPlayer = actor?.type == ActorType.player;
-    final printActor =
-        actor != null && actor.id != widget.previousNode?.actorId;
-
+    final isPlayer = actor.type == ActorType.player;
     return Padding(
       padding: isPlayer
           ? const EdgeInsets.only(left: 32)
@@ -48,13 +60,13 @@ class _NodeCardState extends State<NodeCard> {
             crossAxisAlignment:
                 isPlayer ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
-              if (printActor)
+              if (actor.id != widget.previousNode?.actorId)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
                     getTranslation<ActorTranslation>(
                       widget.translations,
-                      actor!.id,
+                      actor.id,
                       (t) => t.name,
                     ),
                     style: const TextStyle(
