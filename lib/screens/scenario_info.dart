@@ -14,10 +14,9 @@ class ScenarioInfoScreen extends StatefulWidget {
 }
 
 class _ScenarioInfoScreenState extends State<ScenarioInfoScreen> {
-  late Scenario scenario;
-  late List<TranslationAsset> translations;
+  bool loading = false;
 
-  void getScenario() async {
+  void loadScenario() async {
     final db = FirebaseFirestore.instance;
     final doc = await db
         .doc('scenarios/${widget.scenarioInfo.scenarioID}')
@@ -31,7 +30,7 @@ class _ScenarioInfoScreenState extends State<ScenarioInfoScreen> {
       throw ArgumentError(
           'Scenario with id ${widget.scenarioInfo.scenarioID} does not exist');
     }
-    scenario = doc.data()!;
+    final scenario = doc.data()!;
 
     final collection = await db
         .collection(
@@ -43,13 +42,17 @@ class _ScenarioInfoScreenState extends State<ScenarioInfoScreen> {
         )
         .get();
     final assets = collection.docs.map((doc) => doc.data());
-    translations = assets.toList();
-  }
+    final translations = assets.toList();
 
-  @override
-  void initState() {
-    super.initState();
-    getScenario();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => PlayScreen(
+          scenario: scenario,
+          translations: translations,
+        ),
+      ),
+    );
   }
 
   @override
@@ -64,18 +67,13 @@ class _ScenarioInfoScreenState extends State<ScenarioInfoScreen> {
           if (widget.scenarioInfo.description != null)
             Text(widget.scenarioInfo.description!),
           ElevatedButton(
-            onPressed: () async {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => PlayScreen(
-                    scenario: scenario,
-                    translations: translations,
-                  ),
-                ),
-              );
+            onPressed: () {
+              setState(() {
+                loading = true;
+              });
+              loadScenario();
             },
-            child: Text('Play'),
+            child: loading ? CircularProgressIndicator() : Text('Play'),
           ),
         ],
       ),
