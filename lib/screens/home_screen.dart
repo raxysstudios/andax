@@ -2,7 +2,6 @@ import 'package:andax/main.dart';
 import 'package:andax/screens/editor_screen.dart';
 import 'package:andax/screens/scenario_info.dart';
 import 'package:andax/screens/settings_screen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../models/scenario.dart';
@@ -25,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final scenarios = await algolia.instance
         .index('scenarios')
         .query('')
-        .filters('language:${settings.currentLanguage}')
+        .filters('language:${settings.targetLanguage}')
         .getObjects()
         .then(
           (s) => s.hits.map(

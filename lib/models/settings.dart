@@ -1,5 +1,6 @@
 class Settings {
-  String currentLanguage;
+  String nativeLanguage;
+  String targetLanguage;
 
-  Settings({this.currentLanguage = 'en'});
+  Settings({this.targetLanguage = 'en', this.nativeLanguage = 'ru'});
 }
