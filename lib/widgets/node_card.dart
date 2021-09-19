@@ -49,45 +49,57 @@ class _NodeCardState extends State<NodeCard> {
       );
 
     final isPlayer = actor.type == ActorType.player;
-    return Padding(
-      padding: isPlayer
-          ? const EdgeInsets.only(left: 32)
-          : const EdgeInsets.only(right: 32),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            crossAxisAlignment:
-                isPlayer ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-            children: [
-              if (actor.id != widget.previousNode?.actorId)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Text(
-                    getTranslation<ActorTranslation>(
-                      widget.translations,
-                      actor.id,
-                      (t) => t.name,
-                    ),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontStyle: FontStyle.italic,
-                    ),
+    return Card(
+      margin: isPlayer
+          ? const EdgeInsets.fromLTRB(48, 8, 0, 8)
+          : const EdgeInsets.fromLTRB(0, 8, 48, 8),
+      shape: isPlayer
+          ? const RoundedRectangleBorder(
+              borderRadius: const BorderRadius.horizontal(
+                left: const Radius.circular(4),
+              ),
+            )
+          : const RoundedRectangleBorder(
+              borderRadius: const BorderRadius.horizontal(
+                right: const Radius.circular(4),
+              ),
+            ),
+      color: isPlayer ? Theme.of(context).backgroundColor : null,
+      child: Padding(
+        padding: isPlayer
+            ? const EdgeInsets.fromLTRB(8, 8, 20, 8)
+            : const EdgeInsets.fromLTRB(20, 8, 8, 8),
+        child: Column(
+          crossAxisAlignment:
+              isPlayer ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          children: [
+            if (actor.id != widget.previousNode?.actorId)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Text(
+                  getTranslation<ActorTranslation>(
+                    widget.translations,
+                    actor.id,
+                    (t) => t.name,
                   ),
-                ),
-              MarkdownBody(
-                data: text,
-                styleSheet: MarkdownStyleSheet(
-                  p: const TextStyle(
-                    fontSize: 16,
-                  ),
-                  strong: const TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.w500,
+                    fontStyle: FontStyle.italic,
                   ),
                 ),
               ),
-            ],
-          ),
+            MarkdownBody(
+              data: text,
+              styleSheet: MarkdownStyleSheet(
+                p: const TextStyle(
+                  fontSize: 16,
+                ),
+                strong: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -115,24 +115,28 @@ class _PlayScreenState extends State<PlayScreen> {
             actors: actors,
           ),
           if (currentNode.transitions != null && autoAdvance == null)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  for (final transition in currentNode.transitions!)
-                    OutlinedButton(
-                      onPressed: () => advanceStory(transition),
-                      child: Text(
-                        getTranslation<MessageTranslation>(
-                          translations,
-                          transition.id,
-                          (t) => t.text,
+            Wrap(
+              alignment: WrapAlignment.spaceEvenly,
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final transition in currentNode.transitions!)
+                  Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => advanceStory(transition),
+                        child: Text(
+                          getTranslation<MessageTranslation>(
+                            translations,
+                            transition.id,
+                            (t) => t.text,
+                          ),
                         ),
                       ),
                     ),
-                ],
-              ),
+                  ),
+              ],
             ),
           if (isFinished)
             Center(
