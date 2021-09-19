@@ -92,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add_circle_outline),
+        child: Icon(Icons.add_outlined
         onPressed: () => Navigator.push(
           context,
           MaterialPageRoute(
