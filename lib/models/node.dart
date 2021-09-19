@@ -40,7 +40,9 @@ class Node {
   Map<String, dynamic> toJson() => {
         'id': id,
         'actorId': actorId,
-        'endingType': endingType,
+        'endingType': endingType == null
+            ? null
+            : EnumToString.convertToString(endingType),
         'transitions': transitions?.map((c) => c.toJson()),
         'autoTransition': autoTransition,
       };
