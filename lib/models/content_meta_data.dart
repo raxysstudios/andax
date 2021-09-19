@@ -12,11 +12,11 @@ class ContentMetaData {
 
   ContentMetaData({
     required this.id,
-    required this.lastUpdateAt,
+    DateTime? lastUpdateAt,
     this.contributorsIds = const [],
     this.likes = 0,
     this.status = ContentStatus.private,
-  });
+  }) : this.lastUpdateAt = lastUpdateAt ?? DateTime.now();
 
   ContentMetaData.fromJson(
     Map<String, dynamic> json, {
