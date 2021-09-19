@@ -40,13 +40,13 @@ final testScenario = Scenario(
         Transition(id: 't5', targetNodeId: 'normal', score: 0),
         Transition(id: 't6', targetNodeId: 'sad', score: -5),
       ]),
-      Node(id: 'happy', actorId: 'player', transitions: [
+      Node(id: 'happy', actorId: 'player', autoTransition: true, transitions: [
         Transition(id: 't7', targetNodeId: 'glad-to-hear'),
       ]),
-      Node(id: 'normal', actorId: 'player', transitions: [
-        Transition(id: 't7', targetNodeId: 'glad-to-hear'),
+      Node(id: 'normal', actorId: 'player', autoTransition: true, transitions: [
+        Transition(id: 't8', targetNodeId: 'glad-to-hear'),
       ]),
-      Node(id: 'sad', actorId: 'player', transitions: [
+      Node(id: 'sad', actorId: 'player', autoTransition: true, transitions: [
         Transition(id: 't9', targetNodeId: 'whats-wrong'),
       ]),
       Node(
@@ -116,6 +116,8 @@ final testScenario = Scenario(
     ]);
 
 final testTranslations = <TranslationAsset>[
+  ActorTranslation(name: 'Friend', metaData: ContentMetaData(id: 'bot')),
+  ActorTranslation(name: 'You', metaData: ContentMetaData(id: 'player')),
   ScenarioTranslation(
     title: 'Meeting with friend',
     metaData: ContentMetaData(id: 'tatar', lastUpdateAt: DateTime.now()),
@@ -211,6 +213,8 @@ final testTranslations = <TranslationAsset>[
 ];
 
 final testTranslationsRu = <TranslationAsset>[
+  ActorTranslation(name: 'Friend', metaData: ContentMetaData(id: 'bot')),
+  ActorTranslation(name: 'You', metaData: ContentMetaData(id: 'player')),
   ScenarioTranslation(
     title: 'Встреча с другом',
     metaData: ContentMetaData(id: 'tatar', lastUpdateAt: DateTime.now()),
