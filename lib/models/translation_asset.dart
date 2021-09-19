@@ -9,11 +9,11 @@ enum AssetType {
 
 abstract class TranslationAsset {
   final AssetType assetType;
-  final ContentMetaData metaData;
+  final ContentMetaData? metaData;
 
   const TranslationAsset({
-    required this.metaData,
     required this.assetType,
+    this.metaData,
   });
 
   factory TranslationAsset.fromJson(
@@ -29,18 +29,18 @@ abstract class TranslationAsset {
         return MessageTranslation(
           text: json['text'],
           audioUrl: json['audioUrl'],
-          metaData: ContentMetaData.fromJson(json['metaData'], id: id),
+          // metaData: ContentMetaData.fromJson(json['metaData'], id: id),
         );
       case AssetType.actor:
         return ActorTranslation(
           name: json['name'],
-          metaData: ContentMetaData.fromJson(json['metaData'], id: id),
+          // metaData: ContentMetaData.fromJson(json['metaData'], id: id),
         );
       case AssetType.scenario:
         return ScenarioTranslation(
           title: json['title'],
           description: json['description'],
-          metaData: ContentMetaData.fromJson(json['metaData'], id: id),
+          // metaData: ContentMetaData.fromJson(json['metaData'], id: id),
         );
       default:
         return MessageTranslation(
@@ -57,7 +57,7 @@ abstract class TranslationAsset {
     final type = EnumToString.convertToString(assetType);
     return {
       'type': type,
-      'metaData': metaData.toJson(),
+      'metaData': metaData?.toJson(),
     };
   }
 }
@@ -69,7 +69,7 @@ class ScenarioTranslation extends TranslationAsset {
   const ScenarioTranslation({
     required this.title,
     this.description,
-    required ContentMetaData metaData,
+    ContentMetaData? metaData,
   }) : super(metaData: metaData, assetType: AssetType.scenario);
 
   Map<String, dynamic> toJson() {
@@ -88,7 +88,7 @@ class MessageTranslation extends TranslationAsset {
   const MessageTranslation({
     this.text,
     this.audioUrl,
-    required ContentMetaData metaData,
+    ContentMetaData? metaData,
   }) : super(metaData: metaData, assetType: AssetType.message);
 
   Map<String, dynamic> toJson() {
@@ -105,7 +105,7 @@ class ActorTranslation extends TranslationAsset {
 
   const ActorTranslation({
     required this.name,
-    required ContentMetaData metaData,
+    ContentMetaData? metaData,
   }) : super(metaData: metaData, assetType: AssetType.message);
 
   Map<String, dynamic> toJson() {
