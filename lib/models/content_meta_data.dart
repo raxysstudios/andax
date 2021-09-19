@@ -11,8 +11,8 @@ class ContentMetaData {
 
   ContentMetaData({
     required this.id,
-    required this.contributorsIds,
     required this.lastUpdateAt,
+    this.contributorsIds = const [],
     this.likes = 0,
     this.status = ContentStatus.private,
   });

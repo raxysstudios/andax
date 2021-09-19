@@ -10,8 +10,8 @@ List<T> listFromJson<T>(
 String getTranslation<T extends TranslationAsset>(
   Map<String, TranslationAsset> translations,
   String id,
-  String Function(T) getter,
+  String? Function(T) getter,
 ) {
   final asset = translations[id] as T?;
-  return asset == null ? '' : getter(asset);
+  return asset == null ? '' : getter(asset) ?? '';
 }
