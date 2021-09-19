@@ -27,7 +27,7 @@ class ContentMetaData {
             (c) => c as String,
           ),
           lastUpdateAt: json['lastUpdateAt'].toDate(),
-          likes: int.parse(json['likes']),
+          likes: json['likes'] ?? 0,
         );
 
   Map<String, dynamic> toJson() {
