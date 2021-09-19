@@ -3,7 +3,7 @@ import 'package:andax/models/content_meta_data.dart';
 enum AssetKind {
   Message,
   Scenario,
-  Author,
+  Actor,
 }
 
 class TranslationAsset {
@@ -16,11 +16,11 @@ class TranslationAsset {
   });
 }
 
-class ScenarioAsset extends TranslationAsset {
+class ScenarioTranslation extends TranslationAsset {
   final String title;
   final String description;
 
-  const ScenarioAsset({
+  const ScenarioTranslation({
     required this.title,
     required this.description,
     required ContentMetaData metaData,
@@ -29,13 +29,24 @@ class ScenarioAsset extends TranslationAsset {
         super(metaData: metaData, assetKind: assetKind);
 }
 
-class MessageAsset extends TranslationAsset {
+class MessageTranslation extends TranslationAsset {
   final String text;
   final String audioUrl;
 
-  const MessageAsset({
+  const MessageTranslation({
     required this.text,
     required this.audioUrl,
+    required ContentMetaData metaData,
+    required AssetKind assetKind,
+  })  : assert(assetKind == AssetKind.Message),
+        super(metaData: metaData, assetKind: assetKind);
+}
+
+class ActorTranslation extends TranslationAsset {
+  final String name;
+
+  const ActorTranslation({
+    required this.name,
     required ContentMetaData metaData,
     required AssetKind assetKind,
   })  : assert(assetKind == AssetKind.Message),

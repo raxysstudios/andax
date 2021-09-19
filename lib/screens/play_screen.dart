@@ -3,13 +3,15 @@ import "dart:math";
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/scenario.dart';
+import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation_asset.dart';
+import 'package:andax/utils.dart';
+import 'package:andax/widgets/node_card.dart';
 import 'package:flutter/material.dart';
-import '../models/transition.dart';
 
 class PlayScreen extends StatefulWidget {
   final Scenario scenario;
-  final List<MessageAsset> translations;
+  final List<TranslationAsset> translations;
 
   const PlayScreen({
     required this.scenario,
@@ -22,7 +24,7 @@ class PlayScreen extends StatefulWidget {
 
 class _PlayScreenState extends State<PlayScreen> {
   late final Map<String, Node> nodes;
-  late final Map<String, MessageAsset> translations;
+  late final Map<String, TranslationAsset> translations;
   late final Map<String, Actor> actors;
   late Node currentNode;
   final List<Node> storyline = [];
@@ -74,63 +76,25 @@ class _PlayScreenState extends State<PlayScreen> {
     );
   }
 
-  String getTextTranslation(String id) {
-    final translation = translations[id];
-    if (translation == null) return '!!! no translation !!!';
-    return translation.text;
-  }
-
-  Widget buildNode(Node node, int index) {
-    final actor = actors[node.actorId];
-    final translation = translations[node.id];
-    if (translation == null) return SizedBox();
-
-    final isPlayer = actor?.type == ActorType.player;
-    final printActor = actor != null &&
-        (index == 0 || storyline[index - 1].actorId != actor.id);
-    return Padding(
-      padding: isPlayer
-          ? const EdgeInsets.only(left: 32)
-          : const EdgeInsets.only(right: 32),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            crossAxisAlignment:
-                isPlayer ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-            children: [
-              if (printActor)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Text(
-                    getTextTranslation(actor!.id),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ),
-              Text(
-                getTextTranslation(node.id),
-                style: const TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
         children: [
           Center(child: Text('Score: $totalScore')),
-          for (var i = 0; i < storyline.length; i++) buildNode(storyline[i], i),
-          buildNode(currentNode, storyline.length),
+          for (var i = 0; i < storyline.length; i++)
+            NodeCard(
+              node: storyline[i],
+              previousNode: i > 0 ? storyline[i - 1] : null,
+              translations: translations,
+              actors: actors,
+            ),
+          NodeCard(
+            node: currentNode,
+            previousNode: storyline.isEmpty ? null : storyline.last,
+            translations: translations,
+            actors: actors,
+          ),
           if (currentNode.transitions != null && autoAdvance == null)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -140,7 +104,13 @@ class _PlayScreenState extends State<PlayScreen> {
                   for (final transition in currentNode.transitions!)
                     OutlinedButton(
                       onPressed: () => advanceStory(transition),
-                      child: Text(getTextTranslation(transition.id)),
+                      child: Text(
+                        getTranslation<MessageTranslation>(
+                          translations,
+                          transition.id,
+                          (t) => t.text,
+                        ),
+                      ),
                     ),
                 ],
               ),
