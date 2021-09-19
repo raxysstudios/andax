@@ -1,0 +1,191 @@
+import 'package:andax/models/actor.dart';
+import 'package:andax/models/content_meta_data.dart';
+import 'package:andax/models/node.dart';
+import 'package:andax/models/scenario.dart';
+import 'package:andax/models/transition.dart';
+import 'package:andax/models/translation_asset.dart';
+
+final testScenario = Scenario(
+    metaData: ContentMetaData(id: 'tatar', lastUpdateAt: DateTime.now()),
+    startNodeId: 'greeting',
+    actors: [
+      Actor(id: 'bot'),
+      Actor(id: 'player', type: ActorType.player),
+    ],
+    nodes: [
+      Node(
+        id: 'greeting',
+        actorId: 'bot',
+        transitions: [
+          Transition(id: 't1', targetNodeId: 'salam', score: 15),
+          Transition(id: 't2', targetNodeId: 'hi', score: -10),
+        ],
+      ),
+      Node(
+        id: 'salam',
+        actorId: 'player',
+        transitions: [
+          Transition(id: 't3', targetNodeId: 'how-are-you'),
+        ],
+      ),
+      Node(
+        id: 'hi',
+        actorId: 'player',
+        transitions: [
+          Transition(id: 't3', targetNodeId: 'how-are-you'),
+        ],
+      ),
+      Node(id: 'how-are-you', actorId: 'bot', transitions: [
+        Transition(id: 't4', targetNodeId: 'happy', score: 10),
+        Transition(id: 't5', targetNodeId: 'normal', score: 0),
+        Transition(id: 't6', targetNodeId: 'sad', score: -5),
+      ]),
+      Node(id: 'happy', actorId: 'player', transitions: [
+        Transition(id: 't7', targetNodeId: 'glad-to-hear'),
+      ]),
+      Node(id: 'normal', actorId: 'player', transitions: [
+        Transition(id: 't8', targetNodeId: 'glad-to-hear'),
+      ]),
+      Node(id: 'sad', actorId: 'player', transitions: [
+        Transition(id: 't9', targetNodeId: 'whats-wrong'),
+      ]),
+      Node(
+          id: 'glad-to-hear',
+          actorId: 'bot',
+          autoTransition: true,
+          transitions: [
+            Transition(id: 't10', targetNodeId: 'come-for-tea'),
+          ]),
+      Node(
+        id: 'whats-wrong',
+        actorId: 'bot',
+        transitions: [
+          Transition(id: 't11', targetNodeId: 'out-of-tea', score: 5),
+          Transition(id: 't12', targetNodeId: 'wont-talk', score: -30),
+        ],
+      ),
+      Node(
+        id: 'out-of-tea',
+        actorId: 'player',
+        transitions: [
+          Transition(id: 't13', targetNodeId: 'will-bring'),
+        ],
+      ),
+      Node(
+        id: 'wont-talk',
+        actorId: 'player',
+        autoTransition: true,
+        transitions: [
+          Transition(id: 't14', targetNodeId: 'lose'),
+        ],
+      ),
+      Node(
+        id: 'come-for-tea',
+        actorId: 'bot',
+        transitions: [
+          Transition(id: 't15', targetNodeId: 'hate-chakchak', score: -70),
+          Transition(id: 't16', targetNodeId: 'thank-you', score: 15),
+        ],
+      ),
+      Node(
+        id: 'will-bring',
+        actorId: 'bot',
+        transitions: [
+          Transition(id: 't15', targetNodeId: 'hate-chakchak', score: -70),
+          Transition(id: 't16', targetNodeId: 'thank-you', score: 15),
+        ],
+      ),
+      Node(
+        id: 'hate-chakchak',
+        actorId: 'player',
+        autoTransition: true,
+        transitions: [
+          Transition(id: 't17', targetNodeId: 'lose'),
+        ],
+      ),
+      Node(
+        id: 'thank-you',
+        actorId: 'player',
+        autoTransition: true,
+        transitions: [
+          Transition(id: 't18', targetNodeId: 'win'),
+        ],
+      ),
+      Node(id: 'lose', endingType: EndingType.loss),
+      Node(id: 'win', endingType: EndingType.win),
+    ]);
+
+final testTranslations = <TranslationAsset>[
+  ScenarioTranslation(
+    title: 'Meeting with friend',
+    metaData: ContentMetaData(id: 'tatar', lastUpdateAt: DateTime.now()),
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 'greeting'),
+    text: 'Assalamu Alaykum!',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 't1'),
+    text: 'Waalakum Assalam!',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 't2'),
+    text: 'Hi!',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 'how-are-you'),
+    text: 'How are you doing?',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 't4'),
+    text: 'I am doing fine',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 't5'),
+    text: 'Normal',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 't6'),
+    text: 'I am sad :(',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 'glad-to-hear'),
+    text: 'I am glad to hear that :)',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 'whats-wrong'),
+    text: 'Oh no! What is wrong?',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 't11'),
+    text: 'I ran out of tea',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 't12'),
+    text: 'I do not want to talk',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 'come-for-tea'),
+    text: 'Come over. I have tea and chakchak',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 'will-bring'),
+    text: 'I will come over. I will bring tea and Chakchak',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 't15'),
+    text: 'No. I hate Chakchak!',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 't16'),
+    text: 'Awesome! You are a good friend',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 'lose'),
+    text: ':(',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 'win'),
+    text: ':D',
+  ),
+];

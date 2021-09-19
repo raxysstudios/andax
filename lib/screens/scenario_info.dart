@@ -1,3 +1,4 @@
+import 'package:andax/sample_scenario.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/screens/crowdsourcing_screen.dart';
 import 'package:andax/screens/play_screen.dart';
@@ -49,8 +50,8 @@ class _ScenarioInfoScreenState extends State<ScenarioInfoScreen> {
       context,
       MaterialPageRoute(
         builder: (_) => PlayScreen(
-          scenario: scenario,
-          translations: translations,
+          scenario: testScenario,
+          translations: testTranslations,
         ),
       ),
     );
