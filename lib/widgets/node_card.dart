@@ -26,8 +26,12 @@ class _NodeCardState extends State<NodeCard> {
   @override
   Widget build(BuildContext context) {
     final actor = widget.actors[widget.node.actorId];
-    final translation = widget.translations[widget.node.id];
-    if (translation == null) return SizedBox();
+    final text = getTranslation<MessageTranslation>(
+      widget.translations,
+      widget.node.id,
+      (t) => t.text,
+    );
+    if (text.isEmpty) return SizedBox();
 
     final isPlayer = actor?.type == ActorType.player;
     final printActor =
@@ -60,11 +64,7 @@ class _NodeCardState extends State<NodeCard> {
                   ),
                 ),
               MarkdownBody(
-                data: getTranslation<MessageTranslation>(
-                  widget.translations,
-                  actor!.id,
-                  (t) => t.text,
-                ),
+                data: text,
                 styleSheet: MarkdownStyleSheet(
                   p: const TextStyle(
                     fontSize: 16,
