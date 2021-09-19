@@ -123,8 +123,12 @@ class _PlayScreenState extends State<PlayScreen> {
                 padding: const EdgeInsets.all(32),
                 child: Text(
                   currentNode.endingType == EndingType.win
-                      ? 'You won! :)'
+                      ? 'End of scenario.'
                       : 'You lost! :(',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             )
