@@ -52,6 +52,14 @@ abstract class TranslationAsset {
         );
     }
   }
+
+  Map<String, dynamic> toJson() {
+    final type = EnumToString.convertToString(assetType);
+    return {
+      'type': type,
+      'metaData': metaData.toJson(),
+    };
+  }
 }
 
 class ScenarioTranslation extends TranslationAsset {
@@ -63,6 +71,14 @@ class ScenarioTranslation extends TranslationAsset {
     this.description,
     required ContentMetaData metaData,
   }) : super(metaData: metaData, assetType: AssetType.Scenario);
+
+  Map<String, dynamic> toJson() {
+    return super.toJson()
+      ..addAll({
+        'title': title,
+        'description': description,
+      });
+  }
 }
 
 class MessageTranslation extends TranslationAsset {
@@ -74,6 +90,14 @@ class MessageTranslation extends TranslationAsset {
     this.audioUrl,
     required ContentMetaData metaData,
   }) : super(metaData: metaData, assetType: AssetType.Message);
+
+  Map<String, dynamic> toJson() {
+    return super.toJson()
+      ..addAll({
+        'text': text,
+        'audioUrl': audioUrl,
+      });
+  }
 }
 
 class ActorTranslation extends TranslationAsset {
@@ -83,4 +107,11 @@ class ActorTranslation extends TranslationAsset {
     required this.name,
     required ContentMetaData metaData,
   }) : super(metaData: metaData, assetType: AssetType.Message);
+
+  Map<String, dynamic> toJson() {
+    return super.toJson()
+      ..addAll({
+        'name': name,
+      });
+  }
 }
