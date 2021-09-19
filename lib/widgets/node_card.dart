@@ -3,6 +3,7 @@ import 'package:andax/models/node.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 class NodeCard extends StatefulWidget {
   final Node node;
@@ -58,14 +59,19 @@ class _NodeCardState extends State<NodeCard> {
                     ),
                   ),
                 ),
-              Text(
-                getTranslation<MessageTranslation>(
+              MarkdownBody(
+                data: getTranslation<MessageTranslation>(
                   widget.translations,
                   actor!.id,
                   (t) => t.text,
                 ),
-                style: const TextStyle(
-                  fontSize: 16,
+                styleSheet: MarkdownStyleSheet(
+                  p: const TextStyle(
+                    fontSize: 16,
+                  ),
+                  strong: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ],
