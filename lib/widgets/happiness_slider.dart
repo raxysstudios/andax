@@ -36,7 +36,7 @@ class HappinessSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = 72.0;
+    final size = 36.0;
 
     return FlutterSlider(
       min: 0,
@@ -46,6 +46,7 @@ class HappinessSlider extends StatelessWidget {
       centeredOrigin: true,
       handlerHeight: size,
       handlerWidth: size,
+      tooltip: FlutterSliderTooltip(disabled: true),
       handler: FlutterSliderHandler(
         child: Text(
           emoji,

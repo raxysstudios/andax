@@ -1,5 +1,6 @@
 import 'dart:async';
 import "dart:math";
+import 'dart:ui';
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/scenario.dart';
@@ -81,20 +82,18 @@ class _PlayScreenState extends State<PlayScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          getTranslation<ScenarioTranslation>(
-            translations,
-            'scenario',
-            (t) => t.title,
-          ),
-        ),
+        title: HappinessSlider(value: totalScore),
+        titleSpacing: 0,
         actions: [
           Center(
-            child: Text(
-              'Score: $totalScore',
-              style: TextStyle(
-                fontSize: 20,
-                color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                totalScore.toString(),
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           )
@@ -102,7 +101,6 @@ class _PlayScreenState extends State<PlayScreen> {
       ),
       body: ListView(
         children: [
-          HappinessSlider(value: totalScore),
           for (var i = 0; i < storyline.length; i++)
             NodeCard(
               node: storyline[i],
