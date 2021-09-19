@@ -189,3 +189,78 @@ final testTranslations = <TranslationAsset>[
     text: ':D',
   ),
 ];
+
+final testTranslationsRu = <TranslationAsset>[
+  ScenarioTranslation(
+    title: 'Встреча с другом',
+    metaData: ContentMetaData(id: 'tatar', lastUpdateAt: DateTime.now()),
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 'greeting'),
+    text: 'Ассаламу алейкум!',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 't1'),
+    text: 'Ваалейкум ассалам!',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 't2'),
+    text: 'Привет!',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 'how-are-you'),
+    text: 'Как поживаешь?',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 't4'),
+    text: 'Всё впорядке.',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 't5'),
+    text: 'Нормально',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 't6'),
+    text: 'Не очень :(',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 'glad-to-hear'),
+    text: 'Рад это слышать :)',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 'whats-wrong'),
+    text: 'Мне жаль! Что случилось?',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 't11'),
+    text: 'У меня закончился чай',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 't12'),
+    text: 'Я не хочу говорить об этом',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 'come-for-tea'),
+    text: 'Пошли, у меня есть чай с чак-чаком',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 'will-bring'),
+    text: 'Спасибо, я присоединюсь и принесу чай с чакчаком',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 't15'),
+    text: 'Не-а. Я терпеть не могу чак-чак!',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 't16'),
+    text: 'Замечательно! Ты хороший друг',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 'lose'),
+    text: ':(',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 'win'),
+    text: ':D',
+  ),
+];
