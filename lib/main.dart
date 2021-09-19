@@ -58,6 +58,7 @@ class _AppState extends State<App> {
       title: 'Andax',
       theme: themes[0],
       darkTheme: themes[1],
+      debugShowCheckedModeBanner: false,
       home: FutureBuilder(
           // Initialize FlutterFire:
           future: firebase,
