@@ -80,9 +80,28 @@ class _PlayScreenState extends State<PlayScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          getTranslation<ScenarioTranslation>(
+            translations,
+            'scenario',
+            (t) => t.title,
+          ),
+        ),
+        actions: [
+          Center(
+            child: Text(
+              'Score: $totalScore',
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.white,
+              ),
+            ),
+          )
+        ],
+      ),
       body: ListView(
         children: [
-          Center(child: Text('Score: $totalScore')),
           HappinessSlider(value: totalScore),
           for (var i = 0; i < storyline.length; i++)
             NodeCard(

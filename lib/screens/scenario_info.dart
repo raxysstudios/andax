@@ -58,23 +58,29 @@ class _ScenarioInfoScreenState extends State<ScenarioInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Scenario')),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
+      appBar: AppBar(
+        title: Text(widget.scenarioInfo.title),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          setState(() {
+            loading = true;
+          });
+          loadScenario();
+        },
+        icon: const Icon(Icons.play_arrow_outlined),
+        label: const Text('Play'),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
         children: [
-          Text(widget.scenarioInfo.title),
           if (widget.scenarioInfo.description != null)
-            Text(widget.scenarioInfo.description!),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                loading = true;
-              });
-              loadScenario();
-            },
-            child: loading ? CircularProgressIndicator() : Text('Play'),
-          ),
+            Text(
+              widget.scenarioInfo.description!,
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
         ],
       ),
     );
