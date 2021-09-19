@@ -1,5 +1,6 @@
 import 'package:andax/widgets/add_new_node.dart';
 import 'package:andax/widgets/node_preview.dart';
+import 'package:andax/widgets/node_view.dart';
 import 'package:flutter/material.dart';
 
 class EditorScreen extends StatefulWidget {
@@ -43,6 +44,7 @@ class _EditorScreenState extends State<EditorScreen> {
           SizedBox(height: 16),
           AddNewNode(),
           NodePreview(text: "Hello my friend", id: 1),
+          NodeView(),
         ],
       ),
     );
