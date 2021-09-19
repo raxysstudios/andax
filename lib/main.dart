@@ -35,23 +35,18 @@ class _AppState extends State<App> {
     return [
       ThemeData(
         primaryColor: Colors.white,
+        accentColor: Colors.grey,
         toggleableActiveColor: theme.colorScheme.primary,
         scaffoldBackgroundColor: Colors.blueGrey.shade50,
         floatingActionButtonTheme: floatingActionButtonTheme,
         cardTheme: cardTheme,
-        colorScheme: ColorScheme.fromSwatch().copyWith(
-          secondary: Colors.grey,
-          brightness: Brightness.light,
-        ),
       ),
       ThemeData(
+        brightness: Brightness.dark,
+        accentColor: Colors.grey,
         toggleableActiveColor: theme.colorScheme.primary,
         floatingActionButtonTheme: floatingActionButtonTheme,
         cardTheme: cardTheme,
-        colorScheme: ColorScheme.fromSwatch().copyWith(
-          secondary: Colors.grey,
-          brightness: Brightness.dark,
-        ),
       ),
     ];
   }
