@@ -6,6 +6,7 @@ import 'package:andax/models/scenario.dart';
 import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/utils.dart';
+import 'package:andax/widgets/happiness_slider.dart';
 import 'package:andax/widgets/node_card.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +29,7 @@ class _PlayScreenState extends State<PlayScreen> {
   late final Map<String, Actor> actors;
   late Node currentNode;
   final List<Node> storyline = [];
-  int totalScore = 0;
+  int totalScore = 50;
 
   Timer? autoAdvance;
   bool isFinished = false;
@@ -82,6 +83,7 @@ class _PlayScreenState extends State<PlayScreen> {
       body: ListView(
         children: [
           Center(child: Text('Score: $totalScore')),
+          HappinessSlider(value: totalScore),
           for (var i = 0; i < storyline.length; i++)
             NodeCard(
               node: storyline[i],
