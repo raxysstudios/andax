@@ -29,17 +29,18 @@ abstract class TranslationAsset {
         return MessageTranslation(
           text: json['text'],
           audioUrl: json['audioUrl'],
-          metaData: ContentMetaData.fromJson(json, id: id),
+          metaData: ContentMetaData.fromJson(json['metaData'], id: id),
         );
       case AssetType.Actor:
         return ActorTranslation(
           name: json['name'],
-          metaData: ContentMetaData.fromJson(json, id: id),
+          metaData: ContentMetaData.fromJson(json['metaData'], id: id),
         );
-      case AssetType.Actor:
-        return ActorTranslation(
-          name: json['name'],
-          metaData: ContentMetaData.fromJson(json, id: id),
+      case AssetType.Scenario:
+        return ScenarioTranslation(
+          title: json['title'],
+          description: json['description'],
+          metaData: ContentMetaData.fromJson(json['metaData'], id: id),
         );
       default:
         return MessageTranslation(
