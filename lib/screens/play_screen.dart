@@ -58,7 +58,7 @@ class _PlayScreenState extends State<PlayScreen> {
     setState(() {
       autoAdvance?.cancel();
       storyline.add(currentNode);
-      totalScore += transition.score;
+      totalScore = max(0, min(totalScore + transition.score, 100));
       currentNode = nodes[transition.targetNodeId]!;
       if (currentNode.endingType != null) isFinished = true;
       if (currentNode.autoTransition && currentNode.transitions != null)
