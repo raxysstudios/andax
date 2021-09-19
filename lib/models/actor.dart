@@ -26,6 +26,6 @@ class Actor {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'type': type,
+        'type': EnumToString.convertToString(type),
       };
 }

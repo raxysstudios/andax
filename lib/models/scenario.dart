@@ -39,8 +39,8 @@ class Scenario {
   Map<String, dynamic> toJson() {
     return {
       'startNodeId': startNodeId,
-      'nodes': nodes.map((n) => n.toJson()),
-      'actors': actors.map((a) => a.toJson()),
+      'nodes': nodes.map((n) => n.toJson()).toList(),
+      'actors': actors.map((a) => a.toJson()).toList(),
       'metaData': metaData.toJson(),
     };
   }

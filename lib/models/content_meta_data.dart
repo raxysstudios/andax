@@ -1,4 +1,5 @@
 import 'package:andax/utils.dart';
+import 'package:enum_to_string/enum_to_string.dart';
 
 enum ContentStatus { public, unlisted, private, pending }
 
@@ -28,6 +29,9 @@ class ContentMetaData {
           ),
           lastUpdateAt: json['lastUpdateAt'].toDate(),
           likes: json['likes'] ?? 0,
+          status: EnumToString.fromString(
+                  ContentStatus.values, json['status'] ?? '') ??
+              ContentStatus.private,
         );
 
   Map<String, dynamic> toJson() {
@@ -35,7 +39,7 @@ class ContentMetaData {
       'contributorsIds': contributorsIds,
       'lastUpdateAt': lastUpdateAt.millisecondsSinceEpoch,
       'likes': likes,
-      'status': status,
+      'status': EnumToString.convertToString(status),
     };
   }
 }
