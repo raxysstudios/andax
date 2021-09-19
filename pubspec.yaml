@@ -35,6 +35,8 @@ dependencies:
   enum_to_string: ^2.0.1
   pull_to_refresh: ^2.0.0
   dotted_border: ^2.0.0+1
+  flutter_xlider:
+    git: https://github.com/Ali-Azmoud/flutter_xlider.git
 
 dev_dependencies:
   flutter_test:
