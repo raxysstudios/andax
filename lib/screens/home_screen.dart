@@ -1,3 +1,4 @@
+import 'package:andax/main.dart';
 import 'package:andax/screens/editor_screen.dart';
 import 'package:andax/screens/scenario_info.dart';
 import 'package:andax/screens/settings_screen.dart';
@@ -20,43 +21,22 @@ class _HomeScreenState extends State<HomeScreen> {
   );
   List<ScenarioInfo> scenarios = [];
 
-  Future<ScenarioInfo> loadScenarioInfo(Scenario scenario) async {
-    final id = scenario.metaData.id;
-    print('Loading scenario info for $id');
-    final assetsCollection = FirebaseFirestore.instance.collection(
-        'scenarios/$id/translations/${settings.currentLanguage}/assets');
-    final scenarioSnapshot = await assetsCollection
-        .doc('scenario')
-        .withConverter<ScenarioInfo>(
-            fromFirestore: (snapshot, _) => ScenarioInfo(
-                  id: snapshot.id,
-                  title: snapshot.data()!['title'],
-                  description: snapshot.data()!['description'],
-                ),
-            toFirestore: (item, _) => {
-                  'title': item.title,
-                  'description': item.description,
-                })
-        .get();
-    if (!scenarioSnapshot.exists) {
-      throw new ArgumentError('Scenario $id information not found');
-    }
-    return scenarioSnapshot.data()!;
-  }
-
-  Future<void> refreshScenarios() async {
-    final snapshot = await FirebaseFirestore.instance
-        .collection('scenarios')
-        .withConverter(
-          fromFirestore: (snapshot, _) =>
-              Scenario.fromJson(snapshot.data()!, id: snapshot.id),
-          toFirestore: (Scenario object, _) => object.toJson(),
-        )
-        .get();
-    print('Scenarios: ${snapshot.docs}');
-    final data = snapshot.docs.map((d) => d.data());
-    scenarios = await Future.wait(data.map(loadScenarioInfo));
-    setState(() {});
+  void refreshScenarios() async {
+    final scenarios = await algolia.instance
+        .index('scenarios')
+        .query('')
+        .filters('language:${settings.currentLanguage}')
+        .getObjects()
+        .then(
+          (s) => s.hits.map(
+            (h) => ScenarioInfo.fromAlgoliaHit(h),
+          ),
+        );
+    setState(
+      () => this.scenarios
+        ..clear()
+        ..addAll(scenarios),
+    );
     refreshController.refreshCompleted();
   }
 
@@ -96,13 +76,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      subtitle: Text(scenario.description),
+                      subtitle: scenario.description == null
+                          ? null
+                          : Text(scenario.description!),
                       onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ScenarioInfoScreen(
-                            scenarioInfo: scenario,
-                          ),
+                          builder: (_) => ScenarioInfoScreen(scenario),
                         ),
                       ),
                     )
@@ -113,15 +93,13 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add_circle),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => EditorScreen(),
-            ),
-          );
-        },
+        child: Icon(Icons.add_circle_outline),
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => EditorScreen(),
+          ),
+        ),
       ),
     );
   }

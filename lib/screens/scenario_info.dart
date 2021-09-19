@@ -5,8 +5,7 @@ import 'package:andax/models/scenario.dart';
 class ScenarioInfoScreen extends StatelessWidget {
   final ScenarioInfo scenarioInfo;
 
-  const ScenarioInfoScreen({Key? key, required this.scenarioInfo})
-      : super(key: key);
+  const ScenarioInfoScreen(this.scenarioInfo);
 
   @override
   Widget build(BuildContext context) {
@@ -17,14 +16,15 @@ class ScenarioInfoScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Text(scenarioInfo.title),
-          Text(scenarioInfo.description),
+          if (scenarioInfo.description != null) Text(scenarioInfo.description!),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
+              print('SCNR TAP');
               // Navigator.push(
               //           context,
               //           MaterialPageRoute(
-              //             builder: (context) => PlayScreen(scenario: scenario, translations: []),
-              //           );
+              //             builder: (_) => PlayScreen(scenario: scenario, translations: [,]),
+              //           ),);
             },
             child: Text('Play'),
           ),

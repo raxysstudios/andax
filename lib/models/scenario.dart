@@ -2,6 +2,7 @@ import 'package:andax/utils.dart';
 import 'actor.dart';
 import 'content_meta_data.dart';
 import 'node.dart';
+import 'package:algolia/algolia.dart';
 
 class Scenario {
   List<Node> nodes;
@@ -46,13 +47,25 @@ class Scenario {
 }
 
 class ScenarioInfo {
-  final String id;
+  final String scenarioID;
+  final String translationID;
   final String title;
-  final String description;
+  final String? description;
 
-  ScenarioInfo({
-    required this.id,
+  const ScenarioInfo({
+    required this.scenarioID,
+    required this.translationID,
     required this.title,
-    required this.description,
+    this.description,
   });
+
+  factory ScenarioInfo.fromAlgoliaHit(AlgoliaObjectSnapshot hit) {
+    final json = hit.data;
+    return ScenarioInfo(
+      scenarioID: json['scenarioID'],
+      translationID: json['translationID'],
+      title: json['title'],
+      description: json['description'],
+    );
+  }
 }
