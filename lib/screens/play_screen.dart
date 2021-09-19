@@ -53,12 +53,12 @@ class _PlayScreenState extends State<PlayScreen> {
       moveAuto(currentNode.transitions!);
   }
 
-  void advanceStory([Transition? transition]) {
+  void advanceStory(Transition transition) {
     setState(() {
       autoAdvance?.cancel();
       storyline.add(currentNode);
-      totalScore += transition?.score ?? 0;
-      currentNode = nodes[transition!.targetNodeId]!;
+      totalScore += transition.score;
+      currentNode = nodes[transition.targetNodeId]!;
       if (currentNode.endingType != null) isFinished = true;
       if (currentNode.autoTransition && currentNode.transitions != null)
         moveAuto(currentNode.transitions!);
