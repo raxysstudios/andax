@@ -16,7 +16,7 @@ class ScenarioInfoScreen extends StatefulWidget {
 class _ScenarioInfoScreenState extends State<ScenarioInfoScreen> {
   bool loading = false;
 
-  void loadScenario() async {
+  Future<void> loadScenario() async {
     final db = FirebaseFirestore.instance;
     final doc = await db
         .doc('scenarios/${widget.scenarioInfo.scenarioID}')
@@ -44,7 +44,7 @@ class _ScenarioInfoScreenState extends State<ScenarioInfoScreen> {
     final assets = collection.docs.map((doc) => doc.data());
     final translations = assets.toList();
 
-    Navigator.push(
+    await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => PlayScreen(
@@ -62,14 +62,28 @@ class _ScenarioInfoScreenState extends State<ScenarioInfoScreen> {
         title: Text(widget.scenarioInfo.title),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
+        onPressed: () async {
           setState(() {
             loading = true;
           });
-          loadScenario();
+          await loadScenario();
+          setState(() {
+            loading = false;
+          });
         },
-        icon: const Icon(Icons.play_arrow_outlined),
-        label: const Text('Play'),
+        icon: loading
+            ? Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                ),
+              )
+            : const Icon(Icons.play_arrow_outlined),
+        label: loading ? const Text('Loading') : const Text('Play'),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
