@@ -1,4 +1,5 @@
 import 'package:andax/models/translation_asset.dart';
+import 'package:andax/screens/crowdsourcing_screen.dart';
 import 'package:andax/screens/play_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +43,7 @@ class _ScenarioInfoScreenState extends State<ScenarioInfoScreen> {
         )
         .get();
     final assets = collection.docs.map((doc) => doc.data());
-    final translations = assets.toList();
+    final translations = await getTranslations();
 
     await Navigator.push(
       context,
@@ -55,11 +56,42 @@ class _ScenarioInfoScreenState extends State<ScenarioInfoScreen> {
     );
   }
 
+  Future<List<TranslationAsset>> getTranslations() async {
+    final collection = await FirebaseFirestore.instance
+        .collection(
+            'scenarios/${widget.scenarioInfo.scenarioID}/translations/${widget.scenarioInfo.translationID}/assets')
+        .withConverter<TranslationAsset>(
+          fromFirestore: (snapshot, _) =>
+              TranslationAsset.fromJson(snapshot.data()!, snapshot.id),
+          toFirestore: (scenario, _) => scenario.toJson(),
+        )
+        .get();
+    final assets = collection.docs.map((doc) => doc.data());
+    return assets.toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.scenarioInfo.title),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              final translations = await getTranslations();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => CrowdsourcingScreen(
+                    scenarioId: widget.scenarioInfo.scenarioID,
+                    translations: translations,
+                  ),
+                ),
+              );
+            },
+            icon: Icon(Icons.edit_outlined),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
