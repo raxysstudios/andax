@@ -44,7 +44,7 @@ final testScenario = Scenario(
         Transition(id: 't7', targetNodeId: 'glad-to-hear'),
       ]),
       Node(id: 'normal', actorId: 'player', transitions: [
-        Transition(id: 't8', targetNodeId: 'glad-to-hear'),
+        Transition(id: 't7', targetNodeId: 'glad-to-hear'),
       ]),
       Node(id: 'sad', actorId: 'player', transitions: [
         Transition(id: 't9', targetNodeId: 'whats-wrong'),
@@ -137,6 +137,10 @@ final testTranslations = <TranslationAsset>[
     text: 'How are you doing?',
   ),
   MessageTranslation(
+    metaData: ContentMetaData(id: 't3'),
+    text: 'How are you doing?',
+  ),
+  MessageTranslation(
     metaData: ContentMetaData(id: 't4'),
     text: 'I am doing fine',
   ),
@@ -153,7 +157,15 @@ final testTranslations = <TranslationAsset>[
     text: 'I am glad to hear that :)',
   ),
   MessageTranslation(
+    metaData: ContentMetaData(id: 't7'),
+    text: 'I am glad to hear that :)',
+  ),
+  MessageTranslation(
     metaData: ContentMetaData(id: 'whats-wrong'),
+    text: 'Oh no! What is wrong?',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 't9'),
     text: 'Oh no! What is wrong?',
   ),
   MessageTranslation(
@@ -169,7 +181,15 @@ final testTranslations = <TranslationAsset>[
     text: 'Come over. I have tea and chakchak',
   ),
   MessageTranslation(
+    metaData: ContentMetaData(id: 't10'),
+    text: 'Come over. I have tea and chakchak',
+  ),
+  MessageTranslation(
     metaData: ContentMetaData(id: 'will-bring'),
+    text: 'I will come over. I will bring tea and Chakchak',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 't13'),
     text: 'I will come over. I will bring tea and Chakchak',
   ),
   MessageTranslation(
@@ -200,8 +220,16 @@ final testTranslationsRu = <TranslationAsset>[
     text: 'Ассаламу алейкум!',
   ),
   MessageTranslation(
+    metaData: ContentMetaData(id: 'salam'),
+    text: 'Ваалейкум ассалам!',
+  ),
+  MessageTranslation(
     metaData: ContentMetaData(id: 't1'),
     text: 'Ваалейкум ассалам!',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 'hi'),
+    text: 'Привет!',
   ),
   MessageTranslation(
     metaData: ContentMetaData(id: 't2'),
@@ -212,12 +240,28 @@ final testTranslationsRu = <TranslationAsset>[
     text: 'Как поживаешь?',
   ),
   MessageTranslation(
+    metaData: ContentMetaData(id: 't3'),
+    text: 'Как поживаешь?',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 'happy'),
+    text: 'Всё впорядке.',
+  ),
+  MessageTranslation(
     metaData: ContentMetaData(id: 't4'),
     text: 'Всё впорядке.',
   ),
   MessageTranslation(
+    metaData: ContentMetaData(id: 'normal'),
+    text: 'Нормально',
+  ),
+  MessageTranslation(
     metaData: ContentMetaData(id: 't5'),
     text: 'Нормально',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 'sad'),
+    text: 'Не очень :(',
   ),
   MessageTranslation(
     metaData: ContentMetaData(id: 't6'),
@@ -228,12 +272,32 @@ final testTranslationsRu = <TranslationAsset>[
     text: 'Рад это слышать :)',
   ),
   MessageTranslation(
+    metaData: ContentMetaData(id: 't7'),
+    text: 'Рад это слышать :)',
+  ),
+  MessageTranslation(
     metaData: ContentMetaData(id: 'whats-wrong'),
     text: 'Мне жаль! Что случилось?',
   ),
   MessageTranslation(
+    metaData: ContentMetaData(id: 't9'),
+    text: 'Мне жаль! Что случилось?',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 'out-of-tea'),
+    text: 'У меня закончился чай',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 'out-of-tea'),
+    text: 'У меня закончился чай',
+  ),
+  MessageTranslation(
     metaData: ContentMetaData(id: 't11'),
     text: 'У меня закончился чай',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 'wont-talk'),
+    text: 'Я не хочу говорить об этом',
   ),
   MessageTranslation(
     metaData: ContentMetaData(id: 't12'),
@@ -244,12 +308,24 @@ final testTranslationsRu = <TranslationAsset>[
     text: 'Пошли, у меня есть чай с чак-чаком',
   ),
   MessageTranslation(
+    metaData: ContentMetaData(id: 't10'),
+    text: 'Пошли, у меня есть чай с чак-чаком',
+  ),
+  MessageTranslation(
     metaData: ContentMetaData(id: 'will-bring'),
     text: 'Спасибо, я присоединюсь и принесу чай с чакчаком',
   ),
   MessageTranslation(
+    metaData: ContentMetaData(id: 'hate-chakchak'),
+    text: 'Не-а. Я терпеть не могу чак-чак!',
+  ),
+  MessageTranslation(
     metaData: ContentMetaData(id: 't15'),
     text: 'Не-а. Я терпеть не могу чак-чак!',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData(id: 'thank-you'),
+    text: 'Замечательно! Ты хороший друг',
   ),
   MessageTranslation(
     metaData: ContentMetaData(id: 't16'),

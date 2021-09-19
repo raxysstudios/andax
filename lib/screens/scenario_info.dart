@@ -51,7 +51,7 @@ class _ScenarioInfoScreenState extends State<ScenarioInfoScreen> {
       MaterialPageRoute(
         builder: (_) => PlayScreen(
           scenario: testScenario,
-          translations: testTranslations,
+          translations: testTranslationsRu,
         ),
       ),
     );
