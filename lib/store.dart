@@ -1,3 +1,3 @@
 import 'package:andax/models/settings.dart';
 
-final settings = Settings(currentLanguage: 'english');
+final settings = Settings(targetLanguage: 'english', nativeLanguage: 'russian');
