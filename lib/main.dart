@@ -4,7 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
 
-late final algolia;
+late final Algolia algolia;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
