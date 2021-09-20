@@ -24,31 +24,33 @@ abstract class TranslationAsset {
       AssetType.values,
       json['assetType'],
     );
+    final metaData = ContentMetaData.fromJson(
+      json['metaData'],
+      id: id,
+    );
+
     switch (type) {
       case AssetType.message:
         return MessageTranslation(
           text: json['text'],
           audioUrl: json['audioUrl'],
-          metaData: ContentMetaData.fromJson(json['metaData'], id: id),
+          metaData: metaData,
         );
       case AssetType.actor:
         return ActorTranslation(
           name: json['name'],
-          metaData: ContentMetaData.fromJson(json['metaData'], id: id),
+          metaData: metaData,
         );
       case AssetType.scenario:
         return ScenarioTranslation(
           title: json['title'],
           description: json['description'],
-          metaData: ContentMetaData.fromJson(json['metaData'], id: id),
+          metaData: metaData,
         );
       default:
         return MessageTranslation(
           text: 'ERROR',
-          metaData: ContentMetaData(
-            id: id,
-            lastUpdateAt: DateTime.fromMillisecondsSinceEpoch(1),
-          ),
+          metaData: metaData,
         );
     }
   }
@@ -56,7 +58,7 @@ abstract class TranslationAsset {
   Map<String, dynamic> toJson() {
     final type = EnumToString.convertToString(assetType);
     return {
-      'type': type,
+      'assetType': type,
       'metaData': metaData.toJson(),
     };
   }
