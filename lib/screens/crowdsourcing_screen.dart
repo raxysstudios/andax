@@ -74,26 +74,36 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
       onTap: () async {
         var result = '';
         await showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return SimpleDialog(
-                title: Text(
-                  'Translate $title',
-                ),
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Translate $title'),
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(origin),
-                  TextFormField(
-                    onChanged: (s) {
-                      result = s;
-                    },
+                  Text(
+                    origin,
+                    style: Theme.of(context).textTheme.caption,
                   ),
-                  SimpleDialogOption(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('Done'),
+                  Expanded(
+                    child: TextFormField(
+                      maxLines: null,
+                      onChanged: (s) {
+                        result = s;
+                      },
+                    ),
                   ),
                 ],
-              );
-            });
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('DONE'),
+                ),
+              ],
+            );
+          },
+        );
         setState(() => onEdit(result));
       },
     );
