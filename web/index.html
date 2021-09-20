@@ -68,6 +68,14 @@
         // Wait for registration to finish before dropping the <script> tag.
         // Otherwise, the browser will load the script multiple times,
         // potentially different versions.
+
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('../firebase-messaging-sw.js')
+            .then(function (registration) {
+              console.log("Service Worker Registered");
+              messaging.useServiceWorker(registration);
+            });
+        }
         var serviceWorkerUrl = 'flutter_service_worker.js?v=' + serviceWorkerVersion;
         navigator.serviceWorker.register(serviceWorkerUrl)
           .then((reg) => {
