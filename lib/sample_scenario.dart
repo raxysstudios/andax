@@ -127,7 +127,7 @@ final testTranslations = <TranslationAsset>[
   ScenarioTranslation(
     title: 'Meeting with friend',
     description: 'Chak-Chack and tea, one day from the life of Tatar.',
-    metaData: ContentMetaData('tatar'),
+    metaData: ContentMetaData('scenario'),
   ),
   MessageTranslation(
     metaData: ContentMetaData('greeting'),
@@ -231,7 +231,7 @@ final testTranslationsRu = <TranslationAsset>[
   ScenarioTranslation(
     title: 'Встреча с другом',
     description: 'Чак-чак и чай, один день из жизни татарина.',
-    metaData: ContentMetaData('tatar'),
+    metaData: ContentMetaData('scenario'),
   ),
   MessageTranslation(
     metaData: ContentMetaData('greeting'),

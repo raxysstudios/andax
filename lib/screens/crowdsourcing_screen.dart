@@ -19,24 +19,10 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
   late final Map<String, TranslationAsset> translations;
   late final Map<String, TranslationAsset> origins;
   String language = '';
-  List<String> ids = [];
 
   @override
   void initState() {
     super.initState();
-    final sorted = [...widget.translations];
-    sorted.sort(
-      (a, b) {
-        final e = const [
-          AssetType.scenario,
-          AssetType.actor,
-          AssetType.message,
-        ];
-        return e.indexOf(a.assetType) - e.indexOf(b.assetType);
-      },
-    );
-    ids = sorted.map((t) => t.metaData.id).toList();
-
     origins = {
       for (final translation in widget.translations)
         translation.metaData.id: translation,
@@ -202,7 +188,18 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
               language = r;
             },
           ),
-          for (final id in ids) buildFields(id)
+          Divider(height: 0),
+          buildFields('scenario'),
+          Divider(height: 0),
+          for (final a in translations.values.where(
+            (w) => w.assetType == AssetType.actor,
+          ))
+            buildFields(a.metaData.id),
+          Divider(height: 0),
+          for (final a in translations.values.where(
+            (w) => w.assetType == AssetType.message,
+          ))
+            buildFields(a.metaData.id),
         ],
       ),
     );
