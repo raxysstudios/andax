@@ -1,6 +1,6 @@
 import 'package:andax/models/content_meta_data.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 
 class CrowdsourcingScreen extends StatefulWidget {
@@ -20,16 +20,28 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
   late final Map<String, TranslationAsset> translations;
   late final Map<String, TranslationAsset> origins;
   String language = '';
+  List<String> ids = [];
 
   @override
   void initState() {
     super.initState();
+    final sorted = [...widget.translations];
+    sorted.sort(
+      (a, b) {
+        final e = const [
+          AssetType.scenario,
+          AssetType.actor,
+          AssetType.message,
+        ];
+        return e.indexOf(a.assetType) - e.indexOf(b.assetType);
+      },
+    );
+    ids = sorted.map((t) => t.metaData.id).toList();
+
     origins = {
       for (final translation in widget.translations)
         translation.metaData.id: translation,
     };
-    print('ORG');
-
     translations = {
       for (final translation in widget.translations)
         translation.metaData.id: TranslationAsset.fromJson(
@@ -37,95 +49,125 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
           translation.metaData.id,
         ),
     };
-    print('TRS');
   }
 
-  List<Widget> buildFields(String id) {
+  Widget buildTranslatable(
+    String? origin,
+    String? translation, {
+    String? title,
+    required IconData icon,
+    required ValueSetter<String> onEdit,
+  }) {
+    if (origin?.isEmpty ?? true) return SizedBox();
+    return ListTile(
+      leading: Icon(icon),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            origin!,
+            style: Theme.of(context).textTheme.caption,
+          ),
+          if (translation != null) Text(translation),
+        ],
+      ),
+      onTap: () async {
+        var result = '';
+        await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return SimpleDialog(
+                title: Text(
+                  'Translate $title',
+                ),
+                children: [
+                  Text(origin),
+                  TextFormField(
+                    onChanged: (s) {
+                      result = s;
+                    },
+                  ),
+                  SimpleDialogOption(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Done'),
+                  ),
+                ],
+              );
+            });
+        setState(() => onEdit(result));
+      },
+    );
+  }
+
+  Widget buildFields(String id) {
     final type = origins[id]!.assetType;
     switch (type) {
-      case AssetType.actor:
-        final origin = origins[id] as ActorTranslation;
-        return [
-          Text('Actor'),
-          TextFormField(
-            initialValue: origin.name,
-            readOnly: true,
-          ),
-          TextFormField(
-            onChanged: (s) {
-              translations[id] = ActorTranslation(
-                name: s,
-                metaData: ContentMetaData(
-                  id: id,
-                  lastUpdateAt: Timestamp.now(),
-                ),
-              );
-            },
-          ),
-        ];
       case AssetType.message:
         final origin = origins[id] as MessageTranslation;
-        return [
-          Text('Node \ Transition'),
-          TextFormField(
-            initialValue: origin.text,
-            readOnly: true,
-          ),
-          TextFormField(
-            onChanged: (s) {
-              translations[id] = MessageTranslation(
-                text: s,
-                metaData: ContentMetaData(
-                  id: id,
-                  lastUpdateAt: Timestamp.now(),
-                ),
-              );
-            },
-          ),
-        ];
+        final translation = translations[id] as MessageTranslation;
+        return buildTranslatable(
+          origin.text,
+          translation.text,
+          icon: Icons.notes_outlined,
+          title: 'message',
+          onEdit: (r) {
+            translations[id] = MessageTranslation(
+              text: r,
+              metaData: ContentMetaData(id),
+            );
+          },
+        );
+      case AssetType.actor:
+        final origin = origins[id] as ActorTranslation;
+        final translation = translations[id] as ActorTranslation;
+        return buildTranslatable(
+          origin.name,
+          translation.name,
+          icon: Icons.person_outline,
+          title: 'actor',
+          onEdit: (r) {
+            translations[id] = ActorTranslation(
+              name: r,
+              metaData: ContentMetaData(id),
+            );
+          },
+        );
       case AssetType.scenario:
         final origin = origins[id] as ScenarioTranslation;
-        return [
-          Text('Title'),
-          TextFormField(
-            initialValue: origin.title,
-            readOnly: true,
-          ),
-          TextFormField(
-            onChanged: (s) {
-              final translation = translations[id] as ScenarioTranslation;
-              translations[id] = ScenarioTranslation(
-                title: s,
-                description: translation.description,
-                metaData: ContentMetaData(
-                  id: id,
-                  lastUpdateAt: Timestamp.now(),
-                ),
-              );
-            },
-          ),
-          Text('Description'),
-          TextFormField(
-            initialValue: origin.description,
-            readOnly: true,
-          ),
-          TextFormField(
-            onChanged: (s) {
-              final translation = translations[id] as ScenarioTranslation;
-              translations[id] = ScenarioTranslation(
-                title: translation.title,
-                description: s,
-                metaData: ContentMetaData(
-                  id: id,
-                  lastUpdateAt: Timestamp.now(),
-                ),
-              );
-            },
-          ),
-        ];
+        final translation = translations[id] as ScenarioTranslation;
+        return Column(
+          children: [
+            buildTranslatable(
+              origin.title,
+              translation.title,
+              icon: Icons.title_outlined,
+              title: 'scenario title',
+              onEdit: (r) {
+                translations[id] = ScenarioTranslation(
+                  title: r,
+                  description: translation.description,
+                  metaData: ContentMetaData(id),
+                );
+              },
+            ),
+            buildTranslatable(
+              origin.description,
+              translation.description,
+              icon: Icons.description_outlined,
+              title: 'scenario description',
+              onEdit: (r) {
+                translations[id] = ScenarioTranslation(
+                  title: translation.title,
+                  description: r,
+                  metaData: ContentMetaData(id),
+                );
+              },
+            ),
+          ],
+        );
       default:
+        return SizedBox();
     }
-    return [];
   }
 
   @override
@@ -137,20 +179,17 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
         label: Text("Upload"),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
         children: [
-          Text('Language'),
-          TextFormField(
-            onChanged: (s) {
-              language = s;
+          buildTranslatable(
+            'language',
+            language,
+            icon: Icons.language_outlined,
+            title: 'language',
+            onEdit: (r) {
+              language = r;
             },
           ),
-          for (final id in translations.keys)
-            Card(
-              child: Column(
-                children: buildFields(id),
-              ),
-            ),
+          for (final id in ids) buildFields(id)
         ],
       ),
     );

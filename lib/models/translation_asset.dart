@@ -55,13 +55,10 @@ abstract class TranslationAsset {
     }
   }
 
-  Map<String, dynamic> toJson() {
-    final type = EnumToString.convertToString(assetType);
-    return {
-      'assetType': type,
-      'metaData': metaData.toJson(),
-    };
-  }
+  Map<String, dynamic> toJson() => {
+        'assetType': EnumToString.convertToString(assetType),
+        'metaData': metaData.toJson(),
+      };
 }
 
 class ScenarioTranslation extends TranslationAsset {
@@ -108,7 +105,7 @@ class ActorTranslation extends TranslationAsset {
   const ActorTranslation({
     required this.name,
     required ContentMetaData metaData,
-  }) : super(metaData: metaData, assetType: AssetType.message);
+  }) : super(metaData: metaData, assetType: AssetType.actor);
 
   Map<String, dynamic> toJson() {
     return super.toJson()

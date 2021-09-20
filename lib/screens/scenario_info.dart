@@ -58,17 +58,18 @@ class _ScenarioInfoScreenState extends State<ScenarioInfoScreen> {
   }
 
   Future<List<TranslationAsset>> getTranslations() async {
-    final collection = await FirebaseFirestore.instance
-        .collection(
-            'scenarios/${widget.scenarioInfo.scenarioID}/translations/${widget.scenarioInfo.translationID}/assets')
-        .withConverter<TranslationAsset>(
-          fromFirestore: (snapshot, _) =>
-              TranslationAsset.fromJson(snapshot.data()!, snapshot.id),
-          toFirestore: (scenario, _) => scenario.toJson(),
-        )
-        .get();
-    final assets = collection.docs.map((doc) => doc.data());
-    return assets.toList();
+    // final collection = await FirebaseFirestore.instance
+    //     .collection(
+    //         'scenarios/${widget.scenarioInfo.scenarioID}/translations/${widget.scenarioInfo.translationID}/assets')
+    //     .withConverter<TranslationAsset>(
+    //       fromFirestore: (snapshot, _) =>
+    //           TranslationAsset.fromJson(snapshot.data()!, snapshot.id),
+    //       toFirestore: (scenario, _) => scenario.toJson(),
+    //     )
+    //     .get();
+    // final assets = collection.docs.map((doc) => doc.data());
+    // return assets.toList();
+    return testTranslationsRu;
   }
 
   @override

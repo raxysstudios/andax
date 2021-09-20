@@ -11,8 +11,8 @@ class ContentMetaData {
   int likes;
   ContentStatus status;
 
-  ContentMetaData({
-    required this.id,
+  ContentMetaData(
+    this.id, {
     Timestamp? lastUpdateAt,
     this.contributorsIds = const [],
     this.likes = 0,
@@ -23,7 +23,7 @@ class ContentMetaData {
     Map<String, dynamic> json, {
     required String id,
   }) : this(
-          id: id,
+          id,
           contributorsIds: listFromJson(
             json['contributorsIds'],
             (c) => c as String,

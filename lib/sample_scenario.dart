@@ -4,13 +4,9 @@ import 'package:andax/models/node.dart';
 import 'package:andax/models/scenario.dart';
 import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 final testScenario = Scenario(
-    metaData: ContentMetaData(
-      id: 'tatar',
-      lastUpdateAt: Timestamp.now(),
-    ),
+    metaData: ContentMetaData('tatar'),
     startNodeId: 'greeting',
     actors: [
       Actor(id: 'bot'),
@@ -120,101 +116,105 @@ final testScenario = Scenario(
     ]);
 
 final testTranslations = <TranslationAsset>[
-  ActorTranslation(name: 'Friend', metaData: ContentMetaData(id: 'bot')),
-  ActorTranslation(name: 'You', metaData: ContentMetaData(id: 'player')),
+  ActorTranslation(
+    name: 'Friend',
+    metaData: ContentMetaData('bot'),
+  ),
+  ActorTranslation(
+    name: 'You',
+    metaData: ContentMetaData('player'),
+  ),
   ScenarioTranslation(
     title: 'Meeting with friend',
-    metaData: ContentMetaData(
-      id: 'tatar',
-      lastUpdateAt: Timestamp.now(),
-    ),
+    description: 'Chak-Chack and tea, one day from the life of Tatar.',
+    metaData: ContentMetaData('tatar'),
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 'greeting'),
+    metaData: ContentMetaData('greeting'),
     text: 'Assalamu Alaykum!',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't1'),
+    metaData: ContentMetaData('t1'),
     text: 'Waalakum Assalam!',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't2'),
+    metaData: ContentMetaData('t2'),
     text: 'Hi!',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 'how-are-you'),
+    metaData: ContentMetaData('how-are-you'),
     text: 'How are you doing?',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't3'),
+    metaData: ContentMetaData('t3'),
     text: 'How are you doing?',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't4'),
+    metaData: ContentMetaData('t4'),
     text: 'I am doing fine',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't5'),
+    metaData: ContentMetaData('t5'),
     text: 'Normal',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't6'),
+    metaData: ContentMetaData('t6'),
     text: 'I am sad :(',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 'glad-to-hear'),
+    metaData: ContentMetaData('glad-to-hear'),
     text: 'I am glad to hear that :)',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't7'),
+    metaData: ContentMetaData('t7'),
     text: 'I am glad to hear that :)',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 'whats-wrong'),
+    metaData: ContentMetaData('whats-wrong'),
     text: 'Oh no! What is wrong?',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't9'),
+    metaData: ContentMetaData('t9'),
     text: 'Oh no! What is wrong?',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't11'),
+    metaData: ContentMetaData('t11'),
     text: 'I ran out of tea',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't12'),
+    metaData: ContentMetaData('t12'),
     text: 'I do not want to talk',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 'come-for-tea'),
+    metaData: ContentMetaData('come-for-tea'),
     text: 'Come over. I have tea and chakchak',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't10'),
+    metaData: ContentMetaData('t10'),
     text: 'Come over. I have tea and chakchak',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 'will-bring'),
+    metaData: ContentMetaData('will-bring'),
     text: 'I will come over. I will bring tea and Chakchak',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't13'),
+    metaData: ContentMetaData('t13'),
     text: 'I will come over. I will bring tea and Chakchak',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't15'),
+    metaData: ContentMetaData('t15'),
     text: 'No. I hate Chakchak!',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't16'),
+    metaData: ContentMetaData('t16'),
     text: 'Awesome! You are a good friend',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 'lose'),
+    metaData: ContentMetaData('lose'),
     text: ':(',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 'win'),
+    metaData: ContentMetaData('win'),
     text: ':D',
   ),
 ];
@@ -222,141 +222,139 @@ final testTranslations = <TranslationAsset>[
 final testTranslationsRu = <TranslationAsset>[
   ActorTranslation(
     name: 'Friend',
-    metaData: ContentMetaData(id: 'bot'),
+    metaData: ContentMetaData('bot'),
   ),
   ActorTranslation(
     name: 'You',
-    metaData: ContentMetaData(id: 'player'),
+    metaData: ContentMetaData('player'),
   ),
   ScenarioTranslation(
     title: 'Встреча с другом',
-    metaData: ContentMetaData(
-      id: 'tatar',
-      lastUpdateAt: Timestamp.now(),
-    ),
+    description: 'Чак-чак и чай, один день из жизни татарина.',
+    metaData: ContentMetaData('tatar'),
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 'greeting'),
+    metaData: ContentMetaData('greeting'),
     text: 'Ассаламу алейкум!',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 'salam'),
+    metaData: ContentMetaData('salam'),
     text: 'Ваалейкум ассалам!',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't1'),
+    metaData: ContentMetaData('t1'),
     text: 'Ваалейкум ассалам!',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 'hi'),
+    metaData: ContentMetaData('hi'),
     text: 'Привет!',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't2'),
+    metaData: ContentMetaData('t2'),
     text: 'Привет!',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 'how-are-you'),
+    metaData: ContentMetaData('how-are-you'),
     text: 'Как поживаешь?',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't3'),
+    metaData: ContentMetaData('t3'),
     text: 'Как поживаешь?',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 'happy'),
+    metaData: ContentMetaData('happy'),
     text: 'Всё впорядке.',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't4'),
+    metaData: ContentMetaData('t4'),
     text: 'Всё впорядке.',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 'normal'),
+    metaData: ContentMetaData('normal'),
     text: 'Нормально',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't5'),
+    metaData: ContentMetaData('t5'),
     text: 'Нормально',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 'sad'),
+    metaData: ContentMetaData('sad'),
     text: 'Не очень :(',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't6'),
+    metaData: ContentMetaData('t6'),
     text: 'Не очень :(',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 'glad-to-hear'),
+    metaData: ContentMetaData('glad-to-hear'),
     text: 'Рад это слышать :)',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't7'),
+    metaData: ContentMetaData('t7'),
     text: 'Рад это слышать :)',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 'whats-wrong'),
+    metaData: ContentMetaData('whats-wrong'),
     text: 'Мне жаль! Что случилось?',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't9'),
+    metaData: ContentMetaData('t9'),
     text: 'Мне жаль! Что случилось?',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 'out-of-tea'),
+    metaData: ContentMetaData('out-of-tea'),
     text: 'У меня закончился чай',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 'out-of-tea'),
+    metaData: ContentMetaData('out-of-tea'),
     text: 'У меня закончился чай',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't11'),
+    metaData: ContentMetaData('t11'),
     text: 'У меня закончился чай',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 'wont-talk'),
+    metaData: ContentMetaData('wont-talk'),
     text: 'Я не хочу говорить об этом',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't12'),
+    metaData: ContentMetaData('t12'),
     text: 'Я не хочу говорить об этом',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 'come-for-tea'),
+    metaData: ContentMetaData('come-for-tea'),
     text: 'Пошли, у меня есть чай с чак-чаком',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't10'),
+    metaData: ContentMetaData('t10'),
     text: 'Пошли, у меня есть чай с чак-чаком',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 'will-bring'),
+    metaData: ContentMetaData('will-bring'),
     text: 'Спасибо, я присоединюсь и принесу чай с чакчаком',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 'hate-chakchak'),
+    metaData: ContentMetaData('hate-chakchak'),
     text: 'Не-а. Я терпеть не могу чак-чак!',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't15'),
+    metaData: ContentMetaData('t15'),
     text: 'Не-а. Я терпеть не могу чак-чак!',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 'thank-you'),
+    metaData: ContentMetaData('thank-you'),
     text: 'Замечательно! Ты хороший друг',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 't16'),
+    metaData: ContentMetaData('t16'),
     text: 'Замечательно! Ты хороший друг',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 'lose'),
+    metaData: ContentMetaData('lose'),
     text: ':(',
   ),
   MessageTranslation(
-    metaData: ContentMetaData(id: 'win'),
+    metaData: ContentMetaData('win'),
     text: ':D',
   ),
 ];
