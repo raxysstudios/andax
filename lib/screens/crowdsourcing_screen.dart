@@ -1,6 +1,5 @@
 import 'package:andax/models/content_meta_data.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 
 class CrowdsourcingScreen extends StatefulWidget {
@@ -88,6 +87,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
                   Expanded(
                     child: TextFormField(
                       maxLines: null,
+                      initialValue: translation,
                       onChanged: (s) {
                         result = s;
                       },
@@ -183,6 +183,9 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Scenarion translation'),
+      ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {},
         icon: Icon(Icons.upload_outlined),
