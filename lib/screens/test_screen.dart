@@ -1,4 +1,5 @@
 import 'package:andax/models/actor.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'play_screen.dart';
 import '../models/transition.dart';
@@ -89,7 +90,7 @@ class TestScreen extends StatelessWidget {
         metaData: ContentMetaData(
           id: '',
           contributorsIds: [],
-          lastUpdateAt: DateTime.fromMillisecondsSinceEpoch(0),
+          lastUpdateAt: Timestamp.now(),
         ),
       ),
       translations: [

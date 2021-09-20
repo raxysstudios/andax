@@ -4,9 +4,13 @@ import 'package:andax/models/node.dart';
 import 'package:andax/models/scenario.dart';
 import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation_asset.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 final testScenario = Scenario(
-    metaData: ContentMetaData(id: 'tatar', lastUpdateAt: DateTime.now()),
+    metaData: ContentMetaData(
+      id: 'tatar',
+      lastUpdateAt: Timestamp.now(),
+    ),
     startNodeId: 'greeting',
     actors: [
       Actor(id: 'bot'),
@@ -120,7 +124,10 @@ final testTranslations = <TranslationAsset>[
   ActorTranslation(name: 'You', metaData: ContentMetaData(id: 'player')),
   ScenarioTranslation(
     title: 'Meeting with friend',
-    metaData: ContentMetaData(id: 'tatar', lastUpdateAt: DateTime.now()),
+    metaData: ContentMetaData(
+      id: 'tatar',
+      lastUpdateAt: Timestamp.now(),
+    ),
   ),
   MessageTranslation(
     metaData: ContentMetaData(id: 'greeting'),
@@ -213,11 +220,20 @@ final testTranslations = <TranslationAsset>[
 ];
 
 final testTranslationsRu = <TranslationAsset>[
-  ActorTranslation(name: 'Friend', metaData: ContentMetaData(id: 'bot')),
-  ActorTranslation(name: 'You', metaData: ContentMetaData(id: 'player')),
+  ActorTranslation(
+    name: 'Friend',
+    metaData: ContentMetaData(id: 'bot'),
+  ),
+  ActorTranslation(
+    name: 'You',
+    metaData: ContentMetaData(id: 'player'),
+  ),
   ScenarioTranslation(
     title: 'Встреча с другом',
-    metaData: ContentMetaData(id: 'tatar', lastUpdateAt: DateTime.now()),
+    metaData: ContentMetaData(
+      id: 'tatar',
+      lastUpdateAt: Timestamp.now(),
+    ),
   ),
   MessageTranslation(
     metaData: ContentMetaData(id: 'greeting'),

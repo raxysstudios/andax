@@ -1,5 +1,6 @@
 import 'package:andax/models/content_meta_data.dart';
 import 'package:andax/models/translation_asset.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class CrowdsourcingScreen extends StatefulWidget {
@@ -27,6 +28,8 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
       for (final translation in widget.translations)
         translation.metaData.id: translation,
     };
+    print('ORG');
+
     translations = {
       for (final translation in widget.translations)
         translation.metaData.id: TranslationAsset.fromJson(
@@ -34,6 +37,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
           translation.metaData.id,
         ),
     };
+    print('TRS');
   }
 
   List<Widget> buildFields(String id) {
@@ -53,7 +57,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
                 name: s,
                 metaData: ContentMetaData(
                   id: id,
-                  lastUpdateAt: DateTime.fromMillisecondsSinceEpoch(1),
+                  lastUpdateAt: Timestamp.now(),
                 ),
               );
             },
@@ -73,7 +77,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
                 text: s,
                 metaData: ContentMetaData(
                   id: id,
-                  lastUpdateAt: DateTime.fromMillisecondsSinceEpoch(1),
+                  lastUpdateAt: Timestamp.now(),
                 ),
               );
             },
@@ -95,7 +99,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
                 description: translation.description,
                 metaData: ContentMetaData(
                   id: id,
-                  lastUpdateAt: DateTime.fromMillisecondsSinceEpoch(1),
+                  lastUpdateAt: Timestamp.now(),
                 ),
               );
             },
@@ -113,7 +117,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
                 description: s,
                 metaData: ContentMetaData(
                   id: id,
-                  lastUpdateAt: DateTime.fromMillisecondsSinceEpoch(1),
+                  lastUpdateAt: Timestamp.now(),
                 ),
               );
             },
