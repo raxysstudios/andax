@@ -82,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       onTap: () async {
                         final scenario = await loadScenario(info);
                         final translations = await loadTranslations(info);
-                        Navigator.push(
+                        await Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (_) => PlayScreen(
@@ -91,6 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         );
+                        refreshScenarios();
                       },
                       trailing: IconButton(
                         icon: Icon(Icons.edit_outlined),
