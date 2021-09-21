@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
   );
   List<ScenarioInfo> scenarios = [];
 
-  void refreshScenarios() async {
+  Future<void> refreshScenarios() async {
     final scenarios = await algolia.instance
         .index('scenarios')
         .query('')
@@ -91,7 +91,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         );
-                        refreshScenarios();
+                        await refreshScenarios();
+                        refreshController.refreshCompleted();
+                        setState(() {});
                       },
                       trailing: IconButton(
                         icon: Icon(Icons.edit_outlined),
