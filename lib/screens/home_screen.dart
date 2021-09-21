@@ -1,14 +1,17 @@
+import 'package:andax/content_loader.dart';
 import 'package:andax/main.dart';
 import 'package:andax/models/content_meta_data.dart';
 import 'package:andax/models/translation_set.dart';
 import 'package:andax/sample_scenario.dart';
 import 'package:andax/screens/editor_screen.dart';
+import 'package:andax/screens/play_screen.dart';
 import 'package:andax/screens/scenario_info.dart';
 import 'package:andax/screens/settings_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../models/scenario.dart';
+import 'crowdsourcing_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen();
@@ -70,17 +73,39 @@ class _HomeScreenState extends State<HomeScreen> {
               child: ListView(
                 padding: const EdgeInsets.only(bottom: 76),
                 children: [
-                  for (final scenario in scenarios)
+                  for (final info in scenarios)
                     ListTile(
-                      title: Text(scenario.title),
-                      subtitle: scenario.description == null
+                      title: Text(info.title),
+                      subtitle: info.description == null
                           ? null
-                          : Text(scenario.description!),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => ScenarioInfoScreen(scenario),
-                        ),
+                          : Text(info.description!),
+                      onTap: () async {
+                        final scenario = await loadScenario(info);
+                        final translations = await loadTranslations(info);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => PlayScreen(
+                              scenario: scenario,
+                              translations: translations,
+                            ),
+                          ),
+                        );
+                      },
+                      trailing: IconButton(
+                        icon: Icon(Icons.edit_outlined),
+                        onPressed: () async {
+                          final translations = await loadTranslations(info);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => CrowdsourcingScreen(
+                                scenarioId: info.scenarioID,
+                                translations: translations,
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     )
                 ],

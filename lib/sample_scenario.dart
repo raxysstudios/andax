@@ -366,3 +366,135 @@ final testTranslationsRu = <TranslationAsset>[
     text: 'Никогда не стоит говорить татарину что вы ненавидите чак-чак...',
   ),
 ];
+
+final testTranslationsTa = <TranslationAsset>[
+  ActorTranslation(
+    name: 'Дус',
+    metaData: ContentMetaData('bot'),
+  ),
+  ActorTranslation(
+    name: 'Син',
+    metaData: ContentMetaData('player'),
+  ),
+  ScenarioTranslation(
+    title: 'Бер-беребез белән очрашу',
+    description: 'Чәк-чәк һәм чәй, татар тормышыннан бер көн.',
+    metaData: ContentMetaData('scenario'),
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('greeting'),
+    text: 'Ассаламу әләйкум!',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('salam'),
+    text: 'Валейкум ассалам!',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('t1'),
+    text: 'Валейкум ассалам!',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('hi'),
+    text: 'Сәлам!',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('t2'),
+    text: 'Сәлам!',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('how-are-you'),
+    text: 'Ничек яшисең?',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('t3'),
+    text: 'Ничек яшисең?',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('happy'),
+    text: 'Барысы да тәртиптә.',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('t4'),
+    text: 'Барысы да тәртиптә.',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('normal'),
+    text: 'Җирендә.',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('t5'),
+    text: 'Җирендә.',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('sad'),
+    text: 'Бик яхшы :(',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('t6'),
+    text: 'Бик яхшы :(',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('glad-to-hear'),
+    text: 'Моны ишетүемә шатмын :)',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('t7'),
+    text: 'Моны ишетүемә шатмын :)',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('whats-wrong'),
+    text: 'Миңа кызганыч! Ни булды?',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('t9'),
+    text: 'Миңа кызганыч! Ни булды?',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('out-of-tea'),
+    text: 'Минем чәй тәмамланды.',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('t11'),
+    text: 'Минем чәй тәмамланды.',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('wont-talk'),
+    text: 'Мин дә бу хакта сөйләргә теләмим.',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('t12'),
+    text: 'Мин дә бу хакта сөйләргә теләмим.',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('come-for-tea'),
+    text: 'Китте, чәк-чәк белән чәй бар.',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('t10'),
+    text: 'Китте, чәк-чәк белән чәй бар.',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('will-bring'),
+    text: 'Рәхмәт, мин дә кушылам һәм чәк-чәк белән чәй алып кайтам.',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('hate-chakchak'),
+    text: 'Юк, мин чәк-чәккә түзә алмыйм!',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('t15'),
+    text: 'Юк, мин чәк-чәккә түзә алмыйм!',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('thank-you'),
+    text: 'Искиткеч! Син яхшы дус!',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('t16'),
+    text: 'Искиткеч! Син яхшы дус!',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('lose'),
+    text: 'Татарча беркайчан да әйтергә кирәкми, сез чәк-чәкне ненавидите...',
+  ),
+];
