@@ -72,13 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   for (final scenario in scenarios)
                     ListTile(
-                      title: Text(
-                        scenario.title,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      title: Text(scenario.title),
                       subtitle: scenario.description == null
                           ? null
                           : Text(scenario.description!),
@@ -95,35 +89,35 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add_outlined),
-        onPressed: () async {
-          var path = await FirebaseFirestore.instance
-              .collection('scenarios')
-              .add(testScenario.toJson())
-              .then((d) => d.path);
+      // floatingActionButton: FloatingActionButton(
+      //   child: const Icon(Icons.add_outlined),
+      //   onPressed: () async {
+      //     var path = await FirebaseFirestore.instance
+      //         .collection('scenarios')
+      //         .add(testScenario.toJson())
+      //         .then((d) => d.path);
 
-          path = await FirebaseFirestore.instance
-              .collection('$path/translations')
-              .add(
-                TranslationSet(
-                  language: 'russian',
-                  metaData: ContentMetaData(''),
-                ).toJson(),
-              )
-              .then((d) => d.path);
+      //     path = await FirebaseFirestore.instance
+      //         .collection('$path/translations')
+      //         .add(
+      //           TranslationSet(
+      //             language: 'russian',
+      //             metaData: ContentMetaData(''),
+      //           ).toJson(),
+      //         )
+      //         .then((d) => d.path);
 
-          final batch = FirebaseFirestore.instance.batch();
+      //     final batch = FirebaseFirestore.instance.batch();
 
-          for (final t in testTranslationsRu)
-            batch.set(
-              FirebaseFirestore.instance.doc('$path/assets/${t.metaData.id}'),
-              t.toJson(),
-            );
-          await batch.commit();
-          print('DONE');
-        },
-      ),
+      //     for (final t in testTranslationsRu)
+      //       batch.set(
+      //         FirebaseFirestore.instance.doc('$path/assets/${t.metaData.id}'),
+      //         t.toJson(),
+      //       );
+      //     await batch.commit();
+      //     print('DONE');
+      //   },
+      // ),
     );
   }
 }
