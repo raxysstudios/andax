@@ -1,8 +1,8 @@
 import 'package:andax/models/content_meta_data.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/models/translation_set.dart';
+import 'package:andax/sample_scenario.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class CrowdsourcingScreen extends StatefulWidget {
@@ -30,13 +30,22 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
       for (final translation in widget.translations)
         translation.metaData.id: translation,
     };
-    translations = {
-      for (final translation in widget.translations)
-        translation.metaData.id: TranslationAsset.fromJson(
-          translation.toJson(),
-          translation.metaData.id,
-        ),
-    };
+    populateTranslations();
+  }
+
+  void populateTranslations([List<TranslationAsset>? source]) {
+    language = '';
+    if (source == null) {
+      translations = {};
+    } else
+      translations = {
+        for (final translation in source)
+          translation.metaData.id: TranslationAsset.fromJson(
+            translation.toJson(),
+            translation.metaData.id,
+          ),
+      };
+    setState(() {});
   }
 
   Widget buildTranslatable(
@@ -103,10 +112,10 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
     switch (type) {
       case AssetType.message:
         final origin = origins[id] as MessageTranslation;
-        final translation = translations[id] as MessageTranslation;
+        final translation = translations[id] as MessageTranslation?;
         return buildTranslatable(
           origin.text,
-          translation.text,
+          translation?.text,
           icon: Icons.notes_outlined,
           title: 'message',
           onEdit: (r) {
@@ -118,10 +127,10 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
         );
       case AssetType.actor:
         final origin = origins[id] as ActorTranslation;
-        final translation = translations[id] as ActorTranslation;
+        final translation = translations[id] as ActorTranslation?;
         return buildTranslatable(
           origin.name,
-          translation.name,
+          translation?.name,
           icon: Icons.person_outline,
           title: 'actor',
           onEdit: (r) {
@@ -133,30 +142,30 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
         );
       case AssetType.scenario:
         final origin = origins[id] as ScenarioTranslation;
-        final translation = translations[id] as ScenarioTranslation;
+        final translation = translations[id] as ScenarioTranslation?;
         return Column(
           children: [
             buildTranslatable(
               origin.title,
-              translation.title,
+              translation?.title,
               icon: Icons.title_outlined,
               title: 'scenario title',
               onEdit: (r) {
                 translations[id] = ScenarioTranslation(
                   title: r,
-                  description: translation.description,
+                  description: translation?.description,
                   metaData: ContentMetaData(id),
                 );
               },
             ),
             buildTranslatable(
               origin.description,
-              translation.description,
+              translation?.description,
               icon: Icons.description_outlined,
               title: 'scenario description',
               onEdit: (r) {
                 translations[id] = ScenarioTranslation(
-                  title: translation.title,
+                  title: translation?.title ?? '<title>',
                   description: r,
                   metaData: ContentMetaData(id),
                 );
@@ -174,6 +183,12 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Scenarion translation'),
+        actions: [
+          IconButton(
+            onPressed: () => populateTranslations(presetScenario),
+            icon: Icon(Icons.translate_outlined),
+          )
+        ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {

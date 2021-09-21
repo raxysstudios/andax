@@ -498,3 +498,5 @@ final testTranslationsTa = <TranslationAsset>[
     text: 'Татарча беркайчан да әйтергә кирәкми, сез чәк-чәкне ненавидите...',
   ),
 ];
+
+final presetScenario = testTranslations;
