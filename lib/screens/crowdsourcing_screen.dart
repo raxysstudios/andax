@@ -178,6 +178,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
         label: Text("Upload"),
       ),
       body: ListView(
+        padding: const EdgeInsets.only(bottom: 76),
         children: [
           buildTranslatable(
             'language',

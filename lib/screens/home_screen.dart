@@ -65,6 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
               controller: refreshController,
               onRefresh: refreshScenarios,
               child: ListView(
+                padding: const EdgeInsets.only(bottom: 76),
                 children: [
                   for (final scenario in scenarios)
                     ListTile(

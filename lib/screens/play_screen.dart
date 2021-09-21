@@ -60,7 +60,8 @@ class _PlayScreenState extends State<PlayScreen> {
       storyline.add(currentNode);
       totalScore = max(0, min(totalScore + transition.score, 100));
       currentNode = nodes[transition.targetNodeId]!;
-      if (currentNode.endingType != null) isFinished = true;
+      isFinished =
+          totalScore == 0 || (currentNode.transitions?.isEmpty ?? true);
       if (currentNode.autoTransition && currentNode.transitions != null)
         moveAuto(currentNode.transitions!);
     });
@@ -80,6 +81,7 @@ class _PlayScreenState extends State<PlayScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('CRNT ${currentNode.id}');
     return Scaffold(
       appBar: AppBar(
         title: HappinessSlider(value: totalScore),
@@ -100,6 +102,7 @@ class _PlayScreenState extends State<PlayScreen> {
         ],
       ),
       body: ListView(
+        padding: const EdgeInsets.only(bottom: 76),
         children: [
           for (var i = 0; i < storyline.length; i++)
             NodeCard(
@@ -141,13 +144,12 @@ class _PlayScreenState extends State<PlayScreen> {
           if (isFinished)
             Center(
               child: Padding(
-                padding: const EdgeInsets.all(32),
+                padding: const EdgeInsets.all(16),
                 child: Text(
-                  currentNode.endingType == EndingType.win
-                      ? 'End of scenario.'
-                      : 'You lost! :(',
+                  'End',
                   style: const TextStyle(
                     fontSize: 18,
+                    fontStyle: FontStyle.italic,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

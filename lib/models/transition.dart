@@ -3,15 +3,15 @@ class Transition {
   String targetNodeId;
   int score;
 
-  Transition({
-    required this.id,
+  Transition(
+    this.id, {
     required this.targetNodeId,
     this.score = 0,
   });
 
   Transition.fromJson(Map<String, dynamic> json)
       : this(
-          id: json['id'],
+          json['id'],
           targetNodeId: json['targetNodeId'],
           score: json['score'] ?? 0,
         );

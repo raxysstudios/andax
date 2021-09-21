@@ -6,114 +6,130 @@ import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation_asset.dart';
 
 final testScenario = Scenario(
-    metaData: ContentMetaData('tatar'),
-    startNodeId: 'greeting',
-    actors: [
-      Actor(id: 'bot'),
-      Actor(id: 'player', type: ActorType.player),
-    ],
-    nodes: [
-      Node(
-        id: 'greeting',
-        actorId: 'bot',
-        transitions: [
-          Transition(id: 't1', targetNodeId: 'salam', score: 15),
-          Transition(id: 't2', targetNodeId: 'hi', score: -10),
-        ],
-      ),
-      Node(
-        id: 'salam',
-        actorId: 'player',
-        transitions: [
-          Transition(id: 't3', targetNodeId: 'how-are-you'),
-        ],
-      ),
-      Node(
-        id: 'hi',
-        actorId: 'player',
-        transitions: [
-          Transition(id: 't3', targetNodeId: 'how-are-you'),
-        ],
-      ),
-      Node(id: 'how-are-you', actorId: 'bot', transitions: [
-        Transition(id: 't4', targetNodeId: 'happy', score: 10),
-        Transition(id: 't5', targetNodeId: 'normal', score: 0),
-        Transition(id: 't6', targetNodeId: 'sad', score: -5),
-      ]),
-      Node(id: 'happy', actorId: 'player', autoTransition: true, transitions: [
-        Transition(id: 't7', targetNodeId: 'glad-to-hear'),
-      ]),
-      Node(id: 'normal', actorId: 'player', autoTransition: true, transitions: [
-        Transition(id: 't8', targetNodeId: 'glad-to-hear'),
-      ]),
-      Node(id: 'sad', actorId: 'player', autoTransition: true, transitions: [
-        Transition(id: 't9', targetNodeId: 'whats-wrong'),
-      ]),
-      Node(
-          id: 'glad-to-hear',
-          actorId: 'bot',
-          autoTransition: true,
-          transitions: [
-            Transition(id: 't10', targetNodeId: 'come-for-tea'),
-          ]),
-      Node(
-        id: 'whats-wrong',
-        actorId: 'bot',
-        transitions: [
-          Transition(id: 't11', targetNodeId: 'out-of-tea', score: 5),
-          Transition(id: 't12', targetNodeId: 'wont-talk', score: -30),
-        ],
-      ),
-      Node(
-        id: 'out-of-tea',
-        actorId: 'player',
-        transitions: [
-          Transition(id: 't13', targetNodeId: 'will-bring'),
-        ],
-      ),
-      Node(
-        id: 'wont-talk',
-        actorId: 'player',
-        autoTransition: true,
-        transitions: [
-          Transition(id: 't14', targetNodeId: 'lose'),
-        ],
-      ),
-      Node(
-        id: 'come-for-tea',
-        actorId: 'bot',
-        transitions: [
-          Transition(id: 't15', targetNodeId: 'hate-chakchak', score: -70),
-          Transition(id: 't16', targetNodeId: 'thank-you', score: 15),
-        ],
-      ),
-      Node(
-        id: 'will-bring',
-        actorId: 'bot',
-        transitions: [
-          Transition(id: 't15', targetNodeId: 'hate-chakchak', score: -70),
-          Transition(id: 't16', targetNodeId: 'thank-you', score: 15),
-        ],
-      ),
-      Node(
-        id: 'hate-chakchak',
-        actorId: 'player',
-        autoTransition: true,
-        transitions: [
-          Transition(id: 't17', targetNodeId: 'lose'),
-        ],
-      ),
-      Node(
-        id: 'thank-you',
-        actorId: 'player',
-        autoTransition: true,
-        transitions: [
-          Transition(id: 't18', targetNodeId: 'win'),
-        ],
-      ),
-      Node(id: 'lose', endingType: EndingType.loss),
-      Node(id: 'win', endingType: EndingType.win),
-    ]);
+  metaData: ContentMetaData('tatar'),
+  startNodeId: 'greeting',
+  actors: [
+    Actor(id: 'bot'),
+    Actor(id: 'player', type: ActorType.player),
+  ],
+  nodes: [
+    Node(
+      'greeting',
+      actorId: 'bot',
+      transitions: [
+        Transition('t1', targetNodeId: 'salam', score: 15),
+        Transition('t2', targetNodeId: 'hi', score: -10),
+      ],
+    ),
+    Node(
+      'salam',
+      actorId: 'player',
+      transitions: [
+        Transition('t3', targetNodeId: 'how-are-you'),
+      ],
+    ),
+    Node(
+      'hi',
+      actorId: 'player',
+      transitions: [
+        Transition('t3', targetNodeId: 'how-are-you'),
+      ],
+    ),
+    Node(
+      'how-are-you',
+      actorId: 'bot',
+      transitions: [
+        Transition('t4', targetNodeId: 'happy', score: 10),
+        Transition('t5', targetNodeId: 'normal', score: 0),
+        Transition('t6', targetNodeId: 'sad', score: -5),
+      ],
+    ),
+    Node(
+      'happy',
+      actorId: 'player',
+      autoTransition: true,
+      transitions: [
+        Transition('t7', targetNodeId: 'glad-to-hear'),
+      ],
+    ),
+    Node(
+      'normal',
+      actorId: 'player',
+      autoTransition: true,
+      transitions: [
+        Transition('t8', targetNodeId: 'glad-to-hear'),
+      ],
+    ),
+    Node(
+      'sad',
+      actorId: 'player',
+      autoTransition: true,
+      transitions: [
+        Transition('t9', targetNodeId: 'whats-wrong'),
+      ],
+    ),
+    Node(
+      'glad-to-hear',
+      actorId: 'bot',
+      autoTransition: true,
+      transitions: [
+        Transition('t10', targetNodeId: 'come-for-tea'),
+      ],
+    ),
+    Node(
+      'whats-wrong',
+      actorId: 'bot',
+      transitions: [
+        Transition('t11', targetNodeId: 'out-of-tea', score: 5),
+        Transition('t12', targetNodeId: 'wont-talk', score: -30),
+      ],
+    ),
+    Node(
+      'out-of-tea',
+      actorId: 'player',
+      transitions: [
+        Transition('t13', targetNodeId: 'will-bring'),
+      ],
+    ),
+    Node(
+      'wont-talk',
+      actorId: 'player',
+      autoTransition: true,
+      transitions: [
+        Transition('t14', targetNodeId: 'lose'),
+      ],
+    ),
+    Node(
+      'come-for-tea',
+      actorId: 'bot',
+      transitions: [
+        Transition('t15', targetNodeId: 'hate-chakchak', score: -70),
+        Transition('t16', targetNodeId: 'thank-you', score: 15),
+      ],
+    ),
+    Node(
+      'will-bring',
+      actorId: 'bot',
+      transitions: [
+        Transition('t15', targetNodeId: 'hate-chakchak', score: -70),
+        Transition('t16', targetNodeId: 'thank-you', score: 15),
+      ],
+    ),
+    Node(
+      'hate-chakchak',
+      actorId: 'player',
+      autoTransition: true,
+      transitions: [
+        Transition('t17', targetNodeId: 'lose'),
+      ],
+    ),
+    Node(
+      'thank-you',
+      actorId: 'player',
+    ),
+    Node('lose'),
+  ],
+);
 
 final testTranslations = <TranslationAsset>[
   ActorTranslation(
@@ -211,11 +227,7 @@ final testTranslations = <TranslationAsset>[
   ),
   MessageTranslation(
     metaData: ContentMetaData('lose'),
-    text: ':(',
-  ),
-  MessageTranslation(
-    metaData: ContentMetaData('win'),
-    text: ':D',
+    text: 'One must never say to a Tatar that they hate chack-chack...',
   ),
 ];
 
@@ -351,10 +363,6 @@ final testTranslationsRu = <TranslationAsset>[
   ),
   MessageTranslation(
     metaData: ContentMetaData('lose'),
-    text: ':(',
-  ),
-  MessageTranslation(
-    metaData: ContentMetaData('win'),
-    text: ':D',
+    text: 'Никогда не стоит говорить татарину что вы ненавидите чак-чак...',
   ),
 ];

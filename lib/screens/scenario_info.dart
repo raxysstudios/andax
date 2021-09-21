@@ -109,8 +109,8 @@ class _ScenarioInfoScreenState extends State<ScenarioInfoScreen> {
             ? Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: SizedBox(
-                  height: 24,
-                  width: 24,
+                  height: 20,
+                  width: 20,
                   child: CircularProgressIndicator(
                     color: Theme.of(context).colorScheme.onPrimary,
                   ),
@@ -120,7 +120,7 @@ class _ScenarioInfoScreenState extends State<ScenarioInfoScreen> {
         label: loading ? const Text('Loading') : const Text('Play'),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 76),
         children: [
           if (widget.scenarioInfo.description != null)
             Text(
