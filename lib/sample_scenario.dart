@@ -150,8 +150,16 @@ final testTranslations = <TranslationAsset>[
     text: 'Assalamu Alaykum!',
   ),
   MessageTranslation(
+    metaData: ContentMetaData('salam'),
+    text: 'Waalakum Assalam!',
+  ),
+  MessageTranslation(
     metaData: ContentMetaData('t1'),
     text: 'Waalakum Assalam!',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('hi'),
+    text: 'Hi!',
   ),
   MessageTranslation(
     metaData: ContentMetaData('t2'),
@@ -166,12 +174,24 @@ final testTranslations = <TranslationAsset>[
     text: 'How are you doing?',
   ),
   MessageTranslation(
+    metaData: ContentMetaData('happy'),
+    text: 'I am doing fine',
+  ),
+  MessageTranslation(
     metaData: ContentMetaData('t4'),
     text: 'I am doing fine',
   ),
   MessageTranslation(
+    metaData: ContentMetaData('normal'),
+    text: 'Normal',
+  ),
+  MessageTranslation(
     metaData: ContentMetaData('t5'),
     text: 'Normal',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('sad'),
+    text: 'I am sad :(',
   ),
   MessageTranslation(
     metaData: ContentMetaData('t6'),
@@ -194,8 +214,16 @@ final testTranslations = <TranslationAsset>[
     text: 'Oh no! What is wrong?',
   ),
   MessageTranslation(
+    metaData: ContentMetaData('out-of-tea'),
+    text: 'I ran out of tea',
+  ),
+  MessageTranslation(
     metaData: ContentMetaData('t11'),
     text: 'I ran out of tea',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('wont-talk'),
+    text: 'I do not want to talk',
   ),
   MessageTranslation(
     metaData: ContentMetaData('t12'),
@@ -218,8 +246,16 @@ final testTranslations = <TranslationAsset>[
     text: 'I will come over. I will bring tea and Chakchak',
   ),
   MessageTranslation(
+    metaData: ContentMetaData('hate-chakchak'),
+    text: 'No. I hate Chakchak!',
+  ),
+  MessageTranslation(
     metaData: ContentMetaData('t15'),
     text: 'No. I hate Chakchak!',
+  ),
+  MessageTranslation(
+    metaData: ContentMetaData('thank-you'),
+    text: 'Awesome! You are a good friend',
   ),
   MessageTranslation(
     metaData: ContentMetaData('t16'),
@@ -312,10 +348,6 @@ final testTranslationsRu = <TranslationAsset>[
   MessageTranslation(
     metaData: ContentMetaData('t9'),
     text: 'Мне жаль! Что случилось?',
-  ),
-  MessageTranslation(
-    metaData: ContentMetaData('out-of-tea'),
-    text: 'У меня закончился чай',
   ),
   MessageTranslation(
     metaData: ContentMetaData('out-of-tea'),
