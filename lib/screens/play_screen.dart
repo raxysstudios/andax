@@ -10,6 +10,7 @@ import 'package:andax/utils.dart';
 import 'package:andax/widgets/happiness_slider.dart';
 import 'package:andax/widgets/node_card.dart';
 import 'package:flutter/material.dart';
+import 'package:simple_animations/simple_animations.dart';
 
 class PlayScreen extends StatefulWidget {
   final Scenario scenario;
@@ -111,35 +112,58 @@ class _PlayScreenState extends State<PlayScreen> {
               translations: translations,
               actors: actors,
             ),
-          NodeCard(
-            node: currentNode,
-            previousNode: storyline.isEmpty ? null : storyline.last,
-            translations: translations,
-            actors: actors,
+          PlayAnimation<double>(
+            curve: Curves.easeInOutCubic, // define duration
+            tween: Tween(begin: 0, end: 1), // define tween
+            duration: Duration(milliseconds: 500), // define duration
+            builder: (context, child, value) {
+              return Opacity(
+                opacity: value,
+                child: NodeCard(
+                  node: currentNode,
+                  previousNode: storyline.isEmpty ? null : storyline.last,
+                  translations: translations,
+                  actors: actors,
+                ),
+              );
+            },
           ),
           if (currentNode.transitions != null && autoAdvance == null)
-            Wrap(
-              alignment: WrapAlignment.spaceEvenly,
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                for (final transition in currentNode.transitions!)
-                  Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Expanded(
-                      child: ElevatedButton(
-                        onPressed: () => advanceStory(transition),
-                        child: Text(
-                          getTranslation<MessageTranslation>(
-                            translations,
-                            transition.id,
-                            (t) => t.text,
+            PlayAnimation<double>(
+              tween: Tween(begin: 0, end: 1), // define tween
+              duration: Duration(milliseconds: 500),
+              curve: Curves.easeInOutCubic, // define duration
+              builder: (context, child, value) {
+                return Opacity(
+                  opacity: value,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Wrap(
+                      alignment: WrapAlignment.end,
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        for (final transition in currentNode.transitions!)
+                          Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: Expanded(
+                              child: ElevatedButton(
+                                onPressed: () => advanceStory(transition),
+                                child: Text(
+                                  getTranslation<MessageTranslation>(
+                                    translations,
+                                    transition.id,
+                                    (t) => t.text,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
+                      ],
                     ),
                   ),
-              ],
+                );
+              },
             ),
           if (isFinished)
             Center(

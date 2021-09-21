@@ -16,39 +16,35 @@ class NodeCard extends StatefulWidget {
     required this.previousNode,
     required this.translations,
     required this.actors,
-  }) : super(key: ValueKey(node.id));
+  });
 
   @override
   _NodeCardState createState() => _NodeCardState();
 }
 
 class _NodeCardState extends State<NodeCard> {
-  @override
-  Widget build(BuildContext context) {
-    final actor = widget.actors[widget.node.actorId];
-    final text = getTranslation<MessageTranslation>(
-      widget.translations,
-      widget.node.id,
-      (t) => t.text,
-    );
-    if (text.isEmpty) return SizedBox();
-    if (actor == null)
-      return Column(
-        children: [
-          Divider(),
-          Text(
-            text,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 14,
-              fontStyle: FontStyle.italic,
-            ),
+  Widget buildNotificaion(String text) {
+    return Column(
+      children: [
+        Divider(),
+        Text(
+          text,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 14,
+            fontStyle: FontStyle.italic,
           ),
-          Divider(),
-        ],
-      );
+        ),
+        Divider(),
+      ],
+    );
+  }
 
-    final isPlayer = actor.type == ActorType.player;
+  Widget buildMessage(
+    String text,
+    Actor actor,
+    bool isPlayer,
+  ) {
     return Card(
       margin: isPlayer
           ? const EdgeInsets.fromLTRB(48, 8, 0, 8)
@@ -73,7 +69,7 @@ class _NodeCardState extends State<NodeCard> {
           crossAxisAlignment:
               isPlayer ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
-            if (actor.id != widget.previousNode?.actorId)
+            if (!isPlayer && actor.id != widget.previousNode?.actorId)
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
@@ -102,6 +98,23 @@ class _NodeCardState extends State<NodeCard> {
           ],
         ),
       ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final actor = widget.actors[widget.node.actorId];
+    final text = getTranslation<MessageTranslation>(
+      widget.translations,
+      widget.node.id,
+      (t) => t.text,
+    );
+    if (text.isEmpty) return SizedBox();
+    if (actor == null) return buildNotificaion(text);
+    return buildMessage(
+      text,
+      actor,
+      actor.type == ActorType.player,
     );
   }
 }
