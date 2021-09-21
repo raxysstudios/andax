@@ -96,15 +96,17 @@ class _ScenarioInfoScreenState extends State<ScenarioInfoScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          setState(() {
-            loading = true;
-          });
-          await loadScenario();
-          setState(() {
-            loading = false;
-          });
-        },
+        onPressed: loading
+            ? null
+            : () async {
+                setState(() {
+                  loading = true;
+                });
+                await loadScenario();
+                setState(() {
+                  loading = false;
+                });
+              },
         icon: loading
             ? Padding(
                 padding: const EdgeInsets.only(right: 8),
