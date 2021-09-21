@@ -191,7 +191,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
 
           for (final t in translations.entries)
             batch.set(
-              FirebaseFirestore.instance.doc('$path/${t.key}'),
+              FirebaseFirestore.instance.doc('$path/assets/${t.key}'),
               t.value.toJson(),
             );
         },
