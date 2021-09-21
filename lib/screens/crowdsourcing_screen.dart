@@ -19,9 +19,10 @@ class CrowdsourcingScreen extends StatefulWidget {
 }
 
 class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
-  late final Map<String, TranslationAsset> translations;
+  late Map<String, TranslationAsset> translations;
   late final Map<String, TranslationAsset> origins;
   String language = '';
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -34,18 +35,19 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
   }
 
   void populateTranslations([List<TranslationAsset>? source]) {
-    language = '';
-    if (source == null) {
-      translations = {};
-    } else
-      translations = {
-        for (final translation in source)
-          translation.metaData.id: TranslationAsset.fromJson(
-            translation.toJson(),
-            translation.metaData.id,
-          ),
-      };
-    setState(() {});
+    setState(() {
+      language = '';
+      if (source == null) {
+        translations = {};
+      } else
+        translations = {
+          for (final translation in source)
+            translation.metaData.id: TranslationAsset.fromJson(
+              translation.toJson(),
+              translation.metaData.id,
+            ),
+        };
+    });
   }
 
   Widget buildTranslatable(
@@ -178,6 +180,26 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
     }
   }
 
+  Future<void> uploadTranslation() async {
+    final path = await FirebaseFirestore.instance
+        .collection('scenarios/${widget.scenarioId}/translations')
+        .add(
+          TranslationSet(
+            language: language,
+            metaData: ContentMetaData(''),
+          ).toJson(),
+        )
+        .then((d) => d.path);
+    final batch = FirebaseFirestore.instance.batch();
+
+    for (final t in translations.entries)
+      batch.set(
+        FirebaseFirestore.instance.doc('$path/assets/${t.key}'),
+        t.value.toJson(),
+      );
+    await batch.commit();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -185,33 +207,38 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
         title: Text('Scenarion translation'),
         actions: [
           IconButton(
-            onPressed: () => populateTranslations(presetScenario),
+            onPressed: () {
+              print('tap');
+              populateTranslations(presetScenario);
+            },
             icon: Icon(Icons.translate_outlined),
           )
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          final path = await FirebaseFirestore.instance
-              .collection('scenarios/${widget.scenarioId}/translations')
-              .add(
-                TranslationSet(
-                  language: language,
-                  metaData: ContentMetaData(''),
-                ).toJson(),
+        onPressed: isLoading
+            ? null
+            : () async {
+                setState(() {
+                  isLoading = true;
+                });
+                await uploadTranslation();
+                setState(() {
+                  isLoading = false;
+                });
+              },
+        icon: isLoading
+            ? Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                ),
               )
-              .then((d) => d.path);
-
-          final batch = FirebaseFirestore.instance.batch();
-
-          for (final t in translations.entries)
-            batch.set(
-              FirebaseFirestore.instance.doc('$path/assets/${t.key}'),
-              t.value.toJson(),
-            );
-          await batch.commit();
-        },
-        icon: Icon(Icons.upload_outlined),
+            : Icon(Icons.upload_outlined),
         label: Text("Upload"),
       ),
       body: ListView(
@@ -229,12 +256,12 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
           Divider(height: 0),
           buildFields('scenario'),
           Divider(height: 0),
-          for (final a in translations.values.where(
+          for (final a in origins.values.where(
             (w) => w.assetType == AssetType.actor,
           ))
             buildFields(a.metaData.id),
           Divider(height: 0),
-          for (final a in translations.values.where(
+          for (final a in origins.values.where(
             (w) => w.assetType == AssetType.message,
           ))
             buildFields(a.metaData.id),
