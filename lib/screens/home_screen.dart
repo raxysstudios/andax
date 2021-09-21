@@ -1,7 +1,11 @@
 import 'package:andax/main.dart';
+import 'package:andax/models/content_meta_data.dart';
+import 'package:andax/models/translation_set.dart';
+import 'package:andax/sample_scenario.dart';
 import 'package:andax/screens/editor_screen.dart';
 import 'package:andax/screens/scenario_info.dart';
 import 'package:andax/screens/settings_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../models/scenario.dart';
@@ -93,12 +97,32 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add_outlined),
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => EditorScreen(),
-          ),
-        ),
+        onPressed: () async {
+          var path = await FirebaseFirestore.instance
+              .collection('scenarios')
+              .add(testScenario.toJson())
+              .then((d) => d.path);
+
+          path = await FirebaseFirestore.instance
+              .collection('$path/translations')
+              .add(
+                TranslationSet(
+                  language: 'russian',
+                  metaData: ContentMetaData(''),
+                ).toJson(),
+              )
+              .then((d) => d.path);
+
+          final batch = FirebaseFirestore.instance.batch();
+
+          for (final t in testTranslationsRu)
+            batch.set(
+              FirebaseFirestore.instance.doc('$path/assets/${t.metaData.id}'),
+              t.toJson(),
+            );
+          await batch.commit();
+          print('DONE');
+        },
       ),
     );
   }

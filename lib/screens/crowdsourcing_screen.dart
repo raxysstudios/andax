@@ -194,6 +194,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
               FirebaseFirestore.instance.doc('$path/assets/${t.key}'),
               t.value.toJson(),
             );
+          await batch.commit();
         },
         icon: Icon(Icons.upload_outlined),
         label: Text("Upload"),
