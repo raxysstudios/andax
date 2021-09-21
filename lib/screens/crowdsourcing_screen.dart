@@ -1,5 +1,8 @@
 import 'package:andax/models/content_meta_data.dart';
 import 'package:andax/models/translation_asset.dart';
+import 'package:andax/models/translation_set.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class CrowdsourcingScreen extends StatefulWidget {
@@ -173,7 +176,25 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
         title: Text('Scenarion translation'),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () async {
+          final path = await FirebaseFirestore.instance
+              .collection('scenarios/${widget.scenarioId}/translations')
+              .add(
+                TranslationSet(
+                  language: language,
+                  metaData: ContentMetaData(''),
+                ).toJson(),
+              )
+              .then((d) => d.path);
+
+          final batch = FirebaseFirestore.instance.batch();
+
+          for (final t in translations.entries)
+            batch.set(
+              FirebaseFirestore.instance.doc('$path/${t.key}'),
+              t.value.toJson(),
+            );
+        },
         icon: Icon(Icons.upload_outlined),
         label: Text("Upload"),
       ),

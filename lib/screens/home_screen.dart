@@ -5,7 +5,6 @@ import 'package:andax/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../models/scenario.dart';
-import '../store.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen();
@@ -24,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final scenarios = await algolia.instance
         .index('scenarios')
         .query('')
-        .filters('language:${settings.targetLanguage}')
+        // .filters('language:${settings.targetLanguage}')
         .getObjects()
         .then(
           (s) => s.hits.map(
