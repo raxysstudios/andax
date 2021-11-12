@@ -1,6 +1,5 @@
 import 'package:andax/content_loader.dart';
 import 'package:andax/main.dart';
-import 'package:andax/screens/play_screen.dart';
 import 'package:andax/screens/scenario_info.dart';
 import 'package:andax/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
