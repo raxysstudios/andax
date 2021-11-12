@@ -1,8 +1,8 @@
 import 'package:andax/models/content_meta_data.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/models/translation_set.dart';
-import 'package:andax/sample_scenario.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class CrowdsourcingScreen extends StatefulWidget {
@@ -123,7 +123,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
           onEdit: (r) {
             translations[id] = MessageTranslation(
               text: r,
-              metaData: ContentMetaData(id),
+              metaData: ContentMetaData(id, ''),
             );
           },
         );
@@ -138,7 +138,10 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
           onEdit: (r) {
             translations[id] = ActorTranslation(
               name: r,
-              metaData: ContentMetaData(id),
+              metaData: ContentMetaData(
+                id,
+                FirebaseAuth.instance.currentUser?.uid ?? '',
+              ),
             );
           },
         );
@@ -156,7 +159,8 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
                 translations[id] = ScenarioTranslation(
                   title: r,
                   description: translation?.description,
-                  metaData: ContentMetaData(id),
+                  metaData: ContentMetaData(
+                      id, FirebaseAuth.instance.currentUser?.uid ?? ''),
                 );
               },
             ),
@@ -169,7 +173,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
                 translations[id] = ScenarioTranslation(
                   title: translation?.title ?? '<title>',
                   description: r,
-                  metaData: ContentMetaData(id),
+                  metaData: ContentMetaData(id, ''),
                 );
               },
             ),
@@ -186,7 +190,8 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
         .add(
           TranslationSet(
             language: language,
-            metaData: ContentMetaData(''),
+            metaData: ContentMetaData(
+                '', FirebaseAuth.instance.currentUser?.uid ?? ''),
           ).toJson(),
         )
         .then((d) => d.path);
@@ -205,15 +210,6 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Scenarion translation'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              print('tap');
-              populateTranslations(presetScenario);
-            },
-            icon: Icon(Icons.translate_outlined),
-          )
-        ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: isLoading

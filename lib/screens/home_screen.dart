@@ -1,6 +1,7 @@
 import 'package:andax/content_loader.dart';
 import 'package:andax/main.dart';
 import 'package:andax/screens/play_screen.dart';
+import 'package:andax/screens/scenario_info.dart';
 import 'package:andax/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -74,15 +75,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           ? null
                           : Text(info.description!),
                       onTap: () async {
-                        final scenario = await loadScenario(info);
-                        final translations = await loadTranslations(info);
                         await Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => PlayScreen(
-                              scenario: scenario,
-                              translations: translations,
-                            ),
+                            builder: (_) => ScenarioInfoScreen(info),
                           ),
                         );
                         await refreshScenarios();

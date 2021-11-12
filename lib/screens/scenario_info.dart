@@ -1,4 +1,3 @@
-import 'package:andax/sample_scenario.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/screens/crowdsourcing_screen.dart';
 import 'package:andax/screens/play_screen.dart';
@@ -33,8 +32,21 @@ class _ScenarioInfoScreenState extends State<ScenarioInfoScreen> {
           'Scenario with id ${widget.scenarioInfo.scenarioID} does not exist');
     }
     final scenario = doc.data()!;
+    final translations = await getTranslations();
 
-    final collection = await db
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => PlayScreen(
+          scenario: scenario,
+          translations: translations,
+        ),
+      ),
+    );
+  }
+
+  Future<List<TranslationAsset>> getTranslations() async {
+    final collection = await FirebaseFirestore.instance
         .collection(
             'scenarios/${widget.scenarioInfo.scenarioID}/translations/${widget.scenarioInfo.translationID}/assets')
         .withConverter<TranslationAsset>(
@@ -44,32 +56,7 @@ class _ScenarioInfoScreenState extends State<ScenarioInfoScreen> {
         )
         .get();
     final assets = collection.docs.map((doc) => doc.data());
-    final translations = await getTranslations();
-
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => PlayScreen(
-          scenario: testScenario,
-          translations: testTranslationsRu,
-        ),
-      ),
-    );
-  }
-
-  Future<List<TranslationAsset>> getTranslations() async {
-    // final collection = await FirebaseFirestore.instance
-    //     .collection(
-    //         'scenarios/${widget.scenarioInfo.scenarioID}/translations/${widget.scenarioInfo.translationID}/assets')
-    //     .withConverter<TranslationAsset>(
-    //       fromFirestore: (snapshot, _) =>
-    //           TranslationAsset.fromJson(snapshot.data()!, snapshot.id),
-    //       toFirestore: (scenario, _) => scenario.toJson(),
-    //     )
-    //     .get();
-    // final assets = collection.docs.map((doc) => doc.data());
-    // return assets.toList();
-    return testTranslationsRu;
+    return assets.toList();
   }
 
   @override
