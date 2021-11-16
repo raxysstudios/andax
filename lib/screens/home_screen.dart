@@ -1,5 +1,6 @@
 import 'package:andax/content_loader.dart';
 import 'package:andax/main.dart';
+import 'package:andax/editor/editor_screen.dart';
 import 'package:andax/screens/scenario_info.dart';
 import 'package:andax/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
@@ -46,10 +47,16 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text('Scenarios'),
         actions: [
           IconButton(
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => SettingsScreen(),
-              ),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => EditorScreen()),
+            ),
+            icon: Icon(Icons.construction_outlined),
+          ),
+          IconButton(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => SettingsScreen()),
             ),
             icon: Icon(Icons.settings_outlined),
           )

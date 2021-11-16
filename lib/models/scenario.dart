@@ -1,3 +1,4 @@
+import 'package:andax/models/translation_asset.dart';
 import 'package:andax/utils.dart';
 import 'actor.dart';
 import 'content_meta_data.dart';
@@ -11,11 +12,17 @@ class Scenario {
   ContentMetaData metaData;
 
   Scenario({
-    this.nodes = const [],
+    required this.nodes,
     required this.startNodeId,
-    this.actors = const [],
+    required this.actors,
     required this.metaData,
   });
+
+  String getTitle(Map<String, TranslationAsset> translations) =>
+      (translations['scenario'] as ScenarioTranslation?)?.title ?? '';
+
+  String getDescription(Map<String, TranslationAsset> translations) =>
+      (translations['scenario'] as ScenarioTranslation?)?.description ?? '';
 
   Scenario.fromJson(
     Map<String, dynamic> json, {

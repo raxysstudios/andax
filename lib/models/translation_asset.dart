@@ -62,10 +62,10 @@ abstract class TranslationAsset {
 }
 
 class ScenarioTranslation extends TranslationAsset {
-  final String title;
-  final String? description;
+  String title;
+  String? description;
 
-  const ScenarioTranslation({
+  ScenarioTranslation({
     required this.title,
     this.description,
     required ContentMetaData metaData,
@@ -81,10 +81,10 @@ class ScenarioTranslation extends TranslationAsset {
 }
 
 class MessageTranslation extends TranslationAsset {
-  final String? text;
-  final String? audioUrl;
+  String? text;
+  String? audioUrl;
 
-  const MessageTranslation({
+  MessageTranslation({
     this.text,
     this.audioUrl,
     required ContentMetaData metaData,
@@ -100,10 +100,10 @@ class MessageTranslation extends TranslationAsset {
 }
 
 class ActorTranslation extends TranslationAsset {
-  final String name;
+  String name;
 
-  const ActorTranslation({
-    required this.name,
+  ActorTranslation({
+    this.name = "",
     required ContentMetaData metaData,
   }) : super(metaData: metaData, assetType: AssetType.actor);
 

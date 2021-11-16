@@ -1,5 +1,7 @@
 import 'package:enum_to_string/enum_to_string.dart';
 
+import 'translation_asset.dart';
+
 enum ActorType {
   npc,
   player,
@@ -13,6 +15,9 @@ class Actor {
     required this.id,
     this.type = ActorType.npc,
   });
+
+  String getName(Map<String, TranslationAsset> translations) =>
+      (translations[id] as ActorTranslation?)?.name ?? '';
 
   Actor.fromJson(Map<String, dynamic> json)
       : this(
