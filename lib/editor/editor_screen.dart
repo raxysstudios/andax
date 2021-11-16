@@ -54,6 +54,30 @@ class _EditorScreenState extends State<EditorScreen>
     });
   }
 
+  Widget buildNodeSelector(
+    BuildContext context,
+    Node? value,
+    ValueSetter<Node?> onChanged,
+  ) {
+    return DropdownButton(
+      icon: SizedBox(),
+      underline: SizedBox(),
+      value: value,
+      onChanged: onChanged,
+      items: [
+        DropdownMenuItem<Node>(
+          child: Text("None"),
+        ),
+        ...scenario.nodes.map((n) => DropdownMenuItem(
+              value: n,
+              child: Text(
+                (translations[n.id] as MessageTranslation?)?.text ?? '',
+              ),
+            ))
+      ].toList(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,14 +116,14 @@ class _EditorScreenState extends State<EditorScreen>
         },
       ),
       body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
+        headerSliverBuilder: (context, scrolled) {
           return [
             SliverOverlapAbsorber(
               handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
               sliver: SliverAppBar(
                 title: const Text('Story Editor'),
                 pinned: true,
-                forceElevated: innerBoxIsScrolled,
+                forceElevated: true,
                 bottom: TabBar(
                   controller: tabController,
                   tabs: [
@@ -178,6 +202,20 @@ class _EditorScreenState extends State<EditorScreen>
                               }),
                             ),
                           ),
+                          ListTile(
+                            leading: Icon(Icons.login_outlined),
+                            title: buildNodeSelector(
+                              context,
+                              (() {
+                                for (final node in scenario.nodes)
+                                  if (node.id == scenario.startNodeId)
+                                    return node;
+                              })(),
+                              (node) => setState(() {
+                                scenario.startNodeId = node?.id ?? '';
+                              }),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -241,7 +279,7 @@ class _EditorScreenState extends State<EditorScreen>
             Builder(
               builder: (context) {
                 return CustomScrollView(
-                  key: PageStorageKey('general'),
+                  key: PageStorageKey('nodes'),
                   slivers: [
                     SliverOverlapInjector(
                       handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
@@ -252,7 +290,7 @@ class _EditorScreenState extends State<EditorScreen>
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
                           final node = scenario.nodes[index];
-                          Card(
+                          return Card(
                             elevation: 0,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
