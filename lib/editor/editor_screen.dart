@@ -2,6 +2,7 @@ import 'package:andax/models/actor.dart';
 import 'package:andax/models/content_meta_data.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/scenario.dart';
+import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -54,20 +55,27 @@ class _EditorScreenState extends State<EditorScreen>
     });
   }
 
-  Widget buildNodeSelector(
+  Node? getNodeById(String? id) {
+    for (final node in scenario.nodes)
+      if (node.id == scenario.startNodeId) return node;
+  }
+
+  DropdownButton<Node> buildNodeSelector(
     BuildContext context,
     Node? value,
-    ValueSetter<Node?> onChanged,
-  ) {
+    ValueSetter<Node?> onChanged, [
+    allowNone = true,
+  ]) {
     return DropdownButton(
       icon: SizedBox(),
       underline: SizedBox(),
       value: value,
       onChanged: onChanged,
       items: [
-        DropdownMenuItem<Node>(
-          child: Text("None"),
-        ),
+        if (allowNone)
+          DropdownMenuItem<Node>(
+            child: Text("None"),
+          ),
         ...scenario.nodes.map((n) => DropdownMenuItem(
               value: n,
               child: Text(
@@ -206,11 +214,7 @@ class _EditorScreenState extends State<EditorScreen>
                             leading: Icon(Icons.login_outlined),
                             title: buildNodeSelector(
                               context,
-                              (() {
-                                for (final node in scenario.nodes)
-                                  if (node.id == scenario.startNodeId)
-                                    return node;
-                              })(),
+                              getNodeById(scenario.startNodeId),
                               (node) => setState(() {
                                 scenario.startNodeId = node?.id ?? '';
                               }),
@@ -334,6 +338,42 @@ class _EditorScreenState extends State<EditorScreen>
                                       if (t != null) t.text = s;
                                     }),
                                   ),
+                                ),
+                                Divider(),
+                                for (Transition transition
+                                    in node.transitions ?? [])
+                                  ListTile(
+                                    title: buildNodeSelector(
+                                      context,
+                                      getNodeById(transition.targetNodeId),
+                                      (node) => setState(
+                                        () {
+                                          if (node != null)
+                                            transition.targetNodeId = node.id;
+                                        },
+                                      ),
+                                      false,
+                                    ),
+                                    trailing: IconButton(
+                                      onPressed: () => setState(() =>
+                                          node.transitions?.remove(transition)),
+                                      icon: Icon(Icons.remove_outlined),
+                                    ),
+                                  ),
+                                OutlinedButton.icon(
+                                  onPressed: () => setState(() {
+                                    final id = uuid.v4();
+                                    if (node.transitions == null)
+                                      node.transitions = [];
+                                    node.transitions!.add(
+                                        Transition(id, targetNodeId: node.id));
+                                    translations[id] =
+                                        MessageTranslation(metaData: meta);
+                                  }),
+                                  icon: Icon(
+                                    Icons.alt_route_outlined,
+                                  ),
+                                  label: Text('Add Transition'),
                                 ),
                               ],
                             ),
