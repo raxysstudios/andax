@@ -19,16 +19,17 @@ class PlayScreen extends StatefulWidget {
   const PlayScreen({
     required this.scenario,
     required this.translations,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   _PlayScreenState createState() => _PlayScreenState();
 }
 
 class _PlayScreenState extends State<PlayScreen> {
-  late final Map<String, Node> nodes;
   late final Map<String, TranslationAsset> translations;
-  late final Map<String, Actor> actors;
+  Map<String, Node> get nodes => widget.scenario.nodes;
+  Map<String, Actor> get actors => widget.scenario.actors;
   late Node currentNode;
   final List<Node> storyline = [];
   int totalScore = 50;
@@ -39,20 +40,15 @@ class _PlayScreenState extends State<PlayScreen> {
   @override
   void initState() {
     super.initState();
-    nodes = {
-      for (final node in widget.scenario.nodes) node.id: node,
-    };
     translations = {
       for (final translation in widget.translations)
         translation.metaData.id: translation,
     };
     currentNode = nodes[widget.scenario.startNodeId]!;
-    actors = {
-      for (final actor in widget.scenario.actors) actor.id: actor,
-    };
 
-    if (currentNode.autoTransition && currentNode.transitions != null)
+    if (currentNode.autoTransition && currentNode.transitions != null) {
       moveAuto(currentNode.transitions!);
+    }
   }
 
   void advanceStory(Transition transition) {
@@ -63,15 +59,16 @@ class _PlayScreenState extends State<PlayScreen> {
       currentNode = nodes[transition.targetNodeId]!;
       isFinished =
           totalScore == 0 || (currentNode.transitions?.isEmpty ?? true);
-      if (currentNode.autoTransition && currentNode.transitions != null)
+      if (currentNode.autoTransition && currentNode.transitions != null) {
         moveAuto(currentNode.transitions!);
+      }
     });
   }
 
   void moveAuto(List<Transition> transition) {
     autoAdvance?.cancel();
     autoAdvance = Timer(
-      Duration(milliseconds: 500),
+      const Duration(milliseconds: 500),
       () {
         final index = Random().nextInt(transition.length);
         advanceStory(transition[index]);
@@ -82,7 +79,6 @@ class _PlayScreenState extends State<PlayScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('CRNT ${currentNode.id}');
     return Scaffold(
       appBar: AppBar(
         title: HappinessSlider(value: totalScore),
@@ -93,7 +89,7 @@ class _PlayScreenState extends State<PlayScreen> {
               padding: const EdgeInsets.all(16),
               child: Text(
                 totalScore.toString(),
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w500,
                 ),
@@ -115,7 +111,7 @@ class _PlayScreenState extends State<PlayScreen> {
           PlayAnimation<double>(
             curve: Curves.easeInOutCubic, // define duration
             tween: Tween(begin: 0, end: 1), // define tween
-            duration: Duration(milliseconds: 500), // define duration
+            duration: const Duration(milliseconds: 500), // define duration
             builder: (context, child, value) {
               return Opacity(
                 opacity: value,
@@ -131,7 +127,7 @@ class _PlayScreenState extends State<PlayScreen> {
           if (currentNode.transitions != null && autoAdvance == null)
             PlayAnimation<double>(
               tween: Tween(begin: 0, end: 1), // define tween
-              duration: Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 500),
               curve: Curves.easeInOutCubic, // define duration
               builder: (context, child, value) {
                 return Opacity(
@@ -166,12 +162,12 @@ class _PlayScreenState extends State<PlayScreen> {
               },
             ),
           if (isFinished)
-            Center(
+            const Center(
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.all(16),
                 child: Text(
                   'End',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 18,
                     fontStyle: FontStyle.italic,
                     fontWeight: FontWeight.w500,

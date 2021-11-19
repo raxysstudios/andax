@@ -9,14 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 class EditorScreen extends StatefulWidget {
-  // final Scenario scenario;
-  // final List<TranslationAsset> translations;
-
-  const EditorScreen(//{
-      //required this.scenario,
-      //required this.translations
-      //}
-      );
+  const EditorScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _EditorScreenState createState() => _EditorScreenState();
@@ -24,15 +19,15 @@ class EditorScreen extends StatefulWidget {
 
 class _EditorScreenState extends State<EditorScreen>
     with TickerProviderStateMixin {
-  final uuid = Uuid();
+  final uuid = const Uuid();
   final meta = ContentMetaData(
     '',
     FirebaseAuth.instance.currentUser?.uid ?? '',
   );
 
-  late var scenario = new Scenario(
-    nodes: [],
-    actors: [],
+  late var scenario = Scenario(
+    nodes: {},
+    actors: {},
     startNodeId: '',
     metaData: meta,
   );
@@ -55,11 +50,6 @@ class _EditorScreenState extends State<EditorScreen>
     });
   }
 
-  Node? getNodeById(String? id) {
-    for (final node in scenario.nodes)
-      if (node.id == scenario.startNodeId) return node;
-  }
-
   DropdownButton<Node> buildNodeSelector(
     BuildContext context,
     Node? value,
@@ -67,22 +57,23 @@ class _EditorScreenState extends State<EditorScreen>
     allowNone = true,
   ]) {
     return DropdownButton(
-      icon: SizedBox(),
-      underline: SizedBox(),
+      icon: const SizedBox(),
+      underline: const SizedBox(),
       value: value,
       onChanged: onChanged,
       items: [
         if (allowNone)
-          DropdownMenuItem<Node>(
+          const DropdownMenuItem<Node>(
             child: Text("None"),
           ),
-        ...scenario.nodes.map((n) => DropdownMenuItem(
-              value: n,
-              child: Text(
-                (translations[n.id] as MessageTranslation?)?.text ?? '',
-              ),
-            ))
-      ].toList(),
+        for (final node in scenario.nodes.values)
+          DropdownMenuItem(
+            value: node,
+            child: Text(
+              MessageTranslation.get(translations, node.id)?.text ?? '',
+            ),
+          ),
+      ],
     );
   }
 
@@ -96,30 +87,30 @@ class _EditorScreenState extends State<EditorScreen>
             case 0:
               return FloatingActionButton(
                 onPressed: () {},
-                child: Icon(Icons.upload_outlined),
+                child: const Icon(Icons.upload_outlined),
               );
             case 1:
               return FloatingActionButton(
                 onPressed: () => setState(
                   () {
                     final id = uuid.v4();
-                    scenario.actors.add(Actor(id: id));
+                    scenario.actors[id] = Actor(id: id);
                     translations[id] = ActorTranslation(metaData: meta);
                   },
                 ),
-                child: Icon(Icons.person_add_outlined),
+                child: const Icon(Icons.person_add_outlined),
               );
             case 2:
               return FloatingActionButton(
                 onPressed: () => setState(() {
                   final id = uuid.v4();
-                  scenario.nodes.add(Node(id));
+                  scenario.nodes[id] = Node(id);
                   translations[id] = MessageTranslation(metaData: meta);
                 }),
-                child: Icon(Icons.add_box_outlined),
+                child: const Icon(Icons.add_box_outlined),
               );
             default:
-              return SizedBox();
+              return const SizedBox();
           }
         },
       ),
@@ -134,7 +125,7 @@ class _EditorScreenState extends State<EditorScreen>
                 forceElevated: true,
                 bottom: TabBar(
                   controller: tabController,
-                  tabs: [
+                  tabs: const [
                     Tab(
                       icon: Icon(Icons.auto_stories_outlined),
                       text: "General",
@@ -159,7 +150,7 @@ class _EditorScreenState extends State<EditorScreen>
             Builder(
               builder: (context) {
                 return CustomScrollView(
-                  key: PageStorageKey('general'),
+                  key: const PageStorageKey('general'),
                   slivers: [
                     SliverOverlapInjector(
                       handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
@@ -170,9 +161,9 @@ class _EditorScreenState extends State<EditorScreen>
                       delegate: SliverChildListDelegate(
                         [
                           ListTile(
-                            leading: Icon(Icons.language_outlined),
+                            leading: const Icon(Icons.language_outlined),
                             title: TextFormField(
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: 'Initial language',
                               ),
                               initialValue: language,
@@ -182,12 +173,13 @@ class _EditorScreenState extends State<EditorScreen>
                             ),
                           ),
                           ListTile(
-                            leading: Icon(Icons.title_outlined),
+                            leading: const Icon(Icons.title_outlined),
                             title: TextFormField(
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: 'Story title',
                               ),
-                              initialValue: scenario.getTitle(translations),
+                              initialValue:
+                                  ScenarioTranslation.get(translations)?.title,
                               onChanged: (s) => setState(() {
                                 final t = translations['scenario']
                                     as ScenarioTranslation?;
@@ -196,13 +188,14 @@ class _EditorScreenState extends State<EditorScreen>
                             ),
                           ),
                           ListTile(
-                            leading: Icon(Icons.description_outlined),
+                            leading: const Icon(Icons.description_outlined),
                             title: TextFormField(
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: 'Story description',
                               ),
                               initialValue:
-                                  scenario.getDescription(translations),
+                                  ScenarioTranslation.get(translations)
+                                      ?.description,
                               onChanged: (s) => setState(() {
                                 final t = translations['scenario']
                                     as ScenarioTranslation?;
@@ -211,10 +204,10 @@ class _EditorScreenState extends State<EditorScreen>
                             ),
                           ),
                           ListTile(
-                            leading: Icon(Icons.login_outlined),
+                            leading: const Icon(Icons.login_outlined),
                             title: buildNodeSelector(
                               context,
-                              getNodeById(scenario.startNodeId),
+                              scenario.nodes[scenario.startNodeId],
                               (node) => setState(() {
                                 scenario.startNodeId = node?.id ?? '';
                               }),
@@ -241,6 +234,7 @@ class _EditorScreenState extends State<EditorScreen>
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
                           final actor = scenario.actors[index];
+                          if (actor == null) return const SizedBox();
                           return ListTile(
                             leading: IconButton(
                               onPressed: () => setState(() => actor.type =
@@ -252,7 +246,7 @@ class _EditorScreenState extends State<EditorScreen>
                                   : Icons.face_outlined),
                             ),
                             title: TextFormField(
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: 'Actor name',
                               ),
                               initialValue:
@@ -269,7 +263,7 @@ class _EditorScreenState extends State<EditorScreen>
                                 scenario.actors.remove(actor);
                                 translations.remove(actor.id);
                               }),
-                              icon: Icon(Icons.delete_outline),
+                              icon: const Icon(Icons.delete_outline),
                             ),
                           );
                         },
@@ -283,7 +277,7 @@ class _EditorScreenState extends State<EditorScreen>
             Builder(
               builder: (context) {
                 return CustomScrollView(
-                  key: PageStorageKey('nodes'),
+                  key: const PageStorageKey('nodes'),
                   slivers: [
                     SliverOverlapInjector(
                       handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
@@ -294,97 +288,107 @@ class _EditorScreenState extends State<EditorScreen>
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
                           final node = scenario.nodes[index];
-                          return Card(
-                            elevation: 0,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                ListTile(
-                                  leading: Icon(Icons.person_outline),
-                                  title: DropdownButton(
-                                    icon: SizedBox(),
-                                    underline: SizedBox(),
-                                    value: (() {
-                                      for (final actor in scenario.actors)
-                                        if (actor.id == node.actorId)
-                                          return actor;
-                                    })(),
-                                    onChanged: (Actor? actor) => setState(() {
-                                      node.actorId = actor?.id;
-                                    }),
-                                    items: [
-                                      DropdownMenuItem<Actor>(
-                                        child: Text("None"),
-                                      ),
-                                      ...scenario.actors
-                                          .map((a) => DropdownMenuItem(
-                                                value: a,
-                                                child: Text(
-                                                    a.getName(translations)),
-                                              ))
-                                    ].toList(),
-                                  ),
-                                ),
-                                ListTile(
-                                  leading: Icon(Icons.notes_outlined),
-                                  title: TextFormField(
-                                    maxLines: null,
-                                    initialValue: (translations[node.id]
-                                            as MessageTranslation?)
-                                        ?.text,
-                                    onChanged: (s) => setState(() {
-                                      final t = translations[node.id]
-                                          as MessageTranslation?;
-                                      if (t != null) t.text = s;
-                                    }),
-                                  ),
-                                ),
-                                const Divider(),
-                                SwitchListTile(
-                                  value: node.autoTransition,
-                                  title: const Text('Auto transition'),
-                                  onChanged: (v) => setState(() {
-                                    node.autoTransition = v;
-                                  }),
-                                ),
-                                for (Transition transition
-                                    in node.transitions ?? [])
+                          if (node != null) {
+                            return Card(
+                              elevation: 0,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
                                   ListTile(
-                                    title: buildNodeSelector(
-                                      context,
-                                      getNodeById(transition.targetNodeId),
-                                      ((node) {
-                                        if (node != null) {
-                                          setState(
-                                            () {
-                                              transition.targetNodeId = node.id;
-                                            },
-                                          );
+                                    leading: const Icon(Icons.person_outline),
+                                    title: DropdownButton(
+                                      icon: const SizedBox(),
+                                      underline: const SizedBox(),
+                                      value: (() {
+                                        for (final actor
+                                            in scenario.actors.values) {
+                                          if (actor.id == node.actorId) {
+                                            return actor;
+                                          }
                                         }
+                                      })(),
+                                      onChanged: (Actor? actor) => setState(() {
+                                        node.actorId = actor?.id;
                                       }),
-                                      false,
-                                    ),
-                                    trailing: IconButton(
-                                      onPressed: () => setState(() =>
-                                          node.transitions?.remove(transition)),
-                                      icon: const Icon(Icons.remove_outlined),
+                                      items: [
+                                        const DropdownMenuItem<Actor>(
+                                          child: Text("None"),
+                                        ),
+                                        for (final actor
+                                            in scenario.actors.values)
+                                          DropdownMenuItem(
+                                            value: actor,
+                                            child: Text(
+                                              actor.getName(translations),
+                                            ),
+                                          )
+                                      ],
                                     ),
                                   ),
-                                OutlinedButton.icon(
-                                  onPressed: () => setState(() {
-                                    final id = uuid.v4();
-                                    node.transitions ??= [];
-                                    node.transitions!.add(
-                                        Transition(id, targetNodeId: node.id));
-                                    translations[id] =
-                                        MessageTranslation(metaData: meta);
-                                  }),
-                                  icon: const Icon(Icons.alt_route_outlined),
-                                  label: const Text('Add Transition'),
-                                ),
-                              ],
-                            ),
-                          );
+                                  ListTile(
+                                    leading: const Icon(Icons.notes_outlined),
+                                    title: TextFormField(
+                                      maxLines: null,
+                                      initialValue: MessageTranslation.get(
+                                        translations,
+                                        node.id,
+                                      )?.text,
+                                      onChanged: (s) => setState(() {
+                                        final t = translations[node.id]
+                                            as MessageTranslation?;
+                                        if (t != null) t.text = s;
+                                      }),
+                                    ),
+                                  ),
+                                  const Divider(),
+                                  SwitchListTile(
+                                    value: node.autoTransition,
+                                    title: const Text('Auto transition'),
+                                    onChanged: (v) => setState(() {
+                                      node.autoTransition = v;
+                                    }),
+                                  ),
+                                  for (Transition transition
+                                      in node.transitions ?? [])
+                                    ListTile(
+                                      title: buildNodeSelector(
+                                        context,
+                                        scenario.nodes[transition.targetNodeId],
+                                        ((node) {
+                                          if (node != null) {
+                                            setState(
+                                              () {
+                                                transition.targetNodeId =
+                                                    node.id;
+                                              },
+                                            );
+                                          }
+                                        }),
+                                        false,
+                                      ),
+                                      trailing: IconButton(
+                                        onPressed: () => setState(() => node
+                                            .transitions
+                                            ?.remove(transition)),
+                                        icon: const Icon(Icons.remove_outlined),
+                                      ),
+                                    ),
+                                  OutlinedButton.icon(
+                                    onPressed: () => setState(() {
+                                      final id = uuid.v4();
+                                      node.transitions ??= [];
+                                      node.transitions!.add(Transition(id,
+                                          targetNodeId: node.id));
+                                      translations[id] =
+                                          MessageTranslation(metaData: meta);
+                                    }),
+                                    icon: const Icon(Icons.alt_route_outlined),
+                                    label: const Text('Add Transition'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
                         },
                         childCount: scenario.nodes.length,
                       ),

@@ -6,9 +6,9 @@ import 'node.dart';
 import 'package:algolia/algolia.dart';
 
 class Scenario {
-  List<Node> nodes;
+  Map<String, Node> nodes;
+  Map<String, Actor> actors;
   String startNodeId;
-  List<Actor> actors;
   ContentMetaData metaData;
 
   Scenario({
@@ -18,25 +18,25 @@ class Scenario {
     required this.metaData,
   });
 
-  String getTitle(Map<String, TranslationAsset> translations) =>
-      (translations['scenario'] as ScenarioTranslation?)?.title ?? '';
-
-  String getDescription(Map<String, TranslationAsset> translations) =>
-      (translations['scenario'] as ScenarioTranslation?)?.description ?? '';
-
   Scenario.fromJson(
     Map<String, dynamic> json, {
     required String id,
   }) : this(
-          nodes: listFromJson(
-            json['nodes'],
-            (j) => Node.fromJson(j),
-          ),
+          nodes: {
+            for (final node in listFromJson(
+              json['nodes'],
+              (j) => Node.fromJson(j),
+            ))
+              node.id: node
+          },
           startNodeId: json['startNodeId'],
-          actors: listFromJson(
-            json['actors'],
-            (j) => Actor.fromJson(j),
-          ),
+          actors: {
+            for (final actor in listFromJson(
+              json['actors'],
+              (j) => Actor.fromJson(j),
+            ))
+              actor.id: actor
+          },
           metaData: ContentMetaData.fromJson(
             json['metaData'],
             id: id,
@@ -46,8 +46,8 @@ class Scenario {
   Map<String, dynamic> toJson() {
     return {
       'startNodeId': startNodeId,
-      'nodes': nodes.map((n) => n.toJson()).toList(),
-      'actors': actors.map((a) => a.toJson()).toList(),
+      'nodes': nodes.values.map((n) => n.toJson()).toList(),
+      'actors': actors.values.map((a) => a.toJson()).toList(),
       'metaData': metaData.toJson(),
     };
   }

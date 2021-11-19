@@ -16,6 +16,12 @@ abstract class TranslationAsset {
     required this.metaData,
   });
 
+  static TranslationAsset? get(
+    Map<String, TranslationAsset> set,
+    String id,
+  ) =>
+      set[id];
+
   factory TranslationAsset.fromJson(
     Map<String, dynamic> json,
     String id,
@@ -71,13 +77,15 @@ class ScenarioTranslation extends TranslationAsset {
     required ContentMetaData metaData,
   }) : super(metaData: metaData, assetType: AssetType.scenario);
 
-  Map<String, dynamic> toJson() {
-    return super.toJson()
-      ..addAll({
-        'title': title,
-        'description': description,
-      });
-  }
+  static ScenarioTranslation? get(Map<String, TranslationAsset> set) =>
+      set['scenario'] as ScenarioTranslation?;
+
+  @override
+  Map<String, dynamic> toJson() => super.toJson()
+    ..addAll({
+      'title': title,
+      'description': description,
+    });
 }
 
 class MessageTranslation extends TranslationAsset {
@@ -90,13 +98,18 @@ class MessageTranslation extends TranslationAsset {
     required ContentMetaData metaData,
   }) : super(metaData: metaData, assetType: AssetType.message);
 
-  Map<String, dynamic> toJson() {
-    return super.toJson()
-      ..addAll({
-        'text': text,
-        'audioUrl': audioUrl,
-      });
-  }
+  static MessageTranslation? get(
+    Map<String, TranslationAsset> set,
+    String id,
+  ) =>
+      set[id] as MessageTranslation?;
+
+  @override
+  Map<String, dynamic> toJson() => super.toJson()
+    ..addAll({
+      'text': text,
+      'audioUrl': audioUrl,
+    });
 }
 
 class ActorTranslation extends TranslationAsset {
@@ -107,10 +120,15 @@ class ActorTranslation extends TranslationAsset {
     required ContentMetaData metaData,
   }) : super(metaData: metaData, assetType: AssetType.actor);
 
-  Map<String, dynamic> toJson() {
-    return super.toJson()
-      ..addAll({
-        'name': name,
-      });
-  }
+  static ActorTranslation? get(
+    Map<String, TranslationAsset> set,
+    String id,
+  ) =>
+      set[id] as ActorTranslation?;
+
+  @override
+  Map<String, dynamic> toJson() => super.toJson()
+    ..addAll({
+      'name': name,
+    });
 }
