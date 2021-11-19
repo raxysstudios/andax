@@ -339,41 +339,48 @@ class _EditorScreenState extends State<EditorScreen>
                                     }),
                                   ),
                                 ),
-                                Divider(),
+                                const Divider(),
+                                SwitchListTile(
+                                  value: node.autoTransition,
+                                  title: const Text('Auto transition'),
+                                  onChanged: (v) => setState(() {
+                                    node.autoTransition = v;
+                                  }),
+                                ),
                                 for (Transition transition
                                     in node.transitions ?? [])
                                   ListTile(
                                     title: buildNodeSelector(
                                       context,
                                       getNodeById(transition.targetNodeId),
-                                      (node) => setState(
-                                        () {
-                                          if (node != null)
-                                            transition.targetNodeId = node.id;
-                                        },
-                                      ),
+                                      ((node) {
+                                        if (node != null) {
+                                          setState(
+                                            () {
+                                              transition.targetNodeId = node.id;
+                                            },
+                                          );
+                                        }
+                                      }),
                                       false,
                                     ),
                                     trailing: IconButton(
                                       onPressed: () => setState(() =>
                                           node.transitions?.remove(transition)),
-                                      icon: Icon(Icons.remove_outlined),
+                                      icon: const Icon(Icons.remove_outlined),
                                     ),
                                   ),
                                 OutlinedButton.icon(
                                   onPressed: () => setState(() {
                                     final id = uuid.v4();
-                                    if (node.transitions == null)
-                                      node.transitions = [];
+                                    node.transitions ??= [];
                                     node.transitions!.add(
                                         Transition(id, targetNodeId: node.id));
                                     translations[id] =
                                         MessageTranslation(metaData: meta);
                                   }),
-                                  icon: Icon(
-                                    Icons.alt_route_outlined,
-                                  ),
-                                  label: Text('Add Transition'),
+                                  icon: const Icon(Icons.alt_route_outlined),
+                                  label: const Text('Add Transition'),
                                 ),
                               ],
                             ),
