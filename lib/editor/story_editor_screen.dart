@@ -40,7 +40,12 @@ class StoryEditorState extends State<StoryEditorScreen> {
   late var translation = Translation(
     language: '',
     metaData: meta,
-    assets: {},
+    assets: {
+      'story': StoryTranslation(
+        title: 'New story',
+        metaData: meta,
+      )
+    },
   );
 
   void update(VoidCallback action) => setState(action);
