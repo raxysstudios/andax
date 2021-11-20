@@ -95,7 +95,30 @@ class StoryEditorState extends State<StoryEditorScreen> {
     return Provider.value(
       value: this,
       child: Scaffold(
-        body: SafeArea(
+        body: WillPopScope(
+          onWillPop: () async {
+            final result = await showDialog<bool>(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text('Exit editor?'),
+                  actions: [
+                    TextButton.icon(
+                      onPressed: () => Navigator.pop(context, true),
+                      icon: const Icon(Icons.delete_rounded),
+                      label: const Text('Exit'),
+                    ),
+                    TextButton.icon(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(Icons.edit_rounded),
+                      label: const Text('Stay'),
+                    ),
+                  ],
+                );
+              },
+            );
+            return result ?? false;
+          },
           child: PageView.builder(
             controller: _pageController,
             physics: const NeverScrollableScrollPhysics(),
