@@ -40,24 +40,6 @@ class _StoryScreenState extends State<StoryScreen> {
       appBar: AppBar(
         leading: const RoundedBackButton(),
         title: Text(widget.info.title),
-        actions: [
-          IconButton(
-            onPressed: () async {
-              final translation = await loadTranslation(widget.info);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => CrowdsourcingScreen(
-                    storyId: widget.info.storyID,
-                    translations: translation.assets.values.toList(),
-                  ),
-                ),
-              );
-            },
-            tooltip: 'Translate',
-            icon: const Icon(Icons.translate_rounded),
-          ),
-        ],
       ),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 76),
@@ -95,7 +77,19 @@ class _StoryScreenState extends State<StoryScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: IconButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        final translation = await loadTranslation(widget.info);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CrowdsourcingScreen(
+                              storyId: widget.info.storyID,
+                              translations: translation.assets.values.toList(),
+                            ),
+                          ),
+                        );
+                      },
+                      tooltip: 'Translate story',
                       icon: const Icon(Icons.translate_rounded),
                     ),
                   ),
@@ -116,6 +110,7 @@ class _StoryScreenState extends State<StoryScreen> {
                           ),
                         );
                       },
+                      tooltip: 'Edit story',
                       icon: const Icon(Icons.edit_rounded),
                     ),
                   ),

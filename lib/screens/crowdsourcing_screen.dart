@@ -1,6 +1,7 @@
 import 'package:andax/models/content_meta_data.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/models/translation.dart';
+import 'package:andax/widgets/loading_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,6 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
   late Map<String, TranslationAsset> translations;
   late final Map<String, TranslationAsset> origins;
   String language = '';
-  bool isLoading = false;
 
   @override
   void initState() {
@@ -186,7 +186,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
     }
   }
 
-  Future<void> uploadTranslation() async {
+  Future<void> upload() async {
     final path = await FirebaseFirestore.instance
         .collection('stories/${widget.storyId}/translations')
         .add(
@@ -218,29 +218,8 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
         title: const Text('Story translation'),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: isLoading
-            ? null
-            : () async {
-                setState(() {
-                  isLoading = true;
-                });
-                await uploadTranslation();
-                setState(() {
-                  isLoading = false;
-                });
-              },
-        icon: isLoading
-            ? Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: SizedBox(
-                  height: 20,
-                  width: 20,
-                  child: CircularProgressIndicator(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                ),
-              )
-            : const Icon(Icons.upload_outlined),
+        onPressed: () => showLoadingDialog(context, upload()),
+        icon: const Icon(Icons.upload_outlined),
         label: const Text("Upload"),
       ),
       body: ListView(
