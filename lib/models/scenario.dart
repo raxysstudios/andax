@@ -42,14 +42,12 @@ class Scenario {
           ),
         );
 
-  Map<String, dynamic> toJson() {
-    return {
-      'startNodeId': startNodeId,
-      'nodes': nodes.values.map((n) => n.toJson()).toList(),
-      'actors': actors.values.map((a) => a.toJson()).toList(),
-      'metaData': metaData.toJson(),
-    };
-  }
+  Map<String, dynamic> toJson() => {
+        'startNodeId': startNodeId,
+        'nodes': nodes.values.map((n) => n.toJson()).toList(),
+        'actors': actors.values.map((a) => a.toJson()).toList(),
+        'metaData': metaData.toJson(),
+      };
 }
 
 class ScenarioInfo {

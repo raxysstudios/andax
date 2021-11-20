@@ -7,6 +7,8 @@ import 'package:andax/models/node.dart';
 import 'package:andax/models/scenario.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
+import 'package:andax/widgets/loading_dialog.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -43,6 +45,18 @@ class StoryEditorState extends State<StoryEditorScreen> {
 
   void update(VoidCallback action) => setState(action);
 
+  Future upload() async {
+    final sdb = FirebaseFirestore.instance.collection('stories');
+    final sid = await sdb.add(story.toJson()).then((r) => r.id);
+    final tdb = sdb.doc(sid).collection('translations');
+    final tid = await tdb.add(translation.toJson()).then((r) => r.id);
+    final adb = tdb.doc(tid).collection('assets');
+    await Future.wait([
+      for (final entry in translation.assets.entries)
+        adb.doc(entry.key).set(entry.value.toJson())
+    ]);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Provider.value(
@@ -75,7 +89,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
             switch (_page) {
               case 0:
                 return FloatingActionButton(
-                  onPressed: () {},
+                  onPressed: () => showLoadingDialog(context, upload()),
                   tooltip: 'Upload story',
                   child: const Icon(Icons.upload_rounded),
                 );
