@@ -9,45 +9,68 @@ class StoryActorsEditor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final editor = context.read<StoryEditorState>();
-    return ListView.builder(
-      itemCount: editor.story.actors.length,
-      itemBuilder: (context, index) {
-        final actor = editor.story.actors[index];
-        if (actor == null) return const SizedBox();
-        return ListTile(
-          leading: IconButton(
-            onPressed: () => editor.update(() {
-              actor.type = actor.type == ActorType.npc
-                  ? ActorType.player
-                  : ActorType.npc;
-            }),
-            icon: Icon(actor.type == ActorType.npc
-                ? Icons.smart_toy_outlined
-                : Icons.face_outlined),
+    final editor = context.watch<StoryEditorState>();
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          title: Text('Actors: ${editor.story.actors.length}'),
+          forceElevated: true,
+        ),
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              final actor = editor.story.actors[index];
+              if (actor == null) return const SizedBox();
+              return ListTile(
+                leading: IconButton(
+                  onPressed: () => editor.update(() {
+                    actor.type = actor.type == ActorType.npc
+                        ? ActorType.player
+                        : ActorType.npc;
+                  }),
+                  icon: Icon(actor.type == ActorType.npc
+                      ? Icons.smart_toy_outlined
+                      : Icons.face_outlined),
+                ),
+                title: TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Actor name',
+                  ),
+                  initialValue: ActorTranslation.get(
+                    editor.translation,
+                    actor.id,
+                  )?.name,
+                  onChanged: (s) => editor.update(() {
+                    final t =
+                        ActorTranslation.get(editor.translation, actor.id);
+                    if (t != null) t.name = s;
+                  }),
+                ),
+                trailing: IconButton(
+                  onPressed: () => editor.update(() {
+                    editor.story.actors.remove(actor);
+                    editor.translation.assets.remove(actor.id);
+                  }),
+                  icon: const Icon(Icons.delete_outline),
+                ),
+              );
+            },
+            childCount: editor.story.actors.length,
           ),
-          title: TextFormField(
-            decoration: const InputDecoration(
-              labelText: 'Actor name',
-            ),
-            initialValue: ActorTranslation.get(
-              editor.translation,
-              actor.id,
-            )?.name,
-            onChanged: (s) => editor.update(() {
-              final t = ActorTranslation.get(editor.translation, actor.id);
-              if (t != null) t.name = s;
-            }),
+        )
+      ],
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Text(
+            'Actors: ${editor.story.actors.length}',
+            style: Theme.of(context).textTheme.headline6,
           ),
-          trailing: IconButton(
-            onPressed: () => editor.update(() {
-              editor.story.actors.remove(actor);
-              editor.translation.assets.remove(actor.id);
-            }),
-            icon: const Icon(Icons.delete_outline),
-          ),
-        );
-      },
+        ),
+      ],
     );
   }
 }

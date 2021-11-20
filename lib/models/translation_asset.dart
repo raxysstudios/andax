@@ -21,7 +21,7 @@ abstract class TranslationAsset {
     Translation translation,
     String id,
   ) =>
-      translation.assets[id];
+      translation[id];
 
   factory TranslationAsset.fromJson(
     Map<String, dynamic> json,
@@ -81,7 +81,7 @@ class ScenarioTranslation extends TranslationAsset {
   static ScenarioTranslation? get(
     Translation translation,
   ) =>
-      translation.assets['scenario'] as ScenarioTranslation?;
+      translation['scenario'] as ScenarioTranslation?;
 
   @override
   Map<String, dynamic> toJson() => super.toJson()
@@ -105,7 +105,7 @@ class MessageTranslation extends TranslationAsset {
     Translation translation,
     String id,
   ) =>
-      translation.assets[id] as MessageTranslation?;
+      translation[id] as MessageTranslation?;
 
   @override
   Map<String, dynamic> toJson() => super.toJson()
@@ -127,7 +127,7 @@ class ActorTranslation extends TranslationAsset {
     Translation translation,
     String id,
   ) =>
-      translation.assets[id] as ActorTranslation?;
+      translation[id] as ActorTranslation?;
 
   @override
   Map<String, dynamic> toJson() => super.toJson()

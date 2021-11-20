@@ -1,6 +1,11 @@
+import 'package:andax/editor/story_actors_editor.dart';
+import 'package:andax/editor/story_general_editor.dart';
+import 'package:andax/models/actor.dart';
 import 'package:andax/models/content_meta_data.dart';
+import 'package:andax/models/node.dart';
 import 'package:andax/models/scenario.dart';
 import 'package:andax/models/translation.dart';
+import 'package:andax/models/translation_asset.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -42,29 +47,60 @@ class StoryEditorState extends State<StoryEditorScreen> {
     return Provider.value(
       value: this,
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Story Editor'),
+        body: SafeArea(
+          child: PageView.builder(
+            controller: _pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: 3,
+            itemBuilder: (context, page) {
+              switch (page) {
+                case 0:
+                  return const StoryGeneralEditor();
+                case 1:
+                  return const StoryActorsEditor();
+                case 2:
+                  return const Text('Nodes');
+                default:
+                  return const SizedBox();
+              }
+            },
+          ),
         ),
-        body: PageView.builder(
-          controller: _pageController,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: 3,
-          itemBuilder: (context, page) {
-            switch (page) {
+        floatingActionButton: Builder(
+          builder: (context) {
+            switch (_page) {
               case 0:
-                return const Text('General');
+                return FloatingActionButton(
+                  onPressed: () {},
+                  tooltip: 'Upload story',
+                  child: const Icon(Icons.upload_rounded),
+                );
               case 1:
-                return const Text('Actors');
+                return FloatingActionButton(
+                  onPressed: () => setState(
+                    () {
+                      final id = uuid.v4();
+                      story.actors[id] = Actor(id: id);
+                      translation[id] = ActorTranslation(metaData: _meta);
+                    },
+                  ),
+                  tooltip: 'Add actor',
+                  child: const Icon(Icons.person_add_rounded),
+                );
               case 2:
-                return const Text('Nodes');
+                return FloatingActionButton(
+                  onPressed: () => setState(() {
+                    final id = uuid.v4();
+                    story.nodes[id] = Node(id);
+                    translation[id] = MessageTranslation(metaData: _meta);
+                  }),
+                  tooltip: 'Add node',
+                  child: const Icon(Icons.add_box_rounded),
+                );
               default:
                 return const SizedBox();
             }
           },
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          child: const Icon(Icons.library_add_rounded),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         bottomNavigationBar: BottomAppBar(
@@ -77,7 +113,8 @@ class StoryEditorState extends State<StoryEditorScreen> {
                 'Actors': Icons.person_rounded,
                 'Nodes': Icons.timeline_rounded,
               }.entries.toList();
-              return Row(
+              return ListView(
+                scrollDirection: Axis.horizontal,
                 children: [
                   for (var i = 0; i < pages.length; i++)
                     Padding(
@@ -95,8 +132,8 @@ class StoryEditorState extends State<StoryEditorScreen> {
                             _page = i;
                             _pageController.animateToPage(
                               i,
-                              duration: const Duration(milliseconds: 150),
-                              curve: Curves.easeInSine,
+                              duration: kTabScrollDuration,
+                              curve: standardEasing,
                             );
                           },
                         ),
