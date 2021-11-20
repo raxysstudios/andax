@@ -61,6 +61,16 @@ class StoryNodesEditor extends StatelessWidget {
                             )
                         ],
                       ),
+                      trailing: IconButton(
+                        onPressed: () => editor.update(() {
+                          editor.story.nodes.remove(node.id);
+                          editor.translation.assets.remove(node.id);
+                          node.transitions?.forEach(
+                            (t) => editor.translation.assets.remove(t.id),
+                          );
+                        }),
+                        icon: const Icon(Icons.delete_rounded),
+                      ),
                     ),
                     ListTile(
                       leading: const Icon(Icons.notes_rounded),
