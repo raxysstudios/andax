@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> refreshScenarios() async {
     final scenarios = await algolia.instance
-        .index('scenarios')
+        .index('stories')
         .query('')
         // .filters('language:${settings.targetLanguage}')
         .getObjects()
