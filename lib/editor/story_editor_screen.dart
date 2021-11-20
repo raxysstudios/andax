@@ -190,29 +190,28 @@ class StoryEditorState extends State<StoryEditorScreen> {
               return ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
-                  for (var i = 0; i < pages.length; i++)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: IconButton(
-                        tooltip: pages[i].key,
-                        icon: Icon(
-                          pages[i].value,
-                          color: _page == i
-                              ? Theme.of(context).toggleableActiveColor
-                              : null,
-                        ),
-                        onPressed: () => setState(
-                          () {
-                            _page = i;
-                            _pageController.animateToPage(
-                              i,
-                              duration: kTabScrollDuration,
-                              curve: standardEasing,
-                            );
-                          },
-                        ),
+                  for (var i = 0; i < pages.length; i++) ...[
+                    const SizedBox(width: 8),
+                    IconButton(
+                      tooltip: pages[i].key,
+                      icon: Icon(
+                        pages[i].value,
+                        color: _page == i
+                            ? Theme.of(context).toggleableActiveColor
+                            : null,
+                      ),
+                      onPressed: () => setState(
+                        () {
+                          _page = i;
+                          _pageController.animateToPage(
+                            i,
+                            duration: kTabScrollDuration,
+                            curve: standardEasing,
+                          );
+                        },
                       ),
                     ),
+                  ],
                 ],
               );
             }),

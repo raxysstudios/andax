@@ -74,45 +74,41 @@ class _StoryScreenState extends State<StoryScreen> {
               ),
               Row(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: IconButton(
-                      onPressed: () async {
-                        final translation = await loadTranslation(widget.info);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CrowdsourcingScreen(
-                              storyId: widget.info.storyID,
-                              translations: translation.assets.values.toList(),
-                            ),
+                  const SizedBox(width: 8),
+                  IconButton(
+                    onPressed: () async {
+                      final translation = await loadTranslation(widget.info);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CrowdsourcingScreen(
+                            storyId: widget.info.storyID,
+                            translations: translation.assets.values.toList(),
                           ),
-                        );
-                      },
-                      tooltip: 'Translate story',
-                      icon: const Icon(Icons.translate_rounded),
-                    ),
+                        ),
+                      );
+                    },
+                    tooltip: 'Translate story',
+                    icon: const Icon(Icons.translate_rounded),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: IconButton(
-                      onPressed: () async {
-                        final story = await loadStory(widget.info);
-                        final translation = await loadTranslation(widget.info);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => StoryEditorScreen(
-                              story: story,
-                              translation: translation,
-                              info: widget.info,
-                            ),
+                  const SizedBox(width: 8),
+                  IconButton(
+                    onPressed: () async {
+                      final story = await loadStory(widget.info);
+                      final translation = await loadTranslation(widget.info);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => StoryEditorScreen(
+                            story: story,
+                            translation: translation,
+                            info: widget.info,
                           ),
-                        );
-                      },
-                      tooltip: 'Edit story',
-                      icon: const Icon(Icons.edit_rounded),
-                    ),
+                        ),
+                      );
+                    },
+                    tooltip: 'Edit story',
+                    icon: const Icon(Icons.edit_rounded),
                   ),
                 ],
               ),

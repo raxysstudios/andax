@@ -53,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             icon: const Icon(Icons.edit_rounded),
           ),
+          const SizedBox(width: 8),
           IconButton(
             onPressed: () => Navigator.push(
               context,
@@ -61,7 +62,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             icon: const Icon(Icons.settings_rounded),
-          )
+          ),
+          const SizedBox(width: 8),
         ],
       ),
       body: Column(
