@@ -1,5 +1,6 @@
 import 'package:andax/editor/story_actors_editor.dart';
 import 'package:andax/editor/story_general_editor.dart';
+import 'package:andax/editor/story_nodes_editor.dart';
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/content_meta_data.dart';
 import 'package:andax/models/node.dart';
@@ -23,7 +24,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
   var _page = 0;
 
   final uuid = const Uuid();
-  final _meta = ContentMetaData(
+  final meta = ContentMetaData(
     '',
     FirebaseAuth.instance.currentUser?.uid ?? '',
   );
@@ -32,11 +33,11 @@ class StoryEditorState extends State<StoryEditorScreen> {
     nodes: {},
     startNodeId: '',
     actors: {},
-    metaData: _meta,
+    metaData: meta,
   );
   late var translation = Translation(
     language: '',
-    metaData: _meta,
+    metaData: meta,
     assets: {},
   );
 
@@ -61,7 +62,8 @@ class StoryEditorState extends State<StoryEditorScreen> {
                   // ignore: prefer_const_constructors
                   return StoryActorsEditor();
                 case 2:
-                  return const Text('Nodes');
+                  // ignore: prefer_const_constructors
+                  return StoryNodesEditor();
                 default:
                   return const SizedBox();
               }
@@ -83,7 +85,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
                     () {
                       final id = uuid.v4();
                       story.actors[id] = Actor(id: id);
-                      translation[id] = ActorTranslation(metaData: _meta);
+                      translation[id] = ActorTranslation(metaData: meta);
                     },
                   ),
                   tooltip: 'Add actor',
@@ -94,7 +96,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
                   onPressed: () => setState(() {
                     final id = uuid.v4();
                     story.nodes[id] = Node(id);
-                    translation[id] = MessageTranslation(metaData: _meta);
+                    translation[id] = MessageTranslation(metaData: meta);
                   }),
                   tooltip: 'Add node',
                   child: const Icon(Icons.add_box_rounded),

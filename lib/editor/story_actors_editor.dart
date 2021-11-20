@@ -10,6 +10,7 @@ class StoryActorsEditor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final editor = context.watch<StoryEditorState>();
+    final actors = editor.story.actors.values.toList();
     return CustomScrollView(
       slivers: [
         SliverAppBar(
@@ -17,7 +18,7 @@ class StoryActorsEditor extends StatelessWidget {
             onPressed: () => Navigator.pop(context),
             icon: const Icon(Icons.arrow_back_rounded),
           ),
-          title: Text('Actors: ${editor.story.actors.length}'),
+          title: Text('Actors: ${actors.length}'),
           forceElevated: true,
           floating: true,
           snap: true,
@@ -26,7 +27,7 @@ class StoryActorsEditor extends StatelessWidget {
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (context, index) {
-              final actor = editor.story.actors.values.elementAt(index);
+              final actor = actors[index];
               return ListTile(
                 leading: IconButton(
                   onPressed: () => editor.update(() {
@@ -63,7 +64,7 @@ class StoryActorsEditor extends StatelessWidget {
                 ),
               );
             },
-            childCount: editor.story.actors.length,
+            childCount: actors.length,
           ),
         ),
       ],
