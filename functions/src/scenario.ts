@@ -6,24 +6,24 @@ const index = algoliasearch(
     functions.config().algolia.app,
     functions.config().algolia.key
 )
-    .initIndex("scenarios");
+    .initIndex("stories");
 
-type scenarioRecord = {
-    scenarioID: string;
+type storyRecord = {
+    storyID: string;
     translationID: string;
     language: string;
     title: string,
     description:string,
 };
 
-export const indexScenarios = functions
+export const indexstorys = functions
     .region("europe-central2")
     .firestore.document(
-        "scenarios/{scenarioID}/translations/{translationID}/assets/scenario"
+        "stories/{storyID}/translations/{translationID}/assets/story"
     )
     .onWrite(async (change, context) => {
       const translationID = context.params.translationID;
-      const scenarioID = context.params.scenarioID;
+      const storyID = context.params.storyID;
       if (change.before.exists) {
         await index.deleteBy({
           filters: "translationID:" + translationID,
@@ -33,17 +33,17 @@ export const indexScenarios = functions
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const {title, description} = change.after.data()!;
         const language = await firestore()
-            .doc(`scenarios/${scenarioID}/translations/${translationID}`)
+            .doc(`stories/${storyID}/translations/${translationID}`)
             .get()
             .then((doc) => doc.data()?.language);
         await index.saveObject(
             {
-              scenarioID,
+              storyID,
               translationID,
               language,
               title,
               description,
-            } as scenarioRecord,
+            } as storyRecord,
             {autoGenerateObjectIDIfNotExist: true}
         );
       }
