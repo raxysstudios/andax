@@ -98,20 +98,42 @@ class StoryNodesEditor extends StatelessWidget {
                     ),
                     if (node.transitions != null)
                       for (final transition in node.transitions!)
-                        ListTile(
-                          title: StoryNodeSelector(
-                            editor.story.nodes[transition.targetNodeId],
-                            (node) => editor.update(() {
-                              transition.targetNodeId = node?.id ?? '';
-                            }),
-                            allowNone: false,
-                          ),
-                          trailing: IconButton(
-                            onPressed: () => editor.update(
-                              () => node.transitions?.remove(transition),
+                        Column(
+                          children: [
+                            const Divider(),
+                            ListTile(
+                              leading: const Icon(Icons.place_rounded),
+                              title: StoryNodeSelector(
+                                editor.story.nodes[transition.targetNodeId],
+                                (node) => editor.update(() {
+                                  transition.targetNodeId = node?.id ?? '';
+                                }),
+                                allowNone: false,
+                              ),
+                              trailing: IconButton(
+                                onPressed: () => editor.update(
+                                  () => node.transitions?.remove(transition),
+                                ),
+                                icon: const Icon(Icons.remove_rounded),
+                              ),
                             ),
-                            icon: const Icon(Icons.remove_rounded),
-                          ),
+                            ListTile(
+                              leading: const Icon(Icons.short_text_rounded),
+                              title: TextFormField(
+                                maxLines: null,
+                                initialValue: MessageTranslation.get(
+                                  editor.translation,
+                                  transition.id,
+                                )?.text,
+                                onChanged: (s) => editor.update(() {
+                                  MessageTranslation.get(
+                                    editor.translation,
+                                    transition.id,
+                                  )?.text = s;
+                                }),
+                              ),
+                            ),
+                          ],
                         ),
                     OutlinedButton.icon(
                       onPressed: () => editor.update(() {
