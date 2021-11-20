@@ -4,20 +4,20 @@ import 'content_meta_data.dart';
 import 'node.dart';
 import 'package:algolia/algolia.dart';
 
-class Scenario {
+class Story {
   Map<String, Node> nodes;
   Map<String, Actor> actors;
   String startNodeId;
   ContentMetaData metaData;
 
-  Scenario({
+  Story({
     required this.nodes,
     required this.startNodeId,
     required this.actors,
     required this.metaData,
   });
 
-  Scenario.fromJson(
+  Story.fromJson(
     Map<String, dynamic> json, {
     required String id,
   }) : this(
@@ -50,22 +50,22 @@ class Scenario {
       };
 }
 
-class ScenarioInfo {
+class StoryInfo {
   final String scenarioID;
   final String translationID;
   final String title;
   final String? description;
 
-  const ScenarioInfo({
+  const StoryInfo({
     required this.scenarioID,
     required this.translationID,
     required this.title,
     this.description,
   });
 
-  factory ScenarioInfo.fromAlgoliaHit(AlgoliaObjectSnapshot hit) {
+  factory StoryInfo.fromAlgoliaHit(AlgoliaObjectSnapshot hit) {
     final json = hit.data;
-    return ScenarioInfo(
+    return StoryInfo(
       scenarioID: json['scenarioID'],
       translationID: json['translationID'],
       title: json['title'],

@@ -3,7 +3,7 @@ import "dart:math";
 import 'dart:ui';
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
-import 'package:andax/models/scenario.dart';
+import 'package:andax/models/story.dart';
 import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/utils.dart';
@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 class PlayScreen extends StatefulWidget {
-  final Scenario scenario;
+  final Story scenario;
   final List<TranslationAsset> translations;
 
   const PlayScreen({

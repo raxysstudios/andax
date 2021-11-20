@@ -4,7 +4,7 @@ import 'package:andax/editor/story_nodes_editor.dart';
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/content_meta_data.dart';
 import 'package:andax/models/node.dart';
-import 'package:andax/models/scenario.dart';
+import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/widgets/loading_dialog.dart';
@@ -31,7 +31,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
     FirebaseAuth.instance.currentUser?.uid ?? '',
   );
 
-  late var story = Scenario(
+  late var story = Story(
     nodes: {},
     startNodeId: '',
     actors: {},
@@ -122,7 +122,6 @@ class StoryEditorState extends State<StoryEditorScreen> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         bottomNavigationBar: BottomAppBar(
-          shape: const CircularNotchedRectangle(),
           child: SizedBox(
             height: kBottomNavigationBarHeight,
             child: Builder(builder: (context) {

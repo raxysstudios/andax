@@ -1,5 +1,6 @@
 import 'package:andax/editor/story_node_selector.dart';
 import 'package:andax/models/translation_asset.dart';
+import 'package:andax/widgets/rounded_back_button.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,12 +15,9 @@ class StoryGeneralEditor extends StatelessWidget {
     final editor = context.watch<StoryEditorState>();
     return CustomScrollView(
       slivers: [
-        SliverAppBar(
-          leading: IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_rounded),
-          ),
-          title: const Text('General'),
+        const SliverAppBar(
+          leading: RoundedBackButton(),
+          title: Text('General'),
           forceElevated: true,
           floating: true,
           snap: true,

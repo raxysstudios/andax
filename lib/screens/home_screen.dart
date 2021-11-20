@@ -1,10 +1,10 @@
 import 'package:andax/editor/story_editor_screen.dart';
 import 'package:andax/main.dart';
-import 'package:andax/screens/scenario_info.dart';
+import 'package:andax/screens/story_screen.dart';
 import 'package:andax/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import '../models/scenario.dart';
+import '../models/story.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -17,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final RefreshController refreshController = RefreshController(
     initialRefresh: true,
   );
-  List<ScenarioInfo> scenarios = [];
+  List<StoryInfo> scenarios = [];
 
   Future<void> refreshScenarios() async {
     final scenarios = await algolia.instance
@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
         .getObjects()
         .then(
           (s) => s.hits.map(
-            (h) => ScenarioInfo.fromAlgoliaHit(h),
+            (h) => StoryInfo.fromAlgoliaHit(h),
           ),
         );
     setState(
@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Scenarios'),
+        title: const Text('Stories'),
         actions: [
           IconButton(
             onPressed: () => Navigator.push(
@@ -51,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 builder: (context) => const StoryEditorScreen(),
               ),
             ),
-            icon: const Icon(Icons.construction_outlined),
+            icon: const Icon(Icons.construction_rounded),
           ),
           IconButton(
             onPressed: () => Navigator.push(
@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 builder: (context) => const SettingsScreen(),
               ),
             ),
-            icon: const Icon(Icons.settings_outlined),
+            icon: const Icon(Icons.settings_rounded),
           )
         ],
       ),
@@ -86,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         await Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => ScenarioInfoScreen(info),
+                            builder: (_) => StoryScreen(info),
                           ),
                         );
                         await refreshScenarios();
@@ -100,35 +100,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   child: const Icon(Icons.add_outlined),
-      //   onPressed: () async {
-      //     var path = await FirebaseFirestore.instance
-      //         .collection('scenarios')
-      //         .add(testScenario.toJson())
-      //         .then((d) => d.path);
-
-      //     path = await FirebaseFirestore.instance
-      //         .collection('$path/translations')
-      //         .add(
-      //           TranslationSet(
-      //             language: 'russian',
-      //             metaData: ContentMetaData(''),
-      //           ).toJson(),
-      //         )
-      //         .then((d) => d.path);
-
-      //     final batch = FirebaseFirestore.instance.batch();
-
-      //     for (final t in testTranslationsRu)
-      //       batch.set(
-      //         FirebaseFirestore.instance.doc('$path/assets/${t.metaData.id}'),
-      //         t.toJson(),
-      //       );
-      //     await batch.commit();
-      //     print('DONE');
-      //   },
-      // ),
     );
   }
 }
