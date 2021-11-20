@@ -1,5 +1,6 @@
 *.mode1v3
 *.mode2v3
+GoogleService-Info.plist
 *.moved-aside
 *.pbxuser
 *.perspectivev3
