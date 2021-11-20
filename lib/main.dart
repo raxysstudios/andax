@@ -7,44 +7,58 @@ late final Algolia algolia;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(App());
+  runApp(const App());
 }
 
 class App extends StatefulWidget {
+  const App({Key? key}) : super(key: key);
+
   @override
   _AppState createState() => _AppState();
 }
 
 class _AppState extends State<App> {
   final Future firebase = Firebase.initializeApp().then((_) {
-    algolia = Algolia.init(
+    algolia = const Algolia.init(
       applicationId: '4NXJPAZXKE',
       apiKey: 'aef86c663aa0f382553f4375013c2de2',
     );
   });
 
   List<ThemeData> getThemes(BuildContext context) {
-    final theme = Theme.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
     final floatingActionButtonTheme = FloatingActionButtonThemeData(
-      backgroundColor: theme.colorScheme.primary,
-      foregroundColor: theme.colorScheme.onPrimary,
+      backgroundColor: colorScheme.primary,
+      foregroundColor: colorScheme.onPrimary,
     );
-    final cardTheme = const CardTheme(
+    const cardTheme = CardTheme(
       clipBehavior: Clip.antiAlias,
     );
+    const dividerTheme = DividerThemeData(space: 0);
     return [
-      ThemeData(
-        primaryColor: Colors.white,
-        toggleableActiveColor: theme.colorScheme.primary,
+      ThemeData().copyWith(
         scaffoldBackgroundColor: Colors.blueGrey.shade50,
-        floatingActionButtonTheme: floatingActionButtonTheme,
+        colorScheme: ColorScheme.fromSwatch(
+          accentColor: Colors.grey,
+        ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: colorScheme.surface,
+          foregroundColor: colorScheme.onSurface,
+        ),
         cardTheme: cardTheme,
+        toggleableActiveColor: colorScheme.primary,
+        floatingActionButtonTheme: floatingActionButtonTheme,
+        dividerTheme: dividerTheme,
       ),
-      ThemeData(
-        brightness: Brightness.dark,
-          toggleableActiveColor: theme.colorScheme.primary,
-        floatingActionButtonTheme: floatingActionButtonTheme,
+      ThemeData.dark().copyWith(
+        colorScheme: ColorScheme.fromSwatch(
+          accentColor: Colors.grey,
+          brightness: Brightness.dark,
+        ),
         cardTheme: cardTheme,
+        toggleableActiveColor: colorScheme.primary,
+        floatingActionButtonTheme: floatingActionButtonTheme,
+        dividerTheme: dividerTheme,
       ),
     ];
   }
@@ -58,16 +72,18 @@ class _AppState extends State<App> {
       darkTheme: themes[1],
       debugShowCheckedModeBanner: false,
       home: FutureBuilder(
-          // Initialize FlutterFire:
-          future: firebase,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done)
-              return HomeScreen();
-            // return TestScreen();
-            return Center(
+        future: firebase,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return const HomeScreen();
+          }
+          return const Material(
+            child: Center(
               child: Text('Loading...'),
-            );
-          }),
+            ),
+          );
+        },
+      ),
     );
   }
 }

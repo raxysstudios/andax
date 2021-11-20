@@ -1,15 +1,13 @@
-import 'package:andax/content_loader.dart';
+import 'package:andax/editor/story_editor_screen.dart';
 import 'package:andax/main.dart';
-import 'package:andax/editor/editor_screen.dart';
 import 'package:andax/screens/scenario_info.dart';
 import 'package:andax/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../models/scenario.dart';
-import 'crowdsourcing_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen();
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -44,21 +42,25 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Scenarios'),
+        title: const Text('Scenarios'),
         actions: [
           IconButton(
             onPressed: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => EditorScreen()),
+              MaterialPageRoute(
+                builder: (context) => const StoryEditorScreen(),
+              ),
             ),
-            icon: Icon(Icons.construction_outlined),
+            icon: const Icon(Icons.construction_outlined),
           ),
           IconButton(
             onPressed: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => SettingsScreen()),
+              MaterialPageRoute(
+                builder: (context) => const SettingsScreen(),
+              ),
             ),
-            icon: Icon(Icons.settings_outlined),
+            icon: const Icon(Icons.settings_outlined),
           )
         ],
       ),
@@ -91,21 +93,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         refreshController.refreshCompleted();
                         setState(() {});
                       },
-                      trailing: IconButton(
-                        icon: Icon(Icons.edit_outlined),
-                        onPressed: () async {
-                          final translations = await loadTranslations(info);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => CrowdsourcingScreen(
-                                scenarioId: info.scenarioID,
-                                translations: translations,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
                     )
                 ],
               ),
