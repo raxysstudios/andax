@@ -1,18 +1,19 @@
 import 'package:andax/models/content_meta_data.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:andax/models/translation_set.dart';
+import 'package:andax/models/translation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class CrowdsourcingScreen extends StatefulWidget {
-  final String scenarioId;
-  final List<TranslationAsset> translations;
-
   const CrowdsourcingScreen({
     required this.scenarioId,
     required this.translations,
-  });
+    Key? key,
+  }) : super(key: key);
+
+  final String scenarioId;
+  final List<TranslationAsset> translations;
 
   @override
   _CrowdsourcingScreenState createState() => _CrowdsourcingScreenState();
@@ -39,7 +40,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
       language = '';
       if (source == null) {
         translations = {};
-      } else
+      } else {
         translations = {
           for (final translation in source)
             translation.metaData.id: TranslationAsset.fromJson(
@@ -47,6 +48,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
               translation.metaData.id,
             ),
         };
+      }
     });
   }
 
@@ -57,7 +59,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
     required IconData icon,
     required ValueSetter<String> onEdit,
   }) {
-    if (origin?.isEmpty ?? true) return SizedBox();
+    if (origin?.isEmpty ?? true) return const SizedBox();
     return ListTile(
       leading: Icon(icon),
       title: Column(
@@ -98,7 +100,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text('DONE'),
+                  child: const Text('DONE'),
                 ),
               ],
             );
@@ -180,7 +182,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
           ],
         );
       default:
-        return SizedBox();
+        return const SizedBox();
     }
   }
 
@@ -188,20 +190,24 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
     final path = await FirebaseFirestore.instance
         .collection('scenarios/${widget.scenarioId}/translations')
         .add(
-          TranslationSet(
+          Translation(
             language: language,
             metaData: ContentMetaData(
-                '', FirebaseAuth.instance.currentUser?.uid ?? ''),
+              '',
+              FirebaseAuth.instance.currentUser?.uid ?? '',
+            ),
+            assets: {},
           ).toJson(),
         )
         .then((d) => d.path);
     final batch = FirebaseFirestore.instance.batch();
 
-    for (final t in translations.entries)
+    for (final t in translations.entries) {
       batch.set(
         FirebaseFirestore.instance.doc('$path/assets/${t.key}'),
         t.value.toJson(),
       );
+    }
     await batch.commit();
   }
 
@@ -209,7 +215,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Scenarion translation'),
+        title: const Text('Scenarion translation'),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: isLoading
@@ -234,8 +240,8 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
                   ),
                 ),
               )
-            : Icon(Icons.upload_outlined),
-        label: Text("Upload"),
+            : const Icon(Icons.upload_outlined),
+        label: const Text("Upload"),
       ),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 76),
@@ -249,14 +255,14 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
               language = r;
             },
           ),
-          Divider(height: 0),
+          const Divider(height: 0),
           buildFields('scenario'),
-          Divider(height: 0),
+          const Divider(height: 0),
           for (final a in origins.values.where(
             (w) => w.assetType == AssetType.actor,
           ))
             buildFields(a.metaData.id),
-          Divider(height: 0),
+          const Divider(height: 0),
           for (final a in origins.values.where(
             (w) => w.assetType == AssetType.message,
           ))

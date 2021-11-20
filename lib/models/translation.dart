@@ -1,23 +1,29 @@
+import 'package:andax/models/translation_asset.dart';
+
 import 'content_meta_data.dart';
 
-class TranslationSet {
+class Translation {
   String language;
   ContentMetaData metaData;
+  Map<String, TranslationAsset> assets;
 
-  TranslationSet({
+  Translation({
     required this.language,
     required this.metaData,
+    required this.assets,
   });
 
-  TranslationSet.fromJson(
+  Translation.fromJson(
     Map<String, dynamic> json, {
     required String id,
+    Map<String, TranslationAsset>? assets,
   }) : this(
           language: json['language'],
           metaData: ContentMetaData.fromJson(
             json['metaData'],
             id: id,
           ),
+          assets: assets ?? {},
         );
 
   Map<String, dynamic> toJson() => {

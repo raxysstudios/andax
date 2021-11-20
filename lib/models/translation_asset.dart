@@ -1,4 +1,5 @@
 import 'package:andax/models/content_meta_data.dart';
+import 'package:andax/models/translation.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 
 enum AssetType {
@@ -17,10 +18,10 @@ abstract class TranslationAsset {
   });
 
   static TranslationAsset? get(
-    Map<String, TranslationAsset> set,
+    Translation translation,
     String id,
   ) =>
-      set[id];
+      translation.assets[id];
 
   factory TranslationAsset.fromJson(
     Map<String, dynamic> json,
@@ -77,8 +78,10 @@ class ScenarioTranslation extends TranslationAsset {
     required ContentMetaData metaData,
   }) : super(metaData: metaData, assetType: AssetType.scenario);
 
-  static ScenarioTranslation? get(Map<String, TranslationAsset> set) =>
-      set['scenario'] as ScenarioTranslation?;
+  static ScenarioTranslation? get(
+    Translation translation,
+  ) =>
+      translation.assets['scenario'] as ScenarioTranslation?;
 
   @override
   Map<String, dynamic> toJson() => super.toJson()
@@ -99,10 +102,10 @@ class MessageTranslation extends TranslationAsset {
   }) : super(metaData: metaData, assetType: AssetType.message);
 
   static MessageTranslation? get(
-    Map<String, TranslationAsset> set,
+    Translation translation,
     String id,
   ) =>
-      set[id] as MessageTranslation?;
+      translation.assets[id] as MessageTranslation?;
 
   @override
   Map<String, dynamic> toJson() => super.toJson()
@@ -121,10 +124,10 @@ class ActorTranslation extends TranslationAsset {
   }) : super(metaData: metaData, assetType: AssetType.actor);
 
   static ActorTranslation? get(
-    Map<String, TranslationAsset> set,
+    Translation translation,
     String id,
   ) =>
-      set[id] as ActorTranslation?;
+      translation.assets[id] as ActorTranslation?;
 
   @override
   Map<String, dynamic> toJson() => super.toJson()
