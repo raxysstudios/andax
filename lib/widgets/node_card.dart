@@ -11,12 +11,13 @@ class NodeCard extends StatefulWidget {
   final Map<String, TranslationAsset> translations;
   final Map<String, Actor> actors;
 
-  NodeCard({
+  const NodeCard({
+    Key? key,
     required this.node,
     required this.previousNode,
     required this.translations,
     required this.actors,
-  });
+  }) : super(key: key);
 
   @override
   _NodeCardState createState() => _NodeCardState();
@@ -26,7 +27,7 @@ class _NodeCardState extends State<NodeCard> {
   Widget buildNotificaion(String text) {
     return Column(
       children: [
-        Divider(),
+        const Divider(),
         Text(
           text,
           textAlign: TextAlign.center,
@@ -35,7 +36,7 @@ class _NodeCardState extends State<NodeCard> {
             fontStyle: FontStyle.italic,
           ),
         ),
-        Divider(),
+        const Divider(),
       ],
     );
   }
@@ -51,13 +52,13 @@ class _NodeCardState extends State<NodeCard> {
           : const EdgeInsets.fromLTRB(0, 8, 48, 8),
       shape: isPlayer
           ? const RoundedRectangleBorder(
-              borderRadius: const BorderRadius.horizontal(
-                left: const Radius.circular(4),
+              borderRadius: BorderRadius.horizontal(
+                left: Radius.circular(4),
               ),
             )
           : const RoundedRectangleBorder(
-              borderRadius: const BorderRadius.horizontal(
-                right: const Radius.circular(4),
+              borderRadius: BorderRadius.horizontal(
+                right: Radius.circular(4),
               ),
             ),
       color: isPlayer ? Theme.of(context).backgroundColor : null,
@@ -109,7 +110,7 @@ class _NodeCardState extends State<NodeCard> {
       widget.node.id,
       (t) => t.text,
     );
-    if (text.isEmpty) return SizedBox();
+    if (text.isEmpty) return const SizedBox();
     if (actor == null) return buildNotificaion(text);
     return buildMessage(
       text,

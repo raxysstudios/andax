@@ -36,7 +36,7 @@ class HappinessSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = 36.0;
+    const size = 36.0;
 
     return FlutterSlider(
       min: 0,
@@ -50,7 +50,7 @@ class HappinessSlider extends StatelessWidget {
       handler: FlutterSliderHandler(
         child: Text(
           emoji,
-          style: TextStyle(fontSize: size * 0.8),
+          style: const TextStyle(fontSize: size * 0.8),
         ),
         disabled: true,
       ),

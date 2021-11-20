@@ -6,9 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:andax/models/scenario.dart';
 
 class ScenarioInfoScreen extends StatefulWidget {
-  final ScenarioInfo scenarioInfo;
+  const ScenarioInfoScreen(
+    this.scenarioInfo, {
+    Key? key,
+  }) : super(key: key);
 
-  const ScenarioInfoScreen(this.scenarioInfo);
+  final ScenarioInfo scenarioInfo;
 
   @override
   State<ScenarioInfoScreen> createState() => _ScenarioInfoScreenState();
@@ -78,7 +81,7 @@ class _ScenarioInfoScreenState extends State<ScenarioInfoScreen> {
                 ),
               );
             },
-            icon: Icon(Icons.edit_outlined),
+            icon: const Icon(Icons.edit_outlined),
           ),
         ],
       ),
@@ -114,7 +117,7 @@ class _ScenarioInfoScreenState extends State<ScenarioInfoScreen> {
           if (widget.scenarioInfo.description != null)
             Text(
               widget.scenarioInfo.description!,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
               ),
             ),

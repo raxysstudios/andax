@@ -60,17 +60,5 @@ class StoryActorsEditor extends StatelessWidget {
         )
       ],
     );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Text(
-            'Actors: ${editor.story.actors.length}',
-            style: Theme.of(context).textTheme.headline6,
-          ),
-        ),
-      ],
-    );
   }
 }

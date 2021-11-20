@@ -1,4 +1,3 @@
-import 'package:andax/models/translation_asset.dart';
 import 'package:andax/utils.dart';
 import 'actor.dart';
 import 'content_meta_data.dart';

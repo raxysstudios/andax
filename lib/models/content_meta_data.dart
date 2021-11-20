@@ -19,7 +19,7 @@ class ContentMetaData {
     Timestamp? lastUpdateAt,
     this.likes = 0,
     this.status = ContentStatus.private,
-  }) : this.lastUpdateAt = lastUpdateAt ?? Timestamp.now();
+  }) : lastUpdateAt = lastUpdateAt ?? Timestamp.now();
 
   ContentMetaData.fromJson(
     Map<String, dynamic> json, {
