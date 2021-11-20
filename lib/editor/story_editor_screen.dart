@@ -15,7 +15,40 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 class StoryEditorScreen extends StatefulWidget {
-  const StoryEditorScreen({Key? key}) : super(key: key);
+  StoryEditorScreen({
+    Story? story,
+    Translation? translation,
+    this.info,
+    Key? key,
+  }) : super(key: key) {
+    this.story = story ??
+        Story(
+          nodes: {},
+          startNodeId: '',
+          actors: {},
+          metaData: meta,
+        );
+    this.translation = translation ??
+        Translation(
+          language: '',
+          metaData: meta,
+          assets: {
+            'story': StoryTranslation(
+              title: 'New story',
+              metaData: meta,
+            )
+          },
+        );
+  }
+
+  final meta = ContentMetaData(
+    '',
+    FirebaseAuth.instance.currentUser?.uid ?? '',
+  );
+
+  late final Story story;
+  late final Translation translation;
+  final StoryInfo? info;
 
   @override
   StoryEditorState createState() => StoryEditorState();
@@ -26,35 +59,30 @@ class StoryEditorState extends State<StoryEditorScreen> {
   var _page = 0;
 
   final uuid = const Uuid();
-  final meta = ContentMetaData(
-    '',
-    FirebaseAuth.instance.currentUser?.uid ?? '',
-  );
+  ContentMetaData get meta => widget.meta;
 
-  late var story = Story(
-    nodes: {},
-    startNodeId: '',
-    actors: {},
-    metaData: meta,
-  );
-  late var translation = Translation(
-    language: '',
-    metaData: meta,
-    assets: {
-      'story': StoryTranslation(
-        title: 'New story',
-        metaData: meta,
-      )
-    },
-  );
+  Story get story => widget.story;
+  Translation get translation => widget.translation;
 
   void update(VoidCallback action) => setState(action);
 
   Future upload() async {
     final sdb = FirebaseFirestore.instance.collection('stories');
-    final sid = await sdb.add(story.toJson()).then((r) => r.id);
+    var sid = widget.info?.storyID;
+    if (sid == null) {
+      sid = await sdb.add(story.toJson()).then((r) => r.id);
+    } else {
+      await sdb.doc(widget.info?.storyID).set(story.toJson());
+    }
+
     final tdb = sdb.doc(sid).collection('translations');
-    final tid = await tdb.add(translation.toJson()).then((r) => r.id);
+    var tid = widget.info?.translationID;
+    if (tid == null) {
+      tid = await tdb.add(translation.toJson()).then((r) => r.id);
+    } else {
+      await tdb.doc(tid).set(translation.toJson());
+    }
+
     final adb = tdb.doc(tid).collection('assets');
     await Future.wait([
       for (final entry in translation.assets.entries)

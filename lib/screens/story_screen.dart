@@ -1,4 +1,5 @@
 import 'package:andax/content_loader.dart';
+import 'package:andax/editor/story_editor_screen.dart';
 import 'package:andax/screens/crowdsourcing_screen.dart';
 import 'package:andax/screens/play_screen.dart';
 import 'package:andax/widgets/loading_dialog.dart';
@@ -96,6 +97,26 @@ class _StoryScreenState extends State<StoryScreen> {
                     child: IconButton(
                       onPressed: () {},
                       icon: const Icon(Icons.translate_rounded),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: IconButton(
+                      onPressed: () async {
+                        final story = await loadStory(widget.info);
+                        final translation = await loadTranslation(widget.info);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => StoryEditorScreen(
+                              story: story,
+                              translation: translation,
+                              info: widget.info,
+                            ),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.edit_rounded),
                     ),
                   ),
                 ],
