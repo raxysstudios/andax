@@ -1,9 +1,8 @@
-import 'package:andax/models/translation_asset.dart';
+import 'package:andax/content_loader.dart';
 import 'package:andax/screens/crowdsourcing_screen.dart';
 import 'package:andax/screens/play_screen.dart';
 import 'package:andax/widgets/loading_dialog.dart';
 import 'package:andax/widgets/rounded_back_button.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:andax/models/story.dart';
 
@@ -20,46 +19,18 @@ class StoryScreen extends StatefulWidget {
 }
 
 class _StoryScreenState extends State<StoryScreen> {
-  Future<void> loadStory() async {
-    final db = FirebaseFirestore.instance;
-    final doc = await db
-        .doc('stories/${widget.info.storyID}')
-        .withConverter<Story>(
-          fromFirestore: (snapshot, _) =>
-              Story.fromJson(snapshot.data()!, id: snapshot.id),
-          toFirestore: (story, _) => story.toJson(),
-        )
-        .get();
-    if (!doc.exists) {
-      throw ArgumentError(
-          'Story with id ${widget.info.storyID} does not exist');
-    }
-    final story = doc.data()!;
-    final translations = await loadTranslation();
-
+  Future<void> play() async {
+    final story = await loadStory(widget.info);
+    final translation = await loadTranslation(widget.info);
     await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => PlayScreen(
           story: story,
-          translations: translations,
+          translations: translation.assets.values.toList(),
         ),
       ),
     );
-  }
-
-  Future<List<TranslationAsset>> loadTranslation() async {
-    final collection = await FirebaseFirestore.instance
-        .collection(
-            'stories/${widget.info.storyID}/translations/${widget.info.translationID}/assets')
-        .withConverter<TranslationAsset>(
-          fromFirestore: (snapshot, _) =>
-              TranslationAsset.fromJson(snapshot.data()!, snapshot.id),
-          toFirestore: (story, _) => story.toJson(),
-        )
-        .get();
-    final assets = collection.docs.map((doc) => doc.data());
-    return assets.toList();
   }
 
   @override
@@ -71,13 +42,13 @@ class _StoryScreenState extends State<StoryScreen> {
         actions: [
           IconButton(
             onPressed: () async {
-              final translations = await loadTranslation();
+              final translation = await loadTranslation(widget.info);
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (_) => CrowdsourcingScreen(
                     storyId: widget.info.storyID,
-                    translations: translations,
+                    translations: translation.assets.values.toList(),
                   ),
                 ),
               );
@@ -100,10 +71,7 @@ class _StoryScreenState extends State<StoryScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => showLoadingDialog(
-          context,
-          loadStory(),
-        ),
+        onPressed: () => showLoadingDialog(context, play()),
         icon: const Icon(Icons.play_arrow_rounded),
         label: const Text('Play'),
       ),
