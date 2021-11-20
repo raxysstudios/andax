@@ -30,7 +30,7 @@ class Node {
   Map<String, dynamic> toJson() => {
         'id': id,
         'actorId': actorId,
-        'transitions': transitions?.map((c) => c.toJson()),
+        'transitions': transitions?.map((c) => c.toJson()).toList(),
         'autoTransition': autoTransition,
       };
 }
