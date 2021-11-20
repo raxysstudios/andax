@@ -11,12 +11,15 @@ class StoryGeneralEditor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final editor = context.read<StoryEditorState>();
+    final editor = context.watch<StoryEditorState>();
     return CustomScrollView(
       slivers: [
         const SliverAppBar(
           title: Text('General'),
           forceElevated: true,
+          floating: true,
+          snap: true,
+          pinned: true,
         ),
         SliverList(
           delegate: SliverChildListDelegate(

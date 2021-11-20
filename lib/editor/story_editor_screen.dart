@@ -55,9 +55,11 @@ class StoryEditorState extends State<StoryEditorScreen> {
             itemBuilder: (context, page) {
               switch (page) {
                 case 0:
-                  return const StoryGeneralEditor();
+                  // ignore: prefer_const_constructors
+                  return StoryGeneralEditor();
                 case 1:
-                  return const StoryActorsEditor();
+                  // ignore: prefer_const_constructors
+                  return StoryActorsEditor();
                 case 2:
                   return const Text('Nodes');
                 default:
