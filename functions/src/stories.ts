@@ -16,7 +16,7 @@ type storyRecord = {
     description:string,
 };
 
-export const indexstorys = functions
+export const indexStories = functions
     .region("europe-central2")
     .firestore.document(
         "stories/{storyID}/translations/{translationID}/assets/story"
