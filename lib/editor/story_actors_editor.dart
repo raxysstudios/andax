@@ -31,8 +31,8 @@ class StoryActorsEditor extends StatelessWidget {
                           : ActorType.npc;
                     }),
                     icon: Icon(actor.type == ActorType.npc
-                        ? Icons.smart_toy_outlined
-                        : Icons.face_outlined),
+                        ? Icons.smart_toy_rounded
+                        : Icons.face_rounded),
                   ),
                   title: TextFormField(
                     decoration: const InputDecoration(
@@ -53,7 +53,7 @@ class StoryActorsEditor extends StatelessWidget {
                       editor.story.actors.remove(actor.id);
                       editor.translation.assets.remove(actor.id);
                     }),
-                    icon: const Icon(Icons.delete_outline),
+                    icon: const Icon(Icons.clear_rounded),
                   ),
                 )
             ],

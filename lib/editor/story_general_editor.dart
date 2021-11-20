@@ -25,7 +25,7 @@ class StoryGeneralEditor extends StatelessWidget {
           delegate: SliverChildListDelegate(
             [
               ListTile(
-                leading: const Icon(Icons.language_outlined),
+                leading: const Icon(Icons.language_rounded),
                 title: TextFormField(
                   decoration: const InputDecoration(
                     labelText: 'Initial language',
@@ -37,7 +37,7 @@ class StoryGeneralEditor extends StatelessWidget {
                 ),
               ),
               ListTile(
-                leading: const Icon(Icons.title_outlined),
+                leading: const Icon(Icons.title_rounded),
                 title: TextFormField(
                   decoration: const InputDecoration(
                     labelText: 'Story title',
@@ -50,7 +50,7 @@ class StoryGeneralEditor extends StatelessWidget {
                 ),
               ),
               ListTile(
-                leading: const Icon(Icons.description_outlined),
+                leading: const Icon(Icons.description_rounded),
                 title: TextFormField(
                   decoration: const InputDecoration(
                     labelText: 'Story description',
@@ -64,7 +64,7 @@ class StoryGeneralEditor extends StatelessWidget {
                 ),
               ),
               ListTile(
-                leading: const Icon(Icons.login_outlined),
+                leading: const Icon(Icons.login_rounded),
                 title: StoryNodeSelector(
                   editor.story.nodes[editor.story.startNodeId],
                   (node) => editor.update(() {
