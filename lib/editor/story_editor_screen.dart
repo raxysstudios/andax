@@ -15,39 +15,15 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 class StoryEditorScreen extends StatefulWidget {
-  StoryEditorScreen({
-    Story? story,
-    Translation? translation,
+  const StoryEditorScreen({
+    this.story,
+    this.translation,
     this.info,
     Key? key,
-  }) : super(key: key) {
-    this.story = story ??
-        Story(
-          nodes: {},
-          startNodeId: '',
-          actors: {},
-          metaData: meta,
-        );
-    this.translation = translation ??
-        Translation(
-          language: '',
-          metaData: meta,
-          assets: {
-            'story': StoryTranslation(
-              title: 'New story',
-              metaData: meta,
-            )
-          },
-        );
-  }
+  }) : super(key: key);
 
-  final meta = ContentMetaData(
-    '',
-    FirebaseAuth.instance.currentUser?.uid ?? '',
-  );
-
-  late final Story story;
-  late final Translation translation;
+  final Story? story;
+  final Translation? translation;
   final StoryInfo? info;
 
   @override
@@ -59,10 +35,30 @@ class StoryEditorState extends State<StoryEditorScreen> {
   var _page = 0;
 
   final uuid = const Uuid();
-  ContentMetaData get meta => widget.meta;
+  final meta = ContentMetaData(
+    '',
+    FirebaseAuth.instance.currentUser?.uid ?? '',
+  );
 
-  Story get story => widget.story;
-  Translation get translation => widget.translation;
+  late var info = widget.info;
+  late final story = widget.story ??
+      Story(
+        nodes: {},
+        startNodeId: '',
+        actors: {},
+        metaData: meta,
+      );
+  late final translation = widget.translation ??
+      Translation(
+        language: '',
+        metaData: meta,
+        assets: {
+          'story': StoryTranslation(
+            title: 'New story',
+            metaData: meta,
+          )
+        },
+      );
 
   void update(VoidCallback action) => setState(action);
 
@@ -88,6 +84,11 @@ class StoryEditorState extends State<StoryEditorScreen> {
       for (final entry in translation.assets.entries)
         adb.doc(entry.key).set(entry.value.toJson())
     ]);
+    info ??= StoryInfo(
+      storyID: sid!,
+      translationID: tid!,
+      title: '',
+    );
   }
 
   @override

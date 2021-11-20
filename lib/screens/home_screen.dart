@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => StoryEditorScreen(),
+                builder: (context) => const StoryEditorScreen(),
               ),
             ),
             icon: const Icon(Icons.edit_rounded),
