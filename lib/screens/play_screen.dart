@@ -13,11 +13,11 @@ import 'package:flutter/material.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 class PlayScreen extends StatefulWidget {
-  final Story scenario;
+  final Story story;
   final List<TranslationAsset> translations;
 
   const PlayScreen({
-    required this.scenario,
+    required this.story,
     required this.translations,
     Key? key,
   }) : super(key: key);
@@ -28,8 +28,8 @@ class PlayScreen extends StatefulWidget {
 
 class _PlayScreenState extends State<PlayScreen> {
   late final Map<String, TranslationAsset> translations;
-  Map<String, Node> get nodes => widget.scenario.nodes;
-  Map<String, Actor> get actors => widget.scenario.actors;
+  Map<String, Node> get nodes => widget.story.nodes;
+  Map<String, Actor> get actors => widget.story.actors;
   late Node currentNode;
   final List<Node> storyline = [];
   int totalScore = 50;
@@ -44,7 +44,7 @@ class _PlayScreenState extends State<PlayScreen> {
       for (final translation in widget.translations)
         translation.metaData.id: translation,
     };
-    currentNode = nodes[widget.scenario.startNodeId]!;
+    currentNode = nodes[widget.story.startNodeId]!;
 
     if (currentNode.autoTransition && currentNode.transitions != null) {
       moveAuto(currentNode.transitions!);

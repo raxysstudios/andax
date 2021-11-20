@@ -4,7 +4,7 @@ import 'package:enum_to_string/enum_to_string.dart';
 
 enum AssetType {
   message,
-  scenario,
+  story,
   actor,
 }
 
@@ -48,8 +48,8 @@ abstract class TranslationAsset {
           name: json['name'],
           metaData: metaData,
         );
-      case AssetType.scenario:
-        return ScenarioTranslation(
+      case AssetType.story:
+        return StoryTranslation(
           title: json['title'],
           description: json['description'],
           metaData: metaData,
@@ -68,20 +68,20 @@ abstract class TranslationAsset {
       };
 }
 
-class ScenarioTranslation extends TranslationAsset {
+class StoryTranslation extends TranslationAsset {
   String title;
   String? description;
 
-  ScenarioTranslation({
+  StoryTranslation({
     required this.title,
     this.description,
     required ContentMetaData metaData,
-  }) : super(metaData: metaData, assetType: AssetType.scenario);
+  }) : super(metaData: metaData, assetType: AssetType.story);
 
-  static ScenarioTranslation? get(
+  static StoryTranslation? get(
     Translation translation,
   ) =>
-      translation['scenario'] as ScenarioTranslation?;
+      translation['story'] as StoryTranslation?;
 
   @override
   Map<String, dynamic> toJson() => super.toJson()

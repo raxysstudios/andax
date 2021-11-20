@@ -7,7 +7,7 @@ Future<List<TranslationAsset>> loadTranslations(
 ) async {
   final collection = await FirebaseFirestore.instance
       .collection(
-          'scenarios/${scenarioInfo.scenarioID}/translations/${scenarioInfo.translationID}/assets')
+          'scenarios/${scenarioInfo.storyID}/translations/${scenarioInfo.translationID}/assets')
       .withConverter<TranslationAsset>(
         fromFirestore: (snapshot, _) =>
             TranslationAsset.fromJson(snapshot.data()!, snapshot.id),
@@ -19,7 +19,7 @@ Future<List<TranslationAsset>> loadTranslations(
 
 Future<Story> loadScenario(StoryInfo scenarioInfo) async {
   final document = await FirebaseFirestore.instance
-      .doc('scenarios/${scenarioInfo.scenarioID}')
+      .doc('scenarios/${scenarioInfo.storyID}')
       .withConverter<Story>(
         fromFirestore: (snapshot, _) =>
             Story.fromJson(snapshot.data()!, id: snapshot.id),

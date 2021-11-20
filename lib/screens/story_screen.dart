@@ -20,42 +20,42 @@ class StoryScreen extends StatefulWidget {
 }
 
 class _StoryScreenState extends State<StoryScreen> {
-  Future<void> loadScenario() async {
+  Future<void> loadStory() async {
     final db = FirebaseFirestore.instance;
     final doc = await db
-        .doc('scenarios/${widget.info.scenarioID}')
+        .doc('stories/${widget.info.storyID}')
         .withConverter<Story>(
           fromFirestore: (snapshot, _) =>
               Story.fromJson(snapshot.data()!, id: snapshot.id),
-          toFirestore: (scenario, _) => scenario.toJson(),
+          toFirestore: (story, _) => story.toJson(),
         )
         .get();
     if (!doc.exists) {
       throw ArgumentError(
-          'Scenario with id ${widget.info.scenarioID} does not exist');
+          'Story with id ${widget.info.storyID} does not exist');
     }
-    final scenario = doc.data()!;
-    final translations = await getTranslations();
+    final story = doc.data()!;
+    final translations = await loadTranslation();
 
     await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => PlayScreen(
-          scenario: scenario,
+          story: story,
           translations: translations,
         ),
       ),
     );
   }
 
-  Future<List<TranslationAsset>> getTranslations() async {
+  Future<List<TranslationAsset>> loadTranslation() async {
     final collection = await FirebaseFirestore.instance
         .collection(
-            'scenarios/${widget.info.scenarioID}/translations/${widget.info.translationID}/assets')
+            'stories/${widget.info.storyID}/translations/${widget.info.translationID}/assets')
         .withConverter<TranslationAsset>(
           fromFirestore: (snapshot, _) =>
               TranslationAsset.fromJson(snapshot.data()!, snapshot.id),
-          toFirestore: (scenario, _) => scenario.toJson(),
+          toFirestore: (story, _) => story.toJson(),
         )
         .get();
     final assets = collection.docs.map((doc) => doc.data());
@@ -71,12 +71,12 @@ class _StoryScreenState extends State<StoryScreen> {
         actions: [
           IconButton(
             onPressed: () async {
-              final translations = await getTranslations();
+              final translations = await loadTranslation();
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (_) => CrowdsourcingScreen(
-                    scenarioId: widget.info.scenarioID,
+                    storyId: widget.info.storyID,
                     translations: translations,
                   ),
                 ),
@@ -102,7 +102,7 @@ class _StoryScreenState extends State<StoryScreen> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => showLoadingDialog(
           context,
-          loadScenario(),
+          loadStory(),
         ),
         icon: const Icon(Icons.play_arrow_rounded),
         label: const Text('Play'),

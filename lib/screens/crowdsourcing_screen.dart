@@ -7,12 +7,12 @@ import 'package:flutter/material.dart';
 
 class CrowdsourcingScreen extends StatefulWidget {
   const CrowdsourcingScreen({
-    required this.scenarioId,
+    required this.storyId,
     required this.translations,
     Key? key,
   }) : super(key: key);
 
-  final String scenarioId;
+  final String storyId;
   final List<TranslationAsset> translations;
 
   @override
@@ -147,18 +147,18 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
             );
           },
         );
-      case AssetType.scenario:
-        final origin = origins[id] as ScenarioTranslation;
-        final translation = translations[id] as ScenarioTranslation?;
+      case AssetType.story:
+        final origin = origins[id] as StoryTranslation;
+        final translation = translations[id] as StoryTranslation?;
         return Column(
           children: [
             buildTranslatable(
               origin.title,
               translation?.title,
               icon: Icons.title_outlined,
-              title: 'scenario title',
+              title: 'story title',
               onEdit: (r) {
-                translations[id] = ScenarioTranslation(
+                translations[id] = StoryTranslation(
                   title: r,
                   description: translation?.description,
                   metaData: ContentMetaData(
@@ -170,9 +170,9 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
               origin.description,
               translation?.description,
               icon: Icons.description_outlined,
-              title: 'scenario description',
+              title: 'story description',
               onEdit: (r) {
-                translations[id] = ScenarioTranslation(
+                translations[id] = StoryTranslation(
                   title: translation?.title ?? '<title>',
                   description: r,
                   metaData: ContentMetaData(id, ''),
@@ -188,7 +188,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
 
   Future<void> uploadTranslation() async {
     final path = await FirebaseFirestore.instance
-        .collection('scenarios/${widget.scenarioId}/translations')
+        .collection('stories/${widget.storyId}/translations')
         .add(
           Translation(
             language: language,
@@ -215,7 +215,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Scenarion translation'),
+        title: const Text('Story translation'),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: isLoading
@@ -256,7 +256,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
             },
           ),
           const Divider(height: 0),
-          buildFields('scenario'),
+          buildFields('story'),
           const Divider(height: 0),
           for (final a in origins.values.where(
             (w) => w.assetType == AssetType.actor,

@@ -44,10 +44,9 @@ class StoryGeneralEditor extends StatelessWidget {
                   decoration: const InputDecoration(
                     labelText: 'Story title',
                   ),
-                  initialValue:
-                      ScenarioTranslation.get(editor.translation)?.title,
+                  initialValue: StoryTranslation.get(editor.translation)?.title,
                   onChanged: (s) => editor.update(() {
-                    ScenarioTranslation.get(editor.translation)?.title = s;
+                    StoryTranslation.get(editor.translation)?.title = s;
                   }),
                 ),
               ),
@@ -58,10 +57,9 @@ class StoryGeneralEditor extends StatelessWidget {
                     labelText: 'Story description',
                   ),
                   initialValue:
-                      ScenarioTranslation.get(editor.translation)?.description,
+                      StoryTranslation.get(editor.translation)?.description,
                   onChanged: (s) => editor.update(() {
-                    ScenarioTranslation.get(editor.translation)?.description =
-                        s;
+                    StoryTranslation.get(editor.translation)?.description = s;
                   }),
                 ),
               ),

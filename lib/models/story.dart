@@ -51,13 +51,13 @@ class Story {
 }
 
 class StoryInfo {
-  final String scenarioID;
+  final String storyID;
   final String translationID;
   final String title;
   final String? description;
 
   const StoryInfo({
-    required this.scenarioID,
+    required this.storyID,
     required this.translationID,
     required this.title,
     this.description,
@@ -66,7 +66,7 @@ class StoryInfo {
   factory StoryInfo.fromAlgoliaHit(AlgoliaObjectSnapshot hit) {
     final json = hit.data;
     return StoryInfo(
-      scenarioID: json['scenarioID'],
+      storyID: json['storyID'],
       translationID: json['translationID'],
       title: json['title'],
       description: json['description'],
