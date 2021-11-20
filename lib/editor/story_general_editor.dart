@@ -14,8 +14,12 @@ class StoryGeneralEditor extends StatelessWidget {
     final editor = context.watch<StoryEditorState>();
     return CustomScrollView(
       slivers: [
-        const SliverAppBar(
-          title: Text('General'),
+        SliverAppBar(
+          leading: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(Icons.arrow_back_rounded),
+          ),
+          title: const Text('General'),
           forceElevated: true,
           floating: true,
           snap: true,
