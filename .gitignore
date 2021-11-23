@@ -10,7 +10,7 @@
 .svn/
 
 GoogleService-Info.plist
-
+ios/Podfile.lock
 
 # IntelliJ related
 *.iml
