@@ -40,15 +40,15 @@ class StoryEditorState extends State<StoryEditorScreen> {
     FirebaseAuth.instance.currentUser?.uid ?? '',
   );
 
-  late var info = widget.info;
-  late final story = widget.story ??
+  late StoryInfo? info = widget.info;
+  late final Story story = widget.story ??
       Story(
         nodes: {},
         startNodeId: '',
         actors: {},
         metaData: meta,
       );
-  late final translation = widget.translation ??
+  late final Translation translation = widget.translation ??
       Translation(
         language: '',
         metaData: meta,
