@@ -1,3 +1,4 @@
+import 'package:andax/widgets/loading_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -25,7 +26,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               padding: const EdgeInsets.all(8),
               child: ElevatedButton.icon(
                 onPressed: () async {
-                  await signIn();
+                  await showLoadingDialog(context, signIn());
                   setState(() {});
                 },
                 icon: const Icon(Icons.person_outlined),
@@ -34,7 +35,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
             )
-          else ...[
+          else
             ListTile(
               leading: CircleAvatar(
                 backgroundImage: user?.photoURL != null
@@ -51,13 +52,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 tooltip: "Log out",
               ),
             )
-          ],
         ],
       ),
     );
   }
 
   Future<void> signIn() async {
+    await FirebaseAuth.instance.signOut();
+    await GoogleSignIn().signOut();
+
     final user = await GoogleSignIn().signIn();
     if (user != null) {
       final auth = await user.authentication;
