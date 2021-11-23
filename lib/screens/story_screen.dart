@@ -4,6 +4,7 @@ import 'package:andax/screens/crowdsourcing_screen.dart';
 import 'package:andax/screens/play_screen.dart';
 import 'package:andax/widgets/loading_dialog.dart';
 import 'package:andax/widgets/rounded_back_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:andax/models/story.dart';
 
@@ -58,64 +59,71 @@ class _StoryScreenState extends State<StoryScreen> {
         icon: const Icon(Icons.play_arrow_rounded),
         label: const Text('Play'),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      bottomNavigationBar: BottomAppBar(
-        child: SizedBox(
-          height: kBottomNavigationBarHeight + 27,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Text(
-                  'Contributing',
-                  style: Theme.of(context).textTheme.subtitle2,
+      floatingActionButtonLocation: FirebaseAuth.instance.currentUser == null
+          ? null
+          : FloatingActionButtonLocation.endDocked,
+      bottomNavigationBar: FirebaseAuth.instance.currentUser == null
+          ? null
+          : BottomAppBar(
+              child: SizedBox(
+                height: kBottomNavigationBarHeight + 27,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Text(
+                        'Contributing',
+                        style: Theme.of(context).textTheme.subtitle2,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        const SizedBox(width: 8),
+                        IconButton(
+                          onPressed: () async {
+                            final translation =
+                                await loadTranslation(widget.info);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CrowdsourcingScreen(
+                                  storyId: widget.info.storyID,
+                                  translations:
+                                      translation.assets.values.toList(),
+                                ),
+                              ),
+                            );
+                          },
+                          tooltip: 'Translate story',
+                          icon: const Icon(Icons.translate_rounded),
+                        ),
+                        const SizedBox(width: 8),
+                        IconButton(
+                          onPressed: () async {
+                            final story = await loadStory(widget.info);
+                            final translation =
+                                await loadTranslation(widget.info);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => StoryEditorScreen(
+                                  story: story,
+                                  translation: translation,
+                                  info: widget.info,
+                                ),
+                              ),
+                            );
+                          },
+                          tooltip: 'Edit story',
+                          icon: const Icon(Icons.edit_rounded),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              Row(
-                children: [
-                  const SizedBox(width: 8),
-                  IconButton(
-                    onPressed: () async {
-                      final translation = await loadTranslation(widget.info);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CrowdsourcingScreen(
-                            storyId: widget.info.storyID,
-                            translations: translation.assets.values.toList(),
-                          ),
-                        ),
-                      );
-                    },
-                    tooltip: 'Translate story',
-                    icon: const Icon(Icons.translate_rounded),
-                  ),
-                  const SizedBox(width: 8),
-                  IconButton(
-                    onPressed: () async {
-                      final story = await loadStory(widget.info);
-                      final translation = await loadTranslation(widget.info);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => StoryEditorScreen(
-                            story: story,
-                            translation: translation,
-                            info: widget.info,
-                          ),
-                        ),
-                      );
-                    },
-                    tooltip: 'Edit story',
-                    icon: const Icon(Icons.edit_rounded),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }

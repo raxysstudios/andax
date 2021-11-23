@@ -2,6 +2,7 @@ import 'package:andax/editor/story_editor_screen.dart';
 import 'package:andax/main.dart';
 import 'package:andax/screens/story_screen.dart';
 import 'package:andax/screens/settings_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../models/story.dart';
@@ -44,23 +45,27 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text('Stories'),
         actions: [
-          IconButton(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const StoryEditorScreen(),
+          if (FirebaseAuth.instance.currentUser != null)
+            IconButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const StoryEditorScreen(),
+                ),
               ),
+              icon: const Icon(Icons.edit_rounded),
             ),
-            icon: const Icon(Icons.edit_rounded),
-          ),
           const SizedBox(width: 8),
           IconButton(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const SettingsScreen(),
-              ),
-            ),
+            onPressed: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingsScreen(),
+                ),
+              );
+              setState(() {});
+            },
             icon: const Icon(Icons.settings_rounded),
           ),
           const SizedBox(width: 8),
