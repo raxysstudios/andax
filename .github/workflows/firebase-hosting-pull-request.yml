@@ -22,7 +22,7 @@ jobs:
       - name: Analyze and lint 🔬
         run: |
           dart analyze
-          dart format -o none --set-exit-if-changed
+          dart format . -o none --set-exit-if-changed
 
       - name: Build 🛠️
         run: flutter build web
