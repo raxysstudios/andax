@@ -153,7 +153,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
                     slivers: [
                       const SliverAppBar(
                         leading: RoundedBackButton(),
-                        title: Text('General'),
+                        title: Text('Narrative'),
                         forceElevated: true,
                         floating: true,
                         snap: true,

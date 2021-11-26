@@ -1,5 +1,6 @@
 import 'package:andax/models/node.dart';
 import 'package:andax/models/translation_asset.dart';
+import 'package:andax/widgets/modal_picker.dart';
 import 'package:andax/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 
@@ -41,49 +42,20 @@ Future<Node?> showStoryNodePickerSheet(
   BuildContext context, [
   String? selectedId,
 ]) {
-  final media = MediaQuery.of(context);
-  final childSize =
-      1 - (kToolbarHeight + media.padding.top) / media.size.height;
   final editor = context.read<StoryEditorState>();
-  return showModalBottomSheet<Node>(
-    context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    builder: (context) {
-      return DraggableScrollableSheet(
-        minChildSize: childSize - .1,
-        initialChildSize: childSize,
-        maxChildSize: childSize,
-        builder: (context, controller) {
-          return Material(
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(16),
-              ),
-            ),
-            color: Theme.of(context).scaffoldBackgroundColor,
-            clipBehavior: Clip.antiAlias,
-            child: CustomScrollView(
-              controller: controller,
-              slivers: [
-                const SliverAppBar(
-                  leading: RoundedBackButton(),
-                  title: Text('Pick Node'),
-                  forceElevated: true,
-                  floating: true,
-                  snap: true,
-                  pinned: true,
-                ),
-                buildNodesSliverList(
-                  editor,
-                  (node) => Navigator.pop(context, node),
-                  selectedId,
-                ),
-              ],
-            ),
-          );
-        },
-      );
-    },
-  );
+  return showModalPicker(context, [
+    const SliverAppBar(
+      leading: RoundedBackButton(),
+      title: Text('Pick Node'),
+      forceElevated: true,
+      floating: true,
+      snap: true,
+      pinned: true,
+    ),
+    buildNodesSliverList(
+      editor,
+      (node) => Navigator.pop(context, node),
+      selectedId,
+    ),
+  ]);
 }

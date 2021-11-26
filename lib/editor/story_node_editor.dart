@@ -7,6 +7,7 @@ import 'package:andax/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'story_actor_picker.dart';
 import 'story_editor_screen.dart';
 
 class StoryNodesEditor extends StatefulWidget {
@@ -92,32 +93,32 @@ class _StoryNodesEditorState extends State<StoryNodesEditor> {
           ),
           SliverList(
             delegate: SliverChildListDelegate([
-              ListTile(
-                leading: const Icon(Icons.person_rounded),
-                title: DropdownButton<Actor>(
-                  icon: const SizedBox(),
-                  underline: const SizedBox(),
-                  value: editor.story.actors[node.actorId],
-                  onChanged: (actor) => setState(() {
-                    node.actorId = actor?.id;
-                  }),
-                  items: [
-                    const DropdownMenuItem<Actor>(
-                      child: Text("None"),
+              Builder(
+                builder: (context) {
+                  final actor = editor.story.actors[node.actorId];
+                  return ListTile(
+                    onTap: () => showStoryActorPickerSheet(
+                      context,
+                      node.actorId,
+                    ).then(
+                      (actor) => setState(() {
+                        node.actorId = actor?.id;
+                      }),
                     ),
-                    for (final actor in editor.story.actors.values)
-                      DropdownMenuItem(
-                        value: actor,
-                        child: Text(
-                          ActorTranslation.get(
-                                editor.translation,
-                                actor.id,
-                              )?.name ??
-                              '',
-                        ),
-                      )
-                  ],
-                ),
+                    leading: Icon(actor == null
+                        ? Icons.person_rounded
+                        : actor.type == ActorType.npc
+                            ? Icons.smart_toy_rounded
+                            : Icons.face_rounded),
+                    title: Text(
+                      ActorTranslation.get(
+                            editor.translation,
+                            node.actorId ?? '',
+                          )?.name ??
+                          'None',
+                    ),
+                  );
+                },
               ),
               ListTile(
                 leading: const Icon(Icons.notes_rounded),

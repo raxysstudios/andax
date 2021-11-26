@@ -14,9 +14,9 @@ class StoryActorsEditor extends StatelessWidget {
     final actors = editor.story.actors.values.toList();
     return CustomScrollView(
       slivers: [
-        SliverAppBar(
-          leading: const RoundedBackButton(),
-          title: Text('Actors: ${actors.length}'),
+        const SliverAppBar(
+          leading: RoundedBackButton(),
+          title: Text('Actors'),
           forceElevated: true,
           floating: true,
           snap: true,
