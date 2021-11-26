@@ -1,6 +1,7 @@
 import 'package:andax/editor/story_actors_editor.dart';
 import 'package:andax/editor/story_general_editor.dart';
-import 'package:andax/editor/story_nodes_editor.dart';
+import 'package:andax/editor/story_node_editor.dart';
+import 'package:andax/editor/story_node_picker.dart';
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/content_meta_data.dart';
 import 'package:andax/models/node.dart';
@@ -8,6 +9,7 @@ import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/widgets/loading_dialog.dart';
+import 'package:andax/widgets/rounded_back_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -91,6 +93,19 @@ class StoryEditorState extends State<StoryEditorScreen> {
     );
   }
 
+  void openNode(Node node) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Provider.value(
+          value: this,
+          child: StoryNodesEditor(node),
+        ),
+      ),
+    );
+    update(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Provider.value(
@@ -134,7 +149,19 @@ class StoryEditorState extends State<StoryEditorScreen> {
                   return StoryActorsEditor();
                 case 2:
                   // ignore: prefer_const_constructors
-                  return StoryNodesEditor();
+                  return CustomScrollView(
+                    slivers: [
+                      const SliverAppBar(
+                        leading: RoundedBackButton(),
+                        title: Text('General'),
+                        forceElevated: true,
+                        floating: true,
+                        snap: true,
+                        pinned: true,
+                      ),
+                      buildNodesSliverList(this, openNode),
+                    ],
+                  );
                 default:
                   return const SizedBox();
               }
@@ -164,11 +191,13 @@ class StoryEditorState extends State<StoryEditorScreen> {
                 );
               case 2:
                 return FloatingActionButton(
-                  onPressed: () => setState(() {
+                  onPressed: () {
                     final id = uuid.v4();
-                    story.nodes[id] = Node(id);
+                    final node = Node(id);
+                    story.nodes[id] = node;
                     translation[id] = MessageTranslation(metaData: meta);
-                  }),
+                    openNode(node);
+                  },
                   tooltip: 'Add node',
                   child: const Icon(Icons.add_box_rounded),
                 );
@@ -185,7 +214,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
               final pages = {
                 'General': Icons.auto_stories_rounded,
                 'Actors': Icons.person_rounded,
-                'Nodes': Icons.timeline_rounded,
+                'Narrative': Icons.timeline_rounded,
               }.entries.toList();
               return ListView(
                 scrollDirection: Axis.horizontal,

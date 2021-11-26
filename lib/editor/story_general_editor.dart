@@ -64,7 +64,10 @@ class StoryGeneralEditor extends StatelessWidget {
                 ),
               ),
               ListTile(
-                onTap: () => showStoryNodePickerSheet(context).then(
+                onTap: () => showStoryNodePickerSheet(
+                  context,
+                  editor.story.startNodeId,
+                ).then(
                   (node) => editor.update(() {
                     editor.story.startNodeId = node?.id ?? '';
                   }),
