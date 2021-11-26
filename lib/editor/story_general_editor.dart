@@ -1,4 +1,3 @@
-import 'package:andax/editor/story_node_selector.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/widgets/rounded_back_button.dart';
 
@@ -6,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'story_editor_screen.dart';
+import 'story_node_picker.dart';
 
 class StoryGeneralEditor extends StatelessWidget {
   const StoryGeneralEditor({Key? key}) : super(key: key);
@@ -64,12 +64,15 @@ class StoryGeneralEditor extends StatelessWidget {
                 ),
               ),
               ListTile(
-                leading: const Icon(Icons.login_rounded),
-                title: StoryNodeSelector(
-                  editor.story.nodes[editor.story.startNodeId],
+                onTap: () => showStoryNodePickerSheet(context).then(
                   (node) => editor.update(() {
                     editor.story.startNodeId = node?.id ?? '';
                   }),
+                ),
+                leading: const Icon(Icons.login_rounded),
+                title: Text(
+                  MessageTranslation.getText(
+                      editor.translation, editor.story.startNodeId),
                 ),
               ),
             ],
