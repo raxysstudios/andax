@@ -9,6 +9,7 @@ import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/widgets/loading_dialog.dart';
+import 'package:andax/widgets/maybe_pop_alert.dart';
 import 'package:andax/widgets/rounded_back_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -111,31 +112,8 @@ class StoryEditorState extends State<StoryEditorScreen> {
     return Provider.value(
       value: this,
       child: Scaffold(
-        body: WillPopScope(
-          onWillPop: () async {
-            final result = await showDialog<bool>(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: const Text('Exit editor?'),
-                  actions: [
-                    TextButton.icon(
-                      onPressed: () => Navigator.pop(context, true),
-                      icon: const Icon(Icons.delete_rounded),
-                      label: const Text('Exit'),
-                    ),
-                    TextButton.icon(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.edit_rounded),
-                      label: const Text('Stay'),
-                    ),
-                  ],
-                );
-              },
-            );
-            return result ?? false;
-          },
-          child: PageView.builder(
+        body: MaybePopAlert(
+          PageView.builder(
             controller: _pageController,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: 3,
@@ -173,7 +151,10 @@ class StoryEditorState extends State<StoryEditorScreen> {
             switch (_page) {
               case 0:
                 return FloatingActionButton(
-                  onPressed: () => showLoadingDialog(context, upload()),
+                  onPressed: () async {
+                    await showLoadingDialog(context, upload());
+                    Navigator.pop(context);
+                  },
                   tooltip: 'Upload story',
                   child: const Icon(Icons.upload_rounded),
                 );

@@ -49,7 +49,7 @@ Future<Actor?> showStoryActorPickerSheet(
                   '',
             ),
             trailing: Text(
-              actors.indexOf(actor).toString(),
+              (actors.indexOf(actor) + 1).toString(),
               style: Theme.of(context).textTheme.subtitle2,
             ),
             selected: actor.id == selectedId,

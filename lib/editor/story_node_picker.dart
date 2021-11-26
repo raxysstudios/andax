@@ -27,7 +27,7 @@ SliverList buildNodesSliverList(
             ),
           ),
           trailing: Text(
-            nodes.indexOf(node).toString(),
+            (nodes.indexOf(node) + 1).toString(),
             style: Theme.of(context).textTheme.subtitle2,
           ),
           selected: node.id == selectedId,
