@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>803265650064-as3usri2iu8eba80tgdmrklvr2tvmtm6.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.803265650064-as3usri2iu8eba80tgdmrklvr2tvmtm6</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>803265650064-b09dg95vhqgkn0knbb76dlmt6gfghs6p.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCsIEymP95dMDwUcRQn9DS5aUHqzPdhOEg</string>
+	<key>GCM_SENDER_ID</key>
+	<string>803265650064</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.nurios.alphabeats</string>
+	<key>PROJECT_ID</key>
+	<string>andaxapp</string>
+	<key>STORAGE_BUCKET</key>
+	<string>andaxapp.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:803265650064:ios:83e15ee239b9ffe07e6715</string>
+</dict>
+</plist>
