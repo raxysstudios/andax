@@ -137,7 +137,13 @@ class StoryEditorState extends State<StoryEditorScreen> {
                         snap: true,
                         pinned: true,
                       ),
-                      buildNodesSliverList(this, openNode),
+                      SliverPadding(
+                        padding: const EdgeInsets.only(bottom: 76),
+                        sliver: NarrativeEditorSliver(
+                          this,
+                          onSelected: openNode,
+                        ),
+                      ),
                     ],
                   );
                 default:

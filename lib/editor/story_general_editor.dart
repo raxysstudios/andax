@@ -75,7 +75,7 @@ class StoryGeneralEditor extends StatelessWidget {
                 leading: const Icon(Icons.login_rounded),
                 title: Text(
                   MessageTranslation.getText(
-                      editor.translation, editor.story.startNodeId),
+                      editor.translation, editor.story.startNodeId,),
                 ),
               ),
             ],

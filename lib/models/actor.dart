@@ -1,7 +1,5 @@
 import 'package:enum_to_string/enum_to_string.dart';
 
-import 'translation_asset.dart';
-
 enum ActorType {
   npc,
   player,
