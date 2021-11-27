@@ -111,11 +111,10 @@ class _StoryNodesEditorState extends State<StoryNodesEditor> {
                             ? Icons.smart_toy_rounded
                             : Icons.face_rounded),
                     title: Text(
-                      ActorTranslation.get(
-                            editor.translation,
-                            node.actorId ?? '',
-                          )?.name ??
-                          'None',
+                      ActorTranslation.getName(
+                        editor.translation,
+                        node.actorId ?? '',
+                      ),
                     ),
                   );
                 },

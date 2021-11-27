@@ -1,3 +1,4 @@
+import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/widgets/modal_picker.dart';
@@ -18,6 +19,7 @@ SliverList buildNodesSliverList(
     delegate: SliverChildBuilderDelegate(
       (context, index) {
         final node = nodes[index];
+        final actor = editor.story.actors[node.actorId];
         return ListTile(
           onTap: () => onSelected(node),
           title: Text(
@@ -26,6 +28,26 @@ SliverList buildNodesSliverList(
               node.id,
             ),
           ),
+          subtitle: actor == null
+              ? null
+              : Row(
+                  children: [
+                    Icon(
+                      actor.type == ActorType.npc
+                          ? Icons.smart_toy_rounded
+                          : Icons.face_rounded,
+                      size: 16,
+                      color: Theme.of(context).textTheme.caption?.color,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      ActorTranslation.getName(
+                        editor.translation,
+                        actor.id,
+                      ),
+                    )
+                  ],
+                ),
           trailing: Text(
             (nodes.indexOf(node) + 1).toString(),
             style: Theme.of(context).textTheme.subtitle2,

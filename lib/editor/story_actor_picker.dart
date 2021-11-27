@@ -42,11 +42,10 @@ Future<Actor?> showStoryActorPickerSheet(
                 ? Icons.smart_toy_rounded
                 : Icons.face_rounded),
             title: Text(
-              ActorTranslation.get(
-                    editor.translation,
-                    actor.id,
-                  )?.name ??
-                  '',
+              ActorTranslation.getName(
+                editor.translation,
+                actor.id,
+              ),
             ),
             trailing: Text(
               (actors.indexOf(actor) + 1).toString(),

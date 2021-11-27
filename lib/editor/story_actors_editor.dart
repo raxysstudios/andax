@@ -41,10 +41,11 @@ class StoryActorsEditor extends StatelessWidget {
                   decoration: const InputDecoration(
                     labelText: 'Actor name',
                   ),
-                  initialValue: ActorTranslation.get(
+                  initialValue: ActorTranslation.getName(
                     editor.translation,
                     actor.id,
-                  )?.name,
+                    '',
+                  ),
                   onChanged: (s) => editor.update(() {
                     final t = ActorTranslation.get(
                       editor.translation,

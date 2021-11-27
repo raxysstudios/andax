@@ -16,9 +16,6 @@ class Actor {
     this.type = ActorType.npc,
   });
 
-  String getName(Map<String, TranslationAsset> translations) =>
-      (translations[id] as ActorTranslation?)?.name ?? '';
-
   Actor.fromJson(Map<String, dynamic> json)
       : this(
           id: json['id'],

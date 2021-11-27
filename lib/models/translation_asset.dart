@@ -135,6 +135,13 @@ class ActorTranslation extends TranslationAsset {
   ) =>
       translation[id] as ActorTranslation?;
 
+  static String getName(
+    Translation translation,
+    String id, [
+    or = 'None',
+  ]) =>
+      get(translation, id)?.name ?? or;
+
   @override
   Map<String, dynamic> toJson() => super.toJson()
     ..addAll({
