@@ -126,7 +126,6 @@ class StoryEditorState extends State<StoryEditorScreen> {
                   // ignore: prefer_const_constructors
                   return StoryActorsEditor();
                 case 2:
-                  // ignore: prefer_const_constructors
                   return CustomScrollView(
                     slivers: [
                       const SliverAppBar(

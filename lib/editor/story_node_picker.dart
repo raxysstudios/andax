@@ -11,6 +11,9 @@ import 'package:provider/provider.dart';
 
 import 'story_editor_screen.dart';
 
+// TODO fix state updating.
+// TODO unify with picker.
+
 class NarrativeEditorSliver extends StatefulWidget {
   const NarrativeEditorSliver(
     this.editor, {
