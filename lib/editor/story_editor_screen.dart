@@ -115,45 +115,27 @@ class StoryEditorState extends State<StoryEditorScreen> {
             },
           ),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-        bottomNavigationBar: BottomAppBar(
-          child: SizedBox(
-            height: kBottomNavigationBarHeight,
-            child: Builder(builder: (context) {
-              final pages = {
-                'General': Icons.auto_stories_rounded,
-                'Actors': Icons.person_rounded,
-                'Narrative': Icons.timeline_rounded,
-              }.entries.toList();
-              return ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  for (var i = 0; i < pages.length; i++) ...[
-                    const SizedBox(width: 8),
-                    IconButton(
-                      tooltip: pages[i].key,
-                      icon: Icon(
-                        pages[i].value,
-                        color: _page == i
-                            ? Theme.of(context).toggleableActiveColor
-                            : null,
-                      ),
-                      onPressed: () => setState(
-                        () {
-                          _page = i;
-                          _pageController.animateToPage(
-                            i,
-                            duration: kTabScrollDuration,
-                            curve: standardEasing,
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ],
-              );
-            }),
-          ),
+        bottomNavigationBar: BottomNavigationBar(
+          onTap: (i) => update(() {
+            _page = i;
+            _pageController.animateToPage(
+              i,
+              duration: kTabScrollDuration,
+              curve: standardEasing,
+            );
+          }),
+          currentIndex: _page,
+          items: {
+            'General': Icons.auto_stories_rounded,
+            'Actors': Icons.person_rounded,
+            'Narrative': Icons.timeline_rounded,
+          }
+              .entries
+              .map((p) => BottomNavigationBarItem(
+                    icon: Icon(p.value),
+                    label: p.key,
+                  ))
+              .toList(),
         ),
       ),
     );
