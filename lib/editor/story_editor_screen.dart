@@ -1,7 +1,8 @@
+import 'package:andax/editor/narrative_editor.dart';
 import 'package:andax/editor/story_actors_editor.dart';
 import 'package:andax/editor/story_general_editor.dart';
-import 'package:andax/editor/story_node_editor.dart';
-import 'package:andax/editor/story_node_picker.dart';
+import 'package:andax/editor/node_editor.dart';
+import 'package:andax/editor/narrative_sliver.dart';
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/content_meta_data.dart';
 import 'package:andax/models/node.dart';
@@ -94,19 +95,6 @@ class StoryEditorState extends State<StoryEditorScreen> {
     );
   }
 
-  void openNode(Node node) async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => Provider.value(
-          value: this,
-          child: StoryNodesEditor(node),
-        ),
-      ),
-    );
-    update(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     return Provider.value(
@@ -124,27 +112,9 @@ class StoryEditorState extends State<StoryEditorScreen> {
                   return StoryGeneralEditor();
                 case 1:
                   // ignore: prefer_const_constructors
-                  return StoryActorsEditor();
+                  return ActorsEditor();
                 case 2:
-                  return CustomScrollView(
-                    slivers: [
-                      const SliverAppBar(
-                        leading: RoundedBackButton(),
-                        title: Text('Narrative'),
-                        forceElevated: true,
-                        floating: true,
-                        snap: true,
-                        pinned: true,
-                      ),
-                      SliverPadding(
-                        padding: const EdgeInsets.only(bottom: 76),
-                        sliver: NarrativeEditorSliver(
-                          this,
-                          onSelected: openNode,
-                        ),
-                      ),
-                    ],
-                  );
+                  return const NarrativeEditor();
                 default:
                   return const SizedBox();
               }
@@ -175,18 +145,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
                   tooltip: 'Add actor',
                   child: const Icon(Icons.person_add_rounded),
                 );
-              case 2:
-                return FloatingActionButton(
-                  onPressed: () {
-                    final id = uuid.v4();
-                    final node = Node(id);
-                    story.nodes[id] = node;
-                    translation[id] = MessageTranslation(metaData: meta);
-                    openNode(node);
-                  },
-                  tooltip: 'Add node',
-                  child: const Icon(Icons.add_box_rounded),
-                );
+
               default:
                 return const SizedBox();
             }

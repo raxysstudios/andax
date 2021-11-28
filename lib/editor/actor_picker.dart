@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 import 'story_editor_screen.dart';
 
-Future<Actor?> showStoryActorPickerSheet(
+Future<Actor?> showActorPickerSheet(
   BuildContext context, [
   String? selectedId,
 ]) {

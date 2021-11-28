@@ -11,8 +11,8 @@ import 'story_editor_screen.dart';
 
 // TODO add picker filterting.
 
-class NarrativeEditorSliver extends StatefulWidget {
-  const NarrativeEditorSliver(
+class NarrativeSliver extends StatefulWidget {
+  const NarrativeSliver(
     this.editor, {
     this.onSelected,
     this.selectedId,
@@ -26,10 +26,10 @@ class NarrativeEditorSliver extends StatefulWidget {
   final ValueSetter<Node>? onSelected;
 
   @override
-  State<NarrativeEditorSliver> createState() => _NarrativeEditorSliverState();
+  State<NarrativeSliver> createState() => _NarrativeSliverState();
 }
 
-class _NarrativeEditorSliverState extends State<NarrativeEditorSliver> {
+class _NarrativeSliverState extends State<NarrativeSliver> {
   late final translation = widget.editor.translation;
   late final story = widget.editor.story;
   late final nodes = widget.editor.story.nodes.values.toList();
@@ -195,7 +195,7 @@ Future<Node?> showStoryNodePickerSheet(
       snap: true,
       pinned: true,
     ),
-    NarrativeEditorSliver(
+    NarrativeSliver(
       context.read<StoryEditorState>(),
       onSelected: (node) => Navigator.pop(context, node),
       selectedId: selectedId,

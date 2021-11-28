@@ -5,8 +5,8 @@ import 'package:andax/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class StoryActorsEditor extends StatelessWidget {
-  const StoryActorsEditor({Key? key}) : super(key: key);
+class ActorsEditor extends StatelessWidget {
+  const ActorsEditor({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

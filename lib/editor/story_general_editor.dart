@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'story_editor_screen.dart';
-import 'story_node_picker.dart';
+import 'narrative_sliver.dart';
 
 class StoryGeneralEditor extends StatelessWidget {
   const StoryGeneralEditor({Key? key}) : super(key: key);

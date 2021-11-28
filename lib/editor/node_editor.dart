@@ -1,4 +1,4 @@
-import 'package:andax/editor/story_node_picker.dart';
+import 'package:andax/editor/narrative_sliver.dart';
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/transition.dart';
@@ -7,11 +7,11 @@ import 'package:andax/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'story_actor_picker.dart';
+import 'actor_picker.dart';
 import 'story_editor_screen.dart';
 
-class StoryNodesEditor extends StatefulWidget {
-  const StoryNodesEditor(
+class NodeEditor extends StatefulWidget {
+  const NodeEditor(
     this.node, {
     Key? key,
   }) : super(key: key);
@@ -19,10 +19,10 @@ class StoryNodesEditor extends StatefulWidget {
   final Node node;
 
   @override
-  State<StoryNodesEditor> createState() => _StoryNodesEditorState();
+  State<NodeEditor> createState() => _NodeEditorState();
 }
 
-class _StoryNodesEditorState extends State<StoryNodesEditor> {
+class _NodeEditorState extends State<NodeEditor> {
   Node get node => widget.node;
 
   List<Transition>? get transitions => node.transitions;
@@ -97,7 +97,7 @@ class _StoryNodesEditorState extends State<StoryNodesEditor> {
                 builder: (context) {
                   final actor = editor.story.actors[node.actorId];
                   return ListTile(
-                    onTap: () => showStoryActorPickerSheet(
+                    onTap: () => showActorPickerSheet(
                       context,
                       node.actorId,
                     ).then(
