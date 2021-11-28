@@ -135,6 +135,22 @@ class _StoryNodesEditorState extends State<StoryNodesEditor> {
                   },
                 ),
               ),
+              if (transitions?.isNotEmpty ?? false) ...[
+                const Divider(),
+                SwitchListTile(
+                  value: node.autoTransition,
+                  onChanged: (v) => setState(() {
+                    node.autoTransition = v;
+                  }),
+                  secondary: const Padding(
+                    padding: EdgeInsets.only(top: 8),
+                    child: Icon(Icons.skip_next_rounded),
+                  ),
+                  title: const Text('Auto transition'),
+                  subtitle: const Text('Chooses randomly'),
+                ),
+                const Divider(),
+              ]
             ]),
           ),
           SliverList(
@@ -142,57 +158,54 @@ class _StoryNodesEditorState extends State<StoryNodesEditor> {
               (context, index) {
                 final transition = transitions?[index];
                 if (transition == null) return const SizedBox();
-                return Card(
-                  margin: const EdgeInsets.symmetric(vertical: 4),
-                  shape: const RoundedRectangleBorder(),
-                  child: Column(
-                    children: [
-                      ListTile(
-                        onTap: () => showStoryNodePickerSheet(
-                          context,
+                return Column(
+                  children: [
+                    ListTile(
+                      onTap: () => showStoryNodePickerSheet(
+                        context,
+                        transition.targetNodeId,
+                      ).then(
+                        (node) {
+                          if (node != null) {
+                            setState(() {
+                              transition.targetNodeId = node.id;
+                            });
+                          }
+                        },
+                      ),
+                      leading: const Icon(Icons.place_rounded),
+                      title: Text(
+                        MessageTranslation.getText(
+                          editor.translation,
                           transition.targetNodeId,
-                        ).then(
-                          (node) {
-                            if (node != null) {
-                              setState(() {
-                                transition.targetNodeId = node.id;
-                              });
-                            }
-                          },
-                        ),
-                        leading: const Icon(Icons.place_rounded),
-                        title: Text(
-                          MessageTranslation.getText(
-                            editor.translation,
-                            transition.targetNodeId,
-                          ),
-                        ),
-                        trailing: IconButton(
-                          onPressed: () => setState(
-                            () => transitions?.remove(transition),
-                          ),
-                          icon: const Icon(Icons.delete_rounded),
-                          tooltip: 'Delete transition',
                         ),
                       ),
-                      ListTile(
-                        leading: const Icon(Icons.short_text_rounded),
-                        title: TextFormField(
-                          maxLines: null,
-                          initialValue: MessageTranslation.getText(
+                      trailing: IconButton(
+                        onPressed: () => setState(
+                          () => transitions?.remove(transition),
+                        ),
+                        icon: const Icon(Icons.delete_rounded),
+                        tooltip: 'Delete transition',
+                      ),
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.short_text_rounded),
+                      title: TextFormField(
+                        maxLines: null,
+                        initialValue: MessageTranslation.getText(
+                          editor.translation,
+                          transition.id,
+                        ),
+                        onChanged: (s) {
+                          MessageTranslation.get(
                             editor.translation,
                             transition.id,
-                          ),
-                          onChanged: (s) {
-                            MessageTranslation.get(
-                              editor.translation,
-                              transition.id,
-                            )?.text = s;
-                          },
-                        ),
+                          )?.text = s;
+                        },
                       ),
-                    ],
-                  ),
+                    ),
+                    const Divider(),
+                  ],
                 );
               },
               childCount: transitions?.length ?? 0,
