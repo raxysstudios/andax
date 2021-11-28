@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
-Future<T?> showModalPicker<T>(BuildContext context, List<Widget> slivers) {
+Future<T?> showModalPicker<T>(
+  BuildContext context,
+  Function(BuildContext, ScrollController) builder,
+) {
   final media = MediaQuery.of(context);
   final childSize =
       1 - (kToolbarHeight + media.padding.top) / media.size.height;
@@ -22,10 +25,7 @@ Future<T?> showModalPicker<T>(BuildContext context, List<Widget> slivers) {
             ),
             color: Theme.of(context).scaffoldBackgroundColor,
             clipBehavior: Clip.antiAlias,
-            child: CustomScrollView(
-              controller: controller,
-              slivers: slivers,
-            ),
+            child: builder(context, controller),
           );
         },
       );

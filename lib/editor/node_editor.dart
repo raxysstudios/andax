@@ -1,4 +1,4 @@
-import 'package:andax/editor/story_node_picker.dart';
+import 'package:andax/editor/narrative_list_view.dart';
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/transition.dart';
@@ -7,11 +7,11 @@ import 'package:andax/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'story_actor_picker.dart';
+import 'actor_picker.dart';
 import 'story_editor_screen.dart';
 
-class StoryNodesEditor extends StatefulWidget {
-  const StoryNodesEditor(
+class NodeEditor extends StatefulWidget {
+  const NodeEditor(
     this.node, {
     Key? key,
   }) : super(key: key);
@@ -19,10 +19,10 @@ class StoryNodesEditor extends StatefulWidget {
   final Node node;
 
   @override
-  State<StoryNodesEditor> createState() => _StoryNodesEditorState();
+  State<NodeEditor> createState() => _NodeEditorState();
 }
 
-class _StoryNodesEditorState extends State<StoryNodesEditor> {
+class _NodeEditorState extends State<NodeEditor> {
   Node get node => widget.node;
 
   List<Transition>? get transitions => node.transitions;
@@ -97,7 +97,7 @@ class _StoryNodesEditorState extends State<StoryNodesEditor> {
                 builder: (context) {
                   final actor = editor.story.actors[node.actorId];
                   return ListTile(
-                    onTap: () => showStoryActorPickerSheet(
+                    onTap: () => showActorPickerSheet(
                       context,
                       node.actorId,
                     ).then(
@@ -111,11 +111,10 @@ class _StoryNodesEditorState extends State<StoryNodesEditor> {
                             ? Icons.smart_toy_rounded
                             : Icons.face_rounded),
                     title: Text(
-                      ActorTranslation.get(
-                            editor.translation,
-                            node.actorId ?? '',
-                          )?.name ??
-                          'None',
+                      ActorTranslation.getName(
+                        editor.translation,
+                        node.actorId ?? '',
+                      ),
                     ),
                   );
                 },
@@ -136,6 +135,22 @@ class _StoryNodesEditorState extends State<StoryNodesEditor> {
                   },
                 ),
               ),
+              if (transitions?.isNotEmpty ?? false) ...[
+                const Divider(),
+                SwitchListTile(
+                  value: node.autoTransition,
+                  onChanged: (v) => setState(() {
+                    node.autoTransition = v;
+                  }),
+                  secondary: const Padding(
+                    padding: EdgeInsets.only(top: 8),
+                    child: Icon(Icons.skip_next_rounded),
+                  ),
+                  title: const Text('Auto transition'),
+                  subtitle: const Text('Chooses randomly'),
+                ),
+                const Divider(),
+              ]
             ]),
           ),
           SliverList(
@@ -143,57 +158,54 @@ class _StoryNodesEditorState extends State<StoryNodesEditor> {
               (context, index) {
                 final transition = transitions?[index];
                 if (transition == null) return const SizedBox();
-                return Card(
-                  margin: const EdgeInsets.symmetric(vertical: 4),
-                  shape: const RoundedRectangleBorder(),
-                  child: Column(
-                    children: [
-                      ListTile(
-                        onTap: () => showStoryNodePickerSheet(
-                          context,
+                return Column(
+                  children: [
+                    ListTile(
+                      onTap: () => showStoryNodePickerSheet(
+                        context,
+                        transition.targetNodeId,
+                      ).then(
+                        (node) {
+                          if (node != null) {
+                            setState(() {
+                              transition.targetNodeId = node.id;
+                            });
+                          }
+                        },
+                      ),
+                      leading: const Icon(Icons.place_rounded),
+                      title: Text(
+                        MessageTranslation.getText(
+                          editor.translation,
                           transition.targetNodeId,
-                        ).then(
-                          (node) {
-                            if (node != null) {
-                              setState(() {
-                                transition.targetNodeId = node.id;
-                              });
-                            }
-                          },
-                        ),
-                        leading: const Icon(Icons.place_rounded),
-                        title: Text(
-                          MessageTranslation.getText(
-                            editor.translation,
-                            transition.targetNodeId,
-                          ),
-                        ),
-                        trailing: IconButton(
-                          onPressed: () => setState(
-                            () => transitions?.remove(transition),
-                          ),
-                          icon: const Icon(Icons.delete_rounded),
-                          tooltip: 'Delete transition',
                         ),
                       ),
-                      ListTile(
-                        leading: const Icon(Icons.short_text_rounded),
-                        title: TextFormField(
-                          maxLines: null,
-                          initialValue: MessageTranslation.getText(
+                      trailing: IconButton(
+                        onPressed: () => setState(
+                          () => transitions?.remove(transition),
+                        ),
+                        icon: const Icon(Icons.delete_rounded),
+                        tooltip: 'Delete transition',
+                      ),
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.short_text_rounded),
+                      title: TextFormField(
+                        maxLines: null,
+                        initialValue: MessageTranslation.getText(
+                          editor.translation,
+                          transition.id,
+                        ),
+                        onChanged: (s) {
+                          MessageTranslation.get(
                             editor.translation,
                             transition.id,
-                          ),
-                          onChanged: (s) {
-                            MessageTranslation.get(
-                              editor.translation,
-                              transition.id,
-                            )?.text = s;
-                          },
-                        ),
+                          )?.text = s;
+                        },
                       ),
-                    ],
-                  ),
+                    ),
+                    const Divider(),
+                  ],
                 );
               },
               childCount: transitions?.length ?? 0,
