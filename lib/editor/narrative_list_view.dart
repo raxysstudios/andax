@@ -9,8 +9,6 @@ import 'package:provider/provider.dart';
 
 import 'story_editor_screen.dart';
 
-// TODO add picker filterting.
-
 class NarrativeListView extends StatefulWidget {
   const NarrativeListView(
     this.editor, {
