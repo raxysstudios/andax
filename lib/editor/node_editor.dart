@@ -1,4 +1,4 @@
-import 'package:andax/editor/narrative_sliver.dart';
+import 'package:andax/editor/narrative_list_view.dart';
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/transition.dart';

@@ -1,17 +1,11 @@
 import 'package:andax/editor/narrative_editor.dart';
 import 'package:andax/editor/story_actors_editor.dart';
 import 'package:andax/editor/story_general_editor.dart';
-import 'package:andax/editor/node_editor.dart';
-import 'package:andax/editor/narrative_sliver.dart';
-import 'package:andax/models/actor.dart';
 import 'package:andax/models/content_meta_data.dart';
-import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:andax/widgets/loading_dialog.dart';
 import 'package:andax/widgets/maybe_pop_alert.dart';
-import 'package:andax/widgets/rounded_back_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -120,36 +114,6 @@ class StoryEditorState extends State<StoryEditorScreen> {
               }
             },
           ),
-        ),
-        floatingActionButton: Builder(
-          builder: (context) {
-            switch (_page) {
-              case 0:
-                return FloatingActionButton(
-                  onPressed: () async {
-                    await showLoadingDialog(context, upload());
-                    Navigator.pop(context);
-                  },
-                  tooltip: 'Upload story',
-                  child: const Icon(Icons.upload_rounded),
-                );
-              case 1:
-                return FloatingActionButton(
-                  onPressed: () => setState(
-                    () {
-                      final id = uuid.v4();
-                      story.actors[id] = Actor(id: id);
-                      translation[id] = ActorTranslation(metaData: meta);
-                    },
-                  ),
-                  tooltip: 'Add actor',
-                  child: const Icon(Icons.person_add_rounded),
-                );
-
-              default:
-                return const SizedBox();
-            }
-          },
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         bottomNavigationBar: BottomAppBar(

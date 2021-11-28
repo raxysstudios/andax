@@ -4,7 +4,7 @@ import 'package:andax/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'narrative_sliver.dart';
+import 'narrative_list_view.dart';
 import 'node_editor.dart';
 import 'story_editor_screen.dart';
 
@@ -37,6 +37,22 @@ class NarrativeEditorState extends State<NarrativeEditor> {
   Widget build(BuildContext context) {
     final editor = context.watch<StoryEditorState>();
     return Scaffold(
+      appBar: AppBar(
+        leading: const RoundedBackButton(),
+        title: const Text('Narrative'),
+        actions: [
+          IconButton(
+            onPressed: () => setState(() {
+              interactive = !interactive;
+            }),
+            tooltip: 'Toggle view',
+            icon: Icon(interactive
+                ? Icons.account_tree_rounded
+                : Icons.view_list_rounded),
+          ),
+          const SizedBox(width: 4),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           final id = editor.uuid.v4();
@@ -48,37 +64,11 @@ class NarrativeEditorState extends State<NarrativeEditor> {
         tooltip: 'Add node',
         child: const Icon(Icons.add_box_rounded),
       ),
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            leading: const RoundedBackButton(),
-            title: const Text('Narrative'),
-            actions: [
-              IconButton(
-                onPressed: () => setState(() {
-                  interactive = !interactive;
-                }),
-                tooltip: 'Toggle view',
-                icon: Icon(interactive
-                    ? Icons.account_tree_rounded
-                    : Icons.view_list_rounded),
-              ),
-              const SizedBox(width: 4),
-            ],
-            forceElevated: true,
-            floating: true,
-            snap: true,
-            pinned: true,
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.only(bottom: 76),
-            sliver: NarrativeSliver(
-              editor,
-              onSelected: (node) => openNode(editor, node),
-              interactive: interactive,
-            ),
-          ),
-        ],
+      body: NarrativeListView(
+        editor,
+        onSelected: (node) => openNode(editor, node),
+        interactive: interactive,
+        padding: const EdgeInsets.only(bottom: 76),
       ),
     );
   }

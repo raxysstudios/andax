@@ -13,49 +13,55 @@ Future<Actor?> showActorPickerSheet(
 ]) {
   final editor = context.read<StoryEditorState>();
   final actors = editor.story.actors.values.toList();
-  return showModalPicker(context, [
-    const SliverAppBar(
-      leading: RoundedBackButton(),
-      title: Text('Pick Actor'),
-      forceElevated: true,
-      floating: true,
-      snap: true,
-      pinned: true,
-    ),
-    SliverList(
-      delegate: SliverChildListDelegate([
-        ListTile(
-          leading: const Icon(Icons.cancel_rounded),
-          title: const Text('None'),
-          onTap: () => Navigator.pop(context),
+  return showModalPicker(
+    context,
+    (context, scroll) {
+      return Scaffold(
+        appBar: AppBar(
+          leading: const RoundedBackButton(),
+          title: const Text('Pick Actor'),
         ),
-        const Divider(),
-      ]),
-    ),
-    SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          final actor = actors[index];
-          return ListTile(
-            onTap: () => Navigator.pop(context, actor),
-            leading: Icon(actor.type == ActorType.npc
-                ? Icons.smart_toy_rounded
-                : Icons.face_rounded),
-            title: Text(
-              ActorTranslation.getName(
-                editor.translation,
-                actor.id,
+        body: CustomScrollView(
+          controller: scroll,
+          slivers: [
+            SliverList(
+              delegate: SliverChildListDelegate([
+                ListTile(
+                  leading: const Icon(Icons.cancel_rounded),
+                  title: const Text('None'),
+                  onTap: () => Navigator.pop(context),
+                ),
+                const Divider(),
+              ]),
+            ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final actor = actors[index];
+                  return ListTile(
+                    onTap: () => Navigator.pop(context, actor),
+                    leading: Icon(actor.type == ActorType.npc
+                        ? Icons.smart_toy_rounded
+                        : Icons.face_rounded),
+                    title: Text(
+                      ActorTranslation.getName(
+                        editor.translation,
+                        actor.id,
+                      ),
+                    ),
+                    trailing: Text(
+                      '#${(actors.indexOf(actor) + 1)}',
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
+                    selected: actor.id == selectedId,
+                  );
+                },
+                childCount: actors.length,
               ),
             ),
-            trailing: Text(
-              '#${(actors.indexOf(actor) + 1)}',
-              style: Theme.of(context).textTheme.subtitle2,
-            ),
-            selected: actor.id == selectedId,
-          );
-        },
-        childCount: actors.length,
-      ),
-    ),
-  ]);
+          ],
+        ),
+      );
+    },
+  );
 }

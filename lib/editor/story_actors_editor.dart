@@ -12,61 +12,62 @@ class ActorsEditor extends StatelessWidget {
   Widget build(BuildContext context) {
     final editor = context.watch<StoryEditorState>();
     final actors = editor.story.actors.values.toList();
-    return CustomScrollView(
-      slivers: [
-        const SliverAppBar(
-          leading: RoundedBackButton(),
-          title: Text('Actors'),
-          forceElevated: true,
-          floating: true,
-          snap: true,
-          pinned: true,
-        ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) {
-              final actor = actors[index];
-              return ListTile(
-                leading: IconButton(
-                  onPressed: () => editor.update(() {
-                    actor.type = actor.type == ActorType.npc
-                        ? ActorType.player
-                        : ActorType.npc;
-                  }),
-                  icon: Icon(actor.type == ActorType.npc
-                      ? Icons.smart_toy_rounded
-                      : Icons.face_rounded),
-                ),
-                title: TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Actor name',
-                  ),
-                  initialValue: ActorTranslation.getName(
-                    editor.translation,
-                    actor.id,
-                    '',
-                  ),
-                  onChanged: (s) => editor.update(() {
-                    final t = ActorTranslation.get(
-                      editor.translation,
-                      actor.id,
-                    );
-                    if (t != null) t.name = s;
-                  }),
-                ),
-                trailing: IconButton(
-                  onPressed: () => editor.update(() {
-                    editor.story.actors.remove(actor.id);
-                    editor.translation.assets.remove(actor.id);
-                  }),
-                  icon: const Icon(Icons.clear_rounded),
-                ),
-              );
-            },
-            childCount: actors.length,
-          ),
-        ),
-      ],
+    return Scaffold(
+      appBar: AppBar(
+        leading: const RoundedBackButton(),
+        title: const Text('Actors'),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => editor.update(() {
+          final id = editor.uuid.v4();
+          editor.story.actors[id] = Actor(id: id);
+          editor.translation[id] = ActorTranslation(metaData: editor.meta);
+        }),
+        tooltip: 'Add actor',
+        child: const Icon(Icons.person_add_rounded),
+      ),
+      body: ListView.builder(
+        itemCount: actors.length,
+        itemBuilder: (context, index) {
+          final actor = actors[index];
+          return ListTile(
+            leading: IconButton(
+              onPressed: () => editor.update(() {
+                actor.type = actor.type == ActorType.npc
+                    ? ActorType.player
+                    : ActorType.npc;
+              }),
+              icon: Icon(actor.type == ActorType.npc
+                  ? Icons.smart_toy_rounded
+                  : Icons.face_rounded),
+            ),
+            title: TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Actor name',
+              ),
+              initialValue: ActorTranslation.getName(
+                editor.translation,
+                actor.id,
+                '',
+              ),
+              onChanged: (s) => editor.update(() {
+                final t = ActorTranslation.get(
+                  editor.translation,
+                  actor.id,
+                );
+                if (t != null) t.name = s;
+              }),
+            ),
+            trailing: IconButton(
+              onPressed: () => editor.update(() {
+                editor.story.actors.remove(actor.id);
+                editor.translation.assets.remove(actor.id);
+              }),
+              icon: const Icon(Icons.clear_rounded),
+            ),
+          );
+        },
+      ),
     );
   }
 }
