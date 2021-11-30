@@ -51,11 +51,10 @@ class ActorsEditor extends StatelessWidget {
                 '',
               ),
               onChanged: (s) => editor.update(() {
-                final t = ActorTranslation.get(
+                ActorTranslation.get(
                   editor.translation,
                   actor.id,
-                );
-                if (t != null) t.name = s;
+                )?.name = s;
               }),
             ),
             trailing: IconButton(
