@@ -24,25 +24,25 @@ class Story {
           nodes: {
             for (final node in listFromJson(
               json['nodes'],
-              (j) => Node.fromJson(j),
+              (dynamic j) => Node.fromJson(j as Map<String, dynamic>),
             ))
               node.id: node
           },
-          startNodeId: json['startNodeId'],
+          startNodeId: json['startNodeId'] as String,
           actors: {
             for (final actor in listFromJson(
               json['actors'],
-              (j) => Actor.fromJson(j),
+              (dynamic j) => Actor.fromJson(j as Map<String, dynamic>),
             ))
               actor.id: actor
           },
           metaData: ContentMetaData.fromJson(
-            json['metaData'],
+            json['metaData'] as Map<String, dynamic>,
             id: id,
           ),
         );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'startNodeId': startNodeId,
         'nodes': nodes.values.map((n) => n.toJson()).toList(),
         'actors': actors.values.map((a) => a.toJson()).toList(),
@@ -66,10 +66,10 @@ class StoryInfo {
   factory StoryInfo.fromAlgoliaHit(AlgoliaObjectSnapshot hit) {
     final json = hit.data;
     return StoryInfo(
-      storyID: json['storyID'],
-      translationID: json['translationID'],
-      title: json['title'],
-      description: json['description'],
+      storyID: json['storyID'] as String,
+      translationID: json['translationID'] as String,
+      title: json['title'] as String,
+      description: json['description'] as String,
     );
   }
 }

@@ -17,7 +17,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Settings"),
+        title: const Text('Settings'),
       ),
       body: ListView(
         children: [
@@ -49,7 +49,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   setState(() {});
                 },
                 icon: const Icon(Icons.logout_outlined),
-                tooltip: "Log out",
+                tooltip: 'Log out',
               ),
             )
         ],

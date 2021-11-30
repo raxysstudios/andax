@@ -1,5 +1,7 @@
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
+import 'package:andax/models/story.dart';
+import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/widgets/modal_picker.dart';
 import 'package:andax/widgets/rounded_back_button.dart';
@@ -32,9 +34,9 @@ class NarrativeListView extends StatefulWidget {
 }
 
 class _NarrativeListViewState extends State<NarrativeListView> {
-  late final translation = widget.editor.translation;
-  late final story = widget.editor.story;
-  late final nodes = widget.editor.story.nodes.values.toList();
+  late final Translation translation = widget.editor.translation;
+  late final Story story = widget.editor.story;
+  late final List<Node> nodes = widget.editor.story.nodes.values.toList();
 
   var choices = <String, String>{};
 

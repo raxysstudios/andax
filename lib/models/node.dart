@@ -18,16 +18,16 @@ class Node {
 
   Node.fromJson(Map<String, dynamic> json)
       : this(
-          json['id'],
-          actorId: json['actorId'],
+          json['id'] as String,
+          actorId: json['actorId'] as String,
           transitions: listFromJson(
             json['transitions'],
-            (j) => Transition.fromJson(j),
+            (dynamic j) => Transition.fromJson(j as Map<String, dynamic>),
           ),
-          autoTransition: json['autoTransition'] ?? false,
+          autoTransition: json['autoTransition'] as bool? ?? false,
         );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'id': id,
         'actorId': actorId,
         'transitions': transitions?.map((c) => c.toJson()).toList(),

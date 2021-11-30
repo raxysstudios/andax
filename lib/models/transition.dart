@@ -11,12 +11,12 @@ class Transition {
 
   Transition.fromJson(Map<String, dynamic> json)
       : this(
-          json['id'],
-          targetNodeId: json['targetNodeId'],
-          score: json['score'] ?? 0,
+          json['id'] as String,
+          targetNodeId: json['targetNodeId'] as String,
+          score: json['score'] as int? ?? 0,
         );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'id': id,
         'targetNodeId': targetNodeId,
         'score': score,

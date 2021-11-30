@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 Future<T?> showModalPicker<T>(
   BuildContext context,
-  Function(BuildContext, ScrollController) builder,
+  Widget Function(BuildContext, ScrollController) builder,
 ) {
   final media = MediaQuery.of(context);
   final childSize =
