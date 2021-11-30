@@ -95,7 +95,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
       value: this,
       child: Scaffold(
         body: MaybePopAlert(
-          PageView.builder(
+          child: PageView.builder(
             controller: _pageController,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: 3,
@@ -125,17 +125,17 @@ class StoryEditorState extends State<StoryEditorScreen> {
             );
           }),
           currentIndex: _page,
-          items: {
-            'General': Icons.auto_stories_rounded,
-            'Actors': Icons.person_rounded,
-            'Narrative': Icons.timeline_rounded,
-          }
-              .entries
-              .map((p) => BottomNavigationBarItem(
-                    icon: Icon(p.value),
-                    label: p.key,
-                  ))
-              .toList(),
+          items: [
+            for (final entry in {
+              'General': Icons.auto_stories_rounded,
+              'Actors': Icons.person_rounded,
+              'Narrative': Icons.timeline_rounded,
+            }.entries)
+              BottomNavigationBarItem(
+                icon: Icon(entry.value),
+                label: entry.key,
+              )
+          ],
         ),
       ),
     );

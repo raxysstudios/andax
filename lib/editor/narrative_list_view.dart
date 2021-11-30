@@ -38,28 +38,24 @@ class _NarrativeListViewState extends State<NarrativeListView> {
   late final Story story = widget.editor.story;
   late final List<Node> nodes = widget.editor.story.nodes.values.toList();
 
-  var choices = <String, String>{};
+  final choices = <String, String>{};
 
   List<Node> computeThread() {
-    var thread = <Node>{};
+    final thread = <Node>{};
     var node = nodes.isEmpty ? null : nodes.first;
     while (node != null) {
       thread.add(node);
 
       final transitions = node.transitions ?? [];
-      if (transitions.isEmpty) {
-        node = null;
-        continue;
-      }
+      if (transitions.isEmpty) break;
+
       final choice = choices[node.id];
       final transition = choice == null
           ? transitions.first
           : transitions.firstWhere((t) => t.id == choice);
       node = story.nodes[transition.targetNodeId];
 
-      if (thread.contains(node)) {
-        node = null;
-      }
+      if (thread.contains(node)) break;
     }
     return thread.toList();
   }
