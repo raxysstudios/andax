@@ -1,13 +1,11 @@
+import 'package:andax/editor/narrative_editor.dart';
 import 'package:andax/editor/story_actors_editor.dart';
 import 'package:andax/editor/story_general_editor.dart';
-import 'package:andax/editor/story_nodes_editor.dart';
-import 'package:andax/models/actor.dart';
 import 'package:andax/models/content_meta_data.dart';
-import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:andax/widgets/loading_dialog.dart';
+import 'package:andax/widgets/maybe_pop_alert.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -40,15 +38,15 @@ class StoryEditorState extends State<StoryEditorScreen> {
     FirebaseAuth.instance.currentUser?.uid ?? '',
   );
 
-  late var info = widget.info;
-  late final story = widget.story ??
+  late StoryInfo? info = widget.info;
+  late final Story story = widget.story ??
       Story(
         nodes: {},
         startNodeId: '',
         actors: {},
         metaData: meta,
       );
-  late final translation = widget.translation ??
+  late final Translation translation = widget.translation ??
       Translation(
         language: '',
         metaData: meta,
@@ -96,31 +94,8 @@ class StoryEditorState extends State<StoryEditorScreen> {
     return Provider.value(
       value: this,
       child: Scaffold(
-        body: WillPopScope(
-          onWillPop: () async {
-            final result = await showDialog<bool>(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: const Text('Exit editor?'),
-                  actions: [
-                    TextButton.icon(
-                      onPressed: () => Navigator.pop(context, true),
-                      icon: const Icon(Icons.delete_rounded),
-                      label: const Text('Exit'),
-                    ),
-                    TextButton.icon(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.edit_rounded),
-                      label: const Text('Stay'),
-                    ),
-                  ],
-                );
-              },
-            );
-            return result ?? false;
-          },
-          child: PageView.builder(
+        body: MaybePopAlert(
+          PageView.builder(
             controller: _pageController,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: 3,
@@ -131,91 +106,36 @@ class StoryEditorState extends State<StoryEditorScreen> {
                   return StoryGeneralEditor();
                 case 1:
                   // ignore: prefer_const_constructors
-                  return StoryActorsEditor();
+                  return ActorsEditor();
                 case 2:
-                  // ignore: prefer_const_constructors
-                  return StoryNodesEditor();
+                  return const NarrativeEditor();
                 default:
                   return const SizedBox();
               }
             },
           ),
         ),
-        floatingActionButton: Builder(
-          builder: (context) {
-            switch (_page) {
-              case 0:
-                return FloatingActionButton(
-                  onPressed: () => showLoadingDialog(context, upload()),
-                  tooltip: 'Upload story',
-                  child: const Icon(Icons.upload_rounded),
-                );
-              case 1:
-                return FloatingActionButton(
-                  onPressed: () => setState(
-                    () {
-                      final id = uuid.v4();
-                      story.actors[id] = Actor(id: id);
-                      translation[id] = ActorTranslation(metaData: meta);
-                    },
-                  ),
-                  tooltip: 'Add actor',
-                  child: const Icon(Icons.person_add_rounded),
-                );
-              case 2:
-                return FloatingActionButton(
-                  onPressed: () => setState(() {
-                    final id = uuid.v4();
-                    story.nodes[id] = Node(id);
-                    translation[id] = MessageTranslation(metaData: meta);
-                  }),
-                  tooltip: 'Add node',
-                  child: const Icon(Icons.add_box_rounded),
-                );
-              default:
-                return const SizedBox();
-            }
-          },
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-        bottomNavigationBar: BottomAppBar(
-          child: SizedBox(
-            height: kBottomNavigationBarHeight,
-            child: Builder(builder: (context) {
-              final pages = {
-                'General': Icons.auto_stories_rounded,
-                'Actors': Icons.person_rounded,
-                'Nodes': Icons.timeline_rounded,
-              }.entries.toList();
-              return ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  for (var i = 0; i < pages.length; i++) ...[
-                    const SizedBox(width: 8),
-                    IconButton(
-                      tooltip: pages[i].key,
-                      icon: Icon(
-                        pages[i].value,
-                        color: _page == i
-                            ? Theme.of(context).toggleableActiveColor
-                            : null,
-                      ),
-                      onPressed: () => setState(
-                        () {
-                          _page = i;
-                          _pageController.animateToPage(
-                            i,
-                            duration: kTabScrollDuration,
-                            curve: standardEasing,
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ],
-              );
-            }),
-          ),
+        bottomNavigationBar: BottomNavigationBar(
+          onTap: (i) => update(() {
+            _page = i;
+            _pageController.animateToPage(
+              i,
+              duration: kTabScrollDuration,
+              curve: standardEasing,
+            );
+          }),
+          currentIndex: _page,
+          items: {
+            'General': Icons.auto_stories_rounded,
+            'Actors': Icons.person_rounded,
+            'Narrative': Icons.timeline_rounded,
+          }
+              .entries
+              .map((p) => BottomNavigationBarItem(
+                    icon: Icon(p.value),
+                    label: p.key,
+                  ))
+              .toList(),
         ),
       ),
     );

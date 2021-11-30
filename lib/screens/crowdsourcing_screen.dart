@@ -21,97 +21,98 @@ class CrowdsourcingScreen extends StatefulWidget {
 }
 
 class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
-  late Map<String, TranslationAsset> translations;
-  late final Map<String, TranslationAsset> origins;
-  String language = '';
+  late final translations = <String, TranslationAsset>{};
+  late final origins = {
+    for (final translation in widget.translations)
+      translation.metaData.id: translation,
+  };
+  var language = '';
 
   @override
-  void initState() {
-    super.initState();
-    origins = {
-      for (final translation in widget.translations)
-        translation.metaData.id: translation,
-    };
-    populateTranslations();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Story Translation'),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await showLoadingDialog(context, upload());
+          Navigator.pop(context);
+        },
+        child: const Icon(Icons.upload_outlined),
+        tooltip: 'Upload translation',
+      ),
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 76),
+        children: [
+          ...buildTranslatable(
+            'language',
+            language,
+            icon: Icons.language_outlined,
+            title: 'language',
+            onEdit: (r) {
+              language = r;
+            },
+          ),
+          const Divider(height: 0),
+          ...buildFields('story'),
+          const Divider(height: 0),
+          for (final a in origins.values.where(
+            (w) => w.assetType == AssetType.actor,
+          ))
+            ...buildFields(a.metaData.id),
+          const Divider(height: 0),
+          for (final a in origins.values.where(
+            (w) => w.assetType == AssetType.message,
+          ))
+            ...buildFields(a.metaData.id),
+        ],
+      ),
+    );
   }
 
-  void populateTranslations([List<TranslationAsset>? source]) {
-    setState(() {
-      language = '';
-      if (source == null) {
-        translations = {};
-      } else {
-        translations = {
-          for (final translation in source)
-            translation.metaData.id: TranslationAsset.fromJson(
-              translation.toJson(),
-              translation.metaData.id,
-            ),
-        };
-      }
-    });
-  }
-
-  Widget buildTranslatable(
+  List<Widget> buildTranslatable(
     String? origin,
     String? translation, {
     String? title,
     required IconData icon,
     required ValueSetter<String> onEdit,
   }) {
-    if (origin?.isEmpty ?? true) return const SizedBox();
-    return ListTile(
-      leading: Icon(icon),
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            origin!,
+    if (origin?.isEmpty ?? true) return [];
+    return [
+      Padding(
+        padding: const EdgeInsets.only(top: 8, bottom: 4),
+        child: RichText(
+          text: TextSpan(
             style: Theme.of(context).textTheme.caption,
-          ),
-          if (translation != null) Text(translation),
-        ],
-      ),
-      onTap: () async {
-        var result = '';
-        await showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Translate $title'),
-              content: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    origin,
-                    style: Theme.of(context).textTheme.caption,
+            children: [
+              WidgetSpan(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 4),
+                  child: Icon(
+                    icon,
+                    size: 16,
                   ),
-                  Expanded(
-                    child: TextFormField(
-                      maxLines: null,
-                      initialValue: translation,
-                      onChanged: (s) {
-                        result = s;
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('DONE'),
                 ),
-              ],
-            );
-          },
-        );
-        setState(() => onEdit(result));
-      },
-    );
+              ),
+              TextSpan(text: origin!),
+            ],
+          ),
+        ),
+      ),
+      TextFormField(
+        maxLines: null,
+        initialValue: translation,
+        decoration: InputDecoration(
+          fillColor: Theme.of(context).colorScheme.surface,
+          filled: true,
+        ),
+        onChanged: (s) => onEdit(s),
+      )
+    ];
   }
 
-  Widget buildFields(String id) {
+  List<Widget> buildFields(String id) {
     final type = origins[id]!.assetType;
     switch (type) {
       case AssetType.message:
@@ -150,39 +151,37 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
       case AssetType.story:
         final origin = origins[id] as StoryTranslation;
         final translation = translations[id] as StoryTranslation?;
-        return Column(
-          children: [
-            buildTranslatable(
-              origin.title,
-              translation?.title,
-              icon: Icons.title_outlined,
-              title: 'story title',
-              onEdit: (r) {
-                translations[id] = StoryTranslation(
-                  title: r,
-                  description: translation?.description,
-                  metaData: ContentMetaData(
-                      id, FirebaseAuth.instance.currentUser?.uid ?? ''),
-                );
-              },
-            ),
-            buildTranslatable(
-              origin.description,
-              translation?.description,
-              icon: Icons.description_outlined,
-              title: 'story description',
-              onEdit: (r) {
-                translations[id] = StoryTranslation(
-                  title: translation?.title ?? '<title>',
-                  description: r,
-                  metaData: ContentMetaData(id, ''),
-                );
-              },
-            ),
-          ],
-        );
+        return [
+          ...buildTranslatable(
+            origin.title,
+            translation?.title,
+            icon: Icons.title_outlined,
+            title: 'story title',
+            onEdit: (r) {
+              translations[id] = StoryTranslation(
+                title: r,
+                description: translation?.description,
+                metaData: ContentMetaData(
+                    id, FirebaseAuth.instance.currentUser?.uid ?? ''),
+              );
+            },
+          ),
+          ...buildTranslatable(
+            origin.description,
+            translation?.description,
+            icon: Icons.description_outlined,
+            title: 'story description',
+            onEdit: (r) {
+              translations[id] = StoryTranslation(
+                title: translation?.title ?? '<title>',
+                description: r,
+                metaData: ContentMetaData(id, ''),
+              );
+            },
+          ),
+        ];
       default:
-        return const SizedBox();
+        return [];
     }
   }
 
@@ -209,45 +208,5 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
       );
     }
     await batch.commit();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Story translation'),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => showLoadingDialog(context, upload()),
-        icon: const Icon(Icons.upload_outlined),
-        label: const Text("Upload"),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.only(bottom: 76),
-        children: [
-          buildTranslatable(
-            'language',
-            language,
-            icon: Icons.language_outlined,
-            title: 'language',
-            onEdit: (r) {
-              language = r;
-            },
-          ),
-          const Divider(height: 0),
-          buildFields('story'),
-          const Divider(height: 0),
-          for (final a in origins.values.where(
-            (w) => w.assetType == AssetType.actor,
-          ))
-            buildFields(a.metaData.id),
-          const Divider(height: 0),
-          for (final a in origins.values.where(
-            (w) => w.assetType == AssetType.message,
-          ))
-            buildFields(a.metaData.id),
-        ],
-      ),
-    );
   }
 }

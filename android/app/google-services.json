@@ -14,6 +14,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "803265650064-29skmosa9nprali9fmlv7so2s53tgimt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alkaitagi.andax",
+            "certificate_hash": "59693ba638e0d750f302d0dc14b5064c0e5bd7eb"
+          }
+        },
+        {
+          "client_id": "803265650064-94f420hfcestd0rbm6bs9rgm9aansopu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alkaitagi.andax",
+            "certificate_hash": "25b995f0512b42fc6173d325aed1aa9986267e51"
+          }
+        },
+        {
           "client_id": "803265650064-b09dg95vhqgkn0knbb76dlmt6gfghs6p.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -37,43 +53,13 @@
             {
               "client_id": "803265650064-n8euv0sb8rcd1vrl8q49nj8p7e9qnr64.apps.googleusercontent.com",
               "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:803265650064:android:ab87bac26869951a7e6715",
-        "android_client_info": {
-          "package_name": "com.alkaitagi.andax.debug"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "803265650064-b09dg95vhqgkn0knbb76dlmt6gfghs6p.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.alkaitagi.andax.debug",
-            "certificate_hash": "f13f21dd281ab091d1a5ed48d3e2aa616b6acef4"
-          }
-        },
-        {
-          "client_id": "803265650064-n8euv0sb8rcd1vrl8q49nj8p7e9qnr64.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCrbKDNMQ8Lsx2sJCJd9wJdZttqswDCOGs"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
+            },
             {
-              "client_id": "803265650064-n8euv0sb8rcd1vrl8q49nj8p7e9qnr64.apps.googleusercontent.com",
-              "client_type": 3
+              "client_id": "803265650064-as3usri2iu8eba80tgdmrklvr2tvmtm6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.nurios.alphabeats"
+              }
             }
           ]
         }

@@ -107,6 +107,12 @@ class MessageTranslation extends TranslationAsset {
   ) =>
       translation[id] as MessageTranslation?;
 
+  static String getText(
+    Translation translation,
+    String id,
+  ) =>
+      get(translation, id)?.text ?? 'None';
+
   @override
   Map<String, dynamic> toJson() => super.toJson()
     ..addAll({
@@ -128,6 +134,13 @@ class ActorTranslation extends TranslationAsset {
     String id,
   ) =>
       translation[id] as ActorTranslation?;
+
+  static String getName(
+    Translation translation,
+    String id, [
+    or = 'None',
+  ]) =>
+      get(translation, id)?.name ?? or;
 
   @override
   Map<String, dynamic> toJson() => super.toJson()
