@@ -6,7 +6,7 @@ Future<T?> showLoadingDialog<T>(
   BuildContext context,
   Future<T?> future,
 ) async {
-  showDialog<Null>(
+  showDialog<void>(
     context: context,
     barrierDismissible: false,
     builder: (context) {

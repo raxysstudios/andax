@@ -47,7 +47,7 @@ class StoryScreen extends StatelessWidget {
               translation = await loadTranslation(info);
             })(),
           );
-          await Navigator.push<Null>(
+          await Navigator.push<void>(
             context,
             MaterialPageRoute(
               builder: (context) {
@@ -90,7 +90,7 @@ class StoryScreen extends StatelessWidget {
                               loadTranslation(info),
                             );
                             if (translation != null) {
-                              Navigator.push<Null>(
+                              Navigator.push<void>(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => CrowdsourcingScreen(
@@ -117,7 +117,7 @@ class StoryScreen extends StatelessWidget {
                                 translation = await loadTranslation(info);
                               })(),
                             );
-                            Navigator.push<Null>(
+                            Navigator.push<void>(
                               context,
                               MaterialPageRoute(
                                 builder: (context) {

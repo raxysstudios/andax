@@ -18,7 +18,7 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  final Future<Null> firebase = Firebase.initializeApp().then((_) {
+  final Future<void> firebase = Firebase.initializeApp().then((_) {
     algolia = const Algolia.init(
       applicationId: '4NXJPAZXKE',
       apiKey: 'aef86c663aa0f382553f4375013c2de2',
