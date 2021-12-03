@@ -2,6 +2,7 @@
 
 Application for secondary language learning. Utilizes crowdsroucing for content creation and management. Fascilitates langugage acquisition through interactive stories.
 
+Built with Firebase & Flutter & Algolia.
 Web version is available at https://andaxapp.web.app/.
 
 ## Getting Started
