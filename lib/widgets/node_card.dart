@@ -27,7 +27,7 @@ class _NodeCardState extends State<NodeCard> {
   Widget buildNotificaion(String text) {
     return Column(
       children: [
-        const Divider(),
+        const Divider(height: 16),
         Text(
           text,
           textAlign: TextAlign.center,
@@ -36,7 +36,7 @@ class _NodeCardState extends State<NodeCard> {
             fontStyle: FontStyle.italic,
           ),
         ),
-        const Divider(),
+        const Divider(height: 16),
       ],
     );
   }

@@ -77,6 +77,21 @@ class _PlayScreenState extends State<PlayScreen> {
     );
   }
 
+  Widget fadeOut(Widget child) {
+    return PlayAnimation<double>(
+      tween: Tween(begin: 0, end: 1),
+      curve: Curves.easeOutCubic,
+      duration: const Duration(milliseconds: 300),
+      child: child,
+      builder: (context, child, value) {
+        return Opacity(
+          opacity: value,
+          child: child,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,61 +123,38 @@ class _PlayScreenState extends State<PlayScreen> {
               translations: translations,
               actors: actors,
             ),
-          PlayAnimation<double>(
-            curve: Curves.easeInOutCubic, // define duration
-            tween: Tween(begin: 0, end: 1), // define tween
-            duration: const Duration(milliseconds: 500), // define duration
-            builder: (context, child, value) {
-              return Opacity(
-                opacity: value,
-                child: NodeCard(
-                  node: currentNode,
-                  previousNode: storyline.isEmpty ? null : storyline.last,
-                  translations: translations,
-                  actors: actors,
-                ),
-              );
-            },
-          ),
-          if (currentNode.transitions != null && autoAdvance == null)
-            PlayAnimation<double>(
-              tween: Tween(begin: 0, end: 1), // define tween
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.easeInOutCubic, // define duration
-              builder: (context, child, value) {
-                return Opacity(
-                  opacity: value,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Wrap(
-                      alignment: WrapAlignment.end,
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: [
-                        for (final transition in currentNode.transitions!)
-                          Padding(
-                            padding: const EdgeInsets.all(4),
-                            child: Expanded(
-                              child: ElevatedButton(
-                                onPressed: () => advanceStory(transition),
-                                child: Text(
-                                  getTranslation<MessageTranslation>(
-                                    translations,
-                                    transition.id,
-                                    (t) => t.text,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                      ],
+          fadeOut(NodeCard(
+            node: currentNode,
+            previousNode: storyline.isEmpty ? null : storyline.last,
+            translations: translations,
+            actors: actors,
+          )),
+          if (currentNode.transitions != null &&
+              !currentNode.autoTransition &&
+              autoAdvance == null)
+            fadeOut(Padding(
+              padding: const EdgeInsets.all(8),
+              child: Wrap(
+                alignment: WrapAlignment.end,
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final transition in currentNode.transitions!)
+                    ElevatedButton(
+                      onPressed: () => advanceStory(transition),
+                      child: Text(
+                        getTranslation<MessageTranslation>(
+                          translations,
+                          transition.id,
+                          (t) => t.text,
+                        ),
+                      ),
                     ),
-                  ),
-                );
-              },
-            ),
+                ],
+              ),
+            )),
           if (isFinished)
-            const Center(
+            fadeOut(const Center(
               child: Padding(
                 padding: EdgeInsets.all(16),
                 child: Text(
@@ -174,7 +166,7 @@ class _PlayScreenState extends State<PlayScreen> {
                   ),
                 ),
               ),
-            )
+            )),
         ],
       ),
     );

@@ -1,7 +1,7 @@
 import 'package:andax/editor/story_editor_screen.dart';
-import 'package:andax/main.dart';
 import 'package:andax/screens/story_screen.dart';
 import 'package:andax/screens/settings_screen.dart';
+import 'package:andax/store.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
