@@ -3,6 +3,7 @@ import 'package:andax/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
+import 'widgets/splash_screen.dart';
 
 late final Algolia algolia;
 
@@ -74,18 +75,13 @@ class _AppState extends State<App> {
       theme: themes[0],
       darkTheme: themes[1],
       debugShowCheckedModeBanner: false,
-      home: FutureBuilder(
+      home: SplashScreen<void>(
+        title: 'ÆNDAX',
         future: firebase,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return const HomeScreen();
-          }
-          return const Material(
-            child: Center(
-              child: Text('Loading...'),
-            ),
-          );
-        },
+        onLoaded: (context, _) => Navigator.push<void>(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        ),
       ),
     );
   }
