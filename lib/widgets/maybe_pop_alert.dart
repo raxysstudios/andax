@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class MaybePopAlert extends StatelessWidget {
-  const MaybePopAlert(
-    this.child, {
+  const MaybePopAlert({
+    required this.child,
     this.title = 'Exit?',
     Key? key,
   }) : super(key: key);

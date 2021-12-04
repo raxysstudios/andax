@@ -21,8 +21,8 @@ class CrowdsourcingScreen extends StatefulWidget {
 }
 
 class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
-  late final translations = <String, TranslationAsset>{};
-  late final origins = {
+  final translations = <String, TranslationAsset>{};
+  late final origins = <String, TranslationAsset>{
     for (final translation in widget.translations)
       translation.metaData.id: translation,
   };

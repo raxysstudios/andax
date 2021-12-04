@@ -19,7 +19,7 @@ class NarrativeEditorState extends State<NarrativeEditor> {
   var interactive = false;
 
   void openNode(StoryEditorState editor, Node node) async {
-    await Navigator.push(
+    await Navigator.push<void>(
       context,
       MaterialPageRoute(
         builder: (context) {

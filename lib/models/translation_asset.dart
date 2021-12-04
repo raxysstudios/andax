@@ -29,29 +29,29 @@ abstract class TranslationAsset {
   ) {
     final type = EnumToString.fromString(
       AssetType.values,
-      json['assetType'],
+      json['assetType'] as String,
     );
     final metaData = ContentMetaData.fromJson(
-      json['metaData'],
+      json['metaData'] as Map<String, dynamic>,
       id: id,
     );
 
     switch (type) {
       case AssetType.message:
         return MessageTranslation(
-          text: json['text'],
-          audioUrl: json['audioUrl'],
+          text: json['text'] as String?,
+          audioUrl: json['audioUrl'] as String?,
           metaData: metaData,
         );
       case AssetType.actor:
         return ActorTranslation(
-          name: json['name'],
+          name: json['name'] as String,
           metaData: metaData,
         );
       case AssetType.story:
         return StoryTranslation(
-          title: json['title'],
-          description: json['description'],
+          title: json['title'] as String,
+          description: json['description'] as String?,
           metaData: metaData,
         );
       default:
@@ -62,7 +62,7 @@ abstract class TranslationAsset {
     }
   }
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'assetType': EnumToString.convertToString(assetType),
         'metaData': metaData.toJson(),
       };
@@ -85,7 +85,7 @@ class StoryTranslation extends TranslationAsset {
 
   @override
   Map<String, dynamic> toJson() => super.toJson()
-    ..addAll({
+    ..addAll(<String, dynamic>{
       'title': title,
       'description': description,
     });
@@ -115,7 +115,7 @@ class MessageTranslation extends TranslationAsset {
 
   @override
   Map<String, dynamic> toJson() => super.toJson()
-    ..addAll({
+    ..addAll(<String, dynamic>{
       'text': text,
       'audioUrl': audioUrl,
     });
@@ -125,7 +125,7 @@ class ActorTranslation extends TranslationAsset {
   String name;
 
   ActorTranslation({
-    this.name = "",
+    this.name = '',
     required ContentMetaData metaData,
   }) : super(metaData: metaData, assetType: AssetType.actor);
 
@@ -138,13 +138,13 @@ class ActorTranslation extends TranslationAsset {
   static String getName(
     Translation translation,
     String id, [
-    or = 'None',
+    String or = 'None',
   ]) =>
       get(translation, id)?.name ?? or;
 
   @override
   Map<String, dynamic> toJson() => super.toJson()
-    ..addAll({
+    ..addAll(<String, dynamic>{
       'name': name,
     });
 }

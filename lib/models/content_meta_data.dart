@@ -26,25 +26,25 @@ class ContentMetaData {
     required String id,
   }) : this(
           id,
-          json['authorId'] ?? '',
+          json['authorId'] as String? ?? '',
           contributorsIds: listFromJson(
             json['contributorsIds'],
-            (c) => c as String,
+            (dynamic c) => c as String,
           ),
           lastUpdateAt: json['lastUpdateAt'] as Timestamp,
-          likes: json['likes'] ?? 0,
+          likes: json['likes'] as int? ?? 0,
           status: EnumToString.fromString(
-                  ContentStatus.values, json['status'] ?? '') ??
+                ContentStatus.values,
+                json['status'] as String? ?? '',
+              ) ??
               ContentStatus.private,
         );
 
-  Map<String, dynamic> toJson() {
-    return {
-      'contributorsIds': contributorsIds,
-      'authorId': authorId,
-      'lastUpdateAt': lastUpdateAt,
-      'likes': likes,
-      'status': EnumToString.convertToString(status),
-    };
-  }
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'contributorsIds': contributorsIds,
+        'authorId': authorId,
+        'lastUpdateAt': lastUpdateAt,
+        'likes': likes,
+        'status': EnumToString.convertToString(status),
+      };
 }

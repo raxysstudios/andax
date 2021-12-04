@@ -6,18 +6,20 @@ Future<T?> showLoadingDialog<T>(
   BuildContext context,
   Future<T?> future,
 ) async {
-  showDialog(
+  showDialog<void>(
     context: context,
     barrierDismissible: false,
-    builder: (context) => const Center(
-      child: Card(
-        shape: CircleBorder(),
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child: CircularProgressIndicator(),
+    builder: (context) {
+      return const Center(
+        child: Card(
+          shape: CircleBorder(),
+          child: Padding(
+            padding: EdgeInsets.all(16),
+            child: CircularProgressIndicator(),
+          ),
         ),
-      ),
-    ),
+      );
+    },
   );
   try {
     final result = await future;

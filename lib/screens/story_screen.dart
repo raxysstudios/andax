@@ -1,6 +1,5 @@
 import 'package:andax/content_loader.dart';
 import 'package:andax/editor/story_editor_screen.dart';
-import 'package:andax/models/translation.dart';
 import 'package:andax/screens/crowdsourcing_screen.dart';
 import 'package:andax/screens/play_screen.dart';
 import 'package:andax/widgets/loading_dialog.dart';
@@ -9,7 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:andax/models/story.dart';
 
-class StoryScreen extends StatefulWidget {
+class StoryScreen extends StatelessWidget {
   const StoryScreen(
     this.info, {
     Key? key,
@@ -18,53 +17,40 @@ class StoryScreen extends StatefulWidget {
   final StoryInfo info;
 
   @override
-  State<StoryScreen> createState() => _StoryScreenState();
-}
-
-class _StoryScreenState extends State<StoryScreen> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: const RoundedBackButton(),
-        title: Text(widget.info.title),
+        title: Text(info.title),
       ),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 76),
         children: [
-          if (widget.info.description != null)
+          if (info.description != null)
             ListTile(
               leading: const Icon(Icons.info_rounded),
               title: Text(
-                widget.info.description!,
+                info.description!,
               ),
             ),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          final data = await showLoadingDialog<List>(
+        onPressed: () => loadExperience(
+          context,
+          info,
+          (s, t) => Navigator.push<void>(
             context,
-            Future.wait([
-              loadStory(widget.info),
-              loadTranslation(widget.info),
-            ]),
-          );
-          if (data != null) {
-            await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) {
-                  return PlayScreen(
-                    story: data[0],
-                    translations:
-                        (data[1] as Translation).assets.values.toList(),
-                  );
-                },
-              ),
-            );
-          }
-        },
+            MaterialPageRoute(
+              builder: (context) {
+                return PlayScreen(
+                  story: s,
+                  translations: t.assets.values.toList(),
+                );
+              },
+            ),
+          ),
+        ),
         icon: const Icon(Icons.play_arrow_rounded),
         label: const Text('Play'),
       ),
@@ -93,14 +79,14 @@ class _StoryScreenState extends State<StoryScreen> {
                           onPressed: () async {
                             final translation = await showLoadingDialog(
                               context,
-                              loadTranslation(widget.info),
+                              loadTranslation(info),
                             );
                             if (translation != null) {
-                              Navigator.push(
+                              Navigator.push<void>(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => CrowdsourcingScreen(
-                                    storyId: widget.info.storyID,
+                                    storyId: info.storyID,
                                     translations:
                                         translation.assets.values.toList(),
                                   ),
@@ -113,29 +99,22 @@ class _StoryScreenState extends State<StoryScreen> {
                         ),
                         const SizedBox(width: 8),
                         IconButton(
-                          onPressed: () async {
-                            final data = await showLoadingDialog<List>(
+                          onPressed: () => loadExperience(
+                            context,
+                            info,
+                            (s, t) => Navigator.push<void>(
                               context,
-                              Future.wait([
-                                loadStory(widget.info),
-                                loadTranslation(widget.info),
-                              ]),
-                            );
-                            if (data != null) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return StoryEditorScreen(
-                                      story: data[0],
-                                      translation: data[1] as Translation,
-                                      info: widget.info,
-                                    );
-                                  },
-                                ),
-                              );
-                            }
-                          },
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return StoryEditorScreen(
+                                    story: s,
+                                    translation: t,
+                                    info: info,
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
                           tooltip: 'Edit story',
                           icon: const Icon(Icons.edit_rounded),
                         ),

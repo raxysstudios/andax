@@ -1,7 +1,9 @@
 import 'package:andax/models/translation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'models/story.dart';
 import 'models/translation_asset.dart';
+import 'widgets/loading_dialog.dart';
 
 Future<Translation> loadTranslation(StoryInfo info) async {
   final tdc = FirebaseFirestore.instance.doc(
@@ -10,8 +12,10 @@ Future<Translation> loadTranslation(StoryInfo info) async {
   final assets = await tdc
       .collection('assets')
       .withConverter<TranslationAsset>(
-        fromFirestore: (snapshot, _) =>
-            TranslationAsset.fromJson(snapshot.data()!, snapshot.id),
+        fromFirestore: (snapshot, _) => TranslationAsset.fromJson(
+          snapshot.data()!,
+          snapshot.id,
+        ),
         toFirestore: (scenario, _) => scenario.toJson(),
       )
       .get();
@@ -38,4 +42,23 @@ Future<Story> loadStory(StoryInfo info) async {
       )
       .get();
   return document.data()!;
+}
+
+Future<void> loadExperience(
+  BuildContext context,
+  StoryInfo info,
+  Future<void> Function(Story, Translation) onLoaded,
+) async {
+  Story? story;
+  Translation? translation;
+  await showLoadingDialog<void>(
+    context,
+    (() async {
+      story = await loadStory(info);
+      translation = await loadTranslation(info);
+    })(),
+  );
+  if (story != null && translation != null) {
+    await onLoaded(story!, translation!);
+  }
 }

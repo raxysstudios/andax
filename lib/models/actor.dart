@@ -16,15 +16,15 @@ class Actor {
 
   Actor.fromJson(Map<String, dynamic> json)
       : this(
-          id: json['id'],
+          id: json['id'] as String,
           type: EnumToString.fromString(
                 ActorType.values,
-                json['type'],
+                json['type'] as String? ?? '',
               ) ??
               ActorType.npc,
         );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'id': id,
         'type': EnumToString.convertToString(type),
       };

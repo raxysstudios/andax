@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           if (FirebaseAuth.instance.currentUser != null)
             IconButton(
-              onPressed: () => Navigator.push(
+              onPressed: () => Navigator.push<void>(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const StoryEditorScreen(),
@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(width: 8),
           IconButton(
             onPressed: () async {
-              await Navigator.push(
+              await Navigator.push<void>(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const SettingsScreen(),
@@ -90,10 +90,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           ? null
                           : Text(info.description!),
                       onTap: () async {
-                        await Navigator.push(
+                        await Navigator.push<void>(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => StoryScreen(info),
+                            builder: (context) => StoryScreen(info),
                           ),
                         );
                         await refreshScenarios();

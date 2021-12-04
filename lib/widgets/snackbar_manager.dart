@@ -3,9 +3,9 @@ import 'package:flutter/services.dart';
 
 void showSnackbar(
   BuildContext context, {
-  icon = Icons.error_outline_outlined,
-  text = 'Error!',
-  short = false,
+  IconData icon = Icons.error_outline_outlined,
+  String text = 'Error!',
+  bool short = false,
 }) {
   final theme = Theme.of(context);
   final messenger = ScaffoldMessenger.of(context);
