@@ -19,7 +19,7 @@ class Node {
   Node.fromJson(Map<String, dynamic> json)
       : this(
           json['id'] as String,
-          actorId: json['actorId'] as String,
+          actorId: json['actorId'] as String?,
           transitions: listFromJson(
             json['transitions'],
             (dynamic j) => Transition.fromJson(j as Map<String, dynamic>),

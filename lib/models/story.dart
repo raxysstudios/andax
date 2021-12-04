@@ -69,7 +69,7 @@ class StoryInfo {
       storyID: json['storyID'] as String,
       translationID: json['translationID'] as String,
       title: json['title'] as String,
-      description: json['description'] as String,
+      description: json['description'] as String?,
     );
   }
 }

@@ -1,6 +1,5 @@
 import 'package:andax/content_loader.dart';
 import 'package:andax/editor/story_editor_screen.dart';
-import 'package:andax/models/translation.dart';
 import 'package:andax/screens/crowdsourcing_screen.dart';
 import 'package:andax/screens/play_screen.dart';
 import 'package:andax/widgets/loading_dialog.dart';
@@ -37,28 +36,21 @@ class StoryScreen extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          late final Story story;
-          late final Translation translation;
-          await showLoadingDialog<void>(
-            context,
-            (() async {
-              story = await loadStory(info);
-              translation = await loadTranslation(info);
-            })(),
-          );
-          await Navigator.push<void>(
+        onPressed: () => loadExperience(
+          context,
+          info,
+          (s, t) => Navigator.push<void>(
             context,
             MaterialPageRoute(
               builder: (context) {
                 return PlayScreen(
-                  story: story,
-                  translations: translation.assets.values.toList(),
+                  story: s,
+                  translations: t.assets.values.toList(),
                 );
               },
             ),
-          );
-        },
+          ),
+        ),
         icon: const Icon(Icons.play_arrow_rounded),
         label: const Text('Play'),
       ),
@@ -107,29 +99,22 @@ class StoryScreen extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         IconButton(
-                          onPressed: () async {
-                            late final Story story;
-                            late final Translation translation;
-                            await showLoadingDialog<void>(
-                              context,
-                              (() async {
-                                story = await loadStory(info);
-                                translation = await loadTranslation(info);
-                              })(),
-                            );
-                            Navigator.push<void>(
+                          onPressed: () => loadExperience(
+                            context,
+                            info,
+                            (s, t) => Navigator.push<void>(
                               context,
                               MaterialPageRoute(
                                 builder: (context) {
                                   return StoryEditorScreen(
-                                    story: story,
-                                    translation: translation,
+                                    story: s,
+                                    translation: t,
                                     info: info,
                                   );
                                 },
                               ),
-                            );
-                          },
+                            ),
+                          ),
                           tooltip: 'Edit story',
                           icon: const Icon(Icons.edit_rounded),
                         ),
