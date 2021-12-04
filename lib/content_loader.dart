@@ -12,8 +12,10 @@ Future<Translation> loadTranslation(StoryInfo info) async {
   final assets = await tdc
       .collection('assets')
       .withConverter<TranslationAsset>(
-        fromFirestore: (snapshot, _) =>
-            TranslationAsset.fromJson(snapshot.data()!, snapshot.id),
+        fromFirestore: (snapshot, _) => TranslationAsset.fromJson(
+          snapshot.data()!,
+          snapshot.id,
+        ),
         toFirestore: (scenario, _) => scenario.toJson(),
       )
       .get();

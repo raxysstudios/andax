@@ -39,8 +39,8 @@ abstract class TranslationAsset {
     switch (type) {
       case AssetType.message:
         return MessageTranslation(
-          text: json['text'] as String,
-          audioUrl: json['audioUrl'] as String,
+          text: json['text'] as String?,
+          audioUrl: json['audioUrl'] as String?,
           metaData: metaData,
         );
       case AssetType.actor:
@@ -51,7 +51,7 @@ abstract class TranslationAsset {
       case AssetType.story:
         return StoryTranslation(
           title: json['title'] as String,
-          description: json['description'] as String,
+          description: json['description'] as String?,
           metaData: metaData,
         );
       default:
