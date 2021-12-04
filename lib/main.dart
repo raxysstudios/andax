@@ -1,33 +1,15 @@
-import 'package:algolia/algolia.dart';
-import 'package:andax/firebase_options.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:andax/screens/home_screen.dart';
+import 'package:andax/store.dart';
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart';
 import 'widgets/splash_screen.dart';
-
-late final Algolia algolia;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const App());
 }
 
-class App extends StatefulWidget {
+class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
-
-  @override
-  _AppState createState() => _AppState();
-}
-
-class _AppState extends State<App> {
-  final Future<void> firebase = Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  ).then((_) {
-    algolia = const Algolia.init(
-      applicationId: '4NXJPAZXKE',
-      apiKey: 'aef86c663aa0f382553f4375013c2de2',
-    );
-  });
 
   List<ThemeData> getThemes(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -68,17 +50,17 @@ class _AppState extends State<App> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     final themes = getThemes(context);
     return MaterialApp(
       title: 'Andax',
       theme: themes[0],
       darkTheme: themes[1],
       debugShowCheckedModeBanner: false,
-      home: SplashScreen<void>(
+      home: SplashScreen(
         title: 'ÆNDAX',
-        future: firebase,
-        onLoaded: (context, _) => Navigator.push<void>(
+        future: initStore(),
+        onLoaded: (context) => Navigator.pushReplacement<void, void>(
           context,
           MaterialPageRoute(builder: (context) => const HomeScreen()),
         ),
