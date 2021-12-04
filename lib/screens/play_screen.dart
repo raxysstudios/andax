@@ -132,23 +132,26 @@ class _PlayScreenState extends State<PlayScreen> {
           if (currentNode.transitions != null &&
               !currentNode.autoTransition &&
               autoAdvance == null)
-            fadeOut(Wrap(
-              alignment: WrapAlignment.end,
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                for (final transition in currentNode.transitions!)
-                  ElevatedButton(
-                    onPressed: () => advanceStory(transition),
-                    child: Text(
-                      getTranslation<MessageTranslation>(
-                        translations,
-                        transition.id,
-                        (t) => t.text,
+            fadeOut(Padding(
+              padding: const EdgeInsets.all(8),
+              child: Wrap(
+                alignment: WrapAlignment.end,
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final transition in currentNode.transitions!)
+                    ElevatedButton(
+                      onPressed: () => advanceStory(transition),
+                      child: Text(
+                        getTranslation<MessageTranslation>(
+                          translations,
+                          transition.id,
+                          (t) => t.text,
+                        ),
                       ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             )),
           if (isFinished)
             fadeOut(const Center(
