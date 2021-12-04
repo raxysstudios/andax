@@ -1,4 +1,5 @@
 import 'package:algolia/algolia.dart';
+import 'package:andax/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
@@ -18,7 +19,9 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  final Future<void> firebase = Firebase.initializeApp().then((_) {
+  final Future<void> firebase = Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  ).then((_) {
     algolia = const Algolia.init(
       applicationId: '4NXJPAZXKE',
       apiKey: 'aef86c663aa0f382553f4375013c2de2',
