@@ -142,7 +142,6 @@ class _PlayScreenState extends State<PlayScreen> {
                         for (final transition in currentNode.transitions!)
                           Padding(
                             padding: const EdgeInsets.all(4),
-                            child: Expanded(
                               child: ElevatedButton(
                                 onPressed: () => advanceStory(transition),
                                 child: Text(
@@ -151,8 +150,7 @@ class _PlayScreenState extends State<PlayScreen> {
                                     transition.id,
                                     (t) => t.text,
                                   ),
-                                ),
-                              ),
+                                )
                             ),
                           ),
                       ],

@@ -1,10 +1,13 @@
-import 'package:contactus/contactus.dart';
+import 'dart:io';
+
 import 'package:andax/widgets/loading_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:in_app_review/in_app_review.dart';
+
+enum Availability { loading, available, unavailable }
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -15,7 +18,31 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   User? get user => FirebaseAuth.instance.currentUser;
-  double rating = 0;
+  final InAppReview _inAppReview = InAppReview.instance;
+  Availability _availability = Availability.loading;
+
+  @override
+    void initState() {
+      super.initState();
+
+      WidgetsBinding.instance!.addPostFrameCallback((_) async {
+        try {
+          final isAvailable = await _inAppReview.isAvailable();
+
+          setState(() {
+            // This plugin cannot be tested on Android by installing your app
+            // locally. See https://github.com/britannio/in_app_review#testing for
+            // more information.
+            _availability = isAvailable && !Platform.isAndroid
+                ? Availability.available
+                : Availability.unavailable;
+          });
+        } catch (e) {
+          setState(() => _availability = Availability.unavailable);
+        }
+      });
+    }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,45 +82,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 tooltip: "Log out",
               ),
             ),
-             const Center(
-                  child: Text(
-                "contact developer",
-                style: TextStyle(fontSize: 23),
-              )),
+            const Center(
+                child: Text(
+              "contact developer",
+              style: TextStyle(fontSize: 23),
+            )),
             ListTile(
-              leading: RaisedButton(
-                onPressed: () async =>
-                    await launch("https://wa.me/${"+79871852923"}?text=Hello"),
+              leading: ElevatedButton(
+                onPressed: () =>
+                    launch("https://wa.me/${"+79871852923"}?text=Hello"),
                 child: const Text('Open WhatsApp'),
-                color: Colors.black,
               ),
-              trailing: RaisedButton(
-                onPressed: () async =>
-                    await launch("https://t.me/taasneemtoolba"),
+              trailing: ElevatedButton(
+                onPressed: () => launch("https://t.me/taasneemtoolba"),
                 child: const Text('Open Telegram'),
-                color: Colors.black,
-
               ),
             ),
             ListTile(
-              title: const Text("Rate us"),
-              trailing: RatingBar.builder(
-                initialRating: 0,
-                minRating: 1,
-                direction: Axis.horizontal,
-                allowHalfRating: true,
-                itemCount: 5,
-                itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                itemBuilder: (context, _) => const Icon(
-                  Icons.star,
-                ),
-                onRatingUpdate: (rating) {
-                  rating = rating;
-                },
-              ),
-            ),
-          ],
+              leading: TextButton.icon(
+                icon: const Icon(Icons.star),
+                label: const Text('Rate us'),
+                onPressed: _requestReview,
 
+              )
+            )
+          ],
         ],
       ),
     );
@@ -113,4 +126,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
       await FirebaseAuth.instance.signInWithCredential(cred);
     }
   }
+  Future<void> _requestReview() async{
+    if (await _inAppReview.isAvailable()) {
+    return await _inAppReview.requestReview();
+    }
+  }
+  // => _inAppReview.requestReview();
+
 }

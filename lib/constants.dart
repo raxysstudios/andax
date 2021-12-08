@@ -1,0 +1,2 @@
+const kAppStoreId = '';
+const kPlayStoreId = '';
