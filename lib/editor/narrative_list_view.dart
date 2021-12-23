@@ -7,8 +7,6 @@ import 'package:andax/widgets/modal_picker.dart';
 import 'package:andax/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 
-import 'package:provider/provider.dart';
-
 import 'story_editor_screen.dart';
 
 class NarrativeListView extends StatefulWidget {
@@ -146,10 +144,10 @@ class _NarrativeListViewState extends State<NarrativeListView> {
 }
 
 Future<Node?> showStoryNodePickerSheet(
+  StoryEditorState editor,
   BuildContext context, [
   String? selectedId,
 ]) {
-  final editor = context.read<StoryEditorState>();
   return showModalPicker(
     context,
     (context, scroll) {

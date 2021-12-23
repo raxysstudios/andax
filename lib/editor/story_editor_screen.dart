@@ -1,16 +1,18 @@
-import 'package:andax/editor/narrative_editor.dart';
-import 'package:andax/editor/story_actors_editor.dart';
-import 'package:andax/editor/story_general_editor.dart';
+import 'package:andax/editor/story_info_editor.dart';
 import 'package:andax/models/content_meta_data.dart';
+import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/widgets/maybe_pop_alert.dart';
+import 'package:andax/widgets/rounded_back_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
+
+import 'narrative_list_view.dart';
+import 'node_editor.dart';
 
 class StoryEditorScreen extends StatefulWidget {
   const StoryEditorScreen({
@@ -29,9 +31,6 @@ class StoryEditorScreen extends StatefulWidget {
 }
 
 class StoryEditorState extends State<StoryEditorScreen> {
-  final _pageController = PageController();
-  var _page = 0;
-
   final uuid = const Uuid();
   final meta = ContentMetaData(
     '',
@@ -58,7 +57,22 @@ class StoryEditorState extends State<StoryEditorScreen> {
         },
       );
 
-  void update(VoidCallback action) => setState(action);
+  var interactive = false;
+
+  void openNode(Node node) async {
+    await Navigator.push<void>(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return NodeEditor(
+            editor: this,
+            node: node,
+          );
+        },
+      ),
+    );
+    setState(() {});
+  }
 
   Future upload() async {
     final sdb = FirebaseFirestore.instance.collection('stories');
@@ -89,53 +103,68 @@ class StoryEditorState extends State<StoryEditorScreen> {
     );
   }
 
+  final scroll = ScrollController();
+
   @override
   Widget build(BuildContext context) {
-    return Provider.value(
-      value: this,
+    return MaybePopAlert(
       child: Scaffold(
-        body: MaybePopAlert(
-          child: PageView.builder(
-            controller: _pageController,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: 3,
-            itemBuilder: (context, page) {
-              switch (page) {
-                case 0:
-                  // ignore: prefer_const_constructors
-                  return StoryGeneralEditor();
-                case 1:
-                  // ignore: prefer_const_constructors
-                  return ActorsEditor();
-                case 2:
-                  return const NarrativeEditor();
-                default:
-                  return const SizedBox();
-              }
-            },
-          ),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          onTap: (i) => update(() {
-            _page = i;
-            _pageController.animateToPage(
-              i,
-              duration: kTabScrollDuration,
-              curve: standardEasing,
-            );
-          }),
-          currentIndex: _page,
-          items: [
-            for (final entry in {
-              'General': Icons.auto_stories_rounded,
-              'Actors': Icons.person_rounded,
-              'Narrative': Icons.timeline_rounded,
-            }.entries)
-              BottomNavigationBarItem(
-                icon: Icon(entry.value),
-                label: entry.key,
-              )
+        appBar: AppBar(
+          leading: const RoundedBackButton(),
+          title: const Text('Narrative'),
+          actions: [
+            IconButton(
+              onPressed: upload,
+              tooltip: 'Upload story',
+              icon: Icon(
+                Icons.cloud_upload_rounded,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+            IconButton(
+              onPressed: () async {
+                await Navigator.push<void>(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return StoryInfoEditor(
+                      editor: this,
+                    );
+                  }),
+                );
+                setState(() {});
+              },
+              tooltip: 'Edit story info',
+              icon: const Icon(Icons.info_rounded),
+            ),
+            IconButton(
+              onPressed: () => setState(() {
+                interactive = !interactive;
+              }),
+              tooltip: 'Toggle view',
+              icon: Icon(interactive
+                  ? Icons.account_tree_rounded
+                  : Icons.view_list_rounded),
+            ),
+            const SizedBox(width: 4),
           ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            final id = uuid.v4();
+            final node = Node(id);
+            story.nodes[id] = node;
+            translation[id] = MessageTranslation(metaData: meta);
+            openNode(node);
+          },
+          tooltip: 'Add node',
+          child: const Icon(Icons.add_box_rounded),
+        ),
+        body: NarrativeListView(
+          this,
+          controller: scroll,
+          onSelected: openNode,
+          interactive: interactive,
+          padding: const EdgeInsets.only(bottom: 76),
         ),
       ),
     );
