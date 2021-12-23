@@ -103,8 +103,6 @@ class StoryEditorState extends State<StoryEditorScreen> {
     );
   }
 
-  final scroll = ScrollController();
-
   @override
   Widget build(BuildContext context) {
     return MaybePopAlert(
@@ -142,8 +140,8 @@ class StoryEditorState extends State<StoryEditorScreen> {
               }),
               tooltip: 'Toggle view',
               icon: Icon(interactive
-                  ? Icons.account_tree_rounded
-                  : Icons.view_list_rounded),
+                  ? Icons.view_list_rounded
+                  : Icons.account_tree_rounded),
             ),
             const SizedBox(width: 4),
           ],
@@ -161,7 +159,6 @@ class StoryEditorState extends State<StoryEditorScreen> {
         ),
         body: NarrativeListView(
           this,
-          controller: scroll,
           onSelected: openNode,
           interactive: interactive,
           padding: const EdgeInsets.only(bottom: 76),

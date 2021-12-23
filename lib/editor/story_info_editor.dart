@@ -33,7 +33,7 @@ class StoryInfoEditor extends StatelessWidget {
         tooltip: 'Add actor',
         child: const Icon(Icons.person_add_rounded),
       ),
-      body: Column(
+      body: ListView(
         children: [
           ListTile(
             leading: const Icon(Icons.language_rounded),
