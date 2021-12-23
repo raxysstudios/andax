@@ -9,6 +9,7 @@ import 'package:andax/widgets/rounded_back_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:uuid/uuid.dart';
 
 import 'narrative_list_view.dart';
@@ -74,6 +75,18 @@ class StoryEditorState extends State<StoryEditorScreen> {
     setState(() {});
   }
 
+  void openInfo() async {
+    await Navigator.push<void>(
+      context,
+      MaterialPageRoute(builder: (context) {
+        return StoryInfoEditor(
+          editor: this,
+        );
+      }),
+    );
+    setState(() {});
+  }
+
   Future upload() async {
     final sdb = FirebaseFirestore.instance.collection('stories');
     var sid = widget.info?.storyID;
@@ -104,6 +117,16 @@ class StoryEditorState extends State<StoryEditorScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    if (info == null) {
+      SchedulerBinding.instance?.addPostFrameCallback(
+        (_) => openInfo(),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaybePopAlert(
       child: Scaffold(
@@ -120,17 +143,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
               ),
             ),
             IconButton(
-              onPressed: () async {
-                await Navigator.push<void>(
-                  context,
-                  MaterialPageRoute(builder: (context) {
-                    return StoryInfoEditor(
-                      editor: this,
-                    );
-                  }),
-                );
-                setState(() {});
-              },
+              onPressed: openInfo,
               tooltip: 'Edit story info',
               icon: const Icon(Icons.info_rounded),
             ),
