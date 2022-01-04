@@ -1,4 +1,5 @@
 import 'package:andax/models/actor.dart';
+import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/widgets/rounded_back_button.dart';
@@ -8,14 +9,21 @@ import 'package:flutter/material.dart';
 import 'story_editor_screen.dart';
 import 'narrative_list_view.dart';
 
-class StoryInfoEditor extends StatelessWidget {
+class StoryInfoEditor extends StatefulWidget {
   const StoryInfoEditor({
     required this.editor,
     Key? key,
   }) : super(key: key);
 
   final StoryEditorState editor;
-  Translation get translation => editor.translation;
+
+  @override
+  State<StoryInfoEditor> createState() => _StoryInfoEditorState();
+}
+
+class _StoryInfoEditorState extends State<StoryInfoEditor> {
+  Translation get translation => widget.editor.translation;
+  Story get story => widget.editor.story;
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +33,14 @@ class StoryInfoEditor extends StatelessWidget {
         title: const Text('Story Info'),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          final id = editor.uuid.v4();
-          editor.story.actors[id] = Actor(id: id);
-          translation[id] = ActorTranslation(metaData: editor.meta);
-        },
+        onPressed: () => setState(() {
+          final id = widget.editor.uuid.v4();
+          story.actors[id] = Actor(id: id);
+          translation[id] = ActorTranslation(
+            name: 'Actor #${story.actors.length}',
+            metaData: widget.editor.meta,
+          );
+        }),
         tooltip: 'Add actor',
         child: const Icon(Icons.person_add_rounded),
       ),
@@ -74,22 +85,22 @@ class StoryInfoEditor extends StatelessWidget {
           ListTile(
             onTap: () async {
               final node = await showStoryNodePickerSheet(
-                editor,
+                widget.editor,
                 context,
-                editor.story.startNodeId,
+                story.startNodeId,
               );
-              editor.story.startNodeId = node?.id ?? '';
+              story.startNodeId = node?.id ?? '';
             },
             leading: const Icon(Icons.login_rounded),
             title: Text(
               MessageTranslation.getText(
                 translation,
-                editor.story.startNodeId,
+                story.startNodeId,
               ),
             ),
           ),
           const Divider(),
-          for (final actor in editor.story.actors.values)
+          for (final actor in story.actors.values)
             ListTile(
               leading: IconButton(
                 onPressed: () {
@@ -119,7 +130,7 @@ class StoryInfoEditor extends StatelessWidget {
               ),
               trailing: IconButton(
                 onPressed: () {
-                  editor.story.actors.remove(actor.id);
+                  story.actors.remove(actor.id);
                   translation.assets.remove(actor.id);
                 },
                 icon: const Icon(Icons.clear_rounded),

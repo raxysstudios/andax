@@ -6,6 +6,7 @@ import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 import 'actor_picker.dart';
 import 'story_editor_screen.dart';
@@ -29,6 +30,41 @@ class _NodeEditorState extends State<NodeEditor> {
   Node get node => widget.node;
 
   List<Transition> get transitions => node.transitions ?? [];
+
+  @override
+  void initState() {
+    super.initState();
+    if (node.actorId == null &&
+        MessageTranslation.getText(translation, node.id, '').isEmpty) {
+      SchedulerBinding.instance?.addPostFrameCallback(
+        (_) => selectActor(),
+      );
+    }
+  }
+
+  Future<void> selectTransitionNode(Transition transition) async {
+    final node = await showStoryNodePickerSheet(
+      widget.editor,
+      context,
+      transition.targetNodeId,
+    );
+    if (node != null) {
+      setState(() {
+        transition.targetNodeId = node.id;
+      });
+    }
+  }
+
+  Future<void> selectActor() async {
+    final actor = await showActorPickerSheet(
+      widget.editor,
+      context,
+      node.actorId,
+    );
+    setState(() {
+      node.actorId = actor?.id;
+    });
+  }
 
   @override
   Widget build(context) {
@@ -78,12 +114,12 @@ class _NodeEditorState extends State<NodeEditor> {
         onPressed: () => setState(() {
           final id = widget.editor.uuid.v4();
           node.transitions ??= [];
-          node.transitions!.add(
-            Transition(id, targetNodeId: node.id),
-          );
+          final transition = Transition(id, targetNodeId: node.id);
+          node.transitions!.add(transition);
           translation[id] = MessageTranslation(
             metaData: widget.editor.meta,
           );
+          selectTransitionNode(transition);
         }),
         child: const Icon(Icons.add_location_rounded),
       ),
@@ -93,16 +129,7 @@ class _NodeEditorState extends State<NodeEditor> {
             builder: (context) {
               final actor = widget.editor.story.actors[node.actorId];
               return ListTile(
-                onTap: () async {
-                  final actor = await showActorPickerSheet(
-                    widget.editor,
-                    context,
-                    node.actorId,
-                  );
-                  setState(() {
-                    node.actorId = actor?.id;
-                  });
-                },
+                onTap: selectActor,
                 leading: Icon(actor == null
                     ? Icons.person_rounded
                     : actor.type == ActorType.npc
@@ -153,19 +180,7 @@ class _NodeEditorState extends State<NodeEditor> {
             Column(
               children: [
                 ListTile(
-                  onTap: () => showStoryNodePickerSheet(
-                    widget.editor,
-                    context,
-                    transition.targetNodeId,
-                  ).then(
-                    (node) {
-                      if (node != null) {
-                        setState(() {
-                          transition.targetNodeId = node.id;
-                        });
-                      }
-                    },
-                  ),
+                  onTap: () => selectTransitionNode(transition),
                   leading: const Icon(Icons.place_rounded),
                   title: Text(
                     MessageTranslation.getText(
