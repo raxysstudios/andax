@@ -45,16 +45,6 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text('Stories'),
         actions: [
-          if (FirebaseAuth.instance.currentUser != null)
-            IconButton(
-              onPressed: () => Navigator.push<void>(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const StoryEditorScreen(),
-                ),
-              ),
-              icon: const Icon(Icons.edit_rounded),
-            ),
           const SizedBox(width: 8),
           IconButton(
             onPressed: () async {
@@ -71,6 +61,17 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(width: 8),
         ],
       ),
+      floatingActionButton: FirebaseAuth.instance.currentUser == null
+          ? null
+          : FloatingActionButton(
+              onPressed: () => Navigator.push<void>(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const StoryEditorScreen(),
+                ),
+              ),
+              child: const Icon(Icons.edit_rounded),
+            ),
       body: Column(
         children: [
           Expanded(
