@@ -3,15 +3,14 @@ import 'package:andax/models/translation_asset.dart';
 import 'package:andax/widgets/modal_picker.dart';
 import 'package:andax/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'story_editor_screen.dart';
 
 Future<Actor?> showActorPickerSheet(
+  StoryEditorState editor,
   BuildContext context, [
   String? selectedId,
 ]) {
-  final editor = context.read<StoryEditorState>();
   final actors = editor.story.actors.values.toList();
   return showModalPicker(
     context,

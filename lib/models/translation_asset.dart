@@ -109,9 +109,10 @@ class MessageTranslation extends TranslationAsset {
 
   static String getText(
     Translation translation,
-    String id,
-  ) =>
-      get(translation, id)?.text ?? 'None';
+    String id, [
+    String ifNull = 'None',
+  ]) =>
+      get(translation, id)?.text ?? ifNull;
 
   @override
   Map<String, dynamic> toJson() => super.toJson()

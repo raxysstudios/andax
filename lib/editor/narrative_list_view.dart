@@ -7,8 +7,6 @@ import 'package:andax/widgets/modal_picker.dart';
 import 'package:andax/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 
-import 'package:provider/provider.dart';
-
 import 'story_editor_screen.dart';
 
 class NarrativeListView extends StatefulWidget {
@@ -17,7 +15,6 @@ class NarrativeListView extends StatefulWidget {
     this.onSelected,
     this.selectedId,
     this.interactive = true,
-    this.controller,
     this.padding,
     Key? key,
   }) : super(key: key);
@@ -26,7 +23,6 @@ class NarrativeListView extends StatefulWidget {
   final bool interactive;
   final String? selectedId;
   final ValueSetter<Node>? onSelected;
-  final ScrollController? controller;
   final EdgeInsets? padding;
 
   @override
@@ -34,9 +30,9 @@ class NarrativeListView extends StatefulWidget {
 }
 
 class _NarrativeListViewState extends State<NarrativeListView> {
-  late final Translation translation = widget.editor.translation;
-  late final Story story = widget.editor.story;
-  late final List<Node> nodes = widget.editor.story.nodes.values.toList();
+  Translation get translation => widget.editor.translation;
+  Story get story => widget.editor.story;
+  List<Node> get nodes => widget.editor.story.nodes.values.toList();
 
   final choices = <String, String>{};
 
@@ -64,7 +60,6 @@ class _NarrativeListViewState extends State<NarrativeListView> {
   Widget build(BuildContext context) {
     final nodes = widget.interactive ? computeThread() : this.nodes;
     return ListView.builder(
-      controller: widget.controller,
       padding: widget.padding,
       itemCount: nodes.length,
       itemBuilder: (context, index) {
@@ -146,10 +141,10 @@ class _NarrativeListViewState extends State<NarrativeListView> {
 }
 
 Future<Node?> showStoryNodePickerSheet(
+  StoryEditorState editor,
   BuildContext context, [
   String? selectedId,
 ]) {
-  final editor = context.read<StoryEditorState>();
   return showModalPicker(
     context,
     (context, scroll) {
