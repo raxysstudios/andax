@@ -20,3 +20,26 @@ String getTranslation<T extends TranslationAsset>(
   final asset = translations[id] as T?;
   return asset == null ? '' : getter(asset) ?? '';
 }
+
+String capitalize(String? text) {
+  if (text == null) return '';
+  return text
+      .split(' ')
+      .where((s) => s.isNotEmpty)
+      .map((w) => w[0].toUpperCase() + w.substring(1))
+      .join(' ')
+      .split('-')
+      .where((s) => s.isNotEmpty)
+      .map((w) => w[0].toUpperCase() + w.substring(1))
+      .join('-');
+}
+
+String? prettyTags(
+  Iterable<String>? tags, {
+  String separator = ' • ',
+  bool capitalized = true,
+}) {
+  if (tags == null) return null;
+  final text = tags.join(separator);
+  return capitalized ? capitalize(text) : text;
+}

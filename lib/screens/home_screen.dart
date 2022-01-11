@@ -2,6 +2,7 @@ import 'package:andax/editor/story_editor_screen.dart';
 import 'package:andax/screens/story_screen.dart';
 import 'package:andax/screens/settings_screen.dart';
 import 'package:andax/store.dart';
+import 'package:andax/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -87,9 +88,30 @@ class _HomeScreenState extends State<HomeScreen> {
                   for (final info in scenarios)
                     ListTile(
                       title: Text(info.title),
-                      subtitle: info.description == null
-                          ? null
-                          : Text(info.description!),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (info.description == null) Text(info.description!),
+                          if (info.tags != null)
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.tag_rounded,
+                                  size: 16,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(prettyTags(info.tags)!),
+                              ],
+                            ),
+                        ],
+                      ),
+                      trailing: Chip(
+                        avatar: const Icon(
+                          Icons.favorite_rounded,
+                          size: 16,
+                        ),
+                        label: Text(info.likes.toString()),
+                      ),
                       onTap: () async {
                         await Navigator.push<void>(
                           context,
