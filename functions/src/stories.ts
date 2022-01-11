@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import algoliasearch from "algoliasearch";
 import * as functions from "firebase-functions";
 import {firestore} from "firebase-admin";
@@ -9,11 +10,11 @@ const index = algoliasearch(
     .initIndex("stories");
 
 type storyRecord = {
-    storyID: string;
-    translationID: string;
-    language: string;
-    title: string,
-    description:string,
+  storyID: string;
+  translationID: string;
+  language: string;
+  title: string,
+  description: string,
 };
 
 export const indexStories = functions
@@ -30,21 +31,28 @@ export const indexStories = functions
         });
       }
       if (change.after.exists) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const {title, description} = change.after.data()!;
-        const language = await firestore()
+        const {title, description, tags} = change.after.data()!;
+        const story = await firestore()
+            .doc(`stories/${storyID}`)
+            .get()
+            .then((doc) => doc.data()!);
+        const translation = await firestore()
             .doc(`stories/${storyID}/translations/${translationID}`)
             .get()
-            .then((doc) => doc.data()?.language);
+            .then((doc) => doc.data()!);
         await index.saveObject(
-            {
-              storyID,
-              translationID,
-              language,
-              title,
-              description,
-            } as storyRecord,
-            {autoGenerateObjectIDIfNotExist: true}
+        {
+          storyID,
+          storyAuthorID: story.metaData.authorId,
+          translationID,
+          translationAuthorID: translation.metaData.authorId,
+          language: translation.language,
+          title,
+          description,
+          tags,
+          likes: translation.metaData.likes,
+        } as storyRecord,
+        {autoGenerateObjectIDIfNotExist: true}
         );
       }
     });
