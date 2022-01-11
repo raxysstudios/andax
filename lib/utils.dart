@@ -6,6 +6,12 @@ List<T> listFromJson<T>(
 ) =>
     (array as Iterable<dynamic>?)?.map(fromJson).toList() ?? [];
 
+List<String>? json2list(Object? array) {
+  return (array as Iterable<dynamic>?)
+      ?.map((dynamic i) => i as String)
+      .toList();
+}
+
 String getTranslation<T extends TranslationAsset>(
   Map<String, TranslationAsset> translations,
   String id,

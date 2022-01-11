@@ -52,24 +52,36 @@ class Story {
 
 class StoryInfo {
   final String storyID;
+  final String storyAuthorID;
   final String translationID;
+  final String translationAuthorID;
   final String title;
   final String? description;
+  final List<String>? tags;
+  final int likes;
 
   const StoryInfo({
     required this.storyID,
+    required this.storyAuthorID,
     required this.translationID,
+    required this.translationAuthorID,
     required this.title,
     this.description,
+    this.likes = 0,
+    this.tags,
   });
 
   factory StoryInfo.fromAlgoliaHit(AlgoliaObjectSnapshot hit) {
     final json = hit.data;
     return StoryInfo(
       storyID: json['storyID'] as String,
+      storyAuthorID: json['storyAuthorID'] as String,
       translationID: json['translationID'] as String,
+      translationAuthorID: json['translationAuthorID'] as String,
       title: json['title'] as String,
       description: json['description'] as String?,
+      likes: json['likes'] as int,
+      tags: json2list(json['tags']),
     );
   }
 }

@@ -111,7 +111,9 @@ class StoryEditorState extends State<StoryEditorScreen> {
     ]);
     info ??= StoryInfo(
       storyID: sid!,
+      storyAuthorID: '',
       translationID: tid!,
+      translationAuthorID: '',
       title: '',
     );
   }
