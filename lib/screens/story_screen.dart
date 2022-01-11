@@ -4,11 +4,12 @@ import 'package:andax/screens/crowdsourcing_screen.dart';
 import 'package:andax/screens/play_screen.dart';
 import 'package:andax/widgets/loading_dialog.dart';
 import 'package:andax/widgets/rounded_back_button.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:andax/models/story.dart';
 
-class StoryScreen extends StatelessWidget {
+class StoryScreen extends StatefulWidget {
   const StoryScreen(
     this.info, {
     Key? key,
@@ -17,20 +18,66 @@ class StoryScreen extends StatelessWidget {
   final StoryInfo info;
 
   @override
+  State<StoryScreen> createState() => _StoryScreenState();
+}
+
+class _StoryScreenState extends State<StoryScreen> {
+  StoryInfo get info => widget.info;
+
+  bool? liked;
+  DocumentReference? likedDoc;
+
+  @override
+  void initState() {
+    super.initState();
+    if (FirebaseAuth.instance.currentUser != null) {
+      likedDoc = FirebaseFirestore.instance.doc(
+        'users/${FirebaseAuth.instance.currentUser!.uid}/likes/${info.translationID}',
+      );
+      likedDoc!.get().then((doc) {
+        setState(() {
+          liked = doc.exists;
+        });
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: const RoundedBackButton(),
-        title: Text(info.title),
+        title: Text(widget.info.title),
+        actions: [
+          if (liked != null)
+            IconButton(
+              onPressed: () async {
+                setState(() {
+                  liked = !liked!;
+                });
+                if (liked!) {
+                  await likedDoc!.set(
+                    {'storyID': info.storyID, 'date': Timestamp.now()},
+                  );
+                } else {
+                  await likedDoc!.delete();
+                }
+              },
+              icon: Icon(
+                liked! ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+              ),
+            ),
+          const SizedBox(width: 4),
+        ],
       ),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 76),
         children: [
-          if (info.description != null)
+          if (widget.info.description != null)
             ListTile(
               leading: const Icon(Icons.info_rounded),
               title: Text(
-                info.description!,
+                widget.info.description!,
               ),
             ),
         ],
@@ -38,7 +85,7 @@ class StoryScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => loadExperience(
           context,
-          info,
+          widget.info,
           (s, t) => Navigator.push<void>(
             context,
             MaterialPageRoute(
@@ -79,14 +126,14 @@ class StoryScreen extends StatelessWidget {
                           onPressed: () async {
                             final translation = await showLoadingDialog(
                               context,
-                              loadTranslation(info),
+                              loadTranslation(widget.info),
                             );
                             if (translation != null) {
                               Navigator.push<void>(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => CrowdsourcingScreen(
-                                    storyId: info.storyID,
+                                    storyId: widget.info.storyID,
                                     translations:
                                         translation.assets.values.toList(),
                                   ),
@@ -101,7 +148,7 @@ class StoryScreen extends StatelessWidget {
                         IconButton(
                           onPressed: () => loadExperience(
                             context,
-                            info,
+                            widget.info,
                             (s, t) => Navigator.push<void>(
                               context,
                               MaterialPageRoute(
@@ -109,7 +156,7 @@ class StoryScreen extends StatelessWidget {
                                   return StoryEditorScreen(
                                     story: s,
                                     translation: t,
-                                    info: info,
+                                    info: widget.info,
                                   );
                                 },
                               ),
