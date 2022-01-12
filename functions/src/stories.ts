@@ -9,6 +9,8 @@ const index = algoliasearch(
 )
     .initIndex("stories");
 
+const db = firestore();
+
 type storyRecord = {
   storyID: string;
   translationID: string;
@@ -32,11 +34,11 @@ export const indexStories = functions
       }
       if (change.after.exists) {
         const {title, description, tags} = change.after.data()!;
-        const story = await firestore()
+        const story = await db
             .doc(`stories/${storyID}`)
             .get()
             .then((doc) => doc.data()!);
-        const translation = await firestore()
+        const translation = await db
             .doc(`stories/${storyID}/translations/${translationID}`)
             .get()
             .then((doc) => doc.data()!);
@@ -63,10 +65,10 @@ export const countLikes = functions
     .firestore.document(
         "users/{userID}/likes/{likeID}"
     )
-    .onWrite(async (change) => {
+    .onWrite(async (change, context) => {
       const {storyID, translationID} =
         (change.before.data() ?? change.after.data())!;
-      const doc = firestore()
+      const doc = db
           .doc(`stories/${storyID}/translations/${translationID}`);
       const srch = await index.search("", {
         facetFilters: ["storyID:" + storyID, "translationID:" + translationID],
@@ -84,6 +86,8 @@ export const countLikes = functions
       }
       if (value) {
         await doc.update({"metaData.likes": value});
+        await db.doc("users/" + context.params.userID)
+            .update({"likes": value});
         await index.partialUpdateObject(srch);
       }
     });
