@@ -27,8 +27,7 @@ class _PagingListState<T> extends State<PagingList<T>> {
     );
     paging.addPageRequestListener(
       (page) async {
-        final items =
-            await widget.onRequest(page, paging.itemList?.last) as List<T>;
+        final items = await widget.onRequest(page, paging.itemList?.last);
         if (items.isEmpty) {
           paging.appendLastPage([]);
         } else {
