@@ -59,13 +59,34 @@ class ProfileScreen extends StatelessWidget {
               subtitle: Text(user!.email ?? '[no email]'),
             ),
             const Divider(),
+
             ListTile(
               leading: const Icon(Icons.favorite_rounded),
               title: const Text('Liked stories'),
-              trailing: Chip(
-                label: Text(
-                  12.toString(),
-                ),
+              trailing: Builder(
+                builder: (context) {
+                  int? likes;
+                  return Chip(
+                    label: StatefulBuilder(
+                      builder: (context, setState) {
+                        FirebaseFirestore.instance
+                            .doc('users/${user!.uid}')
+                            .get()
+                            .then((r) => r.get('likes') as int)
+                            .then(
+                              (l) => setState(() {
+                                likes = l;
+                              }),
+                            );
+                        return likes == null
+                            ? const CircularProgressIndicator()
+                            : Text(
+                                likes.toString(),
+                              );
+                      },
+                    ),
+                  );
+                },
               ),
               onTap: () => Navigator.push<void>(
                 context,
