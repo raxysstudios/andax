@@ -13,10 +13,10 @@ class PagingList<T> extends StatefulWidget {
   final Future<List<T>> Function(int, T?) onRequest;
 
   @override
-  State<PagingList> createState() => _PagingListState<T>();
+  State<PagingList<T>> createState() => _PagingListState<T>();
 }
 
-class _PagingListState<T> extends State<PagingList> {
+class _PagingListState<T> extends State<PagingList<T>> {
   late final PagingController<int, T> paging;
 
   @override

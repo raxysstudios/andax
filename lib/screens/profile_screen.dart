@@ -107,6 +107,7 @@ class ProfileScreen extends StatelessWidget {
     if (last != null) query = query.startAfterDocument(last.key);
 
     final likes = await query.get().then((r) => r.docs);
+    print(likes.first.data());
     final stories = await algolia.instance
         .index('stories')
         .query('')
