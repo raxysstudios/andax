@@ -56,3 +56,34 @@ export const indexStories = functions
         );
       }
     });
+
+// TODO
+export const countLikes = functions
+    .region("europe-central2")
+    .firestore.document(
+        "users/{userID}/likes/{likeID}"
+    )
+    .onWrite(async (change) => {
+      const {storyID, translationID} =
+        (change.before.data() ?? change.after.data())!;
+      const doc = firestore()
+          .doc(`stories/${storyID}/translations/${translationID}`);
+      const srch = await index.search("", {
+        facetFilters: ["storyID:" + storyID, "translationID:" + translationID],
+        attributesToRetrieve: ["objectID", "likes"],
+        hitsPerPage: 1,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      }).then((h) =>h.hits[0] as Record<string, any>);
+      let value: firestore.FieldValue | undefined;
+      if (!change.before.exists && change.after.exists) {
+        value = firestore.FieldValue.increment(1);
+        srch.likes += 1;
+      } else if (change.before.exists && !change.after.exists) {
+        value = firestore.FieldValue.increment(-1);
+        srch.likes -= 1;
+      }
+      if (value) {
+        await doc.update({"metaData.likes": value});
+        await index.partialUpdateObject(srch);
+      }
+    });
