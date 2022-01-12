@@ -57,7 +57,11 @@ class _StoryScreenState extends State<StoryScreen> {
                 });
                 if (liked!) {
                   await likedDoc!.set(
-                    {'storyID': info.storyID, 'date': Timestamp.now()},
+                    {
+                      'storyID': info.storyID,
+                      'translationID': info.translationID,
+                      'date': Timestamp.now()
+                    },
                   );
                 } else {
                   await likedDoc!.delete();
