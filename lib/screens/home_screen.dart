@@ -1,11 +1,10 @@
 import 'package:andax/editor/story_editor_screen.dart';
 import 'package:andax/screens/story_screen.dart';
-import 'package:andax/screens/settings_screen.dart';
+import 'package:andax/screens/profile_screen.dart';
 import 'package:andax/store.dart';
-import 'package:andax/utils.dart';
+import 'package:andax/widgets/story_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../models/story.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,28 +15,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final RefreshController refreshController = RefreshController(
-    initialRefresh: true,
-  );
-  List<StoryInfo> scenarios = [];
-
-  Future<void> refreshScenarios() async {
-    final scenarios = await algolia.instance
+  Future<List<StoryInfo>> getStories(int page) async {
+    return await algolia.instance
         .index('stories')
         .query('')
+        .setPage(page)
         // .filters('language:${settings.targetLanguage}')
         .getObjects()
         .then(
-          (s) => s.hits.map(
-            (h) => StoryInfo.fromAlgoliaHit(h),
-          ),
+          (s) => s.hits.map((h) => StoryInfo.fromAlgoliaHit(h)).toList(),
         );
-    setState(
-      () => this.scenarios
-        ..clear()
-        ..addAll(scenarios),
-    );
-    refreshController.refreshCompleted();
   }
 
   @override
@@ -52,12 +39,12 @@ class _HomeScreenState extends State<HomeScreen> {
               await Navigator.push<void>(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const SettingsScreen(),
+                  builder: (context) => const ProfileScreen(),
                 ),
               );
               setState(() {});
             },
-            icon: const Icon(Icons.settings_rounded),
+            icon: const Icon(Icons.person_rounded),
           ),
           const SizedBox(width: 8),
         ],
@@ -73,62 +60,14 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: const Icon(Icons.edit_rounded),
             ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SmartRefresher(
-              header: const MaterialClassicHeader(
-                color: Colors.blue,
-              ),
-              controller: refreshController,
-              onRefresh: refreshScenarios,
-              child: ListView(
-                padding: const EdgeInsets.only(bottom: 76),
-                children: [
-                  for (final info in scenarios)
-                    ListTile(
-                      title: Text(info.title),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (info.description == null) Text(info.description!),
-                          if (info.tags != null)
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.tag_rounded,
-                                  size: 16,
-                                ),
-                                const SizedBox(width: 4),
-                                Text(prettyTags(info.tags)!),
-                              ],
-                            ),
-                        ],
-                      ),
-                      trailing: Chip(
-                        avatar: const Icon(
-                          Icons.favorite_rounded,
-                          size: 16,
-                        ),
-                        label: Text(info.likes.toString()),
-                      ),
-                      onTap: () async {
-                        await Navigator.push<void>(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => StoryScreen(info),
-                          ),
-                        );
-                        await refreshScenarios();
-                        refreshController.refreshCompleted();
-                        setState(() {});
-                      },
-                    )
-                ],
-              ),
-            ),
+      body: StoryList(
+        onRequest: getStories,
+        onTap: (info) => Navigator.push<void>(
+          context,
+          MaterialPageRoute(
+            builder: (context) => StoryScreen(info),
           ),
-        ],
+        ),
       ),
     );
   }

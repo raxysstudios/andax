@@ -24,7 +24,7 @@ class StoryInfoEditor extends StatefulWidget {
 class _StoryInfoEditorState extends State<StoryInfoEditor> {
   Translation get translation => widget.editor.translation;
   Story get story => widget.editor.story;
-
+  // TODO tags
   @override
   Widget build(BuildContext context) {
     return Scaffold(
