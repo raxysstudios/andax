@@ -2,7 +2,8 @@ import 'package:andax/editor/story_editor_screen.dart';
 import 'package:andax/screens/story_screen.dart';
 import 'package:andax/screens/profile_screen.dart';
 import 'package:andax/store.dart';
-import 'package:andax/widgets/story_list.dart';
+import 'package:andax/widgets/paging_list.dart';
+import 'package:andax/widgets/story_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../models/story.dart';
@@ -15,7 +16,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Future<List<StoryInfo>> getStories(int page) async {
+  Future<List<StoryInfo>> getStories(int page, StoryInfo? last) async {
     return await algolia.instance
         .index('stories')
         .query('')
@@ -60,14 +61,19 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: const Icon(Icons.edit_rounded),
             ),
-      body: StoryList(
+      body: PagingList<StoryInfo>(
         onRequest: getStories,
-        onTap: (info) => Navigator.push<void>(
-          context,
-          MaterialPageRoute(
-            builder: (context) => StoryScreen(info),
-          ),
-        ),
+        builder: (context, info, index) {
+          return StoryTile(
+            info,
+            onTap: () => Navigator.push<void>(
+              context,
+              MaterialPageRoute(
+                builder: (context) => StoryScreen(info),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
