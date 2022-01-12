@@ -1,13 +1,9 @@
-import 'dart:io';
-
 import 'package:andax/widgets/loading_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:in_app_review/in_app_review.dart';
-
-enum Availability { loading, available, unavailable }
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -19,29 +15,11 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   User? get user => FirebaseAuth.instance.currentUser;
   final InAppReview _inAppReview = InAppReview.instance;
-  Availability _availability = Availability.loading;
 
   @override
-    void initState() {
-      super.initState();
-
-      WidgetsBinding.instance!.addPostFrameCallback((_) async {
-        try {
-          final isAvailable = await _inAppReview.isAvailable();
-
-          setState(() {
-            // This plugin cannot be tested on Android by installing your app
-            // locally. See https://github.com/britannio/in_app_review#testing for
-            // more information.
-            _availability = isAvailable && !Platform.isAndroid
-                ? Availability.available
-                : Availability.unavailable;
-          });
-        } catch (e) {
-          setState(() => _availability = Availability.unavailable);
-        }
-      });
-    }
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,10 +61,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             const Center(
-                child: Text(
-              "contact developer",
-              style: TextStyle(fontSize: 23),
-            )),
+              child: Text(
+                "contact developer",
+                style: TextStyle(fontSize: 23),
+              ),
+            ),
             ListTile(
               leading: ElevatedButton(
                 onPressed: () =>
@@ -103,9 +82,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 icon: const Icon(Icons.star),
                 label: const Text('Rate us'),
                 onPressed: _requestReview,
-
-              )
-            )
+              ),
+            ),
           ],
         ],
       ),
@@ -126,11 +104,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       await FirebaseAuth.instance.signInWithCredential(cred);
     }
   }
-  Future<void> _requestReview() async{
+
+  Future<void> _requestReview() async {
     if (await _inAppReview.isAvailable()) {
-    return await _inAppReview.requestReview();
+      return await _inAppReview.requestReview();
     }
   }
-  // => _inAppReview.requestReview();
-
 }
