@@ -107,14 +107,15 @@ class ProfileScreen extends StatelessWidget {
     if (last != null) query = query.startAfterDocument(last.key);
 
     final likes = await query.get().then((r) => r.docs);
-    print(likes.first.data());
+    if (likes.isEmpty) return [];
+
     final stories = await algolia.instance
         .index('stories')
         .query('')
         .filters(
           likes
               .map((l) => l.data()['translationID'] as String)
-              .map((t) => 'translation:$t')
+              .map((t) => 'translationID:$t')
               .join(' OR '),
         )
         .getObjects()
