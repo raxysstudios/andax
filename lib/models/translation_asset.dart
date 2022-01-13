@@ -53,7 +53,7 @@ abstract class TranslationAsset {
         return StoryTranslation(
           title: json['title'] as String,
           description: json['description'] as String?,
-          tags: json2list(json['description']),
+          tags: json2list(json['tags']),
           metaData: metaData,
         );
       default:
