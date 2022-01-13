@@ -25,6 +25,7 @@ class StoryInfoEditor extends StatefulWidget {
 class _StoryInfoEditorState extends State<StoryInfoEditor> {
   Translation get translation => widget.editor.translation;
   Story get story => widget.editor.story;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,6 +46,7 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
         child: const Icon(Icons.person_add_rounded),
       ),
       body: ListView(
+        padding: const EdgeInsets.only(bottom: 72),
         children: [
           ListTile(
             leading: const Icon(Icons.language_rounded),
@@ -119,11 +121,11 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
           for (final actor in story.actors.values)
             ListTile(
               leading: IconButton(
-                onPressed: () {
+                onPressed: () => setState(() {
                   actor.type = actor.type == ActorType.npc
                       ? ActorType.player
                       : ActorType.npc;
-                },
+                }),
                 icon: Icon(actor.type == ActorType.npc
                     ? Icons.smart_toy_rounded
                     : Icons.face_rounded),
@@ -146,8 +148,10 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
               ),
               trailing: IconButton(
                 onPressed: () {
-                  story.actors.remove(actor.id);
-                  translation.assets.remove(actor.id);
+                  setState(() {
+                    story.actors.remove(actor.id);
+                    translation.assets.remove(actor.id);
+                  });
                 },
                 icon: const Icon(Icons.clear_rounded),
               ),
