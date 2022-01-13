@@ -2,6 +2,7 @@ import 'package:andax/models/content_meta_data.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/widgets/loading_dialog.dart';
+import 'package:andax/widgets/rounded_back_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: const RoundedBackButton(),
         title: const Text('Story Translation'),
       ),
       floatingActionButton: FloatingActionButton(
@@ -136,7 +138,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
         return buildTranslatable(
           origin.name,
           translation?.name,
-          icon: Icons.person_outline,
+          icon: Icons.person_outline_rounded,
           title: 'actor',
           onEdit: (r) {
             translations[id] = ActorTranslation(
