@@ -1,14 +1,19 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:andax/models/story.dart';
 import 'package:andax/screens/story_screen.dart';
 import 'package:andax/store.dart';
 import 'package:andax/widgets/loading_dialog.dart';
-import 'package:andax/widgets/rounded_back_button.dart';
 import 'package:andax/widgets/paging_list.dart';
+import 'package:andax/widgets/rounded_back_button.dart';
 import 'package:andax/widgets/story_tile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 typedef LikeItem = MapEntry<DocumentSnapshot, StoryInfo>;
 
@@ -32,7 +37,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
           IconButton(
             onPressed: () async {
               if (user == null) {
-                await showLoadingDialog(context, signIn());
+                await showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: const Text('Login to Andax via'),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () async {
+                          await showLoadingDialog(context, signIn());
+                          Navigator.pop(context, 'Google');
+                        },
+                        child: const Text('Google'),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          await showLoadingDialog(context, signInWithApple());
+
+                          Navigator.pop(context, 'Apple');
+                        },
+                        child: const Text('Apple'),
+                      ),
+                    ],
+                  ),
+                );
               } else {
                 await FirebaseAuth.instance.signOut();
               }
@@ -173,5 +200,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
       await FirebaseAuth.instance.signInWithCredential(cred);
     }
+  }
+
+  Future<void> signInWithApple() async {
+    final rawNonce = generateNonce();
+    final nonce = sha256ofString(rawNonce);
+
+    final appleCredential = await SignInWithApple.getAppleIDCredential(
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ],
+      nonce: nonce,
+    );
+    // Create an `OAuthCredential` from the credential returned by Apple.
+    final oauthCredential = OAuthProvider('apple.com').credential(
+      idToken: appleCredential.identityToken,
+      rawNonce: rawNonce,
+    );
+
+    await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+  }
+
+  String generateNonce([int length = 32]) {
+    const charset =
+        '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+    final random = Random.secure();
+    return List.generate(length, (_) => charset[random.nextInt(charset.length)])
+        .join();
+  }
+
+  String sha256ofString(String input) {
+    final bytes = utf8.encode(input);
+    final digest = sha256.convert(bytes);
+    return digest.toString();
   }
 }
