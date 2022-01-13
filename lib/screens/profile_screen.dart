@@ -12,9 +12,14 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 typedef LikeItem = MapEntry<DocumentSnapshot, StoryInfo>;
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
   User? get user => FirebaseAuth.instance.currentUser;
 
   @override
@@ -31,6 +36,7 @@ class ProfileScreen extends StatelessWidget {
               } else {
                 await FirebaseAuth.instance.signOut();
               }
+              setState(() {});
             },
             icon: Icon(
               user == null ? Icons.login_rounded : Icons.logout_outlined,
@@ -59,7 +65,6 @@ class ProfileScreen extends StatelessWidget {
               subtitle: Text(user!.email ?? '[no email]'),
             ),
             const Divider(),
-
             ListTile(
               leading: const Icon(Icons.favorite_rounded),
               title: const Text('Liked stories'),
