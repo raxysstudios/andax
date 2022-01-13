@@ -27,7 +27,6 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
       translation.metaData.id: translation,
   };
   var language = '';
-  // TODO tags
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +39,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
           await showLoadingDialog(context, upload());
           Navigator.pop(context);
         },
-        child: const Icon(Icons.upload_outlined),
+        child: const Icon(Icons.upload_rounded),
         tooltip: 'Upload translation',
       ),
       body: ListView(
@@ -49,7 +48,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
           ...buildTranslatable(
             'language',
             language,
-            icon: Icons.language_outlined,
+            icon: Icons.language_rounded,
             title: 'language',
             onEdit: (r) {
               language = r;
@@ -122,7 +121,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
         return buildTranslatable(
           origin.text,
           translation?.text,
-          icon: Icons.notes_outlined,
+          icon: Icons.notes_rounded,
           title: 'message',
           onEdit: (r) {
             translations[id] = MessageTranslation(
@@ -156,12 +155,13 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
           ...buildTranslatable(
             origin.title,
             translation?.title,
-            icon: Icons.title_outlined,
+            icon: Icons.title_rounded,
             title: 'story title',
             onEdit: (r) {
               translations[id] = StoryTranslation(
                 title: r,
                 description: translation?.description,
+                tags: translation?.tags,
                 metaData: ContentMetaData(
                     id, FirebaseAuth.instance.currentUser?.uid ?? ''),
               );
@@ -170,12 +170,29 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
           ...buildTranslatable(
             origin.description,
             translation?.description,
-            icon: Icons.description_outlined,
+            icon: Icons.description_rounded,
             title: 'story description',
             onEdit: (r) {
               translations[id] = StoryTranslation(
                 title: translation?.title ?? '<title>',
                 description: r,
+                tags: translation?.tags,
+                metaData: ContentMetaData(id, ''),
+              );
+            },
+          ),
+          ...buildTranslatable(
+            origin.tags?.join(' '),
+            translation?.tags?.join(' '),
+            icon: Icons.tag_rounded,
+            title: 'story tags',
+            onEdit: (r) {
+              translations[id] = StoryTranslation(
+                title: translation?.title ?? '<title>',
+                description: translation?.description,
+                tags: r.isEmpty
+                    ? null
+                    : r.split(' ').where((t) => t.isNotEmpty).toList(),
                 metaData: ContentMetaData(id, ''),
               );
             },

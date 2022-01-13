@@ -2,6 +2,7 @@ import 'package:andax/models/actor.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
+import 'package:andax/utils.dart';
 import 'package:andax/widgets/rounded_back_button.dart';
 
 import 'package:flutter/material.dart';
@@ -24,7 +25,6 @@ class StoryInfoEditor extends StatefulWidget {
 class _StoryInfoEditorState extends State<StoryInfoEditor> {
   Translation get translation => widget.editor.translation;
   Story get story => widget.editor.story;
-  // TODO tags
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,6 +79,22 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
               initialValue: StoryTranslation.get(translation)?.description,
               onChanged: (s) {
                 StoryTranslation.get(translation)?.description = s;
+              },
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.tag_rounded),
+            title: TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Story tags',
+              ),
+              initialValue: prettyTags(
+                StoryTranslation.get(translation)?.tags,
+                separator: ' ',
+              ),
+              onChanged: (s) {
+                StoryTranslation.get(translation)?.tags =
+                    s.split(' ').where((t) => t.isNotEmpty).toList();
               },
             ),
           ),

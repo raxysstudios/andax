@@ -1,5 +1,6 @@
 import 'package:andax/models/content_meta_data.dart';
 import 'package:andax/models/translation.dart';
+import 'package:andax/utils.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 
 enum AssetType {
@@ -52,6 +53,7 @@ abstract class TranslationAsset {
         return StoryTranslation(
           title: json['title'] as String,
           description: json['description'] as String?,
+          tags: json2list(json['description']),
           metaData: metaData,
         );
       default:
@@ -71,10 +73,12 @@ abstract class TranslationAsset {
 class StoryTranslation extends TranslationAsset {
   String title;
   String? description;
+  List<String>? tags;
 
   StoryTranslation({
     required this.title,
     this.description,
+    this.tags,
     required ContentMetaData metaData,
   }) : super(metaData: metaData, assetType: AssetType.story);
 
@@ -88,6 +92,7 @@ class StoryTranslation extends TranslationAsset {
     ..addAll(<String, dynamic>{
       'title': title,
       'description': description,
+      'tags': tags,
     });
 }
 
