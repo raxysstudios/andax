@@ -199,20 +199,24 @@ class ProfileScreen extends StatelessWidget {
   Future<void> signInWithApple() async {
     final rawNonce = generateNonce();
     final nonce = sha256ofString(rawNonce);
-
-    final appleCredential = await SignInWithApple.getAppleIDCredential(
+    var redirectURL =
+        "https://grey-crimson-vise.glitch.me/callbacks/sign_in_with_apple";
+    var clientID = "andaxapp";
+    final appleIdCredential = await SignInWithApple.getAppleIDCredential(
       scopes: [
         AppleIDAuthorizationScopes.email,
         AppleIDAuthorizationScopes.fullName,
       ],
+      webAuthenticationOptions: WebAuthenticationOptions(
+          clientId: clientID, redirectUri: Uri.parse(redirectURL)),
       nonce: nonce,
     );
     // Create an `OAuthCredential` from the credential returned by Apple.
     final oauthCredential = OAuthProvider('apple.com').credential(
-      idToken: appleCredential.identityToken,
+      idToken: appleIdCredential.identityToken,
+      accessToken: appleIdCredential.authorizationCode,
       rawNonce: rawNonce,
     );
-
     await FirebaseAuth.instance.signInWithCredential(oauthCredential);
   }
 
