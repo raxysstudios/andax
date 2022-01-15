@@ -11,9 +11,10 @@ import 'package:andax/widgets/story_tile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart' as apple;
 
 typedef LikeItem = MapEntry<DocumentSnapshot, StoryInfo>;
 
@@ -197,27 +198,37 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Future<void> signInWithApple() async {
-    final rawNonce = generateNonce();
-    final nonce = sha256ofString(rawNonce);
-    var redirectURL =
-        "https://grey-crimson-vise.glitch.me/callbacks/sign_in_with_apple";
-    var clientID = "andaxapp";
-    final appleIdCredential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
-      ],
-      webAuthenticationOptions: WebAuthenticationOptions(
-          clientId: clientID, redirectUri: Uri.parse(redirectURL)),
-      nonce: nonce,
-    );
-    // Create an `OAuthCredential` from the credential returned by Apple.
-    final oauthCredential = OAuthProvider('apple.com').credential(
-      idToken: appleIdCredential.identityToken,
-      accessToken: appleIdCredential.authorizationCode,
-      rawNonce: rawNonce,
-    );
-    await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+    // Sign in the user with Firebase.
+    if (kIsWeb) {
+      final provider = OAuthProvider("apple.com")
+        ..addScope('email')
+        ..addScope('name');
+
+      await FirebaseAuth.instance.signInWithPopup(provider);
+    } else {
+      final rawNonce = generateNonce();
+      final nonce = sha256ofString(rawNonce);
+      var redirectURL = "https://andaxapp.firebaseapp.com/__/auth/handler";
+      var clientID = "andaxapp";
+      final appleIdCredential =
+          await apple.SignInWithApple.getAppleIDCredential(
+        scopes: [
+          apple.AppleIDAuthorizationScopes.email,
+          apple.AppleIDAuthorizationScopes.fullName,
+        ],
+        webAuthenticationOptions: apple.WebAuthenticationOptions(
+            clientId: clientID, redirectUri: Uri.parse(redirectURL)),
+        nonce: nonce,
+      );
+      // Create an `OAuthCredential` from the credential returned by Apple.
+      final oauthCredential = OAuthProvider('apple.com').credential(
+        idToken: appleIdCredential.identityToken,
+        accessToken: appleIdCredential.authorizationCode,
+        rawNonce: rawNonce,
+      );
+
+      await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+    }
   }
 
   String generateNonce([int length = 32]) {
