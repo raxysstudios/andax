@@ -4,24 +4,36 @@ import 'dart:math';
 import 'package:andax/models/story.dart';
 import 'package:andax/screens/story_screen.dart';
 import 'package:andax/store.dart';
-import 'package:andax/widgets/loading_dialog.dart';
 import 'package:andax/widgets/paging_list.dart';
 import 'package:andax/widgets/rounded_back_button.dart';
+import 'package:andax/widgets/sing_in_buttons.dart';
 import 'package:andax/widgets/story_tile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart' as apple;
 
 typedef LikeItem = MapEntry<DocumentSnapshot, StoryInfo>;
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
   User? get user => FirebaseAuth.instance.currentUser;
+  int? likes;
+
+  Future<void> updateLikes() async {
+    likes = user == null
+        ? null
+        : await FirebaseFirestore.instance
+            .doc('users/${user!.uid}')
+            .get()
+            .then((r) => r.get('likes') as int);
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,54 +41,14 @@ class ProfileScreen extends StatelessWidget {
       appBar: AppBar(
         leading: const RoundedBackButton(),
         title: const Text('Profile'),
-        actions: [
-          IconButton(
-            onPressed: () async {
-              if (user == null) {
-                await showDialog<String>(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                    title: const Text('Login to Andax via'),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () async {
-                          await showLoadingDialog(context, signIn());
-                          Navigator.pop(context, 'Google');
-                        },
-                        child: const Text('Google'),
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          await showLoadingDialog(context, signInWithApple());
-
-                          Navigator.pop(context, 'Apple');
-                        },
-                        child: const Text('Apple'),
-                      ),
-                    ],
-                  ),
-                );
-              } else {
-                await FirebaseAuth.instance.signOut();
-              }
-            },
-            icon: Icon(
-              user == null ? Icons.login_rounded : Icons.logout_outlined,
-            ),
-            tooltip: 'Log out',
-          ),
-          const SizedBox(width: 4),
-        ],
       ),
       body: ListView(
         children: [
-          if (user == null)
-            const Center(
-              child: Text(
-                'No account. Please, sign in above.',
-              ),
-            )
-          else ...[
+          SignInButtons(
+            onSignOut: updateLikes,
+            onSingIn: updateLikes,
+          ),
+          if (user != null) ...[
             ListTile(
               leading: CircleAvatar(
                 backgroundImage: user?.photoURL != null
@@ -87,34 +59,13 @@ class ProfileScreen extends StatelessWidget {
               subtitle: Text(user!.email ?? '[no email]'),
             ),
             const Divider(),
-
             ListTile(
               leading: const Icon(Icons.favorite_rounded),
               title: const Text('Liked stories'),
-              trailing: Builder(
-                builder: (context) {
-                  int? likes;
-                  return Chip(
-                    label: StatefulBuilder(
-                      builder: (context, setState) {
-                        FirebaseFirestore.instance
-                            .doc('users/${user!.uid}')
-                            .get()
-                            .then((r) => r.get('likes') as int)
-                            .then(
-                              (l) => setState(() {
-                                likes = l;
-                              }),
-                            );
-                        return likes == null
-                            ? const CircularProgressIndicator()
-                            : Text(
-                                likes.toString(),
-                              );
-                      },
-                    ),
-                  );
-                },
+              trailing: Chip(
+                label: likes == null
+                    ? const CircularProgressIndicator()
+                    : Text(likes.toString()),
               ),
               onTap: () => Navigator.push<void>(
                 context,
@@ -180,68 +131,5 @@ class ProfileScreen extends StatelessWidget {
           stories[like.data()['translationID'] as String]!,
         )
     ];
-  }
-
-  Future<void> signIn() async {
-    await FirebaseAuth.instance.signOut();
-    await GoogleSignIn().signOut();
-
-    final user = await GoogleSignIn().signIn();
-    if (user != null) {
-      final auth = await user.authentication;
-      final cred = GoogleAuthProvider.credential(
-        accessToken: auth.accessToken,
-        idToken: auth.idToken,
-      );
-      await FirebaseAuth.instance.signInWithCredential(cred);
-    }
-  }
-
-  Future<void> signInWithApple() async {
-    // Sign in the user with Firebase.
-    if (kIsWeb) {
-      final provider = OAuthProvider("apple.com")
-        ..addScope('email')
-        ..addScope('name');
-
-      await FirebaseAuth.instance.signInWithPopup(provider);
-    } else {
-      final rawNonce = generateNonce();
-      final nonce = sha256ofString(rawNonce);
-      var redirectURL = "https://andaxapp.firebaseapp.com/__/auth/handler";
-      var clientID = "andaxapp";
-      final appleIdCredential =
-          await apple.SignInWithApple.getAppleIDCredential(
-        scopes: [
-          apple.AppleIDAuthorizationScopes.email,
-          apple.AppleIDAuthorizationScopes.fullName,
-        ],
-        webAuthenticationOptions: apple.WebAuthenticationOptions(
-            clientId: clientID, redirectUri: Uri.parse(redirectURL)),
-        nonce: nonce,
-      );
-      // Create an `OAuthCredential` from the credential returned by Apple.
-      final oauthCredential = OAuthProvider('apple.com').credential(
-        idToken: appleIdCredential.identityToken,
-        accessToken: appleIdCredential.authorizationCode,
-        rawNonce: rawNonce,
-      );
-
-      await FirebaseAuth.instance.signInWithCredential(oauthCredential);
-    }
-  }
-
-  String generateNonce([int length = 32]) {
-    const charset =
-        '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
-    final random = Random.secure();
-    return List.generate(length, (_) => charset[random.nextInt(charset.length)])
-        .join();
-  }
-
-  String sha256ofString(String input) {
-    final bytes = utf8.encode(input);
-    final digest = sha256.convert(bytes);
-    return digest.toString();
   }
 }
