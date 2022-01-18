@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:math';
-
 import 'package:andax/models/story.dart';
 import 'package:andax/screens/story_screen.dart';
 import 'package:andax/store.dart';
