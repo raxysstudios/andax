@@ -129,7 +129,7 @@ class _SignInButtonsState extends State<SignInButtons> {
         child: Padding(
           padding: EdgeInsets.all(8),
           child: SizedBox.square(
-            dimension: 30,
+            dimension: 24,
             child: CircularProgressIndicator(),
           ),
         ),

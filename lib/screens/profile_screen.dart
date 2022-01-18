@@ -61,9 +61,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               title: const Text('Liked stories'),
               trailing: Chip(
                 label: likes == null
-                    ? const SizedBox(
-                        width: 16,
-                        height: 16,
+                    ? const SizedBox.square(
+                        dimension: 16,
                         child: CircularProgressIndicator(),
                       )
                     : Text(likes.toString()),
