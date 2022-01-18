@@ -2,6 +2,7 @@ import 'package:andax/models/actor.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
+import 'package:andax/utils.dart';
 import 'package:andax/widgets/rounded_back_button.dart';
 
 import 'package:flutter/material.dart';
@@ -24,7 +25,7 @@ class StoryInfoEditor extends StatefulWidget {
 class _StoryInfoEditorState extends State<StoryInfoEditor> {
   Translation get translation => widget.editor.translation;
   Story get story => widget.editor.story;
-  // TODO tags
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,6 +46,7 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
         child: const Icon(Icons.person_add_rounded),
       ),
       body: ListView(
+        padding: const EdgeInsets.only(bottom: 72),
         children: [
           ListTile(
             leading: const Icon(Icons.language_rounded),
@@ -83,6 +85,22 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
             ),
           ),
           ListTile(
+            leading: const Icon(Icons.tag_rounded),
+            title: TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Story tags',
+              ),
+              initialValue: prettyTags(
+                StoryTranslation.get(translation)?.tags,
+                separator: ' ',
+              ),
+              onChanged: (s) {
+                StoryTranslation.get(translation)?.tags =
+                    s.split(' ').where((t) => t.isNotEmpty).toList();
+              },
+            ),
+          ),
+          ListTile(
             onTap: () async {
               final node = await showStoryNodePickerSheet(
                 widget.editor,
@@ -103,11 +121,11 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
           for (final actor in story.actors.values)
             ListTile(
               leading: IconButton(
-                onPressed: () {
+                onPressed: () => setState(() {
                   actor.type = actor.type == ActorType.npc
                       ? ActorType.player
                       : ActorType.npc;
-                },
+                }),
                 icon: Icon(actor.type == ActorType.npc
                     ? Icons.smart_toy_rounded
                     : Icons.face_rounded),
@@ -130,8 +148,10 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
               ),
               trailing: IconButton(
                 onPressed: () {
-                  story.actors.remove(actor.id);
-                  translation.assets.remove(actor.id);
+                  setState(() {
+                    story.actors.remove(actor.id);
+                    translation.assets.remove(actor.id);
+                  });
                 },
                 icon: const Icon(Icons.clear_rounded),
               ),

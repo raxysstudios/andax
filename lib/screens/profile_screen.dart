@@ -100,6 +100,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<List<LikeItem>> getStories(int page, LikeItem? last) async {
     var query = FirebaseFirestore.instance
         .collection('users/${user!.uid}/likes')
+        .orderBy('date', descending: true)
         .limit(20);
     if (last != null) query = query.startAfterDocument(last.key);
 
