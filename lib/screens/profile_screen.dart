@@ -25,6 +25,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   User? get user => FirebaseAuth.instance.currentUser;
   int? likes;
 
+  @override
+  void initState() {
+    super.initState();
+    updateLikes();
+  }
+
   Future<void> updateLikes() async {
     likes = user == null
         ? null
@@ -49,22 +55,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onSingIn: updateLikes,
           ),
           if (user != null) ...[
-            ListTile(
-              leading: CircleAvatar(
-                backgroundImage: user?.photoURL != null
-                    ? NetworkImage(user!.photoURL!)
-                    : null,
-              ),
-              title: Text(user!.displayName ?? '[no name]'),
-              subtitle: Text(user!.email ?? '[no email]'),
-            ),
             const Divider(),
             ListTile(
               leading: const Icon(Icons.favorite_rounded),
               title: const Text('Liked stories'),
               trailing: Chip(
                 label: likes == null
-                    ? const CircularProgressIndicator()
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(),
+                      )
                     : Text(likes.toString()),
               ),
               onTap: () => Navigator.push<void>(
