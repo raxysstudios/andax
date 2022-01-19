@@ -38,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       likes = await FirebaseFirestore.instance
           .doc('users/${user!.uid}')
           .get()
-          .then((r) => r.get('likes') as int);
+          .then((r) => r.get('likes') as int?);
     }
     setState(() {});
   }
