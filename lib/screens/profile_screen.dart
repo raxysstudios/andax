@@ -38,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       likes = await FirebaseFirestore.instance
           .doc('users/${user!.uid}')
           .get()
-          .then((r) => r.data()?['likes'] as int?);
+          .then((r) => r.data()?['likes'] as int? ?? 0);
     }
     setState(() {});
   }
@@ -78,7 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               dimension: 16,
               child: CircularProgressIndicator(),
             )
-          : Text(likes.toString()),
+          : Text(value.toString()),
     );
   }
 
