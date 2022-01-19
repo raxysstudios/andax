@@ -21,21 +21,103 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   User? get user => FirebaseAuth.instance.currentUser;
   int? likes;
+  int? stories;
+  int? translations;
 
   @override
   void initState() {
     super.initState();
     updateLikes();
+    updateStories();
+    updateTranslations();
   }
 
   Future<void> updateLikes() async {
-    likes = user == null
-        ? null
-        : await FirebaseFirestore.instance
-            .doc('users/${user!.uid}')
-            .get()
-            .then((r) => r.get('likes') as int);
+    likes = null;
+    if (user != null) {
+      likes = await FirebaseFirestore.instance
+          .doc('users/${user!.uid}')
+          .get()
+          .then((r) => r.get('likes') as int);
+    }
     setState(() {});
+  }
+
+  Future<void> updateStories() async {
+    stories = null;
+    if (user != null) {
+      stories = await algolia.instance
+          .index('stories')
+          .query('')
+          .filters('storyAuthorID:${user!.uid}')
+          .setHitsPerPage(0)
+          .getObjects()
+          .then((r) => r.nbHits);
+    }
+    setState(() {});
+  }
+
+  Future<void> updateTranslations() async {
+    translations = null;
+    if (user != null) {
+      translations = await algolia.instance
+          .index('stories')
+          .query('')
+          .filters('translationAuthorID:${user!.uid}')
+          .setHitsPerPage(0)
+          .getObjects()
+          .then((r) => r.nbHits);
+    }
+    setState(() {});
+  }
+
+  Widget loadingChip(int? value) {
+    return Chip(
+      label: value == null
+          ? const SizedBox.square(
+              dimension: 16,
+              child: CircularProgressIndicator(),
+            )
+          : Text(likes.toString()),
+    );
+  }
+
+  Widget buildStoriesTile(
+    IconData icon,
+    String title,
+    int? count,
+    Future<List<StoryInfo>> Function(int page, StoryInfo? last) getter,
+  ) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(title),
+      trailing: loadingChip(count),
+      onTap: () => Navigator.push<void>(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Scaffold(
+            appBar: AppBar(
+              leading: const RoundedBackButton(),
+              title: Text(title),
+            ),
+            body: PagingList<StoryInfo>(
+              onRequest: getter,
+              builder: (context, story, index) {
+                return StoryTile(
+                  story,
+                  onTap: () => Navigator.push<void>(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => StoryScreen(story),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -56,14 +138,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ListTile(
               leading: const Icon(Icons.favorite_rounded),
               title: const Text('Liked stories'),
-              trailing: Chip(
-                label: likes == null
-                    ? const SizedBox.square(
-                        dimension: 16,
-                        child: CircularProgressIndicator(),
-                      )
-                    : Text(likes.toString()),
-              ),
+              trailing: loadingChip(likes),
               onTap: () => Navigator.push<void>(
                 context,
                 MaterialPageRoute(
@@ -73,7 +148,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       title: const Text('Liked Stories'),
                     ),
                     body: PagingList<LikeItem>(
-                      onRequest: getStories,
+                      onRequest: getLikes,
                       builder: (context, item, index) {
                         return StoryTile(
                           item.value,
@@ -90,14 +165,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
-            // StoryList(stories)
+            buildStoriesTile(
+              Icons.history_edu_rounded,
+              'Created stories',
+              stories,
+              getStories,
+            ),
+            buildStoriesTile(
+              Icons.translate_rounded,
+              'Created translations',
+              translations,
+              getTranslations,
+            ),
           ]
         ],
       ),
     );
   }
 
-  Future<List<LikeItem>> getStories(int page, LikeItem? last) async {
+  Future<List<LikeItem>> getLikes(int page, LikeItem? last) async {
     var query = FirebaseFirestore.instance
         .collection('users/${user!.uid}/likes')
         .orderBy('date', descending: true)
@@ -129,5 +215,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
           stories[like.data()['translationID'] as String]!,
         )
     ];
+  }
+
+  Future<List<StoryInfo>> getStories(int page, StoryInfo? last) async {
+    final hits = await algolia.instance
+        .index('stories')
+        .query('')
+        .filters('storyAuthorID:${user!.uid}')
+        .setPage(page)
+        .getObjects()
+        .then((r) => r.hits);
+    return hits.map((h) => StoryInfo.fromAlgoliaHit(h)).toList();
+  }
+
+  Future<List<StoryInfo>> getTranslations(int page, StoryInfo? last) async {
+    final hits = await algolia.instance
+        .index('stories')
+        .query('')
+        .filters('translationAuthorID:${user!.uid}')
+        .setPage(page)
+        .getObjects()
+        .then((r) => r.hits);
+    return hits.map((h) => StoryInfo.fromAlgoliaHit(h)).toList();
   }
 }
