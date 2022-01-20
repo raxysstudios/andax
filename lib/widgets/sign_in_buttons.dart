@@ -56,10 +56,6 @@ class _SignInButtonsState extends State<SignInButtons> {
       case 'google.com':
         await GoogleSignIn().signOut();
         break;
-      case 'apple.com':
-        // TODO await appleSignOut;
-        break;
-      default:
     }
     await widget.onSignOut?.call();
     setState(() {
