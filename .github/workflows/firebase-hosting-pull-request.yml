@@ -19,10 +19,15 @@ jobs:
       - name: Install dependencies 🧰
         run: flutter pub get
 
-      - name: Analyze and lint 🔬
-        run: |
-          dart analyze
-          dart format . -o none --set-exit-if-changed
+      - name: Analyze 🔍
+        uses: invertase/github-action-dart-analyzer@v1
+        with:
+          annotate: true
+          fatal-warnings: true
+          working-directory: ./
+
+      - name: Check formatting 🔬
+        run: dart format . -o none --set-exit-if-changed
 
       - name: Build 🛠️
         run: flutter build web
