@@ -12,7 +12,7 @@ class ContentMetaData {
   Timestamp lastUpdateAt;
   int likes;
   int views;
-  int dailyViews;
+  int lastIndexedViews;
   ContentStatus status;
 
   ContentMetaData(
@@ -23,7 +23,7 @@ class ContentMetaData {
     Timestamp? lastUpdateAt,
     this.likes = 0,
     this.views = 0,
-    this.dailyViews = 0,
+    this.lastIndexedViews = 0,
     this.status = ContentStatus.private,
   }) : lastUpdateAt = lastUpdateAt ?? Timestamp.now();
 
@@ -41,7 +41,7 @@ class ContentMetaData {
           lastUpdateAt: json['lastUpdateAt'] as Timestamp,
           likes: json['likes'] as int? ?? 0,
           views: json['views'] as int? ?? 0,
-          dailyViews: json['dailyViews'] as int? ?? 0,
+          lastIndexedViews: json['lastIndexedViews'] as int? ?? 0,
           status: EnumToString.fromString(
                 ContentStatus.values,
                 json['status'] as String? ?? '',
@@ -56,7 +56,7 @@ class ContentMetaData {
         'lastUpdateAt': lastUpdateAt,
         'likes': likes,
         'views': views,
-        'dailyViews': dailyViews,
+        'lastIndexedViews': lastIndexedViews,
         'status': EnumToString.convertToString(status),
       };
 }

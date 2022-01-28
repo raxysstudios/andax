@@ -1,5 +1,6 @@
 import 'package:andax/models/story.dart';
 import 'package:andax/utils.dart';
+import 'package:andax/widgets/span_icon.dart';
 import 'package:flutter/material.dart';
 
 class StoryTile extends StatelessWidget {
@@ -16,22 +17,36 @@ class StoryTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(info.title),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (info.description == null) Text(info.description!),
-          if (info.tags != null)
-            Row(
-              children: [
-                const Icon(
-                  Icons.tag_rounded,
-                  size: 16,
-                ),
-                const SizedBox(width: 4),
-                Text(prettyTags(info.tags)!),
-              ],
+      subtitle: RichText(
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        text: TextSpan(
+          style: Theme.of(context).textTheme.caption?.copyWith(
+                fontSize: 14,
+              ),
+          children: [
+            const WidgetSpan(
+              child: SpanIcon(
+                Icons.visibility_outlined,
+              ),
             ),
-        ],
+            TextSpan(text: info.views.toString()),
+            const WidgetSpan(
+              child: SpanIcon(
+                Icons.favorite_rounded,
+                padding: EdgeInsets.only(left: 4, right: 2),
+              ),
+            ),
+            TextSpan(text: info.likes.toString()),
+            const WidgetSpan(
+              child: SpanIcon(
+                Icons.tag_rounded,
+                padding: EdgeInsets.only(left: 4, right: 2),
+              ),
+            ),
+            TextSpan(text: prettyTags(info.tags)!),
+          ],
+        ),
       ),
       trailing: Chip(
         avatar: const Icon(

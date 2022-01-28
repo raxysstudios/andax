@@ -59,6 +59,7 @@ class StoryInfo {
   final String? description;
   final List<String>? tags;
   final int likes;
+  final int views;
 
   const StoryInfo({
     required this.storyID,
@@ -68,6 +69,7 @@ class StoryInfo {
     required this.title,
     this.description,
     this.likes = 0,
+    this.views = 0,
     this.tags,
   });
 
@@ -81,6 +83,7 @@ class StoryInfo {
       title: json['title'] as String,
       description: json['description'] as String?,
       likes: json['likes'] as int,
+      views: json['views'] as int,
       tags: json2list(json['tags']),
     );
   }
