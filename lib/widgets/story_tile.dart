@@ -44,7 +44,7 @@ class StoryTile extends StatelessWidget {
                 padding: EdgeInsets.only(left: 4, right: 2),
               ),
             ),
-            TextSpan(text: prettyTags(info.tags)!),
+            TextSpan(text: prettyTags(info.tags)),
           ],
         ),
       ),
