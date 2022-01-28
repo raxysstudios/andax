@@ -16,6 +16,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  var query = '';
+  var isSearching = false;
+
   Future<List<StoryInfo>> getStories(int page, StoryInfo? last) async {
     return await algolia.instance
         .index('stories')
@@ -34,7 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text('Stories'),
         actions: [
-          const SizedBox(width: 8),
           IconButton(
             onPressed: () async {
               await Navigator.push<void>(
@@ -47,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             icon: const Icon(Icons.person_rounded),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 4),
         ],
       ),
       floatingActionButton: FirebaseAuth.instance.currentUser == null
