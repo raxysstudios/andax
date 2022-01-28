@@ -82,8 +82,8 @@ class StoryInfo {
       translationAuthorID: json['translationAuthorID'] as String,
       title: json['title'] as String,
       description: json['description'] as String?,
-      likes: json['likes'] as int,
-      views: json['views'] as int,
+      likes: json['likes'] as int? ?? 0,
+      views: json['views'] as int? ?? 0,
       tags: json2list(json['tags']),
     );
   }
