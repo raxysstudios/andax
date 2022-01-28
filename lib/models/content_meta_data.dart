@@ -8,16 +8,22 @@ class ContentMetaData {
   String id;
   List<String> contributorsIds;
   String authorId;
+  String? imageUrl;
   Timestamp lastUpdateAt;
   int likes;
+  int views;
+  int dailyViews;
   ContentStatus status;
 
   ContentMetaData(
     this.id,
     this.authorId, {
+    this.imageUrl,
     this.contributorsIds = const [],
     Timestamp? lastUpdateAt,
     this.likes = 0,
+    this.views = 0,
+    this.dailyViews = 0,
     this.status = ContentStatus.private,
   }) : lastUpdateAt = lastUpdateAt ?? Timestamp.now();
 
@@ -27,12 +33,15 @@ class ContentMetaData {
   }) : this(
           id,
           json['authorId'] as String? ?? '',
+          imageUrl: json['imageUrl'] as String?,
           contributorsIds: listFromJson(
             json['contributorsIds'],
             (dynamic c) => c as String,
           ),
           lastUpdateAt: json['lastUpdateAt'] as Timestamp,
           likes: json['likes'] as int? ?? 0,
+          views: json['views'] as int? ?? 0,
+          dailyViews: json['dailyViews'] as int? ?? 0,
           status: EnumToString.fromString(
                 ContentStatus.values,
                 json['status'] as String? ?? '',
@@ -43,8 +52,11 @@ class ContentMetaData {
   Map<String, dynamic> toJson() => <String, dynamic>{
         'contributorsIds': contributorsIds,
         'authorId': authorId,
+        'imageUrl': imageUrl,
         'lastUpdateAt': lastUpdateAt,
         'likes': likes,
+        'views': views,
+        'dailyViews': dailyViews,
         'status': EnumToString.convertToString(status),
       };
 }
