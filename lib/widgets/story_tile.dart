@@ -38,13 +38,15 @@ class StoryTile extends StatelessWidget {
               ),
             ),
             TextSpan(text: info.likes.toString()),
-            const WidgetSpan(
-              child: SpanIcon(
-                Icons.tag_rounded,
-                padding: EdgeInsets.only(left: 4, right: 2),
+            if (info.tags?.isNotEmpty ?? false) ...[
+              const WidgetSpan(
+                child: SpanIcon(
+                  Icons.tag_rounded,
+                  padding: EdgeInsets.only(left: 4, right: 2),
+                ),
               ),
-            ),
-            TextSpan(text: prettyTags(info.tags)),
+              TextSpan(text: prettyTags(info.tags)),
+            ],
           ],
         ),
       ),
