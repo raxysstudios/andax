@@ -48,13 +48,6 @@ class StoryTile extends StatelessWidget {
           ],
         ),
       ),
-      trailing: Chip(
-        avatar: const Icon(
-          Icons.favorite_rounded,
-          size: 16,
-        ),
-        label: Text(info.likes.toString()),
-      ),
       onTap: onTap,
     );
   }
