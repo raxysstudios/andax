@@ -87,21 +87,27 @@ class _StoryScreenState extends State<StoryScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => loadExperience(
-          context,
-          widget.info,
-          (s, t) => Navigator.push<void>(
+        onPressed: () async {
+          final i = widget.info;
+          await FirebaseFirestore.instance
+              .doc('stories/${i.storyID}/translations/${i.translationID}')
+              .update({'metaData.views': FieldValue.increment(1)});
+          await loadExperience(
             context,
-            MaterialPageRoute(
-              builder: (context) {
-                return PlayScreen(
-                  story: s,
-                  translations: t.assets.values.toList(),
-                );
-              },
+            i,
+            (s, t) => Navigator.push<void>(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return PlayScreen(
+                    story: s,
+                    translations: t.assets.values.toList(),
+                  );
+                },
+              ),
             ),
-          ),
-        ),
+          );
+        },
         icon: const Icon(Icons.play_arrow_rounded),
         label: const Text('Play'),
       ),
