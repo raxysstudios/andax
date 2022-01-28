@@ -4,6 +4,7 @@ import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
+import 'package:andax/widgets/loading_dialog.dart';
 import 'package:andax/widgets/maybe_pop_alert.dart';
 import 'package:andax/widgets/rounded_back_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -137,7 +138,10 @@ class StoryEditorState extends State<StoryEditorScreen> {
           title: const Text('Narrative'),
           actions: [
             IconButton(
-              onPressed: upload,
+              onPressed: () async {
+                await showLoadingDialog(context, upload());
+                Navigator.maybePop(context);
+              },
               tooltip: 'Upload story',
               icon: Icon(
                 Icons.cloud_upload_rounded,
