@@ -46,7 +46,6 @@ class Story {
         'startNodeId': startNodeId,
         'nodes': nodes.values.map((n) => n.toJson()).toList(),
         'actors': actors.values.map((a) => a.toJson()).toList(),
-        'metaData': metaData.toJson(),
       };
 }
 

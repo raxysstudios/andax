@@ -66,7 +66,6 @@ abstract class TranslationAsset {
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'assetType': EnumToString.convertToString(assetType),
-        'metaData': metaData.toJson(),
       };
 }
 
