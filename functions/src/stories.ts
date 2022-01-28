@@ -31,11 +31,6 @@ export const indexStories = functions
     .onWrite(async (change, context) => {
       const translationID = context.params.translationID;
       const storyID = context.params.storyID;
-      if (change.before.exists) {
-        await index.deleteBy({
-          filters: "translationID:" + translationID,
-        });
-      }
       if (change.after.exists) {
         const {title, description, tags} = change.after.data()!;
         const story = await db
@@ -46,8 +41,8 @@ export const indexStories = functions
             .doc(`stories/${storyID}/translations/${translationID}`)
             .get()
             .then((doc) => doc.data()!);
-        await index.partialUpdateObject(
-        {
+
+        const entry = {
           storyID,
           storyAuthorID: story.metaData.authorId,
           translationID,
@@ -56,9 +51,22 @@ export const indexStories = functions
           title,
           description,
           tags,
-        } as storyRecord,
-        {createIfNotExists: true}
-        );
+        } as storyRecord;
+        if (change.before.exists) {
+          const objectID = await index.search("", {
+            filters: "translationID:" + translationID,
+            hitsPerPage: 1,
+          }).then((r) => r.hits[0]?.objectID);
+          await index.partialUpdateObject(
+              {objectID, ...entry},
+              {createIfNotExists: true}
+          );
+        } else {
+          await index.saveObject(
+              entry,
+              {autoGenerateObjectIDIfNotExist: true}
+          );
+        }
       }
     });
 
