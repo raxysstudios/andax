@@ -1,5 +1,3 @@
-/* eslint-disable require-jsdoc */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import algoliasearch from "algoliasearch";
 import * as functions from "firebase-functions";
@@ -26,6 +24,12 @@ type StoryRecord = {
   lastUpdateAt?: Date,
 };
 
+/**
+ * Returns document reference by story and trabslation id.
+ * @param {string} storyID The ID of the story document.
+ * @param {string} translationID The ID of the translation document.
+ * @return {object} The document reference.
+**/
 function storyDoc(storyID: string, translationID?: string):
   firestore.DocumentReference<firestore.DocumentData> {
   let path = "stories/" + storyID;
