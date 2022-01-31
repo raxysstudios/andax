@@ -4,6 +4,7 @@ import 'package:andax/utils.dart';
 import 'package:andax/widgets/loading_builder.dart';
 import 'package:andax/widgets/paging_list.dart';
 import 'package:andax/widgets/rounded_back_button.dart';
+import 'package:andax/widgets/scrollable_modal_sheet.dart';
 import 'package:andax/widgets/story_card.dart';
 import 'package:andax/widgets/story_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -84,28 +85,35 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> expandCategory(String title, String index) async {
-    await Navigator.push<void>(
-      context,
-      MaterialPageRoute(
-        builder: (context) {
-          return Scaffold(
-            appBar: AppBar(
-              leading: const RoundedBackButton(),
-              title: Text(capitalize(title)),
-            ),
-            body: PagingList<StoryInfo>(
-              onRequest: (p, l) => getStories(index, page: p),
-              maxPages: 5,
-              builder: (context, info, index) {
-                return StoryTile(
-                  info,
-                  onTap: () {},
-                );
-              },
-            ),
-          );
-        },
-      ),
+    await showScrollableModalSheet<void>(
+      context: context,
+      builder: (context, scroll) {
+        return Scaffold(
+          appBar: AppBar(
+            leading: const RoundedBackButton(),
+            title: Text(capitalize(title)),
+            actions: [
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.search_rounded),
+                tooltip: 'Search stories',
+              ),
+              const SizedBox(width: 4),
+            ],
+          ),
+          body: PagingList<StoryInfo>(
+            onRequest: (p, l) => getStories(index, page: p),
+            maxPages: 5,
+            scroll: scroll,
+            builder: (context, info, index) {
+              return StoryTile(
+                info,
+                onTap: () {},
+              );
+            },
+          ),
+        );
+      },
     );
   }
 

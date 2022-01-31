@@ -7,11 +7,13 @@ class PagingList<T> extends StatefulWidget {
     required this.onRequest,
     required this.builder,
     this.maxPages,
+    this.scroll,
     Key? key,
   }) : super(key: key);
 
   final Widget Function(BuildContext, T, int) builder;
   final Future<List<T>> Function(int, T?) onRequest;
+  final ScrollController? scroll;
   final int? maxPages;
 
   @override
@@ -50,6 +52,7 @@ class _PagingListState<T> extends State<PagingList<T>> {
       ),
       child: PagedListView<int, T>(
         pagingController: paging,
+        scrollController: widget.scroll,
         builderDelegate: PagedChildBuilderDelegate(
           itemBuilder: widget.builder,
         ),
