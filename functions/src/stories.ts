@@ -13,15 +13,26 @@ const index = algoliasearch(
 
 const db = firestore();
 
-type storyRecord = {
+type StoryRecord = {
   storyID: string,
   storyAuthorID:string,
   translationID: string,
   translationAuthorID: string,
   language: string,
   title: string,
-  description: string,
+  description?: string,
+  tags?: string[],
+  lastUpdateAt?: Date,
 };
+
+function storyDoc(storyID: string, translationID?: string):
+  firestore.DocumentReference<firestore.DocumentData> {
+  let path = "stories/" + storyID;
+  if (translationID) {
+    path += "/translations/" + translationID;
+  }
+  return db.doc(path);
+}
 
 export const indexStories = functions
     .region("europe-central2")
@@ -29,45 +40,51 @@ export const indexStories = functions
         "stories/{storyID}/translations/{translationID}/assets/story"
     )
     .onWrite(async (change, context) => {
+      if (!change.after.exists) return;
       const translationID = context.params.translationID;
       const storyID = context.params.storyID;
-      if (change.after.exists) {
-        const {title, description, tags} = change.after.data()!;
-        const story = await db
-            .doc(`stories/${storyID}`)
-            .get()
-            .then((doc) => doc.data()!);
-        const translation = await db
-            .doc(`stories/${storyID}/translations/${translationID}`)
-            .get()
-            .then((doc) => doc.data()!);
+      const {title, description, tags} = change.after.data()!;
+      const story = await storyDoc(storyID)
+          .get()
+          .then((doc) => doc.data()!);
+      const translation = await storyDoc(storyID, translationID)
+          .get()
+          .then((doc) => doc.data()!);
 
-        const entry = {
-          storyID,
-          storyAuthorID: story.metaData.authorId,
-          translationID,
-          translationAuthorID: translation.metaData.authorId,
-          language: translation.language,
-          title,
-          description,
-          tags,
-        } as storyRecord;
-        if (change.before.exists) {
-          const objectID = await index.search("", {
-            filters: "translationID:" + translationID,
-            hitsPerPage: 1,
-          }).then((r) => r.hits[0]?.objectID);
-          await index.partialUpdateObject(
-              {objectID, ...entry},
-              {createIfNotExists: true}
-          );
-        } else {
-          await index.saveObject(
-              entry,
-              {autoGenerateObjectIDIfNotExist: true}
-          );
-        }
+      const entry: StoryRecord = {
+        storyID,
+        storyAuthorID: story.metaData.authorId,
+        translationID,
+        translationAuthorID: translation.metaData.authorId,
+        language: translation.language,
+        title,
+        description,
+        tags,
+      };
+      if (change.before.exists) {
+        await index.partialUpdateObject(
+            {objectID: translationID, ...entry},
+            {createIfNotExists: true}
+        );
+      } else {
+        await index.saveObject(
+            entry,
+            {autoGenerateObjectIDIfNotExist: true}
+        );
       }
+    });
+
+export const trackStoryUpdateTime = functions
+    .region("europe-central2")
+    .firestore.document(
+        "stories/{storyID}/translations/{translationID}/assets/{assetID}"
+    )
+    .onWrite(async (change, context) => {
+      if (!change.after.exists) return;
+      await storyDoc(context.params.storyID, context.params.translationID)
+          .update({
+            "metaData.lastUpdateAt": firestore.FieldValue.serverTimestamp(),
+          });
     });
 
 export const updateStoryMeta = functions
@@ -78,21 +95,12 @@ export const updateStoryMeta = functions
     .onWrite(async (change, context) => {
       if (change.after.exists) {
         const meta = change.after.data()?.metaData;
-        const likes = meta.likes ?? 0;
-        const views = meta.views ?? 0;
-
-        if (change.before.exists) {
-          const {_likes, _views} = change.before.data()?.metaData;
-          if (_likes === likes && _views === views) return;
-        }
-
-        const objectID = await index.search("", {
-          filters: "translationID:" + context.params.translationID,
-          hitsPerPage: 1,
-        }).then((r) => r.hits[0]?.objectID);
-        if (!objectID) return;
-
-        await index.partialUpdateObject({objectID, likes, views});
+        await index.partialUpdateObject({
+          objectID: context.params.translationID,
+          likes: meta.likes ?? 0,
+          views: meta.views ?? 0,
+          lastUpdateAt: meta.lastUpdateAt,
+        });
       }
     });
 
@@ -100,17 +108,13 @@ export const indexTrendingStories = functions
     .region("europe-central2")
     .pubsub.schedule("every 72 hours")
     .onRun(async () => {
-      await index.browseObjects({
+      await index.browseObjects<StoryRecord>({
         query: "",
-        attributesToRetrieve: [
-          "storyID",
-          "translationID",
-        ],
+        attributesToRetrieve: ["storyID"],
         batch: async (batch) => {
           for (const hit of batch) {
-            const {storyID, translationID, objectID} = (hit as never);
-            const doc = db
-                .doc(`stories/${storyID}/translations/${translationID}`);
+            const {storyID, objectID} = hit;
+            const doc = storyDoc(storyID, objectID);
             const meta = await doc.get().then((r) => r.data()!.metaData);
             const trending = (meta.views ?? 0) - (meta.lastIndexedViews ?? 0);
             await doc.update({"metaData.lastIndexedViews": meta.views ?? 0});
@@ -128,8 +132,7 @@ export const countLikes = functions
     .onWrite(async (change, context) => {
       const {storyID, translationID} =
       (change.before.data() ?? change.after.data())!;
-      const doc = db
-          .doc(`stories/${storyID}/translations/${translationID}`);
+      const doc = storyDoc(storyID, translationID);
       let value: firestore.FieldValue | undefined;
       if (!change.before.exists && change.after.exists) {
         value = firestore.FieldValue.increment(1);
