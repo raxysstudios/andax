@@ -16,6 +16,17 @@ class StoryTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      leading: SizedBox.square(
+        dimension: 48,
+        child: Card(
+          child: info.imageUrl == null
+              ? const Icon(Icons.landscape_rounded)
+              : Image.network(
+                  info.imageUrl!,
+                  fit: BoxFit.cover,
+                ),
+        ),
+      ),
       title: Text(info.title),
       subtitle: RichText(
         maxLines: 1,

@@ -6,11 +6,13 @@ class PagingList<T> extends StatefulWidget {
   const PagingList({
     required this.onRequest,
     required this.builder,
+    this.maxPages,
     Key? key,
   }) : super(key: key);
 
   final Widget Function(BuildContext, T, int) builder;
   final Future<List<T>> Function(int, T?) onRequest;
+  final int? maxPages;
 
   @override
   State<PagingList<T>> createState() => _PagingListState<T>();
@@ -27,6 +29,9 @@ class _PagingListState<T> extends State<PagingList<T>> {
     );
     paging.addPageRequestListener(
       (page) async {
+        if (widget.maxPages != null && page >= widget.maxPages!) {
+          paging.appendLastPage([]);
+        }
         final items = await widget.onRequest(page, paging.itemList?.last);
         if (items.isEmpty) {
           paging.appendLastPage([]);
