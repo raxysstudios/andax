@@ -38,7 +38,7 @@ class StoryTile extends StatelessWidget {
           children: [
             const WidgetSpan(
               child: SpanIcon(
-                Icons.visibility_outlined,
+                Icons.visibility_rounded,
               ),
             ),
             TextSpan(text: info.views.toString()),

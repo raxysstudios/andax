@@ -1,8 +1,11 @@
 import 'package:andax/editor/story_editor_screen.dart';
+import 'package:andax/screens/profile_screen.dart';
+import 'package:andax/screens/search_screen.dart';
 import 'package:andax/store.dart';
 import 'package:andax/utils.dart';
 import 'package:andax/widgets/loading_builder.dart';
 import 'package:andax/widgets/paging_list.dart';
+import 'package:andax/widgets/raxys_logo.dart';
 import 'package:andax/widgets/rounded_back_button.dart';
 import 'package:andax/widgets/scrollable_modal_sheet.dart';
 import 'package:andax/widgets/story_card.dart';
@@ -31,20 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return hits.map((h) => StoryInfo.fromAlgoliaHit(h)).toList();
   }
 
-  // IconButton(
-  //   onPressed: () async {
-  //     await Navigator.push<void>(
-  //       context,
-  //       MaterialPageRoute(
-  //         builder: (context) => const ProfileScreen(),
-  //       ),
-  //     );
-  //     setState(() {});
-  //   },
-  //   icon: const Icon(Icons.person_rounded),
-  // ),
-
-  Widget buildCategory(IconData icon, String title, String index) {
+  Widget categoryCards(IconData icon, String title, String index) {
     return Column(
       children: [
         ListTile(
@@ -55,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
             style: Theme.of(context).textTheme.headline6,
           ),
           trailing: const Icon(Icons.arrow_forward_rounded),
-          onTap: () => expandCategory(title, index),
+          onTap: () => categorySheet(title, index),
         ),
         LoadingBuilder(
           future: getStories(index, hitsPerPage: 10),
@@ -84,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<void> expandCategory(String title, String index) async {
+  Future<void> categorySheet(String title, String index) async {
     await showScrollableModalSheet<void>(
       context: context,
       builder: (context, scroll) {
@@ -94,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
             title: Text(capitalize(title)),
             actions: [
               IconButton(
-                onPressed: () {},
+                onPressed: openSearch,
                 icon: const Icon(Icons.search_rounded),
                 tooltip: 'Search stories',
               ),
@@ -117,32 +107,66 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Future<void> openSearch() {
+    return Navigator.push<void>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SearchScreen(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Stories'),
+        titleSpacing: 0,
+        leading: const RaxysLogo(
+          opacity: .1,
+          scale: 3,
+        ),
+        title: const Text(
+          'Ændax',
+          style: TextStyle(fontSize: 28),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              await Navigator.push<void>(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ProfileScreen(),
+                ),
+              );
+              setState(() {});
+            },
+            icon: const Icon(Icons.person_rounded),
+          ),
+          const SizedBox(width: 4),
+        ],
       ),
       floatingActionButton: FirebaseAuth.instance.currentUser == null
           ? null
-          : FloatingActionButton(
+          : FloatingActionButton.extended(
               onPressed: () => Navigator.push<void>(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const StoryEditorScreen(),
                 ),
               ),
-              child: const Icon(Icons.edit_rounded),
+              icon: const Icon(Icons.add_circle_rounded),
+              label: const Text('Create'),
             ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.only(bottom: 76),
         child: Column(
           children: [
-            buildCategory(
+            categoryCards(
               Icons.whatshot_rounded,
               'trending now',
               'stories_trending',
             ),
-            buildCategory(
+            categoryCards(
               Icons.thumb_up_rounded,
               'most popular',
               'stories',
@@ -155,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: Theme.of(context).textTheme.headline6,
               ),
               trailing: const Icon(Icons.search_rounded),
-              onTap: () {},
+              onTap: openSearch,
             ),
             LoadingBuilder(
               future: algolia
