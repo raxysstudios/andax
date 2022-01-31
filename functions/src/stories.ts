@@ -126,6 +126,24 @@ export const indexTrendingStories = functions
       });
     });
 
+export const indexRandomExploration = functions
+    .region("europe-central2")
+    .pubsub.schedule("every 24 hours")
+    .onRun(async () => {
+      await index.browseObjects<StoryRecord>({
+        query: "",
+        attributesToRetrieve: [],
+        batch: async (batch) => {
+          for (const hit of batch) {
+            await index.partialUpdateObject({
+              objectID: hit.objectID,
+              explore: Math.random(),
+            });
+          }
+        },
+      });
+    });
+
 export const countLikes = functions
     .region("europe-central2")
     .firestore.document(
