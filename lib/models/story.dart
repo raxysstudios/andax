@@ -58,6 +58,7 @@ class StoryInfo {
   final String title;
   final String? description;
   final List<String>? tags;
+  final String? imageUrl;
   final int likes;
   final int views;
   final DateTime? lastUpdateAt;
@@ -73,6 +74,7 @@ class StoryInfo {
     this.views = 0,
     this.tags,
     this.lastUpdateAt,
+    this.imageUrl,
   });
 
   factory StoryInfo.fromAlgoliaHit(AlgoliaObjectSnapshot hit) {
@@ -84,6 +86,7 @@ class StoryInfo {
       translationAuthorID: json['translationAuthorID'] as String,
       title: json['title'] as String,
       description: json['description'] as String?,
+      imageUrl: json['imageUrl'] as String?,
       likes: json['likes'] as int? ?? 0,
       views: json['views'] as int? ?? 0,
       tags: json2list(json['tags']),

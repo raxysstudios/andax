@@ -21,26 +21,50 @@ class _StoryCardState extends State<StoryCard> {
     return Card(
       child: InkWell(
         onTap: () {},
-        child: Column(
+        child: Stack(
           children: [
-            Image.asset(
-              'assets/icon.png',
-              fit: BoxFit.cover,
-              width: 200,
-              height: 90,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                children: [
-                  Text(
-                    widget.story.title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                    ),
+            if (widget.story.imageUrl != null)
+              Positioned.fill(
+                child: ShaderMask(
+                  shaderCallback: (rect) {
+                    return const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black,
+                          Colors.transparent,
+                          Colors.transparent,
+                        ],
+                        stops: [
+                          0,
+                          .75,
+                          1,
+                        ]).createShader(
+                      Rect.fromLTRB(0, 0, rect.width, rect.height),
+                    );
+                  },
+                  blendMode: BlendMode.dstIn,
+                  child: Image.network(
+                    widget.story.imageUrl!,
+                    fit: BoxFit.cover,
                   ),
-                ],
+                ),
+              ),
+            Positioned.fill(
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      widget.story.title,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
