@@ -1,4 +1,5 @@
 import 'package:andax/utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'actor.dart';
 import 'content_meta_data.dart';
 import 'node.dart';
@@ -59,6 +60,7 @@ class StoryInfo {
   final List<String>? tags;
   final int likes;
   final int views;
+  final DateTime? lastUpdateAt;
 
   const StoryInfo({
     required this.storyID,
@@ -70,6 +72,7 @@ class StoryInfo {
     this.likes = 0,
     this.views = 0,
     this.tags,
+    this.lastUpdateAt,
   });
 
   factory StoryInfo.fromAlgoliaHit(AlgoliaObjectSnapshot hit) {
@@ -84,6 +87,7 @@ class StoryInfo {
       likes: json['likes'] as int? ?? 0,
       views: json['views'] as int? ?? 0,
       tags: json2list(json['tags']),
+      lastUpdateAt: (json['lastUpdateAt'] as Timestamp?)?.toDate(),
     );
   }
 }

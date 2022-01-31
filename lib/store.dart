@@ -8,7 +8,11 @@ final settings = Settings(targetLanguage: 'english', nativeLanguage: 'russian');
 
 late final Algolia algolia;
 
+bool _first = false;
+
 Future<void> initStore() async {
+  if (_first) return;
+  _first = true;
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

@@ -2,6 +2,7 @@ import 'package:andax/editor/story_editor_screen.dart';
 import 'package:andax/screens/story_screen.dart';
 import 'package:andax/screens/profile_screen.dart';
 import 'package:andax/store.dart';
+import 'package:andax/widgets/loading_builder.dart';
 import 'package:andax/widgets/paging_list.dart';
 import 'package:andax/widgets/story_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,24 +32,24 @@ class _HomeScreenState extends State<HomeScreen> {
         );
   }
 
+  // IconButton(
+  //   onPressed: () async {
+  //     await Navigator.push<void>(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => const ProfileScreen(),
+  //       ),
+  //     );
+  //     setState(() {});
+  //   },
+  //   icon: const Icon(Icons.person_rounded),
+  // ),
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Stories'),
         actions: [
-          IconButton(
-            onPressed: () async {
-              await Navigator.push<void>(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ProfileScreen(),
-                ),
-              );
-              setState(() {});
-            },
-            icon: const Icon(Icons.person_rounded),
-          ),
           const SizedBox(width: 4),
         ],
       ),
@@ -63,19 +64,90 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: const Icon(Icons.edit_rounded),
             ),
-      body: PagingList<StoryInfo>(
-        onRequest: getStories,
-        builder: (context, info, index) {
-          return StoryTile(
-            info,
-            onTap: () => Navigator.push<void>(
-              context,
-              MaterialPageRoute(
-                builder: (context) => StoryScreen(info),
+      // body: PagingList<StoryInfo>(
+      //   onRequest: getStories,
+      //   builder: (context, info, index) {
+      //     return StoryTile(
+      //       info,
+      //       onTap: () => Navigator.push<void>(
+      //         context,
+      //         MaterialPageRoute(
+      //           builder: (context) => StoryScreen(info),
+      //         ),
+      //       ),
+      //     );
+      //   },
+      // ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.whatshot_rounded),
+              horizontalTitleGap: 0,
+              title: Text(
+                'Trending Now',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              trailing: const Icon(Icons.arrow_forward_rounded),
+              onTap: () {},
+            ),
+            SizedBox(
+              height: 200,
+              child: LoadingBuilder(
+                future: algolia.instance
+                    .index('stories_trending')
+                    .query('')
+                    .getObjects()
+                    .then(
+                      (r) => r.hits
+                          .map((h) => StoryInfo.fromAlgoliaHit(h))
+                          .toList(),
+                    ),
+                builder: (context, stories) {
+                  final s = stories as List<StoryInfo>;
+                  return ListView.builder(
+                    itemExtent: 200,
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: s.length,
+                    itemBuilder: (context, index) {
+                      final story = s[index];
+                      return Card(
+                        child: InkWell(
+                          onTap: () {},
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                'assets/icon.png',
+                                fit: BoxFit.cover,
+                                width: 200,
+                                height: 90,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      story.title,
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
             ),
-          );
-        },
+          ],
+        ),
       ),
     );
   }
