@@ -20,6 +20,7 @@ type StoryRecord = {
   translationAuthorID: string,
   language: string,
   title: string,
+  imageUrl?:string,
   description?: string,
   tags?: string[],
   lastUpdateAt?: Date,
@@ -100,6 +101,7 @@ export const updateStoryMeta = functions
           likes: meta.likes ?? 0,
           views: meta.views ?? 0,
           lastUpdateAt: meta.lastUpdateAt,
+          imageUrl: meta.imageUrl,
         });
       }
     });
