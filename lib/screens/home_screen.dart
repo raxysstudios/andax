@@ -1,6 +1,7 @@
 import 'package:andax/editor/story_editor_screen.dart';
 import 'package:andax/screens/profile_screen.dart';
 import 'package:andax/screens/search_screen.dart';
+import 'package:andax/screens/story_screen.dart';
 import 'package:andax/store.dart';
 import 'package:andax/utils.dart';
 import 'package:andax/widgets/loading_builder.dart';
@@ -47,23 +48,21 @@ class _HomeScreenState extends State<HomeScreen> {
           trailing: const Icon(Icons.arrow_forward_rounded),
           onTap: () => categorySheet(title, index),
         ),
-        LoadingBuilder(
+        LoadingBuilder<List<StoryInfo>>(
           future: getStories(index, hitsPerPage: 10),
           builder: (context, stories) {
-            // TODO why is the type not inferenced?
-            final s = stories as List<StoryInfo>;
             return SizedBox(
               height: 128,
               child: ListView.builder(
                 itemExtent: 200,
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 scrollDirection: Axis.horizontal,
-                itemCount: s.length,
+                itemCount: stories.length,
                 itemBuilder: (context, index) {
-                  final story = s[index];
+                  final story = stories[index];
                   return StoryCard(
                     story,
-                    onTap: () {},
+                    onTap: () => openStory(story),
                   );
                 },
               ),
@@ -98,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
             builder: (context, info, index) {
               return StoryTile(
                 info,
-                onTap: () {},
+                onTap: () => openStory(info),
               );
             },
           ),
@@ -112,6 +111,15 @@ class _HomeScreenState extends State<HomeScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => const SearchScreen(),
+      ),
+    );
+  }
+
+  Future<void> openStory(StoryInfo info) {
+    return Navigator.push<void>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => StoryScreen(info),
       ),
     );
   }
@@ -181,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
               trailing: const Icon(Icons.search_rounded),
               onTap: openSearch,
             ),
-            LoadingBuilder(
+            LoadingBuilder<List<StoryInfo>>(
               future: algolia
                   .index('stories_explore')
                   .query('')
@@ -197,10 +205,10 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, stories) {
                 return Column(
                   children: [
-                    for (var story in stories as List<StoryInfo>)
+                    for (var story in stories)
                       StoryTile(
                         story,
-                        onTap: () {},
+                        onTap: () => openStory(story),
                       )
                   ],
                 );
