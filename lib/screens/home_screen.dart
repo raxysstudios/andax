@@ -183,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
               leading: const Icon(Icons.explore_rounded),
               horizontalTitleGap: 0,
               title: Text(
-                capitalize('explore new'),
+                capitalize('explore'),
                 style: Theme.of(context).textTheme.headline6,
               ),
               trailing: const Icon(Icons.search_rounded),
