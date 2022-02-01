@@ -24,6 +24,18 @@ type StoryRecord = {
   lastUpdateAt?: Date,
 };
 
+type MetaData = {
+  id: string,
+  authorID: string,
+  contributorsIDs?: string[],
+  lastUpdateAt?: Date,
+  imageUrl?:string,
+  likes?: number,
+  views?: number,
+  lastIndexedViews?: number,
+  status?: "public" | "unlisted" | "private" | "pending"
+};
+
 /**
  * Returns document reference by story and trabslation id.
  * @param {string} storyID The ID of the story document.
@@ -98,16 +110,15 @@ export const updateStoryMeta = functions
         "stories/{storyID}/translations/{translationID}"
     )
     .onWrite(async (change, context) => {
-      if (change.after.exists) {
-        const meta = change.after.data()?.metaData;
-        await index.partialUpdateObject({
-          objectID: context.params.translationID,
-          likes: meta.likes ?? 0,
-          views: meta.views ?? 0,
-          lastUpdateAt: meta.lastUpdateAt,
-          imageUrl: meta.imageUrl,
-        });
-      }
+      if (!change.after.exists) return;
+      const meta = change.after.data()?.metaData as MetaData;
+      await index.partialUpdateObject({
+        objectID: context.params.translationID,
+        likes: meta.likes ?? 0,
+        views: meta.views ?? 0,
+        lastUpdateAt: meta.lastUpdateAt,
+        imageUrl: meta.imageUrl,
+      });
     });
 
 export const indexTrendingStories = functions
