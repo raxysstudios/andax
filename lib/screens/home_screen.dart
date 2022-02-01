@@ -171,12 +171,12 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             categoryCards(
               Icons.whatshot_rounded,
-              'trending now',
+              'trending',
               'stories_trending',
             ),
             categoryCards(
               Icons.thumb_up_rounded,
-              'most popular',
+              'popular',
               'stories',
             ),
             ListTile(
