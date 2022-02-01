@@ -1,5 +1,6 @@
 import 'package:andax/models/story.dart';
 import 'package:andax/utils.dart';
+import 'package:andax/widgets/span_icon.dart';
 import 'package:flutter/material.dart';
 
 class StoryTile extends StatelessWidget {
@@ -15,30 +16,50 @@ class StoryTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(info.title),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (info.description == null) Text(info.description!),
-          if (info.tags != null)
-            Row(
-              children: [
-                const Icon(
-                  Icons.tag_rounded,
-                  size: 16,
+      leading: SizedBox.square(
+        dimension: 48,
+        child: Card(
+          child: info.imageUrl == null
+              ? const Icon(Icons.landscape_rounded)
+              : Image.network(
+                  info.imageUrl!,
+                  fit: BoxFit.cover,
                 ),
-                const SizedBox(width: 4),
-                Text(prettyTags(info.tags)!),
-              ],
-            ),
-        ],
-      ),
-      trailing: Chip(
-        avatar: const Icon(
-          Icons.favorite_rounded,
-          size: 16,
         ),
-        label: Text(info.likes.toString()),
+      ),
+      title: Text(info.title),
+      subtitle: RichText(
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        text: TextSpan(
+          style: Theme.of(context).textTheme.caption?.copyWith(
+                fontSize: 14,
+              ),
+          children: [
+            const WidgetSpan(
+              child: SpanIcon(
+                Icons.visibility_rounded,
+              ),
+            ),
+            TextSpan(text: info.views.toString()),
+            const WidgetSpan(
+              child: SpanIcon(
+                Icons.favorite_rounded,
+                padding: EdgeInsets.only(left: 4, right: 2),
+              ),
+            ),
+            TextSpan(text: info.likes.toString()),
+            if (info.tags?.isNotEmpty ?? false) ...[
+              const WidgetSpan(
+                child: SpanIcon(
+                  Icons.tag_rounded,
+                  padding: EdgeInsets.only(left: 4, right: 2),
+                ),
+              ),
+              TextSpan(text: prettyTags(info.tags)),
+            ],
+          ],
+        ),
       ),
       onTap: onTap,
     );

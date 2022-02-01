@@ -4,6 +4,7 @@ import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
+import 'package:andax/widgets/loading_dialog.dart';
 import 'package:andax/widgets/maybe_pop_alert.dart';
 import 'package:andax/widgets/rounded_back_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -93,7 +94,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
     if (sid == null) {
       sid = await sdb.add(story.toJson()).then((r) => r.id);
     } else {
-      await sdb.doc(widget.info?.storyID).set(story.toJson());
+      await sdb.doc(widget.info?.storyID).update(story.toJson());
     }
 
     final tdb = sdb.doc(sid).collection('translations');
@@ -101,13 +102,13 @@ class StoryEditorState extends State<StoryEditorScreen> {
     if (tid == null) {
       tid = await tdb.add(translation.toJson()).then((r) => r.id);
     } else {
-      await tdb.doc(tid).set(translation.toJson());
+      await tdb.doc(tid).update(translation.toJson());
     }
 
     final adb = tdb.doc(tid).collection('assets');
     await Future.wait([
       for (final entry in translation.assets.entries)
-        adb.doc(entry.key).set(entry.value.toJson())
+        adb.doc(entry.key).update(entry.value.toJson())
     ]);
     info ??= StoryInfo(
       storyID: sid!,
@@ -137,7 +138,10 @@ class StoryEditorState extends State<StoryEditorScreen> {
           title: const Text('Narrative'),
           actions: [
             IconButton(
-              onPressed: upload,
+              onPressed: () async {
+                await showLoadingDialog(context, upload());
+                Navigator.maybePop(context);
+              },
               tooltip: 'Upload story',
               icon: Icon(
                 Icons.cloud_upload_rounded,

@@ -1,4 +1,5 @@
 import 'package:andax/utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'actor.dart';
 import 'content_meta_data.dart';
 import 'node.dart';
@@ -46,7 +47,6 @@ class Story {
         'startNodeId': startNodeId,
         'nodes': nodes.values.map((n) => n.toJson()).toList(),
         'actors': actors.values.map((a) => a.toJson()).toList(),
-        'metaData': metaData.toJson(),
       };
 }
 
@@ -58,7 +58,10 @@ class StoryInfo {
   final String title;
   final String? description;
   final List<String>? tags;
+  final String? imageUrl;
   final int likes;
+  final int views;
+  final DateTime? lastUpdateAt;
 
   const StoryInfo({
     required this.storyID,
@@ -68,7 +71,10 @@ class StoryInfo {
     required this.title,
     this.description,
     this.likes = 0,
+    this.views = 0,
     this.tags,
+    this.lastUpdateAt,
+    this.imageUrl,
   });
 
   factory StoryInfo.fromAlgoliaHit(AlgoliaObjectSnapshot hit) {
@@ -80,8 +86,11 @@ class StoryInfo {
       translationAuthorID: json['translationAuthorID'] as String,
       title: json['title'] as String,
       description: json['description'] as String?,
-      likes: json['likes'] as int,
+      imageUrl: json['imageUrl'] as String?,
+      likes: json['likes'] as int? ?? 0,
+      views: json['views'] as int? ?? 0,
       tags: json2list(json['tags']),
+      lastUpdateAt: (json['lastUpdateAt'] as Timestamp?)?.toDate(),
     );
   }
 }
