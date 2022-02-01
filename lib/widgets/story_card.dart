@@ -20,7 +20,7 @@ class _StoryCardState extends State<StoryCard> {
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
-        onTap: () {},
+        onTap: widget.onTap,
         child: Stack(
           children: [
             if (widget.story.imageUrl != null)
