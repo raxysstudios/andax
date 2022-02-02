@@ -107,7 +107,9 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
                 context,
                 story.startNodeId,
               );
-              story.startNodeId = node?.id ?? '';
+              setState(() {
+                story.startNodeId = node?.id ?? '';
+              });
             },
             leading: const Icon(Icons.login_rounded),
             title: Text(
