@@ -108,7 +108,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
     final adb = tdb.doc(tid).collection('assets');
     await Future.wait([
       for (final entry in translation.assets.entries)
-        adb.doc(entry.key).update(entry.value.toJson())
+        adb.doc(entry.key).set(entry.value.toJson())
     ]);
     info ??= StoryInfo(
       storyID: sid!,
