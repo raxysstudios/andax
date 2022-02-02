@@ -133,10 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
           opacity: .1,
           scale: 3,
         ),
-        title: const Text(
-          'Ændax',
-          style: TextStyle(fontSize: 28),
-        ),
+        title: const Text('Ændax'),
         actions: [
           IconButton(
             onPressed: () async {
