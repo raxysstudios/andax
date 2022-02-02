@@ -1,4 +1,5 @@
 import 'package:andax/editor/story_editor_screen.dart';
+import 'package:andax/get_stories.dart';
 import 'package:andax/screens/profile_screen.dart';
 import 'package:andax/screens/search_screen.dart';
 import 'package:andax/screens/story_screen.dart';
@@ -23,18 +24,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Future<List<StoryInfo>> getStories(
-    String index, {
-    int? page,
-    int? hitsPerPage,
-  }) async {
-    var query = algolia.instance.index(index).query('');
-    if (page != null) query = query.setPage(page);
-    if (hitsPerPage != null) query = query.setHitsPerPage(hitsPerPage);
-    final hits = await query.getObjects().then((s) => s.hits);
-    return hits.map((h) => StoryInfo.fromAlgoliaHit(h)).toList();
-  }
-
   Widget categoryCards(IconData icon, String title, String index) {
     return Column(
       children: [
@@ -190,10 +179,18 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: openSearch,
             ),
             LoadingBuilder<List<StoryInfo>>(
-              future: getStories(
-                'stories_updated',
-                hitsPerPage: 30,
-              ),
+              future: algolia
+                  .index('stories_explore')
+                  .query('')
+                  .setHitsPerPage(0)
+                  .getObjects()
+                  .then((r) {
+                return getStories(
+                  'stories_explore',
+                  page: r.nbHits ~/ 30,
+                  hitsPerPage: 30,
+                );
+              }),
               builder: (context, stories) {
                 return Column(
                   children: [
