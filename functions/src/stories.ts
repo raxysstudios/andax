@@ -12,6 +12,7 @@ const index = algoliasearch(
 const db = firestore();
 
 type StoryRecord = {
+  objectID: string,
   storyID: string,
   storyAuthorID:string,
   translationID: string,
@@ -69,6 +70,7 @@ export const indexStories = functions
           .then((doc) => doc.data()!);
 
       const entry: StoryRecord = {
+        objectID: translationID,
         storyID,
         storyAuthorID: story.metaData.authorId,
         translationID,
@@ -80,14 +82,11 @@ export const indexStories = functions
       };
       if (change.before.exists) {
         await index.partialUpdateObject(
-            {objectID: translationID, ...entry},
+            entry,
             {createIfNotExists: true}
         );
       } else {
-        await index.saveObject(
-            entry,
-            {autoGenerateObjectIDIfNotExist: true}
-        );
+        await index.saveObject(entry);
       }
     });
 
