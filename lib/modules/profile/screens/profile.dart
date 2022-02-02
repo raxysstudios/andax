@@ -3,7 +3,7 @@ import 'package:andax/screens/story_screen.dart';
 import 'package:andax/store.dart';
 import 'package:andax/widgets/paging_list.dart';
 import 'package:andax/widgets/rounded_back_button.dart';
-import 'package:andax/widgets/sign_in_buttons.dart';
+import 'package:andax/modules/profile/widgets/sign_in_buttons.dart';
 import 'package:andax/widgets/story_tile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

@@ -1,6 +1,6 @@
 import 'package:andax/editor/story_editor_screen.dart';
 import 'package:andax/get_stories.dart';
-import 'package:andax/screens/profile_screen.dart';
+import 'package:andax/modules/profile/screens/profile.dart';
 import 'package:andax/screens/search_screen.dart';
 import 'package:andax/screens/story_screen.dart';
 import 'package:andax/store.dart';
@@ -12,9 +12,9 @@ import 'package:andax/widgets/rounded_back_button.dart';
 import 'package:andax/widgets/scrollable_modal_sheet.dart';
 import 'package:andax/modules/home/widgets/story_card.dart';
 import 'package:andax/widgets/story_tile.dart';
+import 'package:andax/models/story.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../../../models/story.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
