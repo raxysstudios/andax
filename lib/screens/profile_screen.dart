@@ -27,48 +27,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    updateLikes();
-    updateStories();
-    updateTranslations();
+    updateCounters();
   }
 
-  Future<void> updateLikes() async {
-    likes = null;
-    if (user != null) {
-      likes = await FirebaseFirestore.instance
-          .doc('users/${user!.uid}')
-          .get()
-          .then((r) => r.data()?['likes'] as int? ?? 0);
+  Future<void> updateCounters() async {
+    Future<void> updateLikes() async {
+      likes = null;
+      if (user != null) {
+        likes = await FirebaseFirestore.instance
+            .doc('users/${user!.uid}')
+            .get()
+            .then((r) => r.data()?['likes'] as int? ?? 0);
+      }
+      setState(() {});
     }
-    setState(() {});
-  }
 
-  Future<void> updateStories() async {
-    stories = null;
-    if (user != null) {
-      stories = await algolia.instance
-          .index('stories')
-          .query('')
-          .filters('storyAuthorID:${user!.uid}')
-          .setHitsPerPage(0)
-          .getObjects()
-          .then((r) => r.nbHits);
+    Future<void> updateStories() async {
+      stories = null;
+      if (user != null) {
+        stories = await algolia.instance
+            .index('stories')
+            .query('')
+            .filters('storyAuthorID:${user!.uid}')
+            .setHitsPerPage(0)
+            .getObjects()
+            .then((r) => r.nbHits);
+      }
+      setState(() {});
     }
-    setState(() {});
-  }
 
-  Future<void> updateTranslations() async {
-    translations = null;
-    if (user != null) {
-      translations = await algolia.instance
-          .index('stories')
-          .query('')
-          .filters('translationAuthorID:${user!.uid}')
-          .setHitsPerPage(0)
-          .getObjects()
-          .then((r) => r.nbHits);
+    Future<void> updateTranslations() async {
+      translations = null;
+      if (user != null) {
+        translations = await algolia.instance
+            .index('stories')
+            .query('')
+            .filters('translationAuthorID:${user!.uid}')
+            .setHitsPerPage(0)
+            .getObjects()
+            .then((r) => r.nbHits);
+      }
+      setState(() {});
     }
-    setState(() {});
+
+    await Future.wait([
+      updateLikes(),
+      updateStories(),
+      updateTranslations(),
+    ]);
   }
 
   Widget loadingChip(int? value) {
@@ -130,8 +136,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: ListView(
         children: [
           SignInButtons(
-            onSignOut: updateLikes,
-            onSingIn: updateLikes,
+            onSignOut: updateCounters,
+            onSingIn: updateCounters,
           ),
           if (user != null) ...[
             const Divider(),
