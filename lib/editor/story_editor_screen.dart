@@ -92,7 +92,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
     final sdb = FirebaseFirestore.instance.collection('stories');
     var sid = widget.info?.storyID;
     if (sid == null) {
-      sid = await sdb.add(story.toJson()).then((r) => r.id);
+      sid = await sdb.add(story.toJson(true)).then((r) => r.id);
     } else {
       await sdb.doc(widget.info?.storyID).update(story.toJson());
     }
@@ -100,7 +100,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
     final tdb = sdb.doc(sid).collection('translations');
     var tid = widget.info?.translationID;
     if (tid == null) {
-      tid = await tdb.add(translation.toJson()).then((r) => r.id);
+      tid = await tdb.add(translation.toJson(true)).then((r) => r.id);
     } else {
       await tdb.doc(tid).update(translation.toJson());
     }

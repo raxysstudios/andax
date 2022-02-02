@@ -43,10 +43,11 @@ class Story {
           ),
         );
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
+  Map<String, dynamic> toJson([bool withMeta = false]) => <String, dynamic>{
         'startNodeId': startNodeId,
         'nodes': nodes.values.map((n) => n.toJson()).toList(),
         'actors': actors.values.map((a) => a.toJson()).toList(),
+        if (withMeta) 'metaData': metaData.toJson(),
       };
 }
 
