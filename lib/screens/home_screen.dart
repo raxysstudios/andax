@@ -153,12 +153,15 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FirebaseAuth.instance.currentUser == null
           ? null
           : FloatingActionButton.extended(
-              onPressed: () => Navigator.push<void>(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const StoryEditorScreen(),
-                ),
-              ),
+              onPressed: () async {
+                await Navigator.push<void>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const StoryEditorScreen(),
+                  ),
+                );
+                setState(() {});
+              },
               icon: const Icon(Icons.add_circle_rounded),
               label: const Text('Create'),
             ),
@@ -187,18 +190,10 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: openSearch,
             ),
             LoadingBuilder<List<StoryInfo>>(
-              future: algolia
-                  .index('stories_explore')
-                  .query('')
-                  .setHitsPerPage(0)
-                  .getObjects()
-                  .then((r) {
-                return getStories(
-                  'stories_explore',
-                  page: r.nbHits ~/ 30,
-                  hitsPerPage: 30,
-                );
-              }),
+              future: getStories(
+                'stories_updated',
+                hitsPerPage: 30,
+              ),
               builder: (context, stories) {
                 return Column(
                   children: [
