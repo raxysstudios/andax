@@ -7,14 +7,14 @@ import 'package:andax/store.dart';
 import 'package:andax/utils.dart';
 import 'package:andax/widgets/loading_builder.dart';
 import 'package:andax/widgets/paging_list.dart';
-import 'package:andax/widgets/raxys_logo.dart';
+import 'package:andax/modules/home/widgets/raxys_logo.dart';
 import 'package:andax/widgets/rounded_back_button.dart';
 import 'package:andax/widgets/scrollable_modal_sheet.dart';
-import 'package:andax/widgets/story_card.dart';
+import 'package:andax/modules/home/widgets/story_card.dart';
 import 'package:andax/widgets/story_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../models/story.dart';
+import '../../../models/story.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -111,6 +111,14 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context) => StoryScreen(info),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseAuth.instance.authStateChanges().listen((user) {
+      setState(() {});
+    });
   }
 
   @override

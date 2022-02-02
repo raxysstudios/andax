@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-import 'raxys_logo.dart';
+import '../widgets/raxys_logo.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({
