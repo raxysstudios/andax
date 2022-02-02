@@ -1,7 +1,6 @@
 import 'package:andax/get_stories.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/screens/story_screen.dart';
-import 'package:andax/store.dart';
 import 'package:andax/widgets/paging_list.dart';
 import 'package:andax/widgets/story_tile.dart';
 import 'package:flutter/material.dart';
