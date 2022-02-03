@@ -1,7 +1,7 @@
 import 'package:andax/modules/story_info/services/content_loader.dart';
 import 'package:andax/modules/story_editor/screens/narrative_editor.dart';
 import 'package:andax/screens/crowdsourcing_screen.dart';
-import 'package:andax/screens/play_screen.dart';
+import 'package:andax/modules/store_play/screens/play.dart';
 import 'package:andax/widgets/loading_dialog.dart';
 import 'package:andax/widgets/rounded_back_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
