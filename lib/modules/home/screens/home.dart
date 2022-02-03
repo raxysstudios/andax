@@ -1,7 +1,7 @@
 import 'package:andax/modules/story_editor/screens/narrative_editor.dart';
-import 'package:andax/get_stories.dart';
+import 'package:andax/modules/home/services/stories.dart';
 import 'package:andax/modules/profile/screens/profile.dart';
-import 'package:andax/screens/search_screen.dart';
+import 'package:andax/modules/home/screens/search.dart';
 import 'package:andax/modules/story_info/screens/story_info.dart';
 import 'package:andax/store.dart';
 import 'package:andax/utils.dart';

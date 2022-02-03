@@ -1,4 +1,4 @@
-import 'package:andax/get_stories.dart';
+import 'package:andax/modules/home/services/stories.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/modules/story_info/screens/story_info.dart';
 import 'package:andax/widgets/paging_list.dart';
