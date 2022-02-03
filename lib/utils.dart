@@ -1,3 +1,5 @@
+import 'package:andax/shared/extensions.dart';
+
 List<T> listFromJson<T>(
   Object? array,
   T Function(dynamic) fromJson,
@@ -10,19 +12,6 @@ List<String>? json2list(Object? array) {
       .toList();
 }
 
-String capitalize(String? text) {
-  if (text == null) return '';
-  return text
-      .split(' ')
-      .where((s) => s.isNotEmpty)
-      .map((w) => w[0].toUpperCase() + w.substring(1))
-      .join(' ')
-      .split('-')
-      .where((s) => s.isNotEmpty)
-      .map((w) => w[0].toUpperCase() + w.substring(1))
-      .join('-');
-}
-
 String? prettyTags(
   Iterable<String>? tags, {
   String separator = ' • ',
@@ -30,5 +19,5 @@ String? prettyTags(
 }) {
   if (tags == null) return null;
   final text = tags.join(separator);
-  return capitalized ? capitalize(text) : text;
+  return capitalized ? text.titleCase : text;
 }

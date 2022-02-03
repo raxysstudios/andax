@@ -4,7 +4,7 @@ import 'package:andax/modules/profile/screens/profile.dart';
 import 'package:andax/modules/home/screens/search.dart';
 import 'package:andax/modules/story_info/screens/story_info.dart';
 import 'package:andax/store.dart';
-import 'package:andax/utils.dart';
+import 'package:andax/shared/extensions.dart';
 import 'package:andax/widgets/loading_builder.dart';
 import 'package:andax/widgets/paging_list.dart';
 import 'package:andax/modules/home/widgets/raxys_logo.dart';
@@ -31,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
           leading: Icon(icon),
           horizontalTitleGap: 0,
           title: Text(
-            capitalize(title),
+            title.titleCase,
             style: Theme.of(context).textTheme.headline6,
           ),
           trailing: const Icon(Icons.arrow_forward_rounded),
@@ -69,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return Scaffold(
           appBar: AppBar(
             leading: const RoundedBackButton(),
-            title: Text(capitalize(title)),
+            title: Text(title.titleCase),
             actions: [
               IconButton(
                 onPressed: openSearch,
@@ -180,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
               leading: const Icon(Icons.explore_rounded),
               horizontalTitleGap: 0,
               title: Text(
-                capitalize('explore'),
+                'explore'.titleCase,
                 style: Theme.of(context).textTheme.headline6,
               ),
               trailing: const Icon(Icons.search_rounded),
