@@ -1,4 +1,4 @@
-import 'package:andax/content_loader.dart';
+import 'package:andax/modules/story_info/services/content_loader.dart';
 import 'package:andax/modules/story_editor/screens/narrative_editor.dart';
 import 'package:andax/screens/crowdsourcing_screen.dart';
 import 'package:andax/screens/play_screen.dart';
@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:andax/models/story.dart';
+import '../services/likes.dart';
 
 class StoryScreen extends StatefulWidget {
   const StoryScreen(
@@ -24,22 +25,15 @@ class StoryScreen extends StatefulWidget {
 class _StoryScreenState extends State<StoryScreen> {
   StoryInfo get info => widget.info;
 
+  late final LikeService _likeService;
   bool? liked;
   DocumentReference? likedDoc;
 
   @override
   void initState() {
     super.initState();
-    if (FirebaseAuth.instance.currentUser != null) {
-      likedDoc = FirebaseFirestore.instance.doc(
-        'users/${FirebaseAuth.instance.currentUser!.uid}/likes/${info.translationID}',
-      );
-      likedDoc!.get().then((doc) {
-        setState(() {
-          liked = doc.exists;
-        });
-      });
-    }
+    _likeService = LikeService(info);
+    setState(() async => liked = await _likeService.updateLikedState());
   }
 
   Future<void> play() async {
@@ -73,21 +67,11 @@ class _StoryScreenState extends State<StoryScreen> {
         actions: [
           if (liked != null)
             IconButton(
-              onPressed: () async {
+              onPressed: () {
                 setState(() {
                   liked = !liked!;
+                  _likeService.toggleLike(liked);
                 });
-                if (liked!) {
-                  await likedDoc!.set(
-                    {
-                      'storyID': info.storyID,
-                      'translationID': info.translationID,
-                      'date': Timestamp.now()
-                    },
-                  );
-                } else {
-                  await likedDoc!.delete();
-                }
               },
               icon: Icon(
                 liked! ? Icons.favorite_rounded : Icons.favorite_border_rounded,
@@ -99,11 +83,11 @@ class _StoryScreenState extends State<StoryScreen> {
       body: ListView(
         padding: const EdgeInsets.only(bottom: 76),
         children: [
-          if (widget.info.description != null)
+          if (info.description != null)
             ListTile(
               leading: const Icon(Icons.info_rounded),
               title: Text(
-                widget.info.description!,
+                info.description!,
               ),
             ),
         ],

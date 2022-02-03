@@ -1,5 +1,5 @@
 import 'package:andax/models/story.dart';
-import 'package:andax/screens/story_screen.dart';
+import 'package:andax/modules/story_info/screens/story_info.dart';
 import 'package:andax/store.dart';
 import 'package:andax/widgets/paging_list.dart';
 import 'package:andax/widgets/rounded_back_button.dart';
