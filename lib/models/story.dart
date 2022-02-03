@@ -1,9 +1,10 @@
+import 'package:algolia/algolia.dart';
 import 'package:andax/shared/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'actor.dart';
 import 'content_meta_data.dart';
 import 'node.dart';
-import 'package:algolia/algolia.dart';
 
 class Story {
   Map<String, Node> nodes;

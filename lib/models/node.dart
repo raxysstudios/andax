@@ -1,4 +1,5 @@
 import 'package:andax/shared/utils.dart';
+
 import 'transition.dart';
 
 enum EndingType { win, loss }

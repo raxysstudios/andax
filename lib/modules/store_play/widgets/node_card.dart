@@ -1,9 +1,10 @@
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/translation_asset.dart';
-import '../utils/get_translation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+
+import '../utils/get_translation.dart';
 
 class NodeCard extends StatefulWidget {
   final Node node;

@@ -1,15 +1,17 @@
 import 'dart:async';
 import 'dart:math';
+
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation_asset.dart';
-import '../utils/get_translation.dart';
 import 'package:andax/modules/store_play/widgets/happiness_slider.dart';
 import 'package:andax/modules/store_play/widgets/node_card.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_animations/simple_animations.dart';
+
+import '../utils/get_translation.dart';
 
 class PlayScreen extends StatefulWidget {
   final Story story;

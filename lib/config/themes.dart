@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import './themes/light.dart';
+
 import './themes/dark.dart';
+import './themes/light.dart';
 
 class Themes {
   final ThemeData light;

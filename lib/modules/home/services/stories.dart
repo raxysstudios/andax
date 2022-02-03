@@ -1,6 +1,5 @@
-import 'package:andax/store.dart';
-
 import 'package:andax/models/story.dart';
+import 'package:andax/store.dart';
 
 Future<List<StoryInfo>> getStories(
   String index, {

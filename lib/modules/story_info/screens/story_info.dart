@@ -1,13 +1,14 @@
-import 'package:andax/modules/story_info/services/content_loader.dart';
-import 'package:andax/modules/story_editor/screens/narrative_editor.dart';
-import 'package:andax/modules/story_translator/screens/crowdsourcing.dart';
+import 'package:andax/models/story.dart';
 import 'package:andax/modules/store_play/screens/play.dart';
+import 'package:andax/modules/story_editor/screens/narrative_editor.dart';
+import 'package:andax/modules/story_info/services/content_loader.dart';
+import 'package:andax/modules/story_translator/screens/crowdsourcing.dart';
 import 'package:andax/shared/widgets/loading_dialog.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:andax/models/story.dart';
+
 import '../services/likes.dart';
 
 class StoryScreen extends StatefulWidget {

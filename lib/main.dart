@@ -2,6 +2,7 @@ import 'package:andax/config/themes.dart';
 import 'package:andax/modules/home/screens/home.dart';
 import 'package:andax/store.dart';
 import 'package:flutter/material.dart';
+
 import 'modules/home/screens/splash.dart';
 
 void main() {

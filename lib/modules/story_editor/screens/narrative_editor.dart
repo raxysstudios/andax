@@ -1,9 +1,9 @@
-import 'package:andax/modules/story_editor/screens/info_editor.dart';
 import 'package:andax/models/content_meta_data.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
+import 'package:andax/modules/story_editor/screens/info_editor.dart';
 import 'package:andax/shared/widgets/loading_dialog.dart';
 import 'package:andax/shared/widgets/maybe_pop_alert.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';

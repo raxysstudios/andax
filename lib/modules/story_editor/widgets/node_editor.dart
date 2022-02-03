@@ -1,15 +1,15 @@
-import 'package:andax/modules/story_editor/widgets/narrative_list_view.dart';
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
+import 'package:andax/modules/story_editor/widgets/narrative_list_view.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-import 'actor_picker.dart';
 import '../screens/narrative_editor.dart';
+import 'actor_picker.dart';
 
 class NodeEditor extends StatefulWidget {
   const NodeEditor({
