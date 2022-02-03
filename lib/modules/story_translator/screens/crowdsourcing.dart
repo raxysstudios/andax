@@ -1,8 +1,8 @@
 import 'package:andax/models/content_meta_data.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/models/translation.dart';
-import 'package:andax/widgets/loading_dialog.dart';
-import 'package:andax/widgets/rounded_back_button.dart';
+import 'package:andax/shared/widgets/loading_dialog.dart';
+import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

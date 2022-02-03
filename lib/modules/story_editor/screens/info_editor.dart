@@ -2,8 +2,8 @@ import 'package:andax/models/actor.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:andax/utils.dart';
-import 'package:andax/widgets/rounded_back_button.dart';
+import 'package:andax/shared/utils.dart';
+import 'package:andax/shared/widgets/rounded_back_button.dart';
 
 import 'package:flutter/material.dart';
 

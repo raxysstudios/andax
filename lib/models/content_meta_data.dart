@@ -1,4 +1,4 @@
-import 'package:andax/utils.dart';
+import 'package:andax/shared/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 

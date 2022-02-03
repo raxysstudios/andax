@@ -4,7 +4,7 @@ import 'package:andax/models/node.dart';
 import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:andax/widgets/rounded_back_button.dart';
+import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
