@@ -1,4 +1,4 @@
-import 'package:andax/editor/story_editor_screen.dart';
+import 'package:andax/modules/story_editor/screens/narrative_editor.dart';
 import 'package:andax/get_stories.dart';
 import 'package:andax/modules/profile/screens/profile.dart';
 import 'package:andax/screens/search_screen.dart';

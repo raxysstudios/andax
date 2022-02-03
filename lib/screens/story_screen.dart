@@ -1,5 +1,5 @@
 import 'package:andax/content_loader.dart';
-import 'package:andax/editor/story_editor_screen.dart';
+import 'package:andax/modules/story_editor/screens/narrative_editor.dart';
 import 'package:andax/screens/crowdsourcing_screen.dart';
 import 'package:andax/screens/play_screen.dart';
 import 'package:andax/widgets/loading_dialog.dart';

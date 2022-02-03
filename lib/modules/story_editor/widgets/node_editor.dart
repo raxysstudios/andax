@@ -1,4 +1,4 @@
-import 'package:andax/editor/narrative_list_view.dart';
+import 'package:andax/modules/story_editor/widgets/narrative_list_view.dart';
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/transition.dart';
@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 import 'actor_picker.dart';
-import 'story_editor_screen.dart';
+import '../screens/narrative_editor.dart';
 
 class NodeEditor extends StatefulWidget {
   const NodeEditor({

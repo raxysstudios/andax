@@ -7,8 +7,8 @@ import 'package:andax/widgets/rounded_back_button.dart';
 
 import 'package:flutter/material.dart';
 
-import 'story_editor_screen.dart';
-import 'narrative_list_view.dart';
+import 'narrative_editor.dart';
+import '../widgets/narrative_list_view.dart';
 
 class StoryInfoEditor extends StatefulWidget {
   const StoryInfoEditor({

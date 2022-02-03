@@ -1,4 +1,4 @@
-import 'package:andax/editor/story_info_editor.dart';
+import 'package:andax/modules/story_editor/screens/info_editor.dart';
 import 'package:andax/models/content_meta_data.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
@@ -13,8 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:uuid/uuid.dart';
 
-import 'narrative_list_view.dart';
-import 'node_editor.dart';
+import '../widgets/narrative_list_view.dart';
+import '../widgets/node_editor.dart';
 
 class StoryEditorScreen extends StatefulWidget {
   const StoryEditorScreen({

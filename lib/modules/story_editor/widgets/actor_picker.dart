@@ -1,10 +1,10 @@
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:andax/widgets/modal_picker.dart';
+import 'package:andax/modules/story_editor/widgets/modal_picker.dart';
 import 'package:andax/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 
-import 'story_editor_screen.dart';
+import '../screens/narrative_editor.dart';
 
 Future<Actor?> showActorPickerSheet(
   StoryEditorState editor,
