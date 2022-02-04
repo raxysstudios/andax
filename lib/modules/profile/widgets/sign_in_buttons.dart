@@ -66,13 +66,12 @@ class _SignInButtonsState extends State<SignInButtons> {
 
   Future<AuthCredential?> getGoogleCredentials() async {
     final user = await GoogleSignIn().signIn();
-    if (user != null) {
-      final auth = await user.authentication;
-      return GoogleAuthProvider.credential(
-        accessToken: auth.accessToken,
-        idToken: auth.idToken,
-      );
-    }
+    if (user == null) return null;
+    final auth = await user.authentication;
+    return GoogleAuthProvider.credential(
+      accessToken: auth.accessToken,
+      idToken: auth.idToken,
+    );
   }
 
   Future<AuthCredential?> getAppleCredentials() async {
@@ -94,7 +93,8 @@ class _SignInButtonsState extends State<SignInButtons> {
       final provider = OAuthProvider('apple.com')
         ..addScope('email')
         ..addScope('name');
-      await FirebaseAuth.instance.signInWithPopup(provider);
+      final creds = await FirebaseAuth.instance.signInWithPopup(provider);
+      return creds.credential;
     } else {
       final rawNonce = generateNonce();
       final nonce = sha256ofString(rawNonce);
