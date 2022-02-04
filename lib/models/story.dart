@@ -92,7 +92,9 @@ class StoryInfo {
       likes: json['likes'] as int? ?? 0,
       views: json['views'] as int? ?? 0,
       tags: json2list(json['tags']),
-      lastUpdateAt: (json['lastUpdateAt'] as Timestamp?)?.toDate(),
+      lastUpdateAt: json['lastUpdateAt'] == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(json['lastUpdateAt'] as int),
     );
   }
 }
