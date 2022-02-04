@@ -3,7 +3,7 @@ import 'package:andax/modules/home/screens/search.dart';
 import 'package:andax/modules/home/services/stories.dart';
 import 'package:andax/modules/home/widgets/raxys_logo.dart';
 import 'package:andax/modules/home/widgets/story_card.dart';
-import 'package:andax/modules/profile/screens/profile.dart';
+import 'package:andax/modules/profile/screens/auth_gate.dart';
 import 'package:andax/modules/story_editor/screens/narrative_editor.dart';
 import 'package:andax/modules/story_info/screens/story_info.dart';
 import 'package:andax/shared/extensions.dart';
@@ -137,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
               await Navigator.push<void>(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const ProfileScreen(),
+                  builder: (context) => const AuthGate(),
                 ),
               );
               setState(() {});

@@ -1,5 +1,4 @@
 import 'package:andax/models/story.dart';
-import 'package:andax/modules/profile/widgets/sign_in_buttons.dart';
 import 'package:andax/modules/story_info/screens/story_info.dart';
 import 'package:andax/shared/widgets/paging_list.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
@@ -128,6 +127,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return const Scaffold();
+
     return Scaffold(
       appBar: AppBar(
         leading: const RoundedBackButton(),
@@ -135,9 +137,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       body: ListView(
         children: [
-          SignInButtons(
-            onSignOut: updateCounters,
-            onSingIn: updateCounters,
+          ListTile(
+            leading: CircleAvatar(
+              backgroundImage:
+                  user.photoURL == null ? null : NetworkImage(user.photoURL!),
+              backgroundColor: Colors.transparent,
+            ),
+            title: Text(user.displayName ?? '[no name]'),
+            subtitle: Text(user.email ?? '[no email]'),
+            trailing: IconButton(
+              onPressed: FirebaseAuth.instance.signOut,
+              icon: const Icon(Icons.logout_rounded),
+              tooltip: 'Sign out',
+            ),
           ),
           if (user != null) ...[
             const Divider(),
