@@ -115,7 +115,7 @@ export const updateStoryMeta = functions
         objectID: context.params.translationID,
         likes: meta.likes ?? 0,
         views: meta.views ?? 0,
-        lastUpdateAt: meta.lastUpdateAt,
+        lastUpdateAt: meta.lastUpdateAt?.getTime(),
         imageUrl: meta.imageUrl,
       });
     });
