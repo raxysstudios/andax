@@ -94,9 +94,7 @@ class StoryInfo {
       tags: json2list(json['tags']),
       lastUpdateAt: json['lastUpdateAt'] == null
           ? null
-          : (Timestamp(json['lastUpdateAt']['_seconds'] as int,
-                  json['lastUpdateAt']['_nanoseconds'] as int))
-              .toDate(),
+          : DateTime.fromMillisecondsSinceEpoch(json['lastUpdateAt'] as int),
     );
   }
 }
