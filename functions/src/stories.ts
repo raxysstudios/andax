@@ -22,14 +22,14 @@ type StoryRecord = {
   imageUrl?:string,
   description?: string,
   tags?: string[],
-  lastUpdateAt?: Date,
+  lastUpdateAt?: number,
 };
 
 type MetaData = {
   id: string,
   authorID: string,
   contributorsIDs?: string[],
-  lastUpdateAt?: Date,
+  lastUpdateAt?: firestore.Timestamp,
   imageUrl?:string,
   likes?: number,
   views?: number,
@@ -115,7 +115,7 @@ export const updateStoryMeta = functions
         objectID: context.params.translationID,
         likes: meta.likes ?? 0,
         views: meta.views ?? 0,
-        lastUpdateAt: meta.lastUpdateAt?.getTime(),
+        lastUpdateAt: meta.lastUpdateAt?.toMillis(),
         imageUrl: meta.imageUrl,
       });
     });
