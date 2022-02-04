@@ -7,18 +7,23 @@ import 'package:andax/store.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterfire_ui/auth.dart' as flutterfire_auth;
+
+import '../config/auth_providers.dart';
 
 typedef LikeItem = MapEntry<DocumentSnapshot, StoryInfo>;
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  final User _user;
+
+  const ProfileScreen(this._user, {Key? key}) : super(key: key);
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  User? get user => FirebaseAuth.instance.currentUser;
+  User get user => widget._user;
   int? likes;
   int? stories;
   int? translations;
@@ -31,41 +36,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> updateCounters() async {
     Future<void> updateLikes() async {
-      likes = null;
-      if (user != null) {
-        likes = await FirebaseFirestore.instance
-            .doc('users/${user!.uid}')
-            .get()
-            .then((r) => r.data()?['likes'] as int? ?? 0);
-      }
+      likes = await FirebaseFirestore.instance
+          .doc('users/${user.uid}')
+          .get()
+          .then((r) => r.data()?['likes'] as int? ?? 0);
       setState(() {});
     }
 
     Future<void> updateStories() async {
-      stories = null;
-      if (user != null) {
-        stories = await algolia.instance
-            .index('stories')
-            .query('')
-            .filters('storyAuthorID:${user!.uid}')
-            .setHitsPerPage(0)
-            .getObjects()
-            .then((r) => r.nbHits);
-      }
+      stories = await algolia.instance
+          .index('stories')
+          .query('')
+          .filters('storyAuthorID:${user.uid}')
+          .setHitsPerPage(0)
+          .getObjects()
+          .then((r) => r.nbHits);
       setState(() {});
     }
 
     Future<void> updateTranslations() async {
-      translations = null;
-      if (user != null) {
-        translations = await algolia.instance
-            .index('stories')
-            .query('')
-            .filters('translationAuthorID:${user!.uid}')
-            .setHitsPerPage(0)
-            .getObjects()
-            .then((r) => r.nbHits);
-      }
+      translations = await algolia.instance
+          .index('stories')
+          .query('')
+          .filters('translationAuthorID:${user.uid}')
+          .setHitsPerPage(0)
+          .getObjects()
+          .then((r) => r.nbHits);
       setState(() {});
     }
 
@@ -127,83 +123,62 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return const Scaffold();
-
-    return Scaffold(
-      appBar: AppBar(
-        leading: const RoundedBackButton(),
-        title: const Text('Profile'),
-      ),
-      body: ListView(
-        children: [
-          ListTile(
-            leading: CircleAvatar(
-              backgroundImage:
-                  user.photoURL == null ? null : NetworkImage(user.photoURL!),
-              backgroundColor: Colors.transparent,
-            ),
-            title: Text(user.displayName ?? '[no name]'),
-            subtitle: Text(user.email ?? '[no email]'),
-            trailing: IconButton(
-              onPressed: FirebaseAuth.instance.signOut,
-              icon: const Icon(Icons.logout_rounded),
-              tooltip: 'Sign out',
-            ),
-          ),
-          if (user != null) ...[
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.favorite_rounded),
-              title: const Text('Liked stories'),
-              trailing: loadingChip(likes),
-              onTap: () => Navigator.push<void>(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Scaffold(
-                    appBar: AppBar(
-                      leading: const RoundedBackButton(),
-                      title: const Text('Liked Stories'),
-                    ),
-                    body: PagingList<LikeItem>(
-                      onRequest: getLikes,
-                      builder: (context, item, index) {
-                        return StoryTile(
-                          item.value,
-                          onTap: () => Navigator.push<void>(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => StoryScreen(item.value),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+    return flutterfire_auth.ProfileScreen(
+      providerConfigs: providerConfigs,
+      avatarSize: 100,
+      children: [
+        const SizedBox(height: 16),
+        const Divider(),
+        ListTile(
+          leading: const Icon(Icons.favorite_rounded),
+          title: const Text('Liked stories'),
+          trailing: loadingChip(likes),
+          onTap: () => Navigator.push<void>(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Scaffold(
+                appBar: AppBar(
+                  leading: const RoundedBackButton(),
+                  title: const Text('Liked Stories'),
+                ),
+                body: PagingList<LikeItem>(
+                  onRequest: getLikes,
+                  builder: (context, item, index) {
+                    return StoryTile(
+                      item.value,
+                      onTap: () => Navigator.push<void>(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => StoryScreen(item.value),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
-            buildStoriesTile(
-              Icons.history_edu_rounded,
-              'Created stories',
-              stories,
-              getStories,
-            ),
-            buildStoriesTile(
-              Icons.translate_rounded,
-              'Created translations',
-              translations,
-              getTranslations,
-            ),
-          ]
-        ],
-      ),
+          ),
+        ),
+        buildStoriesTile(
+          Icons.history_edu_rounded,
+          'Created stories',
+          stories,
+          getStories,
+        ),
+        buildStoriesTile(
+          Icons.translate_rounded,
+          'Created translations',
+          translations,
+          getTranslations,
+        ),
+        const Divider(),
+      ],
     );
   }
 
   Future<List<LikeItem>> getLikes(int page, LikeItem? last) async {
     var query = FirebaseFirestore.instance
-        .collection('users/${user!.uid}/likes')
+        .collection('users/${user.uid}/likes')
         .orderBy('date', descending: true)
         .limit(20);
     if (last != null) query = query.startAfterDocument(last.key);
@@ -239,7 +214,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final hits = await algolia.instance
         .index('stories')
         .query('')
-        .filters('storyAuthorID:${user!.uid}')
+        .filters('storyAuthorID:${user.uid}')
         .setPage(page)
         .getObjects()
         .then((r) => r.hits);
@@ -250,7 +225,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final hits = await algolia.instance
         .index('stories')
         .query('')
-        .filters('translationAuthorID:${user!.uid}')
+        .filters('translationAuthorID:${user.uid}')
         .setPage(page)
         .getObjects()
         .then((r) => r.hits);
