@@ -34,7 +34,11 @@ class _StoryScreenState extends State<StoryScreen> {
   void initState() {
     super.initState();
     _likeService = LikeService(info);
-    setState(() async => liked = await _likeService.updateLikedState());
+    _likeService.updateLikedState().then((liked) {
+      setState(() {
+        this.liked = liked;
+      });
+    });
   }
 
   Future<void> play() async {
