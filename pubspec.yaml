@@ -23,12 +23,15 @@ dependencies:
     git: https://github.com/Ali-Azmoud/flutter_xlider.git
   sign_in_with_apple: ^3.3.0
   crypto: ^3.0.1
+  json_annotation: ^4.4.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: ^0.9.0
   flutter_lints: ^1.0.4
+  build_runner: ^2.1.7
+  json_serializable: ^6.1.4
 
 flutter_icons:
   image_path: "assets/icon.png"
