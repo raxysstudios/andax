@@ -24,6 +24,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  User? get user => FirebaseAuth.instance.currentUser;
+
   Widget categoryCards(IconData icon, String title, String index) {
     return Column(
       children: [
@@ -142,12 +144,12 @@ class _HomeScreenState extends State<HomeScreen> {
               );
               setState(() {});
             },
-            icon: const Icon(Icons.person_rounded),
+            icon: Icon(user == null ? Icons.login : Icons.person_rounded),
           ),
           const SizedBox(width: 4),
         ],
       ),
-      floatingActionButton: FirebaseAuth.instance.currentUser == null
+      floatingActionButton: user == null
           ? null
           : FloatingActionButton.extended(
               onPressed: () async {
