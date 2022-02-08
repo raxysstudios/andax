@@ -1,4 +1,3 @@
-import 'package:andax/shared/utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'transition.dart';

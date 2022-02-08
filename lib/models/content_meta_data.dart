@@ -1,6 +1,4 @@
-import 'package:andax/shared/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:enum_to_string/enum_to_string.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'content_meta_data.g.dart';

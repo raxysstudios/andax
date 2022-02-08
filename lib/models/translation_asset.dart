@@ -1,7 +1,5 @@
 import 'package:andax/models/content_meta_data.dart';
 import 'package:andax/models/translation.dart';
-import 'package:andax/shared/utils.dart';
-import 'package:enum_to_string/enum_to_string.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'translation_asset.g.dart';
