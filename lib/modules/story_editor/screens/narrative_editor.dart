@@ -42,9 +42,9 @@ class StoryEditorState extends State<StoryEditorScreen> {
   late StoryInfo? info = widget.info;
   late final Story story = widget.story ??
       Story(
-        nodes: {},
+        nodes: [],
         startNodeId: '',
-        actors: {},
+        actors: [],
         metaData: meta,
       );
   late final Translation translation = widget.translation ??

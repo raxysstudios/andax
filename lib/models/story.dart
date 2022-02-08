@@ -1,56 +1,49 @@
 import 'package:algolia/algolia.dart';
 import 'package:andax/shared/utils.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 import 'actor.dart';
 import 'content_meta_data.dart';
 import 'node.dart';
 
+part 'story.g.dart';
+
+@JsonSerializable()
 class Story {
-  final Map<String, Node> nodes;
-  final Map<String, Actor> actors;
+  @JsonKey(name: 'nodes')
+  List<Node> _nodes;
+  @JsonKey(name: 'actors')
+  List<Actor> _actors;
+  Map<String, Node> get nodes => {for (final node in _nodes) node.id: node};
+  Map<String, Actor> get actors =>
+      {for (final actor in _actors) actor.id: actor};
   String startNodeId;
   final ContentMetaData metaData;
 
   Story({
-    required this.nodes,
+    required List<Node> nodes,
     required this.startNodeId,
-    required this.actors,
+    required List<Actor> actors,
     required this.metaData,
-  });
+  })  : _nodes = nodes,
+        _actors = actors;
 
-  Story.fromJson(
-    Map<String, dynamic> json, {
-    required String id,
-  }) : this(
-          nodes: {
-            for (final node in listFromJson(
-              json['nodes'],
-              (dynamic j) => Node.fromJson(j as Map<String, dynamic>),
-            ))
-              node.id: node
-          },
-          startNodeId: json['startNodeId'] as String,
-          actors: {
-            for (final actor in listFromJson(
-              json['actors'],
-              (dynamic j) => Actor.fromJson(j as Map<String, dynamic>),
-            ))
-              actor.id: actor
-          },
-          metaData: ContentMetaData.fromJson(
-            json['metaData'] as Map<String, dynamic>,
-            id: id,
-          ),
-        );
+  factory Story.fromJson(Map<String, dynamic> json) => _$StoryFromJson(json);
 
-  Map<String, dynamic> toJson([bool withMeta = false]) => <String, dynamic>{
-        'startNodeId': startNodeId,
-        'nodes': nodes.values.map((n) => n.toJson()).toList(),
-        'actors': actors.values.map((a) => a.toJson()).toList(),
-        if (withMeta) 'metaData': metaData.toJson(),
-      };
+  Map<String, dynamic> toJson([bool withMeta = false]) {
+    final json = _$StoryToJson(this);
+    if (!withMeta) {
+      json.remove('metaData');
+    }
+    return json;
+  }
 }
 
+// Workaround since json_serializable doesn't support constructor tearoff
+DateTime? _dateFromMillis(int? millis) =>
+    millis == null ? null : DateTime.fromMillisecondsSinceEpoch(millis);
+
+@JsonSerializable()
 class StoryInfo {
   final String storyID;
   final String storyAuthorID;
@@ -62,6 +55,7 @@ class StoryInfo {
   final String? imageUrl;
   final int likes;
   final int views;
+  @JsonKey(fromJson: _dateFromMillis)
   final DateTime? lastUpdateAt;
 
   const StoryInfo({
@@ -80,20 +74,6 @@ class StoryInfo {
 
   factory StoryInfo.fromAlgoliaHit(AlgoliaObjectSnapshot hit) {
     final json = hit.data;
-    return StoryInfo(
-      storyID: json['storyID'] as String,
-      storyAuthorID: json['storyAuthorID'] as String,
-      translationID: json['translationID'] as String,
-      translationAuthorID: json['translationAuthorID'] as String,
-      title: json['title'] as String,
-      description: json['description'] as String?,
-      imageUrl: json['imageUrl'] as String?,
-      likes: json['likes'] as int? ?? 0,
-      views: json['views'] as int? ?? 0,
-      tags: json2list(json['tags']),
-      lastUpdateAt: json['lastUpdateAt'] == null
-          ? null
-          : DateTime.fromMillisecondsSinceEpoch(json['lastUpdateAt'] as int),
-    );
+    return _$StoryInfoFromJson(json);
   }
 }

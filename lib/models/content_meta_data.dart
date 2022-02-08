@@ -1,15 +1,24 @@
 import 'package:andax/shared/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enum_to_string/enum_to_string.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'content_meta_data.g.dart';
 
 enum ContentStatus { public, unlisted, private, pending }
 
+DateTime _timestampToDate(Timestamp timestamp) => timestamp.toDate();
+Timestamp _dateToTimestamp(DateTime date) => Timestamp.fromDate(date);
+
+@JsonSerializable()
 class ContentMetaData {
   final String id;
   final List<String> contributorsIds;
+  @JsonKey(defaultValue: '')
   final String authorId;
   final String? imageUrl;
-  final Timestamp lastUpdateAt;
+  @JsonKey(fromJson: _timestampToDate, toJson: _dateToTimestamp)
+  final DateTime lastUpdateAt;
   final int likes;
   final int views;
   final int lastIndexedViews;
@@ -20,43 +29,15 @@ class ContentMetaData {
     this.authorId, {
     this.imageUrl,
     this.contributorsIds = const [],
-    Timestamp? lastUpdateAt,
+    DateTime? lastUpdateAt,
     this.likes = 0,
     this.views = 0,
     this.lastIndexedViews = 0,
     this.status = ContentStatus.private,
-  }) : lastUpdateAt = lastUpdateAt ?? Timestamp.now();
+  }) : lastUpdateAt = lastUpdateAt ?? DateTime.now();
 
-  ContentMetaData.fromJson(
-    Map<String, dynamic> json, {
-    required String id,
-  }) : this(
-          id,
-          json['authorId'] as String? ?? '',
-          imageUrl: json['imageUrl'] as String?,
-          contributorsIds: listFromJson(
-            json['contributorsIds'],
-            (dynamic c) => c as String,
-          ),
-          lastUpdateAt: json['lastUpdateAt'] as Timestamp,
-          likes: json['likes'] as int? ?? 0,
-          views: json['views'] as int? ?? 0,
-          lastIndexedViews: json['lastIndexedViews'] as int? ?? 0,
-          status: EnumToString.fromString(
-                ContentStatus.values,
-                json['status'] as String? ?? '',
-              ) ??
-              ContentStatus.private,
-        );
+  factory ContentMetaData.fromJson(Map<String, dynamic> json) =>
+      _$ContentMetaDataFromJson(json);
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'contributorsIds': contributorsIds,
-        'authorId': authorId,
-        'imageUrl': imageUrl,
-        'lastUpdateAt': lastUpdateAt,
-        'likes': likes,
-        'views': views,
-        'lastIndexedViews': lastIndexedViews,
-        'status': EnumToString.convertToString(status),
-      };
+  Map<String, dynamic> toJson() => _$ContentMetaDataToJson(this)..remove('id');
 }

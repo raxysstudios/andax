@@ -1,9 +1,13 @@
 import 'package:andax/shared/utils.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 import 'transition.dart';
 
+part 'node.g.dart';
+
 enum EndingType { win, loss }
 
+@JsonSerializable()
 class Node {
   final String id;
   String? actorId;
@@ -17,21 +21,7 @@ class Node {
     this.autoTransition = false,
   });
 
-  Node.fromJson(Map<String, dynamic> json)
-      : this(
-          json['id'] as String,
-          actorId: json['actorId'] as String?,
-          transitions: listFromJson(
-            json['transitions'],
-            (dynamic j) => Transition.fromJson(j as Map<String, dynamic>),
-          ),
-          autoTransition: json['autoTransition'] as bool? ?? false,
-        );
+  factory Node.fromJson(Map<String, dynamic> json) => _$NodeFromJson(json);
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
-        'actorId': actorId,
-        'transitions': transitions?.map((c) => c.toJson()).toList(),
-        'autoTransition': autoTransition,
-      };
+  Map<String, dynamic> toJson() => _$NodeToJson(this);
 }
