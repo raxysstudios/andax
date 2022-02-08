@@ -117,6 +117,7 @@ class _NodeEditorState extends State<NodeEditor> {
           final transition = Transition(id, targetNodeId: node.id);
           node.transitions!.add(transition);
           translation[id] = MessageTranslation(
+            id: id,
             metaData: widget.editor.meta,
           );
           selectTransitionNode(transition);

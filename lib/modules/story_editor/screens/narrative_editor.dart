@@ -53,6 +53,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
         metaData: meta,
         assets: {
           'story': StoryTranslation(
+            id: '',
             title: 'New story',
             metaData: meta,
           )
@@ -170,7 +171,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
             final id = uuid.v4();
             final node = Node(id);
             story.nodes[id] = node;
-            translation[id] = MessageTranslation(metaData: meta);
+            translation[id] = MessageTranslation(id: id, metaData: meta);
             openNode(node);
           },
           tooltip: 'Add node',
