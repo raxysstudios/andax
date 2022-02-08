@@ -2,7 +2,6 @@ import 'package:algolia/algolia.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'actor.dart';
-import 'content_meta_data.dart';
 import 'node.dart';
 
 part 'story.g.dart';
@@ -17,25 +16,17 @@ class Story {
   Map<String, Actor> get actors =>
       {for (final actor in _actors) actor.id: actor};
   String startNodeId;
-  final ContentMetaData metaData;
 
   Story({
     required List<Node> nodes,
     required this.startNodeId,
     required List<Actor> actors,
-    required this.metaData,
   })  : _nodes = nodes,
         _actors = actors;
 
   factory Story.fromJson(Map<String, dynamic> json) => _$StoryFromJson(json);
 
-  Map<String, dynamic> toJson([bool withMeta = false]) {
-    final json = _$StoryToJson(this);
-    if (!withMeta) {
-      json.remove('metaData');
-    }
-    return json;
-  }
+  Map<String, dynamic> toJson() => _$StoryToJson(this);
 }
 
 // Workaround since json_serializable doesn't support constructor tearoff

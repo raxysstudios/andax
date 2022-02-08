@@ -1,4 +1,3 @@
-import 'package:andax/models/content_meta_data.dart';
 import 'package:andax/models/translation.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -10,20 +9,14 @@ enum AssetType {
   actor,
 }
 
-// ignore: prefer_void_to_null
-Null toNull(dynamic _) => null;
-
 @JsonSerializable(createFactory: false)
 abstract class TranslationAsset {
   final String id;
   final AssetType assetType;
-  @JsonKey(toJson: toNull, includeIfNull: false)
-  final ContentMetaData metaData;
 
   const TranslationAsset({
     required this.id,
     required this.assetType,
-    required this.metaData,
   });
 
   static TranslationAsset? get(
@@ -33,8 +26,6 @@ abstract class TranslationAsset {
       translation[id];
 
   factory TranslationAsset.fromJson(Map<String, dynamic> json) {
-    json['metaData']['id'] = json['id'];
-
     final type = _$AssetTypeEnumMap.entries
         .firstWhere((element) => element.value == json['assetType'] as String)
         .key;
@@ -50,8 +41,6 @@ abstract class TranslationAsset {
         return MessageTranslation(
           id: json['id'] as String,
           text: 'ERROR',
-          metaData: ContentMetaData.fromJson(
-              json['metaData'] as Map<String, dynamic>),
         );
     }
   }
@@ -70,8 +59,7 @@ class StoryTranslation extends TranslationAsset {
     required this.title,
     this.description,
     this.tags,
-    required ContentMetaData metaData,
-  }) : super(id: id, metaData: metaData, assetType: AssetType.story);
+  }) : super(id: id, assetType: AssetType.story);
 
   factory StoryTranslation.fromJson(Map<String, dynamic> json) =>
       _$StoryTranslationFromJson(json);
@@ -95,8 +83,7 @@ class MessageTranslation extends TranslationAsset {
     required String id,
     this.text,
     this.audioUrl,
-    required ContentMetaData metaData,
-  }) : super(id: id, metaData: metaData, assetType: AssetType.message);
+  }) : super(id: id, assetType: AssetType.message);
 
   factory MessageTranslation.fromJson(Map<String, dynamic> json) =>
       _$MessageTranslationFromJson(json);
@@ -126,8 +113,7 @@ class ActorTranslation extends TranslationAsset {
   ActorTranslation({
     required String id,
     this.name = '',
-    required ContentMetaData metaData,
-  }) : super(id: id, metaData: metaData, assetType: AssetType.actor);
+  }) : super(id: id, assetType: AssetType.actor);
 
   factory ActorTranslation.fromJson(Map<String, dynamic> json) =>
       _$ActorTranslationFromJson(json);

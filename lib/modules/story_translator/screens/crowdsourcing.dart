@@ -1,10 +1,8 @@
-import 'package:andax/models/content_meta_data.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/shared/widgets/loading_dialog.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class CrowdsourcingScreen extends StatefulWidget {
@@ -24,8 +22,7 @@ class CrowdsourcingScreen extends StatefulWidget {
 class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
   final translations = <String, TranslationAsset>{};
   late final origins = <String, TranslationAsset>{
-    for (final translation in widget.translations)
-      translation.metaData.id: translation,
+    for (final translation in widget.translations) translation.id: translation,
   };
   var language = '';
 
@@ -62,12 +59,12 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
           for (final a in origins.values.where(
             (w) => w.assetType == AssetType.actor,
           ))
-            ...buildFields(a.metaData.id),
+            ...buildFields(a.id),
           const Divider(height: 0),
           for (final a in origins.values.where(
             (w) => w.assetType == AssetType.message,
           ))
-            ...buildFields(a.metaData.id),
+            ...buildFields(a.id),
         ],
       ),
     );
@@ -129,7 +126,6 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
             translations[id] = MessageTranslation(
               id: id,
               text: r,
-              metaData: ContentMetaData(id, ''),
             );
           },
         );
@@ -145,10 +141,6 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
             translations[id] = ActorTranslation(
               id: id,
               name: r,
-              metaData: ContentMetaData(
-                id,
-                FirebaseAuth.instance.currentUser?.uid ?? '',
-              ),
             );
           },
         );
@@ -167,8 +159,6 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
                 title: r,
                 description: translation?.description,
                 tags: translation?.tags,
-                metaData: ContentMetaData(
-                    id, FirebaseAuth.instance.currentUser?.uid ?? ''),
               );
             },
           ),
@@ -183,7 +173,6 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
                 title: translation?.title ?? '<title>',
                 description: r,
                 tags: translation?.tags,
-                metaData: ContentMetaData(id, ''),
               );
             },
           ),
@@ -200,7 +189,6 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
                 tags: r.isEmpty
                     ? null
                     : r.split(' ').where((t) => t.isNotEmpty).toList(),
-                metaData: ContentMetaData(id, ''),
               );
             },
           ),
@@ -216,10 +204,6 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
         .add(
           Translation(
             language: language,
-            metaData: ContentMetaData(
-              '',
-              FirebaseAuth.instance.currentUser?.uid ?? '',
-            ),
             assets: {},
           ).toJson(),
         )

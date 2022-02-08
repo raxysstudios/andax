@@ -1,4 +1,3 @@
-import 'package:andax/models/content_meta_data.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
@@ -8,7 +7,6 @@ import 'package:andax/shared/widgets/loading_dialog.dart';
 import 'package:andax/shared/widgets/maybe_pop_alert.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:uuid/uuid.dart';
@@ -34,10 +32,6 @@ class StoryEditorScreen extends StatefulWidget {
 
 class StoryEditorState extends State<StoryEditorScreen> {
   final uuid = const Uuid();
-  final meta = ContentMetaData(
-    '',
-    FirebaseAuth.instance.currentUser?.uid ?? '',
-  );
 
   late StoryInfo? info = widget.info;
   late final Story story = widget.story ??
@@ -45,17 +39,14 @@ class StoryEditorState extends State<StoryEditorScreen> {
         nodes: [],
         startNodeId: '',
         actors: [],
-        metaData: meta,
       );
   late final Translation translation = widget.translation ??
       Translation(
         language: '',
-        metaData: meta,
         assets: {
           'story': StoryTranslation(
             id: '',
             title: 'New story',
-            metaData: meta,
           )
         },
       );
@@ -93,7 +84,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
     final sdb = FirebaseFirestore.instance.collection('stories');
     var sid = widget.info?.storyID;
     if (sid == null) {
-      sid = await sdb.add(story.toJson(true)).then((r) => r.id);
+      sid = await sdb.add(story.toJson()).then((r) => r.id);
     } else {
       await sdb.doc(widget.info?.storyID).update(story.toJson());
     }
@@ -101,7 +92,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
     final tdb = sdb.doc(sid).collection('translations');
     var tid = widget.info?.translationID;
     if (tid == null) {
-      tid = await tdb.add(translation.toJson(true)).then((r) => r.id);
+      tid = await tdb.add(translation.toJson()).then((r) => r.id);
     } else {
       await tdb.doc(tid).update(translation.toJson());
     }
@@ -171,7 +162,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
             final id = uuid.v4();
             final node = Node(id);
             story.nodes[id] = node;
-            translation[id] = MessageTranslation(id: id, metaData: meta);
+            translation[id] = MessageTranslation(id: id);
             openNode(node);
           },
           tooltip: 'Add node',

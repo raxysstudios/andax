@@ -39,7 +39,6 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
           translation[id] = ActorTranslation(
             id: id,
             name: 'Actor #${story.actors.length}',
-            metaData: widget.editor.meta,
           );
         }),
         tooltip: 'Add actor',
