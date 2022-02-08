@@ -5,15 +5,15 @@ import 'package:enum_to_string/enum_to_string.dart';
 enum ContentStatus { public, unlisted, private, pending }
 
 class ContentMetaData {
-  String id;
-  List<String> contributorsIds;
-  String authorId;
-  String? imageUrl;
-  Timestamp lastUpdateAt;
-  int likes;
-  int views;
-  int lastIndexedViews;
-  ContentStatus status;
+  final String id;
+  final List<String> contributorsIds;
+  final String authorId;
+  final String? imageUrl;
+  final Timestamp lastUpdateAt;
+  final int likes;
+  final int views;
+  final int lastIndexedViews;
+  final ContentStatus status;
 
   ContentMetaData(
     this.id,

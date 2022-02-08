@@ -6,7 +6,7 @@ enum ActorType {
 }
 
 class Actor {
-  String id;
+  final String id;
   ActorType type;
 
   Actor({

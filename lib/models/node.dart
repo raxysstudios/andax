@@ -5,7 +5,7 @@ import 'transition.dart';
 enum EndingType { win, loss }
 
 class Node {
-  String id;
+  final String id;
   String? actorId;
   List<Transition>? transitions;
   bool autoTransition;

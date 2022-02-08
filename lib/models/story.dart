@@ -6,10 +6,10 @@ import 'content_meta_data.dart';
 import 'node.dart';
 
 class Story {
-  Map<String, Node> nodes;
-  Map<String, Actor> actors;
+  final Map<String, Node> nodes;
+  final Map<String, Actor> actors;
   String startNodeId;
-  ContentMetaData metaData;
+  final ContentMetaData metaData;
 
   Story({
     required this.nodes,

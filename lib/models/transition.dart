@@ -1,7 +1,7 @@
 class Transition {
-  String id;
+  final String id;
   String targetNodeId;
-  int score;
+  final int score;
 
   Transition(
     this.id, {
