@@ -23,6 +23,7 @@ dependencies:
     git: https://github.com/Ali-Azmoud/flutter_xlider.git
   sign_in_with_apple: ^3.3.0
   crypto: ^3.0.1
+  flutterfire_ui: ^0.3.2
 
 dev_dependencies:
   flutter_test:
