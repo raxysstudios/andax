@@ -6,7 +6,7 @@ import 'node.dart';
 
 part 'story.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class Story {
   @JsonKey(name: 'nodes')
   List<Node> _nodes;

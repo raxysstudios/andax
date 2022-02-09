@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'translation.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class Translation {
   String language;
   final Map<String, TranslationAsset> assets;
