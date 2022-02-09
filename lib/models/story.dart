@@ -8,11 +8,11 @@ part 'story.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Story {
-  @JsonKey(name: 'nodes')
   List<Node> _nodes;
-  @JsonKey(name: 'actors')
   List<Actor> _actors;
+  @JsonKey(toJson: _nodesToJson)
   Map<String, Node> get nodes => {for (final node in _nodes) node.id: node};
+  @JsonKey(toJson: _actorsToJson)
   Map<String, Actor> get actors =>
       {for (final actor in _actors) actor.id: actor};
   String startNodeId;
@@ -27,6 +27,12 @@ class Story {
   factory Story.fromJson(Map<String, dynamic> json) => _$StoryFromJson(json);
 
   Map<String, dynamic> toJson() => _$StoryToJson(this);
+
+  static List<Map<String, dynamic>> _nodesToJson(Map<String, Node> nodes) =>
+      nodes.values.map((node) => node.toJson()).toList();
+
+  static List<Map<String, dynamic>> _actorsToJson(Map<String, Actor> actors) =>
+      actors.values.map((node) => node.toJson()).toList();
 }
 
 // Workaround since json_serializable doesn't support constructor tearoff
