@@ -31,8 +31,9 @@ class Translation {
           assets: assets ?? {},
         );
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
+  Map<String, dynamic> toJson([bool withMeta = false]) => <String, dynamic>{
         'language': language,
         'metaData': metaData.toJson(),
+        if (withMeta) 'metaData': metaData.toJson(),
       };
 }

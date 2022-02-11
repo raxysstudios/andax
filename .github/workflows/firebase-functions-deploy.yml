@@ -1,0 +1,35 @@
+name: Deploy to Firebase Functions
+'on':
+  push:
+    branches:
+      - main
+    paths:
+      - 'functions/**'
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: functions
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'npm'
+          cache-dependency-path: 'functions/package-lock.json'
+
+      - name: Build 🛠️
+        run: |
+          npm ci
+          npm install -g firebase-tools
+          npm run build
+
+      - name: Deploy 📦
+        run: npm run deploy
+        env:
+          FIREBASE_TOKEN: '${{ secrets.FIREBASE_TOKEN }}'
