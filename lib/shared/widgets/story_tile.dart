@@ -16,8 +16,8 @@ class StoryTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: SizedBox.square(
-        dimension: 48,
+      leading: AspectRatio(
+        aspectRatio: 1,
         child: Card(
           child: info.imageUrl == null
               ? const Icon(Icons.landscape_rounded)
