@@ -13,12 +13,25 @@ Web version is available at https://andaxapp.web.app/.
 > git clone https://github.com/raxysstudios/andax.git
 > cd andax
 > pub get
+```
+
+And in two separate terminals, run the following commands:
+```sh
+> flutter pub run build_runner watch
+# and
 > flutter run -d chrome --web-port 80
 ```
 
 _Note: Port 80 is required for the web version for authentication to work._
 
 ### Building for release
+
+First run the following command to generate the missing code:
+```sh
+> flutter pub run build_runner build
+```
+
+and then:
 
 #### Android
 
