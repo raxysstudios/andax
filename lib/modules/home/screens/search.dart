@@ -1,3 +1,4 @@
+import 'package:algolia/algolia.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/modules/home/services/stories.dart';
 import 'package:andax/modules/story_info/screens/story_info.dart';
@@ -5,6 +6,7 @@ import 'package:andax/shared/extensions.dart';
 import 'package:andax/shared/widgets/paging_list.dart';
 import 'package:andax/shared/widgets/story_tile.dart';
 import 'package:andax/store.dart';
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -24,8 +26,7 @@ class _SortMode {
 
 class _SearchScreenState extends State<SearchScreen> {
   final textController = TextEditingController();
-  var languages = <String>[];
-  var language = '';
+  late AlgoliaQuery query;
 
   var sorts = [
     _SortMode('stories', 'likes', Icons.favorite_rounded),
@@ -37,12 +38,8 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
-    algolia.index('stories').facetQuery('language', maxFacetHits: 100).then(
-          (fs) => setState(() {
-            languages = fs.map((h) => h.value).toList();
-            if (languages.isNotEmpty) language = languages.first;
-          }),
-        );
+    textController.addListener(updateQuery);
+    updateQuery();
   }
 
   Future<void> openStory(StoryInfo info) {
@@ -52,6 +49,13 @@ class _SearchScreenState extends State<SearchScreen> {
         builder: (context) => StoryScreen(info),
       ),
     );
+  }
+
+  void updateQuery() {
+    print('QU ${textController.text}');
+    setState(() {
+      query = algolia.index(sort.index).query(textController.text);
+    });
   }
 
   @override
@@ -71,57 +75,40 @@ class _SearchScreenState extends State<SearchScreen> {
               onPressed: textController.clear,
               icon: const Icon(Icons.clear_rounded),
             ),
+          Badge(
+            ignorePointer: true,
+            animationType: BadgeAnimationType.fade,
+            position: BadgePosition.topEnd(top: 0, end: 0),
+            badgeColor: Theme.of(context).colorScheme.primary,
+            badgeContent: Icon(sort.icon, size: 16),
+            child: PopupMenuButton<_SortMode>(
+              icon: const Icon(Icons.sort_rounded),
+              onSelected: (s) {
+                sort = s;
+                updateQuery();
+              },
+              itemBuilder: (context) {
+                return [
+                  for (final sort in sorts)
+                    PopupMenuItem(
+                      value: sort,
+                      child: ListTile(
+                        leading: Icon(sort.icon),
+                        title: Text(sort.text.titleCase),
+                      ),
+                    ),
+                ];
+              },
+            ),
+          ),
           const SizedBox(width: 4),
         ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(36),
-          child: Row(
-            children: [
-              PopupMenuButton<_SortMode>(
-                child: Chip(
-                  avatar: Icon(sort.icon),
-                  label: Text('Sort by ${sort.text.titleCase}'),
-                ),
-                onSelected: (s) => setState(() {
-                  sort = s;
-                }),
-                itemBuilder: (context) {
-                  return [
-                    for (final sort in sorts)
-                      PopupMenuItem(
-                        value: sort,
-                        child: ListTile(
-                          leading: Icon(sort.icon),
-                          title: Text(sort.text.titleCase),
-                        ),
-                      ),
-                  ];
-                },
-              ),
-              PopupMenuButton<String>(
-                child: Chip(
-                  avatar: const Icon(Icons.language_rounded),
-                  label: Text('Language: $language'),
-                ),
-                onSelected: (l) => setState(() {
-                  language = l;
-                }),
-                itemBuilder: (context) {
-                  return [
-                    for (final language in languages)
-                      PopupMenuItem(
-                        value: language,
-                        child: Text(language),
-                      ),
-                  ];
-                },
-              )
-            ],
-          ),
-        ),
       ),
       body: PagingList<StoryInfo>(
-        onRequest: (p, l) => getStories(sort.index, page: p),
+        onRequest: (p, l) async {
+          final qs = await query.setPage(p).getObjects();
+          return storiesFromSnapshot(qs);
+        },
         builder: (context, info, index) {
           return StoryTile(
             info,
