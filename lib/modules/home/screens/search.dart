@@ -8,6 +8,7 @@ import 'package:andax/shared/widgets/story_tile.dart';
 import 'package:andax/store.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -26,11 +27,12 @@ class _SortMode {
 
 class _SearchScreenState extends State<SearchScreen> {
   final textController = TextEditingController();
+  final pagingController = PagingController<int, StoryInfo>(firstPageKey: 0);
   late AlgoliaQuery query;
 
   var sorts = [
     _SortMode('stories', 'likes', Icons.favorite_rounded),
-    _SortMode('stories', 'views', Icons.visibility_rounded),
+    _SortMode('stories_views', 'views', Icons.visibility_rounded),
     _SortMode('stories_updated', 'new', Icons.new_releases_rounded),
   ];
   late var sort = sorts.first;
@@ -52,9 +54,9 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void updateQuery() {
-    print('QU ${textController.text}');
     setState(() {
       query = algolia.index(sort.index).query(textController.text);
+      pagingController.refresh();
     });
   }
 
@@ -105,6 +107,7 @@ class _SearchScreenState extends State<SearchScreen> {
         ],
       ),
       body: PagingList<StoryInfo>(
+        controller: pagingController,
         onRequest: (p, l) async {
           final qs = await query.setPage(p).getObjects();
           return storiesFromSnapshot(qs);
