@@ -4,7 +4,7 @@ publish_to: "none"
 version: 1.0.2+10
 
 environment:
-  sdk: ">=2.13.0 <3.0.0"
+  sdk: ">=2.16.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -15,7 +15,6 @@ dependencies:
   google_sign_in: ^5.2.1
   algolia: ^1.0.1
   flutter_markdown: ^0.6.3
-  enum_to_string: ^2.0.1
   simple_animations: ^4.0.1
   uuid: ^3.0.5
   infinite_scroll_pagination: ^3.1.0
@@ -23,6 +22,7 @@ dependencies:
     git: https://github.com/Ali-Azmoud/flutter_xlider.git
   sign_in_with_apple: ^3.3.0
   crypto: ^3.0.1
+  json_annotation: ^4.4.0
   flutterfire_ui: ^0.3.2
   badges: ^2.0.2
 
@@ -31,6 +31,8 @@ dev_dependencies:
     sdk: flutter
   flutter_launcher_icons: ^0.9.0
   flutter_lints: ^1.0.4
+  build_runner: ^2.1.7
+  json_serializable: ^6.1.4
 
 flutter_icons:
   image_path: "assets/icon.png"

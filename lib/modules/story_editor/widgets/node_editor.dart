@@ -116,9 +116,7 @@ class _NodeEditorState extends State<NodeEditor> {
           node.transitions ??= [];
           final transition = Transition(id, targetNodeId: node.id);
           node.transitions!.add(transition);
-          translation[id] = MessageTranslation(
-            metaData: widget.editor.meta,
-          );
+          translation[id] = MessageTranslation(id: id);
           selectTransitionNode(transition);
         }),
         child: const Icon(Icons.add_location_rounded),
