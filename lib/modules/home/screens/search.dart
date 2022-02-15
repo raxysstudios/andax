@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:algolia/algolia.dart';
 import 'package:andax/models/story.dart';
+import 'package:andax/modules/home/services/searching.dart';
 import 'package:andax/modules/home/services/stories.dart';
 import 'package:andax/modules/story_info/screens/story_info.dart';
 import 'package:andax/shared/extensions.dart';
@@ -29,6 +32,7 @@ class _SearchScreenState extends State<SearchScreen> {
   final textController = TextEditingController();
   final pagingController = PagingController<int, StoryInfo>(firstPageKey: 0);
   late AlgoliaQuery query;
+  var timer = Timer(Duration.zero, () {});
 
   var sorts = [
     _SortMode('stories', 'likes', Icons.favorite_rounded),
@@ -40,7 +44,13 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
-    textController.addListener(updateQuery);
+    textController.addListener(() {
+      timer.cancel();
+      timer = Timer(
+        const Duration(milliseconds: 300),
+        updateQuery,
+      );
+    });
     updateQuery();
   }
 
@@ -54,8 +64,9 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void updateQuery() {
+    timer.cancel();
     setState(() {
-      query = algolia.index(sort.index).query(textController.text);
+      query = parseQuery(algolia.index(sort.index), textController.text);
       pagingController.refresh();
     });
   }
