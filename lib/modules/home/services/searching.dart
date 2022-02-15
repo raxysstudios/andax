@@ -1,6 +1,6 @@
 import 'package:algolia/algolia.dart';
 
-String generateFilter(
+String _generateFilter(
   Iterable<String> values, [
   String filter = 'tags',
   bool and = false,
@@ -10,7 +10,7 @@ String generateFilter(
   return tags.join(' $joint ');
 }
 
-AlgoliaQuery parseQuery(AlgoliaIndexReference index, String query) {
+AlgoliaQuery formQuery(AlgoliaIndexReference index, String query) {
   final tags = <String>[];
   final words = <String>[];
   query.split(' ').forEach((e) {
@@ -24,5 +24,5 @@ AlgoliaQuery parseQuery(AlgoliaIndexReference index, String query) {
   });
   return index
       .query(words.join(' '))
-      .filters(generateFilter(tags, 'tags', true));
+      .filters(_generateFilter(tags, 'tags', true));
 }
