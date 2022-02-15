@@ -8,21 +8,18 @@ part 'story.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Story {
-  List<Node> _nodes;
-  List<Actor> _actors;
   @JsonKey(toJson: _nodesToJson)
-  Map<String, Node> get nodes => {for (final node in _nodes) node.id: node};
+  Map<String, Node> nodes;
   @JsonKey(toJson: _actorsToJson)
-  Map<String, Actor> get actors =>
-      {for (final actor in _actors) actor.id: actor};
+  Map<String, Actor> actors;
   String startNodeId;
 
   Story({
-    required List<Node> nodes,
     required this.startNodeId,
+    required List<Node> nodes,
     required List<Actor> actors,
-  })  : _nodes = nodes,
-        _actors = actors;
+  })  : nodes = {for (final node in nodes) node.id: node},
+        actors = {for (final actor in actors) actor.id: actor};
 
   factory Story.fromJson(Map<String, dynamic> json) => _$StoryFromJson(json);
 
