@@ -179,7 +179,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<List<LikeItem>> getLikes(int page, LikeItem? last) async {
     var query = FirebaseFirestore.instance
         .collection('users/${user.uid}/likes')
-        .orderBy('date', descending: true)
+        // This seems to break `startAfterDocument`: https://github.com/FirebaseExtended/flutterfire/issues/7946
+        // .orderBy('date', descending: true)
         .limit(20);
     if (last != null) query = query.startAfterDocument(last.key);
 

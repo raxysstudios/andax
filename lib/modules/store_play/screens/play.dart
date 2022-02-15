@@ -43,7 +43,7 @@ class _PlayScreenState extends State<PlayScreen> {
     super.initState();
     translations = {
       for (final translation in widget.translations)
-        translation.metaData.id: translation,
+        translation.id: translation,
     };
     currentNode = nodes[widget.story.startNodeId]!;
 

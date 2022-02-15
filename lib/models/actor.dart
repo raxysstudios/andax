@@ -1,12 +1,15 @@
-import 'package:enum_to_string/enum_to_string.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'actor.g.dart';
 
 enum ActorType {
   npc,
   player,
 }
 
+@JsonSerializable()
 class Actor {
-  String id;
+  final String id;
   ActorType type;
 
   Actor({
@@ -14,18 +17,7 @@ class Actor {
     this.type = ActorType.npc,
   });
 
-  Actor.fromJson(Map<String, dynamic> json)
-      : this(
-          id: json['id'] as String,
-          type: EnumToString.fromString(
-                ActorType.values,
-                json['type'] as String? ?? '',
-              ) ??
-              ActorType.npc,
-        );
+  factory Actor.fromJson(Map<String, dynamic> json) => _$ActorFromJson(json);
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
-        'type': EnumToString.convertToString(type),
-      };
+  Map<String, dynamic> toJson() => _$ActorToJson(this);
 }

@@ -1,7 +1,12 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'transition.g.dart';
+
+@JsonSerializable()
 class Transition {
-  String id;
+  final String id;
   String targetNodeId;
-  int score;
+  final int score;
 
   Transition(
     this.id, {
@@ -9,16 +14,8 @@ class Transition {
     this.score = 0,
   });
 
-  Transition.fromJson(Map<String, dynamic> json)
-      : this(
-          json['id'] as String,
-          targetNodeId: json['targetNodeId'] as String,
-          score: json['score'] as int? ?? 0,
-        );
+  factory Transition.fromJson(Map<String, dynamic> json) =>
+      _$TransitionFromJson(json);
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
-        'targetNodeId': targetNodeId,
-        'score': score,
-      };
+  Map<String, dynamic> toJson() => _$TransitionToJson(this)..remove('id');
 }
