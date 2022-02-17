@@ -10,10 +10,10 @@ String _generateFilter(
   return tags.join(' $joint ');
 }
 
-AlgoliaQuery formQuery(AlgoliaIndexReference index, String query) {
+AlgoliaQuery formQuery(AlgoliaIndexReference index, String text) {
   final tags = <String>[];
   final words = <String>[];
-  query.split(' ').forEach((e) {
+  text.split(' ').forEach((e) {
     if (e.startsWith('#')) {
       if (e != '#') {
         tags.add(e.substring(1));
@@ -22,7 +22,9 @@ AlgoliaQuery formQuery(AlgoliaIndexReference index, String query) {
       words.add(e);
     }
   });
-  return index
-      .query(words.join(' '))
-      .filters(_generateFilter(tags, 'tags', true));
+  var query = index.query(words.join(' '));
+  if (tags.isNotEmpty) {
+    query = query.filters(_generateFilter(tags, 'tags', true));
+  }
+  return query;
 }
