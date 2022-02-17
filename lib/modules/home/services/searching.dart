@@ -1,4 +1,5 @@
 import 'package:algolia/algolia.dart';
+import 'package:andax/store.dart';
 
 String _generateFilter(
   Iterable<String> values, [
@@ -10,7 +11,7 @@ String _generateFilter(
   return tags.join(' $joint ');
 }
 
-AlgoliaQuery formQuery(AlgoliaIndexReference index, String text) {
+AlgoliaQuery formQuery(String index, String text) {
   final tags = <String>[];
   final words = <String>[];
   text.split(' ').forEach((e) {
@@ -22,7 +23,7 @@ AlgoliaQuery formQuery(AlgoliaIndexReference index, String text) {
       words.add(e);
     }
   });
-  var query = index.query(words.join(' '));
+  var query = algolia.index(index).query(words.join(' '));
   if (tags.isNotEmpty) {
     query = query.filters(_generateFilter(tags, 'tags', true));
   }

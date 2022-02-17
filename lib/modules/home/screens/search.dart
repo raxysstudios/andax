@@ -66,7 +66,7 @@ class _SearchScreenState extends State<SearchScreen> {
   void updateQuery() {
     timer.cancel();
     setState(() {
-      query = formQuery(algolia.index(sort.index), textController.text);
+      query = formQuery(sort.index, textController.text);
       pagingController.refresh();
     });
   }
