@@ -8,7 +8,6 @@ import 'package:andax/modules/story_info/screens/story_info.dart';
 import 'package:andax/shared/extensions.dart';
 import 'package:andax/shared/widgets/paging_list.dart';
 import 'package:andax/shared/widgets/story_tile.dart';
-import 'package:andax/store.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
