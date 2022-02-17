@@ -25,7 +25,7 @@ class _SortMode {
   final String text;
   final IconData icon;
 
-  _SortMode(this.index, this.text, this.icon);
+  const _SortMode(this.index, this.text, this.icon);
 }
 
 class _SearchScreenState extends State<SearchScreen> {
