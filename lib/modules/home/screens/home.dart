@@ -135,6 +135,11 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('Ændax'),
         actions: [
           IconButton(
+            onPressed: openSearch,
+            icon: const Icon(Icons.search_rounded),
+            tooltip: 'Search stories',
+          ),
+          IconButton(
             onPressed: () async {
               await Navigator.push<void>(
                 context,

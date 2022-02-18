@@ -7,11 +7,13 @@ class PagingList<T> extends StatefulWidget {
   const PagingList({
     required this.onRequest,
     required this.builder,
+    this.controller,
     this.maxPages,
     this.scroll,
     Key? key,
   }) : super(key: key);
 
+  final PagingController<int, T>? controller;
   final Widget Function(BuildContext, T, int) builder;
   final Future<List<T>> Function(int, T?) onRequest;
   final ScrollController? scroll;
@@ -27,9 +29,7 @@ class _PagingListState<T> extends State<PagingList<T>> {
   @override
   void initState() {
     super.initState();
-    paging = PagingController<int, T>(
-      firstPageKey: 0,
-    );
+    paging = widget.controller ?? PagingController<int, T>(firstPageKey: 0);
     paging.addPageRequestListener(
       (page) async {
         if (widget.maxPages != null && page >= widget.maxPages!) {
