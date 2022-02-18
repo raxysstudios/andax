@@ -49,6 +49,7 @@ class _SearchScreenState extends State<SearchScreen> {
         const Duration(milliseconds: 300),
         updateQuery,
       );
+      setState(() {});
     });
     updateQuery();
   }
@@ -80,7 +81,7 @@ class _SearchScreenState extends State<SearchScreen> {
           decoration: InputDecoration(
             hintText: 'Search',
             border: InputBorder.none,
-            suffix: textController.text.isEmpty
+            suffixIcon: textController.text.isEmpty
                 ? null
                 : IconButton(
                     onPressed: textController.clear,
