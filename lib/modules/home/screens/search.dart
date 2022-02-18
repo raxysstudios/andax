@@ -33,7 +33,7 @@ class _SearchScreenState extends State<SearchScreen> {
   late AlgoliaQuery query;
   var timer = Timer(Duration.zero, () {});
 
-  var sorts = const [
+  static const sorts = [
     _SortMode('stories', 'likes', Icons.favorite_rounded),
     _SortMode('stories_views', 'views', Icons.visibility_rounded),
     _SortMode('stories_updated', 'new', Icons.new_releases_rounded),
