@@ -77,16 +77,18 @@ class _SearchScreenState extends State<SearchScreen> {
         title: TextField(
           controller: textController,
           autofocus: true,
-          decoration: const InputDecoration.collapsed(
+          decoration: InputDecoration(
             hintText: 'Search',
+            border: InputBorder.none,
+            suffix: textController.text.isEmpty
+                ? null
+                : IconButton(
+                    onPressed: textController.clear,
+                    icon: const Icon(Icons.clear_rounded),
+                  ),
           ),
         ),
         actions: [
-          if (textController.text.isNotEmpty)
-            IconButton(
-              onPressed: textController.clear,
-              icon: const Icon(Icons.clear_rounded),
-            ),
           Badge(
             ignorePointer: true,
             animationType: BadgeAnimationType.fade,
