@@ -82,6 +82,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
   }
 
   Future upload() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
     final sdb = FirebaseFirestore.instance.collection('stories');
     var sid = widget.info?.storyID;
     if (sid == null) {
@@ -89,6 +90,10 @@ class StoryEditorState extends State<StoryEditorScreen> {
     } else {
       await sdb.doc(widget.info?.storyID).update(story.toJson());
     }
+    await sdb.doc(sid).update({
+      'metaData.lastUpdateAt': FieldValue.serverTimestamp(),
+      'metaData.authorId': uid,
+    });
 
     final tdb = sdb.doc(sid).collection('translations');
     var tid = widget.info?.translationID;
@@ -97,7 +102,6 @@ class StoryEditorState extends State<StoryEditorScreen> {
     } else {
       await tdb.doc(tid).update(translation.toJson());
     }
-    final uid = FirebaseAuth.instance.currentUser?.uid;
     await tdb.doc(tid).update({
       'metaData.lastUpdateAt': FieldValue.serverTimestamp(),
       'metaData.authorId': uid,
@@ -108,9 +112,6 @@ class StoryEditorState extends State<StoryEditorScreen> {
       for (final entry in translation.assets.entries)
         adb.doc(entry.key).set(entry.value.toJson())
     ]);
-    await adb.doc('story').update({
-      'metaData.authorId': uid,
-    });
 
     info ??= StoryInfo(
       storyID: sid!,
