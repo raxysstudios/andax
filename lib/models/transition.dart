@@ -17,5 +17,5 @@ class Transition {
   factory Transition.fromJson(Map<String, dynamic> json) =>
       _$TransitionFromJson(json);
 
-  Map<String, dynamic> toJson() => _$TransitionToJson(this)..remove('id');
+  Map<String, dynamic> toJson() => _$TransitionToJson(this);
 }
