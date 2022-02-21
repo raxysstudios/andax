@@ -7,6 +7,7 @@ import 'package:andax/shared/widgets/loading_dialog.dart';
 import 'package:andax/shared/widgets/maybe_pop_alert.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:uuid/uuid.dart';
@@ -96,15 +97,21 @@ class StoryEditorState extends State<StoryEditorScreen> {
     } else {
       await tdb.doc(tid).update(translation.toJson());
     }
-    await tdb
-        .doc(tid)
-        .update({'metaData.lastUpdateAt': FieldValue.serverTimestamp()});
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    await tdb.doc(tid).update({
+      'metaData.lastUpdateAt': FieldValue.serverTimestamp(),
+      'metaData.authorId': uid,
+    });
 
     final adb = tdb.doc(tid).collection('assets');
     await Future.wait([
       for (final entry in translation.assets.entries)
         adb.doc(entry.key).set(entry.value.toJson())
     ]);
+    await adb.doc('story').update({
+      'metaData.authorId': uid,
+    });
+
     info ??= StoryInfo(
       storyID: sid!,
       storyAuthorID: '',
