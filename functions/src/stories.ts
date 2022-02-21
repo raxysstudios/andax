@@ -58,9 +58,12 @@ export const indexStories = functions
         "stories/{storyID}/translations/{translationID}/assets/story"
     )
     .onWrite(async (change, context) => {
-      if (!change.after.exists) return;
       const translationID = context.params.translationID;
       const storyID = context.params.storyID;
+      if (!change.after.exists) {
+        await index.deleteObject(translationID);
+        return;
+      }
       const {title, description, tags} = change.after.data()!;
       const story = await storyDoc(storyID)
           .get()
