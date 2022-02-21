@@ -96,6 +96,9 @@ class StoryEditorState extends State<StoryEditorScreen> {
     } else {
       await tdb.doc(tid).update(translation.toJson());
     }
+    await tdb
+        .doc(tid)
+        .update({'metaData.lastUpdateAt': FieldValue.serverTimestamp()});
 
     final adb = tdb.doc(tid).collection('assets');
     await Future.wait([
