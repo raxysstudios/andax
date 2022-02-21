@@ -90,19 +90,6 @@ export const indexStories = functions
       }
     });
 
-export const trackStoryUpdateTime = functions
-    .region("europe-central2")
-    .firestore.document(
-        "stories/{storyID}/translations/{translationID}/assets/{assetID}"
-    )
-    .onWrite(async (change, context) => {
-      if (!change.after.exists) return;
-      await storyDoc(context.params.storyID, context.params.translationID)
-          .update({
-            "metaData.lastUpdateAt": firestore.FieldValue.serverTimestamp(),
-          });
-    });
-
 export const updateStoryMeta = functions
     .region("europe-central2")
     .firestore.document(
