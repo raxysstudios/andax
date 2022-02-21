@@ -26,7 +26,6 @@ type StoryRecord = {
 };
 
 type MetaData = {
-  id: string,
   authorID: string,
   contributorsIDs?: string[],
   lastUpdateAt?: firestore.Timestamp,
