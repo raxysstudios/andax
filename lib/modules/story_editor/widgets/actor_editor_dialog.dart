@@ -41,29 +41,55 @@ void showActorEditorDialog(
       onResult(result);
     },
     title: 'Edit actor',
-    children: [
-      // ListTile(
-      //   leading: IconButton(
-      //     onPressed: () => setState(() {
-      //       actor.type =
-      //           actor.type == ActorType.npc ? ActorType.player : ActorType.npc;
-      //     }),
-      //     icon: Icon(actor.type == ActorType.npc
-      //         ? Icons.smart_toy_rounded
-      //         : Icons.face_rounded),
-      //   ),
-      // ),
-      TextFormField(
-        decoration: const InputDecoration(
-          labelText: 'Actor name',
+    padding: EdgeInsets.zero,
+    builder: (context, setState) {
+      return [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: TextFormField(
+            decoration: const InputDecoration(
+              labelText: 'Actor name',
+            ),
+            autofocus: true,
+            initialValue: translation.name,
+            validator: emptyValidator,
+            onChanged: (s) {
+              translation.name = s;
+            },
+          ),
         ),
-        autofocus: true,
-        initialValue: translation.name,
-        validator: emptyValidator,
-        onChanged: (s) {
-          translation.name = s;
-        },
-      ),
-    ],
+        Padding(
+          padding: const EdgeInsets.fromLTRB(24, 18, 24, 8),
+          child: Text(
+            'Actor mode',
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+        ),
+        ListTile(
+          selected: actor.type == ActorType.npc,
+          onTap: () => setState(() {
+            actor.type = ActorType.npc;
+          }),
+          dense: true,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 24),
+          horizontalTitleGap: 12,
+          leading: const Icon(Icons.smart_toy_rounded),
+          title: const Text('NPC actor'),
+          subtitle: const Text('Follows the narrative'),
+        ),
+        ListTile(
+          selected: actor.type == ActorType.player,
+          onTap: () => setState(() {
+            actor.type = ActorType.player;
+          }),
+          dense: true,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 24),
+          horizontalTitleGap: 12,
+          leading: const Icon(Icons.face_rounded),
+          title: const Text('Payer actor'),
+          subtitle: const Text('Controller by the player'),
+        ),
+      ];
+    },
   );
 }
