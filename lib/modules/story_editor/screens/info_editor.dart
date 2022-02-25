@@ -74,13 +74,13 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
         automaticallyImplyLeading: false,
         title: const Text('Info'),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           await showLoadingDialog(context, upload());
           Navigator.maybePop(context);
         },
-        tooltip: 'Upload story',
-        child: const Icon(Icons.upload_rounded),
+        icon: const Icon(Icons.upload_rounded),
+        label: const Text('Upload story'),
       ),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 72),

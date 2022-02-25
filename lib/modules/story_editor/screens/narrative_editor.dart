@@ -42,7 +42,7 @@ class _StoryNarrativeEditorScreenState
           const SizedBox(width: 4),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           final id = widget.editor.uuid.v4();
           final node = Node(id);
@@ -51,8 +51,8 @@ class _StoryNarrativeEditorScreenState
           await openNode(context, widget.editor, node);
           setState(() {});
         },
-        tooltip: 'Add node',
-        child: const Icon(Icons.add_box_rounded),
+        icon: const Icon(Icons.add_box_rounded),
+        label: const Text('Add node'),
       ),
       body: NarrativeListView(
         widget.editor,

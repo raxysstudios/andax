@@ -13,7 +13,8 @@ class StoryActorsEditorScreen extends StatefulWidget {
   final StoryEditorState editor;
 
   @override
-  _StoryActorsEditorScreenState createState() => _StoryActorsEditorScreenState();
+  _StoryActorsEditorScreenState createState() =>
+      _StoryActorsEditorScreenState();
 }
 
 class _StoryActorsEditorScreenState extends State<StoryActorsEditorScreen> {
@@ -25,14 +26,14 @@ class _StoryActorsEditorScreenState extends State<StoryActorsEditorScreen> {
         automaticallyImplyLeading: false,
         title: const Text('Story actors'),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () => showActorEditorDialog(
           context,
           widget.editor,
           (r) => setState(() {}),
         ),
-        tooltip: 'Add actor',
-        child: const Icon(Icons.person_add_rounded),
+        icon: const Icon(Icons.person_add_rounded),
+        label: const Text('Add actor'),
       ),
       body: ListView.builder(
           itemCount: actors.length,
