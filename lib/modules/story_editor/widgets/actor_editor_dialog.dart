@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 void showActorEditorDialog(
   BuildContext context,
-  ValueSetter<Actor> result, [
+  ValueSetter<Actor?> onResult, [
   Actor? value,
 ]) {
   final editor = context.read<StoryEditorState>();
@@ -29,20 +29,31 @@ void showActorEditorDialog(
   showEditorDialog<Actor>(
     context,
     result: () => actor,
-    callback: (value) {
-      if (value == null) {
+    callback: (result) {
+      if (result == null) {
         if (value != null) {
           editor.story.actors.remove(value.id);
           editor.translation.assets.remove(value.id);
         }
-        return;
+      } else {
+        editor.story.actors[result.id] = result;
+        editor.translation[result.id] = translation;
       }
-      editor.story.actors[value.id] = value;
-      editor.translation[value.id] = translation;
-      result(value);
+      onResult(result);
     },
     title: 'Edit actor',
     children: [
+      // ListTile(
+      //   leading: IconButton(
+      //     onPressed: () => setState(() {
+      //       actor.type =
+      //           actor.type == ActorType.npc ? ActorType.player : ActorType.npc;
+      //     }),
+      //     icon: Icon(actor.type == ActorType.npc
+      //         ? Icons.smart_toy_rounded
+      //         : Icons.face_rounded),
+      //   ),
+      // ),
       TextFormField(
         decoration: const InputDecoration(
           prefixIcon: Icon(Icons.short_text_rounded),
