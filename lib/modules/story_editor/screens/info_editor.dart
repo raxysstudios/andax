@@ -3,13 +3,12 @@ import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/shared/utils.dart';
 import 'package:andax/shared/widgets/loading_dialog.dart';
-import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/narrative_list_view.dart';
-import 'narrative_editor.dart';
+import '../widgets/node_picker_sheet.dart';
+import 'story_editor.dart';
 
 class StoryInfoEditor extends StatefulWidget {
   const StoryInfoEditor(
@@ -72,8 +71,8 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const RoundedBackButton(icon: Icons.done_all_rounded),
-        title: const Text('Story Info'),
+        automaticallyImplyLeading: false,
+        title: const Text('Info'),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -81,7 +80,7 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
           Navigator.maybePop(context);
         },
         tooltip: 'Upload story',
-        child: const Icon(Icons.cloud_upload_rounded),
+        child: const Icon(Icons.upload_rounded),
       ),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 72),
@@ -140,7 +139,7 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
           ),
           ListTile(
             onTap: () async {
-              final node = await showStoryNodePickerSheet(
+              final node = await showNodePickerSheet(
                 context,
                 editor,
                 story.startNodeId,

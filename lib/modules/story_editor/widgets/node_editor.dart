@@ -3,13 +3,25 @@ import 'package:andax/models/node.dart';
 import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:andax/modules/story_editor/widgets/narrative_list_view.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-import '../screens/narrative_editor.dart';
-import 'actor_picker.dart';
+import '../screens/story_editor.dart';
+import 'actor_picker_sheet.dart';
+import 'node_picker_sheet.dart';
+
+Future<void> openNode(
+    BuildContext context, StoryEditorState editor, Node node) async {
+  await Navigator.push<void>(
+    context,
+    MaterialPageRoute(
+      builder: (context) {
+        return NodeEditor(editor, node);
+      },
+    ),
+  );
+}
 
 class NodeEditor extends StatefulWidget {
   const NodeEditor(
@@ -43,7 +55,7 @@ class _NodeEditorState extends State<NodeEditor> {
   }
 
   Future<void> selectTransitionNode(Transition transition) async {
-    final node = await showStoryNodePickerSheet(
+    final node = await showNodePickerSheet(
       context,
       widget.editor,
       transition.targetNodeId,

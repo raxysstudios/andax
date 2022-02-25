@@ -3,11 +3,9 @@ import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:andax/shared/widgets/modal_picker.dart';
-import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 
-import '../screens/narrative_editor.dart';
+import '../screens/story_editor.dart';
 
 class NarrativeListView extends StatefulWidget {
   const NarrativeListView(
@@ -138,28 +136,4 @@ class _NarrativeListViewState extends State<NarrativeListView> {
       },
     );
   }
-}
-
-Future<Node?> showStoryNodePickerSheet(
-  BuildContext context,
-  StoryEditorState editor, [
-  String? selectedId,
-]) {
-  return showModalPicker(
-    context,
-    (context, scroll) {
-      return Scaffold(
-        appBar: AppBar(
-          leading: const RoundedBackButton(),
-          title: const Text('Pick Node'),
-        ),
-        body: NarrativeListView(
-          editor,
-          onSelected: (node) => Navigator.pop(context, node),
-          selectedId: selectedId,
-          interactive: false,
-        ),
-      );
-    },
-  );
 }

@@ -1,6 +1,6 @@
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:andax/modules/story_editor/screens/narrative_editor.dart';
+import 'package:andax/modules/story_editor/screens/story_editor.dart';
 import 'package:andax/shared/widgets/modal_picker.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';

@@ -1,6 +1,6 @@
 import 'package:andax/models/story.dart';
 import 'package:andax/modules/store_play/screens/play.dart';
-import 'package:andax/modules/story_editor/screens/narrative_editor.dart';
+import 'package:andax/modules/story_editor/screens/story_editor.dart';
 import 'package:andax/modules/story_info/services/content_loader.dart';
 import 'package:andax/modules/story_translator/screens/crowdsourcing.dart';
 import 'package:andax/shared/widgets/loading_dialog.dart';
