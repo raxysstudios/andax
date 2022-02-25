@@ -4,16 +4,14 @@ import 'package:andax/modules/story_editor/screens/narrative_editor.dart';
 import 'package:andax/modules/story_editor/widgets/modal_picker.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
-
-import 'package:provider/provider.dart';
 import 'actor_editor_dialog.dart';
 
 void showActorPickerSheet(
   BuildContext context,
+  StoryEditorState editor,
   ValueSetter<Actor?> onSelect, [
   String? selectedId,
 ]) {
-  final editor = context.read<StoryEditorState>();
   final actors = editor.story.actors.values.toList();
   showModalPicker<Actor>(
     context,
@@ -26,6 +24,7 @@ void showActorPickerSheet(
         floatingActionButton: FloatingActionButton(
           onPressed: () => showActorEditorDialog(
             context,
+            editor,
             (r) {
               if (r != null) {
                 Navigator.pop(context);
@@ -44,7 +43,10 @@ void showActorPickerSheet(
                 ListTile(
                   leading: const Icon(Icons.cancel_rounded),
                   title: const Text('None'),
-                  onTap: () => Navigator.pop(context),
+                  onTap: () {
+                    Navigator.pop(context);
+                    onSelect(null);
+                  },
                 ),
                 const Divider(),
               ]),

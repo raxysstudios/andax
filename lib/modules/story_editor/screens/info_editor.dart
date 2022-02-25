@@ -4,13 +4,17 @@ import 'package:andax/modules/story_editor/widgets/actor_editor_dialog.dart';
 import 'package:andax/shared/utils.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../widgets/narrative_list_view.dart';
 import 'narrative_editor.dart';
 
 class StoryInfoEditor extends StatefulWidget {
-  const StoryInfoEditor({Key? key}) : super(key: key);
+  const StoryInfoEditor(
+    this.editor, {
+    Key? key,
+  }) : super(key: key);
+
+  final StoryEditorState editor;
 
   @override
   State<StoryInfoEditor> createState() => _StoryInfoEditorState();
@@ -19,9 +23,8 @@ class StoryInfoEditor extends StatefulWidget {
 class _StoryInfoEditorState extends State<StoryInfoEditor> {
   @override
   Widget build(BuildContext context) {
-    final editor = context.watch<StoryEditorState>();
-    final translation = editor.translation;
-    final story = editor.story;
+    final translation = widget.editor.translation;
+    final story = widget.editor.story;
 
     return Scaffold(
       appBar: AppBar(
@@ -31,6 +34,7 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => showActorEditorDialog(
           context,
+          widget.editor,
           (r) => setState(() {}),
         ),
         tooltip: 'Add actor',
@@ -94,8 +98,8 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
           ListTile(
             onTap: () async {
               final node = await showStoryNodePickerSheet(
-                editor,
                 context,
+                widget.editor,
                 story.startNodeId,
               );
               setState(() {
@@ -115,6 +119,7 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
             ListTile(
               onTap: () => showActorEditorDialog(
                 context,
+                widget.editor,
                 (r) => setState(() {}),
                 actor,
               ),

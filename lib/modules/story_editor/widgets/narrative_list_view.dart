@@ -141,8 +141,8 @@ class _NarrativeListViewState extends State<NarrativeListView> {
 }
 
 Future<Node?> showStoryNodePickerSheet(
-  StoryEditorState editor,
-  BuildContext context, [
+  BuildContext context,
+  StoryEditorState editor, [
   String? selectedId,
 ]) {
   return showModalPicker(

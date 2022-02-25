@@ -7,10 +7,10 @@ import 'package:provider/provider.dart';
 
 void showActorEditorDialog(
   BuildContext context,
+  StoryEditorState editor,
   ValueSetter<Actor?> onResult, [
   Actor? value,
 ]) {
-  final editor = context.read<StoryEditorState>();
   late Actor actor;
   late ActorTranslation translation;
 
