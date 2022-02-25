@@ -1,24 +1,40 @@
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/translation_asset.dart';
+import 'package:andax/modules/story_editor/screens/narrative_editor.dart';
 import 'package:andax/modules/story_editor/widgets/modal_picker.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 
-import '../screens/narrative_editor.dart';
+import 'package:provider/provider.dart';
+import 'actor_editor_dialog.dart';
 
-Future<Actor?> showActorPickerSheet(
-  StoryEditorState editor,
-  BuildContext context, [
+void showActorPickerSheet(
+  BuildContext context,
+  ValueSetter<Actor?> onSelect, [
   String? selectedId,
 ]) {
+  final editor = context.read<StoryEditorState>();
   final actors = editor.story.actors.values.toList();
-  return showModalPicker(
+  showModalPicker<Actor>(
     context,
     (context, scroll) {
       return Scaffold(
         appBar: AppBar(
           leading: const RoundedBackButton(),
           title: const Text('Pick Actor'),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => showActorEditorDialog(
+            context,
+            (r) {
+              if (r != null) {
+                Navigator.pop(context);
+                onSelect(r);
+              }
+            },
+          ),
+          tooltip: 'Add actor',
+          child: const Icon(Icons.person_add_rounded),
         ),
         body: CustomScrollView(
           controller: scroll,
@@ -38,7 +54,10 @@ Future<Actor?> showActorPickerSheet(
                 (context, index) {
                   final actor = actors[index];
                   return ListTile(
-                    onTap: () => Navigator.pop(context, actor),
+                    onTap: () {
+                      Navigator.pop(context);
+                      onSelect(actor);
+                    },
                     leading: Icon(actor.type == ActorType.npc
                         ? Icons.smart_toy_rounded
                         : Icons.face_rounded),

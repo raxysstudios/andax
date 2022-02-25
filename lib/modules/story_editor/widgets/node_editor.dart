@@ -1,24 +1,22 @@
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/transition.dart';
-import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/story_editor/widgets/narrative_list_view.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:provider/provider.dart';
 
 import '../screens/narrative_editor.dart';
 import 'actor_picker.dart';
 
 class NodeEditor extends StatefulWidget {
-  const NodeEditor({
-    required this.editor,
-    required this.node,
+  const NodeEditor(
+    this.node, {
     Key? key,
   }) : super(key: key);
 
-  final StoryEditorState editor;
   final Node node;
 
   @override
@@ -26,7 +24,6 @@ class NodeEditor extends StatefulWidget {
 }
 
 class _NodeEditorState extends State<NodeEditor> {
-  Translation get translation => widget.editor.translation;
   Node get node => widget.node;
 
   List<Transition> get transitions => node.transitions ?? [];
@@ -35,7 +32,11 @@ class _NodeEditorState extends State<NodeEditor> {
   void initState() {
     super.initState();
     if (node.actorId == null &&
-        MessageTranslation.getText(translation, node.id, '').isEmpty) {
+        MessageTranslation.getText(
+          context.read<StoryEditorState>().translation,
+          node.id,
+          '',
+        ).isEmpty) {
       SchedulerBinding.instance?.addPostFrameCallback(
         (_) => selectActor(),
       );
@@ -44,7 +45,7 @@ class _NodeEditorState extends State<NodeEditor> {
 
   Future<void> selectTransitionNode(Transition transition) async {
     final node = await showStoryNodePickerSheet(
-      widget.editor,
+      context.read<StoryEditorState>(),
       context,
       transition.targetNodeId,
     );
@@ -55,19 +56,21 @@ class _NodeEditorState extends State<NodeEditor> {
     }
   }
 
-  Future<void> selectActor() async {
-    final actor = await showActorPickerSheet(
-      widget.editor,
+  void selectActor() {
+    showActorPickerSheet(
       context,
+      (a) => setState(() {
+        node.actorId = a?.id;
+      }),
       node.actorId,
     );
-    setState(() {
-      node.actorId = actor?.id;
-    });
   }
 
   @override
   Widget build(context) {
+    final editor = context.watch<StoryEditorState>();
+    final translation = editor.translation;
+
     return Scaffold(
       appBar: AppBar(
         leading: const RoundedBackButton(icon: Icons.done_all_rounded),
@@ -96,7 +99,7 @@ class _NodeEditorState extends State<NodeEditor> {
                 },
               );
               if (delete ?? false) {
-                widget.editor.story.nodes.remove(node.id);
+                editor.story.nodes.remove(node.id);
                 translation.assets.remove(node.id);
                 node.transitions?.forEach(
                   (t) => translation.assets.remove(t.id),
@@ -112,7 +115,7 @@ class _NodeEditorState extends State<NodeEditor> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => setState(() {
-          final id = widget.editor.uuid.v4();
+          final id = editor.uuid.v4();
           node.transitions ??= [];
           final transition = Transition(id, targetNodeId: node.id);
           node.transitions!.add(transition);
@@ -125,7 +128,7 @@ class _NodeEditorState extends State<NodeEditor> {
         children: [
           Builder(
             builder: (context) {
-              final actor = widget.editor.story.actors[node.actorId];
+              final actor = editor.story.actors[node.actorId];
               return ListTile(
                 onTap: selectActor,
                 leading: Icon(actor == null

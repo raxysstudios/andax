@@ -60,9 +60,9 @@ class StoryEditorState extends State<StoryEditorScreen> {
       context,
       MaterialPageRoute(
         builder: (context) {
-          return NodeEditor(
-            editor: this,
-            node: node,
+          return Provider.value(
+            value: this,
+            child: NodeEditor(node),
           );
         },
       ),
