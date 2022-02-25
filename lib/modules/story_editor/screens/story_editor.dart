@@ -4,7 +4,7 @@ import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/story_editor/screens/actors_editor.dart';
 import 'package:andax/modules/story_editor/screens/info_editor.dart';
 import 'package:andax/modules/story_editor/screens/narrative_editor.dart';
-import 'package:andax/shared/widgets/maybe_pop_alert.dart';
+import 'package:andax/shared/widgets/danger_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
@@ -50,7 +50,13 @@ class StoryEditorState extends State<StoryEditorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MaybePopAlert(
+    return WillPopScope(
+      onWillPop: () => showDangerDialog(
+        context,
+        'Leave editor? Unsaved progress will be lost!',
+        confirmText: 'Exit',
+        rejectText: 'Stay',
+      ),
       child: Scaffold(
         body: PageView(
           controller: _paging,

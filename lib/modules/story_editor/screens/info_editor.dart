@@ -1,8 +1,11 @@
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
+import 'package:andax/modules/home/screens/home.dart';
 import 'package:andax/shared/utils.dart';
+import 'package:andax/shared/widgets/danger_dialog.dart';
 import 'package:andax/shared/widgets/loading_dialog.dart';
+import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +30,7 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
   Translation get translation => editor.translation;
   Story get story => editor.story;
 
-  Future upload() async {
+  Future<void> uploadStory() async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     final sdb = FirebaseFirestore.instance.collection('stories');
     var sid = editor.info?.storyID;
@@ -67,16 +70,48 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
     );
   }
 
+  Future<void> deleteStory() async {
+    if (editor.info == null) return;
+    await FirebaseFirestore.instance
+        .doc('stories/${editor.info!.storyID}')
+        .delete();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        leading: const RoundedBackButton(),
         title: const Text('Story info'),
+        actions: [
+          if (editor.info != null)
+            IconButton(
+              onPressed: () async {
+                bool delete = await showDangerDialog(
+                  context,
+                  'Completely delete the story and all of its translations?',
+                );
+                if (delete) {
+                  await showLoadingDialog(context, deleteStory());
+                  Navigator.pushReplacement<void, void>(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const HomeScreen();
+                      },
+                    ),
+                  );
+                }
+              },
+              tooltip: 'Delete story',
+              icon: const Icon(Icons.delete_forever_rounded),
+            ),
+          const SizedBox(width: 4),
+        ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
-          await showLoadingDialog(context, upload());
+          await showLoadingDialog(context, uploadStory());
           Navigator.maybePop(context);
         },
         icon: const Icon(Icons.upload_rounded),

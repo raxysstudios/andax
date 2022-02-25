@@ -51,7 +51,7 @@ class _StoryNarrativeEditorScreenState
           await openNode(context, widget.editor, node);
           setState(() {});
         },
-        icon: const Icon(Icons.add_box_rounded),
+        icon: const Icon(Icons.add_circle_rounded),
         label: const Text('Add node'),
       ),
       body: NarrativeListView(
