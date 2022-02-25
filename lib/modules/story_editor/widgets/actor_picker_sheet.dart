@@ -1,5 +1,4 @@
 import 'package:andax/models/actor.dart';
-import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/story_editor/screens/story_editor.dart';
 import 'package:andax/modules/story_editor/widgets/actor_tile.dart';
 import 'package:andax/shared/widgets/modal_picker.dart';
