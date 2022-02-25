@@ -8,6 +8,7 @@ class ActorTile extends StatelessWidget {
     this.actor,
     this.editor, {
     this.onTap,
+    this.onLongPress,
     this.selected = false,
     this.index,
     Key? key,
@@ -16,6 +17,7 @@ class ActorTile extends StatelessWidget {
   final Actor? actor;
   final StoryEditorState editor;
   final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
   final bool selected;
   final int? index;
 
@@ -34,6 +36,7 @@ class ActorTile extends StatelessWidget {
     final index = getIndex();
     return ListTile(
       onTap: onTap,
+      onLongPress: onLongPress,
       leading: Icon(
         actor == null
             ? Icons.person_outline_rounded
