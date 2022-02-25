@@ -10,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 import '../widgets/narrative_list_view.dart';
@@ -72,11 +73,14 @@ class StoryEditorState extends State<StoryEditorScreen> {
   void openInfo() async {
     await Navigator.push<void>(
       context,
-      MaterialPageRoute(builder: (context) {
-        return StoryInfoEditor(
-          editor: this,
-        );
-      }),
+      MaterialPageRoute(
+        builder: (context) {
+          return Provider.value(
+            value: this,
+            child: const StoryInfoEditor(),
+          );
+        },
+      ),
     );
     setState(() {});
   }
