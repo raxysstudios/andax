@@ -4,8 +4,8 @@ import 'package:andax/modules/story_editor/screens/narrative_editor.dart';
 import 'package:andax/modules/story_editor/widgets/actor_editor_dialog.dart';
 import 'package:flutter/material.dart';
 
-class ActorsEditorScreen extends StatefulWidget {
-  const ActorsEditorScreen(
+class StoryActorsEditorScreen extends StatefulWidget {
+  const StoryActorsEditorScreen(
     this.editor, {
     Key? key,
   }) : super(key: key);
@@ -13,10 +13,10 @@ class ActorsEditorScreen extends StatefulWidget {
   final StoryEditorState editor;
 
   @override
-  _ActorsEditorScreenState createState() => _ActorsEditorScreenState();
+  _StoryActorsEditorScreenState createState() => _StoryActorsEditorScreenState();
 }
 
-class _ActorsEditorScreenState extends State<ActorsEditorScreen> {
+class _StoryActorsEditorScreenState extends State<StoryActorsEditorScreen> {
   @override
   Widget build(BuildContext context) {
     final actors = widget.editor.story.actors.values.toList();
