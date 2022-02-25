@@ -72,9 +72,18 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
 
   Future<void> deleteStory() async {
     if (editor.info == null) return;
-    await FirebaseFirestore.instance
-        .doc('stories/${editor.info!.storyID}')
-        .delete();
+    final story = FirebaseFirestore.instance.doc(
+      'stories/' + editor.info!.storyID,
+    );
+    final translations = await story.collection('translations').get();
+    for (final t in translations.docs) {
+      final assets = await t.reference.collection('assets').get();
+      for (final a in assets.docs) {
+        await a.reference.delete();
+      }
+      t.reference.delete();
+    }
+    story.delete();
   }
 
   @override
