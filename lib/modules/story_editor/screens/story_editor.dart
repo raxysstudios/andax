@@ -48,15 +48,20 @@ class StoryEditorState extends State<StoryEditorScreen> {
   var _page = 0;
   final _paging = PageController();
 
+  var done = false;
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () => showDangerDialog(
         context,
-        'Leave editor? Unsaved progress will be lost!',
+        'Leave editor?' + (done ? '' : ' Unsaved progress will be lost!'),
         confirmText: 'Exit',
         rejectText: 'Stay',
-      ),
+      ).then((r) {
+        done = false;
+        return r;
+      }),
       child: Scaffold(
         body: PageView(
           controller: _paging,
