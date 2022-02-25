@@ -9,8 +9,6 @@ import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import '../widgets/node_picker_sheet.dart';
 import 'story_editor.dart';
 
 class StoryInfoEditor extends StatefulWidget {
@@ -180,26 +178,6 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
                     s.split(' ').where((t) => t.isNotEmpty).toList();
               },
             ),
-          ),
-          ListTile(
-            onTap: () async {
-              final node = await showNodePickerSheet(
-                context,
-                editor,
-                story.startNodeId,
-              );
-              setState(() {
-                story.startNodeId = node?.id ?? '';
-              });
-            },
-            leading: const Icon(Icons.login_rounded),
-            title: Text(
-              MessageTranslation.getText(
-                translation,
-                story.startNodeId,
-              ),
-            ),
-            subtitle: const Text('Starting node'),
           ),
         ],
       ),

@@ -24,6 +24,14 @@ Future<void> openNode(
   );
 }
 
+Node createNode(StoryEditorState editor) {
+  final id = editor.uuid.v4();
+  final node = Node(id);
+  editor.story.nodes[id] = node;
+  editor.translation[id] = MessageTranslation(id: id);
+  return node;
+}
+
 class NodeEditor extends StatefulWidget {
   const NodeEditor(
     this.editor,
@@ -55,17 +63,15 @@ class _NodeEditorState extends State<NodeEditor> {
     }
   }
 
-  Future<void> selectTransitionNode(Transition transition) async {
-    final node = await showNodePickerSheet(
+  void selectTransitionNode(Transition transition) {
+    showNodePickerSheet(
       context,
       widget.editor,
+      (n) => setState(() {
+        transition.targetNodeId = n.id;
+      }),
       transition.targetNodeId,
     );
-    if (node != null) {
-      setState(() {
-        transition.targetNodeId = node.id;
-      });
-    }
   }
 
   void selectActor() {

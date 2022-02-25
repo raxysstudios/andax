@@ -12,10 +12,10 @@ void showActorPickerSheet(
   ValueSetter<Actor?> onSelect, [
   String? selectedId,
 ]) {
-  final actors = editor.story.actors.values.toList();
   showModalPicker<Actor>(
     context,
     (context, scroll) {
+      final actors = editor.story.actors.values.toList();
       return Scaffold(
         appBar: AppBar(
           leading: const RoundedBackButton(),
@@ -51,22 +51,25 @@ void showActorPickerSheet(
                 const Divider(),
               ]),
             ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final actor = actors[index];
-                  return ActorTile(
-                    actor,
-                    editor,
-                    onTap: () {
-                      Navigator.pop(context);
-                      onSelect(actor);
-                    },
-                    index: index,
-                    selected: actor.id == selectedId,
-                  );
-                },
-                childCount: actors.length,
+            SliverPadding(
+              padding: const EdgeInsets.only(bottom: 76),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final actor = actors[index];
+                    return ActorTile(
+                      actor,
+                      editor,
+                      onTap: () {
+                        Navigator.pop(context);
+                        onSelect(actor);
+                      },
+                      index: index,
+                      selected: actor.id == selectedId,
+                    );
+                  },
+                  childCount: actors.length,
+                ),
               ),
             ),
           ],

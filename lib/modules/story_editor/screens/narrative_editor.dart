@@ -1,10 +1,11 @@
 import 'package:andax/models/node.dart';
+import 'package:andax/models/story.dart';
+import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/story_editor/screens/story_editor.dart';
 import 'package:andax/modules/story_editor/widgets/node_editor.dart';
 import 'package:flutter/material.dart';
-
-import '../widgets/narrative_list_view.dart';
+import '../widgets/node_tile.dart';
 
 class StoryNarrativeEditorScreen extends StatefulWidget {
   const StoryNarrativeEditorScreen(
@@ -21,10 +22,36 @@ class StoryNarrativeEditorScreen extends StatefulWidget {
 
 class _StoryNarrativeEditorScreenState
     extends State<StoryNarrativeEditorScreen> {
+  Translation get translation => widget.editor.translation;
+  Story get story => widget.editor.story;
+  List<Node> get nodes => widget.editor.story.nodes.values.toList();
+
+  final choices = <String, String>{};
   var interactive = false;
+
+  List<Node> computeThread() {
+    final thread = <Node>{};
+    var node = nodes.isEmpty ? null : nodes.first;
+    while (node != null) {
+      thread.add(node);
+
+      final transitions = node.transitions ?? [];
+      if (transitions.isEmpty) break;
+
+      final choice = choices[node.id];
+      final transition = choice == null
+          ? transitions.first
+          : transitions.firstWhere((t) => t.id == choice);
+      node = story.nodes[transition.targetNodeId];
+
+      if (thread.contains(node)) break;
+    }
+    return thread.toList();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final nodes = interactive ? computeThread() : this.nodes;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -35,33 +62,73 @@ class _StoryNarrativeEditorScreenState
               interactive = !interactive;
             }),
             tooltip: 'Toggle view',
-            icon: Icon(interactive
-                ? Icons.view_list_rounded
-                : Icons.account_tree_rounded),
+            icon: Icon(
+              interactive
+                  ? Icons.view_list_rounded
+                  : Icons.account_tree_rounded,
+            ),
           ),
           const SizedBox(width: 4),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
-          final id = widget.editor.uuid.v4();
-          final node = Node(id);
-          widget.editor.story.nodes[id] = node;
-          widget.editor.translation[id] = MessageTranslation(id: id);
+          final node = createNode(widget.editor);
           await openNode(context, widget.editor, node);
           setState(() {});
         },
         icon: const Icon(Icons.add_circle_rounded),
         label: const Text('Add node'),
       ),
-      body: NarrativeListView(
-        widget.editor,
-        onSelected: (n) async {
-          await openNode(context, widget.editor, n);
-          setState(() {});
-        },
-        interactive: interactive,
+      body: ListView.builder(
         padding: const EdgeInsets.only(bottom: 76),
+        itemCount: nodes.length,
+        itemBuilder: (context, index) {
+          final node = nodes[index];
+          final transitions = node.transitions ?? [];
+          final choice = choices[node.id] ??
+              (transitions.isEmpty ? null : transitions.first.id);
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              NodeTile(
+                node,
+                widget.editor,
+                onTap: () async {
+                  await openNode(context, widget.editor, node);
+                  setState(() {});
+                },
+              ),
+              if (interactive && transitions.length > 1)
+                SizedBox(
+                  height: 50,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.all(8),
+                    children: [
+                      for (final transition in transitions)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: InputChip(
+                            onPressed: () => setState(() {
+                              choices[node.id] = transition.id;
+                            }),
+                            selected: choice == transition.id,
+                            label: Text(
+                              MessageTranslation.getText(
+                                translation,
+                                transition.id,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              const Divider(),
+            ],
+          );
+        },
       ),
     );
   }
