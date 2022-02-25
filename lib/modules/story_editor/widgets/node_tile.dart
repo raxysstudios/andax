@@ -43,7 +43,7 @@ class NodeTile extends StatelessWidget {
               children: [
                 if (editor.story.startNodeId == node.id)
                   Padding(
-                    padding: const EdgeInsets.only(right: 4),
+                    padding: const EdgeInsets.only(right: 8),
                     child: Icon(
                       Icons.login_rounded,
                       size: 16,

@@ -176,8 +176,20 @@ class _NodeEditorState extends State<NodeEditor> {
               },
             ),
           ),
+          const Divider(),
+          SwitchListTile(
+            value: widget.editor.story.startNodeId == node.id,
+            onChanged: (v) => setState(() {
+              widget.editor.story.startNodeId = node.id;
+            }),
+            secondary: const Padding(
+              padding: EdgeInsets.only(top: 8),
+              child: Icon(Icons.login_rounded),
+            ),
+            title: const Text('Story entry'),
+            subtitle: const Text('Players start from this node'),
+          ),
           if (transitions.isNotEmpty) ...[
-            const Divider(),
             SwitchListTile(
               value: node.autoTransition,
               onChanged: (v) => setState(() {
