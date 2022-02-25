@@ -39,8 +39,7 @@ class NodeTile extends StatelessWidget {
         ),
       ),
       subtitle: editor.story.startNodeId == node.id || actor != null
-          ? null
-          : Row(
+          ? Row(
               children: [
                 if (editor.story.startNodeId == node.id)
                   Padding(
@@ -71,7 +70,8 @@ class NodeTile extends StatelessWidget {
                   ),
                 ],
               ],
-            ),
+            )
+          : null,
       trailing: Text(
         '#${getIndex() + 1}',
         style: Theme.of(context).textTheme.subtitle2,
