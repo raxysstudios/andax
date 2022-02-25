@@ -1,8 +1,11 @@
-import 'package:andax/models/actor.dart';
+import 'package:andax/models/story.dart';
+import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:andax/modules/story_editor/widgets/actor_editor_dialog.dart';
 import 'package:andax/shared/utils.dart';
+import 'package:andax/shared/widgets/loading_dialog.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/narrative_list_view.dart';
@@ -21,24 +24,64 @@ class StoryInfoEditor extends StatefulWidget {
 }
 
 class _StoryInfoEditorState extends State<StoryInfoEditor> {
+  StoryEditorState get editor => widget.editor;
+  Translation get translation => editor.translation;
+  Story get story => editor.story;
+
+  Future upload() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    final sdb = FirebaseFirestore.instance.collection('stories');
+    var sid = editor.info?.storyID;
+    if (sid == null) {
+      sid = await sdb.add(story.toJson()).then((r) => r.id);
+    } else {
+      await sdb.doc(editor.info?.storyID).update(story.toJson());
+    }
+    await sdb.doc(sid).update({
+      'metaData.lastUpdateAt': FieldValue.serverTimestamp(),
+      'metaData.authorId': uid,
+    });
+
+    final tdb = sdb.doc(sid).collection('translations');
+    var tid = editor.info?.translationID;
+    if (tid == null) {
+      tid = await tdb.add(translation.toJson()).then((r) => r.id);
+    } else {
+      await tdb.doc(tid).update(translation.toJson());
+    }
+    await tdb.doc(tid).update({
+      'metaData.lastUpdateAt': FieldValue.serverTimestamp(),
+      'metaData.authorId': uid,
+    });
+
+    final adb = tdb.doc(tid).collection('assets');
+    await Future.wait([
+      for (final entry in translation.assets.entries)
+        adb.doc(entry.key).set(entry.value.toJson())
+    ]);
+    editor.info ??= StoryInfo(
+      storyID: sid!,
+      storyAuthorID: '',
+      translationID: tid!,
+      translationAuthorID: '',
+      title: '',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final translation = widget.editor.translation;
-    final story = widget.editor.story;
-
     return Scaffold(
       appBar: AppBar(
         leading: const RoundedBackButton(icon: Icons.done_all_rounded),
         title: const Text('Story Info'),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => showActorEditorDialog(
-          context,
-          widget.editor,
-          (r) => setState(() {}),
-        ),
-        tooltip: 'Add actor',
-        child: const Icon(Icons.person_add_rounded),
+        onPressed: () async {
+          await showLoadingDialog(context, upload());
+          Navigator.maybePop(context);
+        },
+        tooltip: 'Upload story',
+        child: const Icon(Icons.cloud_upload_rounded),
       ),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 72),
@@ -99,7 +142,7 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
             onTap: () async {
               final node = await showStoryNodePickerSheet(
                 context,
-                widget.editor,
+                editor,
                 story.startNodeId,
               );
               setState(() {
@@ -114,20 +157,6 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
               ),
             ),
           ),
-          const Divider(),
-          for (final actor in story.actors.values)
-            ListTile(
-              onTap: () => showActorEditorDialog(
-                context,
-                widget.editor,
-                (r) => setState(() {}),
-                actor,
-              ),
-              leading: Icon(actor.type == ActorType.npc
-                  ? Icons.smart_toy_rounded
-                  : Icons.face_rounded),
-              title: Text(ActorTranslation.getName(translation, actor.id)),
-            )
         ],
       ),
     );
