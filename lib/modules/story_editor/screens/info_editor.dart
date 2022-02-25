@@ -72,7 +72,7 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Info'),
+        title: const Text('Story info'),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
@@ -155,6 +155,7 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
                 story.startNodeId,
               ),
             ),
+            subtitle: const Text('Starting node'),
           ),
         ],
       ),

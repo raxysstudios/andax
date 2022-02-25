@@ -28,7 +28,7 @@ class _StoryNarrativeEditorScreenState
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Narrative'),
+        title: const Text('Story narrative'),
         actions: [
           IconButton(
             onPressed: () => setState(() {
