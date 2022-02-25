@@ -17,7 +17,7 @@ Future<Node?> showNodePickerSheet(
       return Scaffold(
         appBar: AppBar(
           leading: const RoundedBackButton(),
-          title: const Text('Pick Node'),
+          title: const Text('Pick node'),
         ),
         body: NarrativeListView(
           editor,

@@ -20,7 +20,7 @@ void showActorPickerSheet(
       return Scaffold(
         appBar: AppBar(
           leading: const RoundedBackButton(),
-          title: const Text('Pick Actor'),
+          title: const Text('Pick actor'),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () => showActorEditorDialog(
