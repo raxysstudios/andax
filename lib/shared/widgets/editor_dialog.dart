@@ -11,7 +11,12 @@ Future<void> showEditorDialog<T>(
   required ValueGetter<T?> result,
   required ValueSetter<T?> callback,
   required String title,
-  required List<Widget> children,
+  required List<Widget> Function(
+    BuildContext context,
+    void Function(void Function()),
+  )
+      builder,
+  EdgeInsets padding = const EdgeInsets.fromLTRB(24, 20, 24, 24),
 }) async {
   final form = GlobalKey<FormState>();
   final theme = Theme.of(context);
@@ -20,14 +25,20 @@ Future<void> showEditorDialog<T>(
     builder: (context) {
       return AlertDialog(
         title: Text(title),
-        content: SingleChildScrollView(
-          child: Form(
-            key: form,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            child: Column(
-              children: children,
-            ),
-          ),
+        contentPadding: padding,
+        content: StatefulBuilder(
+          builder: (context, setState) {
+            return SingleChildScrollView(
+              child: Form(
+                key: form,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: builder(context, setState),
+                ),
+              ),
+            );
+          },
         ),
         actions: [
           Row(
