@@ -42,7 +42,7 @@ void showActorPickerSheet(
             SliverList(
               delegate: SliverChildListDelegate([
                 ListTile(
-                  leading: const Icon(Icons.cancel_rounded),
+                  leading: const Icon(Icons.person_outline_rounded),
                   title: const Text('None'),
                   onTap: () {
                     Navigator.pop(context);
