@@ -129,7 +129,7 @@ class _NodeEditorState extends State<NodeEditor> {
           const SizedBox(width: 4),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () => setState(() {
           final id = widget.editor.uuid.v4();
           node.transitions ??= [];
@@ -138,7 +138,8 @@ class _NodeEditorState extends State<NodeEditor> {
           translation[id] = MessageTranslation(id: id);
           selectTransitionNode(transition);
         }),
-        child: const Icon(Icons.add_location_rounded),
+        icon: const Icon(Icons.add_location_rounded),
+        label: const Text('Add transition'),
       ),
       body: ListView(
         children: [
