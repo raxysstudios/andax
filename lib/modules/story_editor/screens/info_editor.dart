@@ -121,8 +121,7 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           await showLoadingDialog(context, uploadStory());
-          editor.done = true;
-          Navigator.maybePop(context);
+          Navigator.pop(context);
         },
         icon: const Icon(Icons.upload_rounded),
         label: const Text('Upload story'),
