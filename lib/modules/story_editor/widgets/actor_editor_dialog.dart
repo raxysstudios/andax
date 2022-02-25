@@ -3,7 +3,6 @@ import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/story_editor/screens/narrative_editor.dart';
 import 'package:andax/shared/widgets/editor_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 void showActorEditorDialog(
   BuildContext context,
