@@ -3,7 +3,7 @@ import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:andax/modules/story_editor/widgets/modal_picker.dart';
+import 'package:andax/shared/widgets/modal_picker.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 
