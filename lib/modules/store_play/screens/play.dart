@@ -45,7 +45,9 @@ class _PlayScreenState extends State<PlayScreen> {
       for (final translation in widget.translations)
         translation.id: translation,
     };
-    currentNode = nodes[widget.story.startNodeId]!;
+    currentNode = widget.story.startNodeId == null
+        ? nodes.values.first
+        : nodes[widget.story.startNodeId]!;
 
     if (currentNode.autoTransition && currentNode.transitions != null) {
       moveAuto(currentNode.transitions!);

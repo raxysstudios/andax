@@ -12,10 +12,10 @@ class Story {
   Map<String, Node> nodes;
   @JsonKey(toJson: _actorsToJson)
   Map<String, Actor> actors;
-  String startNodeId;
+  String? startNodeId;
 
   Story({
-    required this.startNodeId,
+    this.startNodeId,
     required List<Node> nodes,
     required List<Actor> actors,
   })  : nodes = {for (final node in nodes) node.id: node},
