@@ -3,6 +3,7 @@ import 'package:andax/models/node.dart';
 import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
+import 'package:andax/modules/story_editor/widgets/actor_tile.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -135,24 +136,10 @@ class _NodeEditorState extends State<NodeEditor> {
       ),
       body: ListView(
         children: [
-          Builder(
-            builder: (context) {
-              final actor = widget.editor.story.actors[node.actorId];
-              return ListTile(
-                onTap: selectActor,
-                leading: Icon(actor == null
-                    ? Icons.person_rounded
-                    : actor.type == ActorType.npc
-                        ? Icons.smart_toy_rounded
-                        : Icons.face_rounded),
-                title: Text(
-                  ActorTranslation.getName(
-                    translation,
-                    node.actorId ?? '',
-                  ),
-                ),
-              );
-            },
+          ActorTile(
+            widget.editor.story.actors[node.actorId],
+            widget.editor,
+            onTap: selectActor,
           ),
           ListTile(
             leading: const Icon(Icons.notes_rounded),

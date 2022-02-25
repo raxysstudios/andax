@@ -1,6 +1,7 @@
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/story_editor/screens/story_editor.dart';
+import 'package:andax/modules/story_editor/widgets/actor_tile.dart';
 import 'package:andax/shared/widgets/modal_picker.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
@@ -55,24 +56,14 @@ void showActorPickerSheet(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
                   final actor = actors[index];
-                  return ListTile(
+                  return ActorTile(
+                    actor,
+                    editor,
                     onTap: () {
                       Navigator.pop(context);
                       onSelect(actor);
                     },
-                    leading: Icon(actor.type == ActorType.npc
-                        ? Icons.smart_toy_rounded
-                        : Icons.face_rounded),
-                    title: Text(
-                      ActorTranslation.getName(
-                        editor.translation,
-                        actor.id,
-                      ),
-                    ),
-                    trailing: Text(
-                      '#${(actors.indexOf(actor) + 1)}',
-                      style: Theme.of(context).textTheme.subtitle2,
-                    ),
+                    index: index,
                     selected: actor.id == selectedId,
                   );
                 },

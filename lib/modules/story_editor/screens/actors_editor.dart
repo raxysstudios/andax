@@ -1,7 +1,6 @@
-import 'package:andax/models/actor.dart';
-import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/story_editor/screens/story_editor.dart';
 import 'package:andax/modules/story_editor/widgets/actor_editor_dialog.dart';
+import 'package:andax/modules/story_editor/widgets/actor_tile.dart';
 import 'package:flutter/material.dart';
 
 class StoryActorsEditorScreen extends StatefulWidget {
@@ -36,25 +35,22 @@ class _StoryActorsEditorScreenState extends State<StoryActorsEditorScreen> {
         label: const Text('Add actor'),
       ),
       body: ListView.builder(
-          itemCount: actors.length,
-          itemBuilder: (context, i) {
-            final actor = actors[i];
-            return ListTile(
-              onTap: () => showActorEditorDialog(
-                context,
-                widget.editor,
-                (r) => setState(() {}),
-                actor,
-              ),
-              leading: Icon(actor.type == ActorType.npc
-                  ? Icons.smart_toy_rounded
-                  : Icons.face_rounded),
-              title: Text(ActorTranslation.getName(
-                widget.editor.translation,
-                actor.id,
-              )),
-            );
-          }),
+        itemCount: actors.length,
+        itemBuilder: (context, index) {
+          final actor = actors[index];
+          return ActorTile(
+            actor,
+            widget.editor,
+            onTap: () => showActorEditorDialog(
+              context,
+              widget.editor,
+              (r) => setState(() {}),
+              actor,
+            ),
+            index: index,
+          );
+        },
+      ),
     );
   }
 }

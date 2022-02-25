@@ -56,7 +56,10 @@ class _StoryNarrativeEditorScreenState
       ),
       body: NarrativeListView(
         widget.editor,
-        onSelected: (n) => openNode(context, widget.editor, n),
+        onSelected: (n) async {
+          await openNode(context, widget.editor, n);
+          setState(() {});
+        },
         interactive: interactive,
         padding: const EdgeInsets.only(bottom: 76),
       ),

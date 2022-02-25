@@ -87,7 +87,7 @@ void showActorEditorDialog(
           horizontalTitleGap: 12,
           leading: const Icon(Icons.face_rounded),
           title: const Text('Payer actor'),
-          subtitle: const Text('Controller by the player'),
+          subtitle: const Text('Controlled by the player'),
         ),
       ];
     },
