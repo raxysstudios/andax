@@ -1,6 +1,4 @@
 import 'package:andax/models/actor.dart';
-import 'package:andax/models/story.dart';
-import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/story_editor/widgets/actor_editor_dialog.dart';
 import 'package:andax/shared/utils.dart';
