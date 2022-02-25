@@ -56,9 +56,9 @@ void showActorEditorDialog(
       // ),
       TextFormField(
         decoration: const InputDecoration(
-          prefixIcon: Icon(Icons.short_text_rounded),
           labelText: 'Actor name',
         ),
+        autofocus: true,
         initialValue: translation.name,
         validator: emptyValidator,
         onChanged: (s) {

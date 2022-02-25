@@ -116,6 +116,7 @@ class _StoryInfoEditorState extends State<StoryInfoEditor> {
               onTap: () => showActorEditorDialog(
                 context,
                 (r) => setState(() {}),
+                actor,
               ),
               leading: Icon(actor.type == ActorType.npc
                   ? Icons.smart_toy_rounded
