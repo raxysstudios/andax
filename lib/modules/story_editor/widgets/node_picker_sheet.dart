@@ -5,16 +5,17 @@ import 'package:andax/modules/story_editor/widgets/node_tile.dart';
 import 'package:andax/shared/widgets/modal_picker.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 Future<Node?> showNodePickerSheet(
   BuildContext context,
-  StoryEditorState editor,
   ValueSetter<Node> onSelect, [
   String? selectedId,
 ]) {
   return showModalPicker(
     context,
     (context, scroll) {
+      final editor = context.read<StoryEditorState>();
       final nodes = editor.story.nodes.values.toList();
       return Scaffold(
         appBar: AppBar(

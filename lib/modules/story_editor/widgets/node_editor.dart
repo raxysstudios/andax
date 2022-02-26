@@ -69,7 +69,6 @@ class _NodeEditorState extends State<NodeEditor> {
   void selectTransitionNode(Transition transition) {
     showNodePickerSheet(
       context,
-      widget.editor,
       (n) => setState(() {
         transition.targetNodeId = n.id;
       }),
