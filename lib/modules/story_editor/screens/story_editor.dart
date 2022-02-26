@@ -50,6 +50,11 @@ class StoryEditorState extends State<StoryEditorScreen> {
   final _paging = PageController();
 
   @override
+  void setState(void Function() fn) {
+    super.setState(fn);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Provider.value(
       value: this,
@@ -67,7 +72,8 @@ class StoryEditorState extends State<StoryEditorScreen> {
             children: [
               const StoryInfoEditorScreen(),
               StoryNarrativeEditorScreen(this),
-              StoryActorsEditorScreen(this),
+              // ignore: prefer_const_constructors
+              StoryActorsEditorScreen(),
             ],
           ),
           bottomNavigationBar: BottomNavigationBar(

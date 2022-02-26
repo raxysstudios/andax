@@ -1,5 +1,4 @@
 import 'package:andax/models/story.dart';
-import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/home/screens/home.dart';
 import 'package:andax/shared/utils.dart';
@@ -10,29 +9,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'story_editor.dart';
 
-class StoryInfoEditorScreen extends StatefulWidget {
+class StoryInfoEditorScreen extends StatelessWidget {
   const StoryInfoEditorScreen({Key? key}) : super(key: key);
 
-  @override
-  State<StoryInfoEditorScreen> createState() => _StoryInfoEditorScreenState();
-}
-
-class _StoryInfoEditorScreenState extends State<StoryInfoEditorScreen> {
-  StoryEditorState get editor => context.watch<StoryEditorState>();
-  Translation get translation => editor.translation;
-  Story get story => editor.story;
-
-  Future<void> uploadStory() async {
+  Future<void> uploadStory(StoryEditorState editor) async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     final sdb = FirebaseFirestore.instance.collection('stories');
     var sid = editor.info?.storyID;
     if (sid == null) {
-      sid = await sdb.add(story.toJson()).then((r) => r.id);
+      sid = await sdb.add(editor.story.toJson()).then((r) => r.id);
     } else {
-      await sdb.doc(editor.info?.storyID).update(story.toJson());
+      await sdb.doc(editor.info?.storyID).update(editor.story.toJson());
     }
     await sdb.doc(sid).update({
       'metaData.lastUpdateAt': FieldValue.serverTimestamp(),
@@ -42,9 +31,9 @@ class _StoryInfoEditorScreenState extends State<StoryInfoEditorScreen> {
     final tdb = sdb.doc(sid).collection('translations');
     var tid = editor.info?.translationID;
     if (tid == null) {
-      tid = await tdb.add(translation.toJson()).then((r) => r.id);
+      tid = await tdb.add(editor.translation.toJson()).then((r) => r.id);
     } else {
-      await tdb.doc(tid).update(translation.toJson());
+      await tdb.doc(tid).update(editor.translation.toJson());
     }
     await tdb.doc(tid).update({
       'metaData.lastUpdateAt': FieldValue.serverTimestamp(),
@@ -53,19 +42,21 @@ class _StoryInfoEditorScreenState extends State<StoryInfoEditorScreen> {
 
     final adb = tdb.doc(tid).collection('assets');
     await Future.wait([
-      for (final entry in translation.assets.entries)
+      for (final entry in editor.translation.assets.entries)
         adb.doc(entry.key).set(entry.value.toJson())
     ]);
-    editor.info ??= StoryInfo(
-      storyID: sid!,
-      storyAuthorID: '',
-      translationID: tid!,
-      translationAuthorID: '',
-      title: '',
-    );
+    editor.setState(() {
+      editor.info ??= StoryInfo(
+        storyID: sid!,
+        storyAuthorID: '',
+        translationID: tid!,
+        translationAuthorID: '',
+        title: '',
+      );
+    });
   }
 
-  Future<void> deleteStory() async {
+  Future<void> deleteStory(StoryEditorState editor) async {
     if (editor.info == null) return;
     final story = FirebaseFirestore.instance.doc(
       'stories/' + editor.info!.storyID,
@@ -83,6 +74,7 @@ class _StoryInfoEditorScreenState extends State<StoryInfoEditorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final editor = context.watch<StoryEditorState>();
     return Scaffold(
       appBar: AppBar(
         leading: const RoundedBackButton(),
@@ -96,7 +88,7 @@ class _StoryInfoEditorScreenState extends State<StoryInfoEditorScreen> {
                   'Completely delete the story and all of its translations?',
                 );
                 if (delete) {
-                  await showLoadingDialog(context, deleteStory());
+                  await showLoadingDialog(context, deleteStory(editor));
                   Navigator.pushReplacement<void, void>(
                     context,
                     MaterialPageRoute(
@@ -115,7 +107,7 @@ class _StoryInfoEditorScreenState extends State<StoryInfoEditorScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
-          await showLoadingDialog(context, uploadStory());
+          await showLoadingDialog(context, uploadStory(editor));
           Navigator.pop(context);
         },
         icon: const Icon(Icons.upload_rounded),
@@ -130,9 +122,9 @@ class _StoryInfoEditorScreenState extends State<StoryInfoEditorScreen> {
               decoration: const InputDecoration(
                 labelText: 'Initial language',
               ),
-              initialValue: translation.language,
+              initialValue: editor.translation.language,
               onChanged: (s) {
-                translation.language = s;
+                editor.translation.language = s;
               },
             ),
           ),
@@ -142,9 +134,9 @@ class _StoryInfoEditorScreenState extends State<StoryInfoEditorScreen> {
               decoration: const InputDecoration(
                 labelText: 'Story title',
               ),
-              initialValue: StoryTranslation.get(translation)?.title,
+              initialValue: StoryTranslation.get(editor.translation)?.title,
               onChanged: (s) {
-                StoryTranslation.get(translation)?.title = s;
+                StoryTranslation.get(editor.translation)?.title = s;
               },
             ),
           ),
@@ -154,9 +146,10 @@ class _StoryInfoEditorScreenState extends State<StoryInfoEditorScreen> {
               decoration: const InputDecoration(
                 labelText: 'Story description',
               ),
-              initialValue: StoryTranslation.get(translation)?.description,
+              initialValue:
+                  StoryTranslation.get(editor.translation)?.description,
               onChanged: (s) {
-                StoryTranslation.get(translation)?.description = s;
+                StoryTranslation.get(editor.translation)?.description = s;
               },
             ),
           ),
@@ -167,11 +160,11 @@ class _StoryInfoEditorScreenState extends State<StoryInfoEditorScreen> {
                 labelText: 'Story tags',
               ),
               initialValue: prettyTags(
-                StoryTranslation.get(translation)?.tags,
+                StoryTranslation.get(editor.translation)?.tags,
                 separator: ' ',
               ),
               onChanged: (s) {
-                StoryTranslation.get(translation)?.tags =
+                StoryTranslation.get(editor.translation)?.tags =
                     s.split(' ').where((t) => t.isNotEmpty).toList();
               },
             ),
