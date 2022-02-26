@@ -9,22 +9,19 @@ import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'story_editor.dart';
 
-class StoryInfoEditor extends StatefulWidget {
-  const StoryInfoEditor(
-    this.editor, {
-    Key? key,
-  }) : super(key: key);
-
-  final StoryEditorState editor;
+class StoryInfoEditorScreen extends StatefulWidget {
+  const StoryInfoEditorScreen({Key? key}) : super(key: key);
 
   @override
-  State<StoryInfoEditor> createState() => _StoryInfoEditorState();
+  State<StoryInfoEditorScreen> createState() => _StoryInfoEditorScreenState();
 }
 
-class _StoryInfoEditorState extends State<StoryInfoEditor> {
-  StoryEditorState get editor => widget.editor;
+class _StoryInfoEditorScreenState extends State<StoryInfoEditorScreen> {
+  StoryEditorState get editor => context.watch<StoryEditorState>();
   Translation get translation => editor.translation;
   Story get story => editor.story;
 

@@ -6,6 +6,7 @@ import 'package:andax/modules/story_editor/screens/info_editor.dart';
 import 'package:andax/modules/story_editor/screens/narrative_editor.dart';
 import 'package:andax/shared/widgets/danger_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 class StoryEditorScreen extends StatefulWidget {
@@ -50,47 +51,50 @@ class StoryEditorState extends State<StoryEditorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () => showDangerDialog(
-        context,
-        'Leave editor? Unsaved progress will be lost!',
-        confirmText: 'Exit',
-        rejectText: 'Stay',
-      ),
-      child: Scaffold(
-        body: PageView(
-          controller: _paging,
-          physics: const NeverScrollableScrollPhysics(),
-          children: [
-            StoryInfoEditor(this),
-            StoryNarrativeEditorScreen(this),
-            StoryActorsEditorScreen(this),
-          ],
+    return Provider.value(
+      value: this,
+      child: WillPopScope(
+        onWillPop: () => showDangerDialog(
+          context,
+          'Leave editor? Unsaved progress will be lost!',
+          confirmText: 'Exit',
+          rejectText: 'Stay',
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.history_edu_rounded),
-              label: 'Info',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.insights_rounded),
-              label: 'Narrative',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person_rounded),
-              label: 'Actors',
-            ),
-          ],
-          currentIndex: _page,
-          onTap: (i) => setState(() {
-            _page = i;
-            _paging.animateToPage(
-              i,
-              duration: const Duration(milliseconds: 250),
-              curve: standardEasing,
-            );
-          }),
+        child: Scaffold(
+          body: PageView(
+            controller: _paging,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              const StoryInfoEditorScreen(),
+              StoryNarrativeEditorScreen(this),
+              StoryActorsEditorScreen(this),
+            ],
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.history_edu_rounded),
+                label: 'Info',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.insights_rounded),
+                label: 'Narrative',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person_rounded),
+                label: 'Actors',
+              ),
+            ],
+            currentIndex: _page,
+            onTap: (i) => setState(() {
+              _page = i;
+              _paging.animateToPage(
+                i,
+                duration: const Duration(milliseconds: 250),
+                curve: standardEasing,
+              );
+            }),
+          ),
         ),
       ),
     );
