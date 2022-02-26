@@ -1,19 +1,14 @@
 import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
-import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/story_editor/screens/story_editor.dart';
 import 'package:andax/modules/story_editor/widgets/node_editor.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../widgets/node_tile.dart';
 
 class StoryNarrativeEditorScreen extends StatefulWidget {
-  const StoryNarrativeEditorScreen(
-    this.editor, {
-    Key? key,
-  }) : super(key: key);
-
-  final StoryEditorState editor;
+  const StoryNarrativeEditorScreen({Key? key}) : super(key: key);
 
   @override
   _StoryNarrativeEditorScreenState createState() =>
@@ -22,16 +17,15 @@ class StoryNarrativeEditorScreen extends StatefulWidget {
 
 class _StoryNarrativeEditorScreenState
     extends State<StoryNarrativeEditorScreen> {
-  Translation get translation => widget.editor.translation;
-  Story get story => widget.editor.story;
-  List<Node> get nodes => widget.editor.story.nodes.values.toList();
-
   final choices = <String, String>{};
   var interactive = false;
 
-  List<Node> computeThread() {
+  List<Node> computeThread(Story story) {
     final thread = <Node>{};
-    var node = nodes.isEmpty ? null : nodes.first;
+    var node = story.startNodeId == null
+        ? story.nodes.values.first
+        : story.nodes[story.startNodeId];
+
     while (node != null) {
       thread.add(node);
 
@@ -51,7 +45,11 @@ class _StoryNarrativeEditorScreenState
 
   @override
   Widget build(BuildContext context) {
-    final nodes = interactive ? computeThread() : this.nodes;
+    final editor = context.watch<StoryEditorState>();
+    final nodes = interactive
+        ? computeThread(editor.story)
+        : editor.story.nodes.values.toList();
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -73,8 +71,8 @@ class _StoryNarrativeEditorScreenState
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
-          final node = createNode(widget.editor);
-          await openNode(context, widget.editor, node);
+          final node = createNode(editor);
+          await openNode(context, editor, node);
           setState(() {});
         },
         icon: const Icon(Icons.add_circle_rounded),
@@ -93,9 +91,9 @@ class _StoryNarrativeEditorScreenState
             children: [
               NodeTile(
                 node,
-                widget.editor,
+                editor,
                 onTap: () async {
-                  await openNode(context, widget.editor, node);
+                  await openNode(context, editor, node);
                   setState(() {});
                 },
               ),
@@ -116,7 +114,7 @@ class _StoryNarrativeEditorScreenState
                             selected: choice == transition.id,
                             label: Text(
                               MessageTranslation.getText(
-                                translation,
+                                editor.translation,
                                 transition.id,
                               ),
                             ),
