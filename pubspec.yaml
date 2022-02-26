@@ -25,6 +25,7 @@ dependencies:
   json_annotation: ^4.4.0
   flutterfire_ui: ^0.3.2
   badges: ^2.0.2
+  provider: ^6.0.2
 
 dev_dependencies:
   flutter_test:
