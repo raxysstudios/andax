@@ -166,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
                 setState(() {});
               },
-              icon: const Icon(Icons.add_circle_rounded),
+              icon: const Icon(Icons.create_rounded),
               label: const Text('Create'),
             ),
       body: SingleChildScrollView(
