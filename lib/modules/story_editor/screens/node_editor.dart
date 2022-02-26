@@ -171,6 +171,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
               labelText: 'Message text',
               prefixIcon: Icon(Icons.notes_rounded),
             ),
+            autofocus: true,
             initialValue: MessageTranslation.get(
               editor.translation,
               node.id,

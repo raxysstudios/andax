@@ -123,7 +123,6 @@ class _StoryNarrativeEditorScreenState
                     ],
                   ),
                 ),
-              const Divider(),
             ],
           );
         },
