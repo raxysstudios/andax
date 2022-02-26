@@ -12,66 +12,73 @@ void showActorPickerSheet(
   ValueSetter<Actor?> onSelect, [
   String? selectedId,
 ]) {
+  final editor = context.read<StoryEditorState>();
   showModalPicker<Actor>(
     context,
     (context, scroll) {
-      final editor = context.read<StoryEditorState>();
       final actors = editor.story.actors.values.toList();
-      return Scaffold(
-        appBar: AppBar(
-          leading: const RoundedBackButton(),
-          title: const Text('Pick actor'),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => showActorEditorDialog(
-            context,
-            (r) {
-              if (r != null) {
-                Navigator.pop(context);
-                onSelect(r);
-              }
-            },
-          ),
-          tooltip: 'Add actor',
-          child: const Icon(Icons.person_add_rounded),
-        ),
-        body: CustomScrollView(
-          controller: scroll,
-          slivers: [
-            SliverList(
-              delegate: SliverChildListDelegate([
-                ListTile(
-                  leading: const Icon(Icons.person_outline_rounded),
-                  title: const Text('None'),
-                  onTap: () {
-                    Navigator.pop(context);
-                    onSelect(null);
-                  },
-                ),
-                const Divider(),
-              ]),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.only(bottom: 76),
-              sliver: SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final actor = actors[index];
-                    return ActorTile(
-                      actor,
-                      onTap: () {
-                        Navigator.pop(context);
-                        onSelect(actor);
-                      },
-                      index: index,
-                      selected: actor.id == selectedId,
-                    );
-                  },
-                  childCount: actors.length,
-                ),
+      return Provider.value(
+        value: editor,
+        child: Builder(
+          builder: (context) {
+            return Scaffold(
+              appBar: AppBar(
+                leading: const RoundedBackButton(),
+                title: const Text('Pick actor'),
               ),
-            ),
-          ],
+              floatingActionButton: FloatingActionButton(
+                onPressed: () => showActorEditorDialog(
+                  context,
+                  (r) {
+                    if (r != null) {
+                      Navigator.pop(context);
+                      onSelect(r);
+                    }
+                  },
+                ),
+                tooltip: 'Add actor',
+                child: const Icon(Icons.person_add_rounded),
+              ),
+              body: CustomScrollView(
+                controller: scroll,
+                slivers: [
+                  SliverList(
+                    delegate: SliverChildListDelegate([
+                      ListTile(
+                        leading: const Icon(Icons.person_outline_rounded),
+                        title: const Text('None'),
+                        onTap: () {
+                          Navigator.pop(context);
+                          onSelect(null);
+                        },
+                      ),
+                      const Divider(),
+                    ]),
+                  ),
+                  SliverPadding(
+                    padding: const EdgeInsets.only(bottom: 76),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          final actor = actors[index];
+                          return ActorTile(
+                            actor,
+                            onTap: () {
+                              Navigator.pop(context);
+                              onSelect(actor);
+                            },
+                            index: index,
+                            selected: actor.id == selectedId,
+                          );
+                        },
+                        childCount: actors.length,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
         ),
       );
     },

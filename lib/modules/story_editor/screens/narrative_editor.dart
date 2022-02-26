@@ -72,7 +72,7 @@ class _StoryNarrativeEditorScreenState
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           final node = createNode(editor);
-          await openNode(context, editor, node);
+          await openNode(context, node);
           setState(() {});
         },
         icon: const Icon(Icons.add_circle_rounded),
@@ -92,7 +92,7 @@ class _StoryNarrativeEditorScreenState
               NodeTile(
                 node,
                 onTap: () async {
-                  await openNode(context, editor, node);
+                  await openNode(context, node);
                   setState(() {});
                 },
               ),

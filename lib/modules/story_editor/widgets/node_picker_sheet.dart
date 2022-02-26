@@ -12,38 +12,45 @@ Future<Node?> showNodePickerSheet(
   ValueSetter<Node> onSelect, [
   String? selectedId,
 ]) {
+  final editor = context.read<StoryEditorState>();
   return showModalPicker(
     context,
     (context, scroll) {
-      final editor = context.read<StoryEditorState>();
       final nodes = editor.story.nodes.values.toList();
-      return Scaffold(
-        appBar: AppBar(
-          leading: const RoundedBackButton(),
-          title: const Text('Pick node'),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            final node = createNode(editor);
-            await openNode(context, editor, node);
-            Navigator.pop(context);
-            onSelect(node);
-          },
-          tooltip: 'Add node',
-          child: const Icon(Icons.add_circle_rounded),
-        ),
-        body: ListView.builder(
-          padding: const EdgeInsets.only(bottom: 76),
-          itemCount: nodes.length,
-          itemBuilder: (context, index) {
-            final node = nodes[index];
-            return NodeTile(
-              node,
-              onTap: () {
-                Navigator.pop(context);
-                onSelect(node);
-              },
-              selected: selectedId == node.id,
+      return Provider.value(
+        value: editor,
+        child: Builder(
+          builder: (context) {
+            return Scaffold(
+              appBar: AppBar(
+                leading: const RoundedBackButton(),
+                title: const Text('Pick node'),
+              ),
+              floatingActionButton: FloatingActionButton(
+                onPressed: () async {
+                  final node = createNode(editor);
+                  await openNode(context, node);
+                  Navigator.pop(context);
+                  onSelect(node);
+                },
+                tooltip: 'Add node',
+                child: const Icon(Icons.add_circle_rounded),
+              ),
+              body: ListView.builder(
+                padding: const EdgeInsets.only(bottom: 76),
+                itemCount: nodes.length,
+                itemBuilder: (context, index) {
+                  final node = nodes[index];
+                  return NodeTile(
+                    node,
+                    onTap: () {
+                      Navigator.pop(context);
+                      onSelect(node);
+                    },
+                    selected: selectedId == node.id,
+                  );
+                },
+              ),
             );
           },
         ),
