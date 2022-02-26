@@ -59,7 +59,6 @@ void showActorPickerSheet(
                     final actor = actors[index];
                     return ActorTile(
                       actor,
-                      editor,
                       onTap: () {
                         Navigator.pop(context);
                         onSelect(actor);

@@ -13,7 +13,10 @@ import 'actor_picker_sheet.dart';
 import 'node_picker_sheet.dart';
 
 Future<void> openNode(
-    BuildContext context, StoryEditorState editor, Node node) async {
+  BuildContext context,
+  StoryEditorState editor,
+  Node node,
+) async {
   await Navigator.push<void>(
     context,
     MaterialPageRoute(
@@ -147,7 +150,6 @@ class _NodeEditorState extends State<NodeEditor> {
               final actor = widget.editor.story.actors[node.actorId];
               return ActorTile(
                 actor,
-                widget.editor,
                 onTap: selectActor,
                 onLongPress: actor == null
                     ? null

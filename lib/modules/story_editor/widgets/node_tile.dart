@@ -3,11 +3,11 @@ import 'package:andax/models/node.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/story_editor/screens/story_editor.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class NodeTile extends StatelessWidget {
   const NodeTile(
-    this.node,
-    this.editor, {
+    this.node, {
     this.onTap,
     this.index,
     this.selected = false,
@@ -15,12 +15,11 @@ class NodeTile extends StatelessWidget {
   }) : super(key: key);
 
   final Node node;
-  final StoryEditorState editor;
   final VoidCallback? onTap;
   final int? index;
   final bool selected;
 
-  int getIndex() {
+  int getIndex(StoryEditorState editor) {
     if (index != null) {
       return index!;
     }
@@ -29,6 +28,7 @@ class NodeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final editor = context.watch<StoryEditorState>();
     final actor = editor.story.actors[node.actorId];
     return ListTile(
       onTap: onTap,
@@ -73,7 +73,7 @@ class NodeTile extends StatelessWidget {
             )
           : null,
       trailing: Text(
-        '#${getIndex() + 1}',
+        '#${getIndex(editor) + 1}',
         style: Theme.of(context).textTheme.subtitle2,
       ),
       selected: selected,

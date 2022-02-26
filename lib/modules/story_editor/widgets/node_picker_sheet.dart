@@ -38,7 +38,6 @@ Future<Node?> showNodePickerSheet(
             final node = nodes[index];
             return NodeTile(
               node,
-              editor,
               onTap: () {
                 Navigator.pop(context);
                 onSelect(node);

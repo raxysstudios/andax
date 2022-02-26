@@ -30,7 +30,6 @@ class StoryActorsEditorScreen extends StatelessWidget {
           final actor = actors[index];
           return ActorTile(
             actor,
-            editor,
             onTap: () => showActorEditorDialog(
               context,
               (r) => editor.setState(() {}),

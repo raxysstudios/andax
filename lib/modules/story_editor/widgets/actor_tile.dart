@@ -2,11 +2,11 @@ import 'package:andax/models/actor.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/story_editor/screens/story_editor.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ActorTile extends StatelessWidget {
   const ActorTile(
-    this.actor,
-    this.editor, {
+    this.actor, {
     this.onTap,
     this.onLongPress,
     this.selected = false,
@@ -15,13 +15,12 @@ class ActorTile extends StatelessWidget {
   }) : super(key: key);
 
   final Actor? actor;
-  final StoryEditorState editor;
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
   final bool selected;
   final int? index;
 
-  int? getIndex() {
+  int? getIndex(StoryEditorState editor) {
     if (index != null) {
       return index;
     }
@@ -33,7 +32,8 @@ class ActorTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final index = getIndex();
+    final editor = context.watch<StoryEditorState>();
+    final index = getIndex(editor);
     return ListTile(
       onTap: onTap,
       onLongPress: onLongPress,

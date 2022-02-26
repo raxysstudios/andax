@@ -91,7 +91,6 @@ class _StoryNarrativeEditorScreenState
             children: [
               NodeTile(
                 node,
-                editor,
                 onTap: () async {
                   await openNode(context, editor, node);
                   setState(() {});
