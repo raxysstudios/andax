@@ -8,9 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
-import '../screens/story_editor.dart';
-import 'actor_picker_sheet.dart';
-import 'node_picker_sheet.dart';
+import '../widgets/actor_picker_sheet.dart';
+import '../widgets/node_picker_sheet.dart';
+import 'story_editor.dart';
 
 Future<void> openNode(
   BuildContext context,
@@ -23,7 +23,7 @@ Future<void> openNode(
       builder: (context) {
         return Provider.value(
           value: editor,
-          child: NodeEditor(node),
+          child: NodeEditorScreen(node),
         );
       },
     ),
@@ -38,8 +38,8 @@ Node createNode(StoryEditorState editor) {
   return node;
 }
 
-class NodeEditor extends StatefulWidget {
-  const NodeEditor(
+class NodeEditorScreen extends StatefulWidget {
+  const NodeEditorScreen(
     this.node, {
     Key? key,
   }) : super(key: key);
@@ -47,10 +47,10 @@ class NodeEditor extends StatefulWidget {
   final Node node;
 
   @override
-  State<NodeEditor> createState() => _NodeEditorState();
+  State<NodeEditorScreen> createState() => _NodeEditorScreenState();
 }
 
-class _NodeEditorState extends State<NodeEditor> {
+class _NodeEditorScreenState extends State<NodeEditorScreen> {
   Node get node => widget.node;
   List<Transition> get transitions => node.transitions ?? [];
 
@@ -147,6 +147,7 @@ class _NodeEditorState extends State<NodeEditor> {
         label: const Text('Add transition'),
       ),
       body: ListView(
+        padding: const EdgeInsets.only(bottom: 76),
         children: [
           Builder(
             builder: (context) {
@@ -164,27 +165,27 @@ class _NodeEditorState extends State<NodeEditor> {
               );
             },
           ),
-          ListTile(
-            leading: const Icon(Icons.notes_rounded),
-            title: TextFormField(
-              maxLines: null,
-              initialValue: MessageTranslation.get(
+          TextFormField(
+            maxLines: null,
+            decoration: const InputDecoration(
+              labelText: 'Message text',
+              prefixIcon: Icon(Icons.notes_rounded),
+            ),
+            initialValue: MessageTranslation.get(
+              editor.translation,
+              node.id,
+            )?.text,
+            onChanged: (s) {
+              MessageTranslation.get(
                 editor.translation,
                 node.id,
-              )?.text,
-              onChanged: (s) {
-                MessageTranslation.get(
-                  editor.translation,
-                  node.id,
-                )?.text = s;
-              },
-            ),
+              )?.text = s;
+            },
           ),
-          const Divider(),
           SwitchListTile(
             value: editor.story.startNodeId == node.id,
             onChanged: (v) => setState(() {
-              editor.story.startNodeId = node.id;
+              editor.story.startNodeId = v ? node.id : null;
             }),
             secondary: const Padding(
               padding: EdgeInsets.only(top: 8),
@@ -206,7 +207,6 @@ class _NodeEditorState extends State<NodeEditor> {
               title: const Text('Auto transition'),
               subtitle: const Text('Chooses randomly'),
             ),
-            const Divider(),
           ],
           for (final transition in transitions)
             Column(
@@ -228,21 +228,23 @@ class _NodeEditorState extends State<NodeEditor> {
                     tooltip: 'Delete transition',
                   ),
                 ),
-                ListTile(
-                  leading: const Icon(Icons.short_text_rounded),
-                  title: TextFormField(
-                    maxLines: null,
-                    initialValue: MessageTranslation.getText(
+                TextFormField(
+                  maxLines: null,
+                  decoration: const InputDecoration(
+                    labelText: 'Transition text',
+                    prefixIcon: Icon(Icons.short_text_rounded),
+                  ),
+                  initialValue: MessageTranslation.getText(
+                    editor.translation,
+                    transition.id,
+                    '',
+                  ),
+                  onChanged: (s) {
+                    MessageTranslation.get(
                       editor.translation,
                       transition.id,
-                    ),
-                    onChanged: (s) {
-                      MessageTranslation.get(
-                        editor.translation,
-                        transition.id,
-                      )?.text = s;
-                    },
-                  ),
+                    )?.text = s;
+                  },
                 ),
                 const Divider(),
               ],

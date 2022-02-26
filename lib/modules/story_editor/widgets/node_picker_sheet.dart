@@ -1,6 +1,6 @@
 import 'package:andax/models/node.dart';
+import 'package:andax/modules/story_editor/screens/node_editor.dart';
 import 'package:andax/modules/story_editor/screens/story_editor.dart';
-import 'package:andax/modules/story_editor/widgets/node_editor.dart';
 import 'package:andax/modules/story_editor/widgets/node_tile.dart';
 import 'package:andax/shared/widgets/modal_picker.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';

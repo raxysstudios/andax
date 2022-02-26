@@ -116,58 +116,50 @@ class StoryInfoEditorScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.only(bottom: 72),
         children: [
-          ListTile(
-            leading: const Icon(Icons.language_rounded),
-            title: TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Initial language',
-              ),
-              initialValue: editor.translation.language,
-              onChanged: (s) {
-                editor.translation.language = s;
-              },
+          TextFormField(
+            decoration: const InputDecoration(
+              labelText: 'Initial language',
+              prefixIcon: Icon(Icons.language_rounded),
             ),
+            initialValue: editor.translation.language,
+            onChanged: (s) {
+              editor.translation.language = s;
+            },
           ),
-          ListTile(
-            leading: const Icon(Icons.title_rounded),
-            title: TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Story title',
-              ),
-              initialValue: StoryTranslation.get(editor.translation)?.title,
-              onChanged: (s) {
-                StoryTranslation.get(editor.translation)?.title = s;
-              },
+          TextFormField(
+            decoration: const InputDecoration(
+              labelText: 'Story title',
+              prefixIcon: Icon(Icons.title_rounded),
             ),
+            initialValue: StoryTranslation.get(editor.translation)?.title,
+            onChanged: (s) {
+              StoryTranslation.get(editor.translation)?.title = s;
+            },
           ),
-          ListTile(
-            leading: const Icon(Icons.description_rounded),
-            title: TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Story description',
-              ),
-              initialValue:
-                  StoryTranslation.get(editor.translation)?.description,
-              onChanged: (s) {
-                StoryTranslation.get(editor.translation)?.description = s;
-              },
+          TextFormField(
+            maxLines: null,
+            decoration: const InputDecoration(
+              labelText: 'Story description',
+              prefixIcon: Icon(Icons.description_rounded),
             ),
+            initialValue: StoryTranslation.get(editor.translation)?.description,
+            onChanged: (s) {
+              StoryTranslation.get(editor.translation)?.description = s;
+            },
           ),
-          ListTile(
-            leading: const Icon(Icons.tag_rounded),
-            title: TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Story tags',
-              ),
-              initialValue: prettyTags(
-                StoryTranslation.get(editor.translation)?.tags,
-                separator: ' ',
-              ),
-              onChanged: (s) {
-                StoryTranslation.get(editor.translation)?.tags =
-                    s.split(' ').where((t) => t.isNotEmpty).toList();
-              },
+          TextFormField(
+            decoration: const InputDecoration(
+              labelText: 'Story tags',
+              prefixIcon: Icon(Icons.tag_rounded),
             ),
+            initialValue: prettyTags(
+              StoryTranslation.get(editor.translation)?.tags,
+              separator: ' ',
+            ),
+            onChanged: (s) {
+              StoryTranslation.get(editor.translation)?.tags =
+                  s.split(' ').where((t) => t.isNotEmpty).toList();
+            },
           ),
         ],
       ),
