@@ -3,13 +3,14 @@ import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/story_editor/screens/story_editor.dart';
 import 'package:andax/shared/widgets/editor_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void showActorEditorDialog(
   BuildContext context,
-  StoryEditorState editor,
   ValueSetter<Actor?> onResult, [
   Actor? value,
 ]) {
+  final editor = context.read<StoryEditorState>();
   late Actor actor;
   late ActorTranslation translation;
 
@@ -40,7 +41,7 @@ void showActorEditorDialog(
       }
       onResult(result);
     },
-    title: 'Edit actor',
+    title: value == null ? 'Create actor' : 'Edit actor',
     padding: EdgeInsets.zero,
     builder: (context, setState) {
       return [

@@ -19,7 +19,6 @@ class StoryActorsEditorScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => showActorEditorDialog(
           context,
-          editor,
           (r) => editor.setState(() {}),
         ),
         icon: const Icon(Icons.person_add_rounded),
@@ -34,7 +33,6 @@ class StoryActorsEditorScreen extends StatelessWidget {
             editor,
             onTap: () => showActorEditorDialog(
               context,
-              editor,
               (r) => editor.setState(() {}),
               actor,
             ),

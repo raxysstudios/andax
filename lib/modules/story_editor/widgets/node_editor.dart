@@ -77,7 +77,6 @@ class _NodeEditorState extends State<NodeEditor> {
   void selectActor() {
     showActorPickerSheet(
       context,
-      widget.editor,
       (a) => setState(() {
         node.actorId = a?.id;
       }),
@@ -154,7 +153,6 @@ class _NodeEditorState extends State<NodeEditor> {
                     ? null
                     : () => showActorEditorDialog(
                           context,
-                          widget.editor,
                           (r) => setState(() {}),
                           actor,
                         ),
