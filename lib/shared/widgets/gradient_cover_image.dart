@@ -6,6 +6,7 @@ class GradientCoverImage extends StatelessWidget {
     this.opacity = 1,
     this.reversed = false,
     this.placeholderSize = 24,
+    this.step = .25,
     Key? key,
   }) : super(key: key);
 
@@ -13,6 +14,7 @@ class GradientCoverImage extends StatelessWidget {
   final double opacity;
   final bool reversed;
   final double placeholderSize;
+  final double step;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class GradientCoverImage extends StatelessWidget {
           colors: reversed ? colors.reversed.toList() : colors,
           stops: [
             0,
-            reversed ? .25 : .75,
+            (reversed ? 1 - step : step),
             1,
           ],
         ).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));

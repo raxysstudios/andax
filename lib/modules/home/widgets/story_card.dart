@@ -27,6 +27,7 @@ class _StoryCardState extends State<StoryCard> {
             Positioned.fill(
               child: GradientCoverImage(
                 widget.story.imageUrl,
+                reversed: true,
                 placeholderSize: 64,
               ),
             ),
