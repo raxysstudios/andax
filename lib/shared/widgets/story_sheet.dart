@@ -180,7 +180,9 @@ Future<void> showStorySheet(BuildContext context, StoryInfo info) async {
                   children: [
                     Text(
                       info.title,
-                      style: textTheme.headline5,
+                      style: textTheme.headline5?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                     if (info.description != null)
                       Padding(
