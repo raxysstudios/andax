@@ -14,7 +14,7 @@ dependencies:
   firebase_auth: ^3.3.0
   google_sign_in: ^5.2.1
   algolia: ^1.0.1
-  flutter_markdown: ^0.6.3
+  flutter_markdown: ^0.6.9
   simple_animations: ^4.0.1
   uuid: ^3.0.5
   infinite_scroll_pagination: ^3.1.0
@@ -26,6 +26,7 @@ dependencies:
   flutterfire_ui: ^0.3.2
   badges: ^2.0.2
   provider: ^6.0.2
+  url_launcher: ^6.0.20
 
 dev_dependencies:
   flutter_test:

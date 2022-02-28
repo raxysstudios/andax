@@ -10,6 +10,8 @@ import 'package:andax/shared/widgets/span_icon.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'modal_scrollable_sheet.dart';
 
@@ -148,9 +150,20 @@ Future<void> showStorySheet(BuildContext context, StoryInfo info) async {
                           if (info.description != null)
                             Padding(
                               padding: const EdgeInsets.only(top: 16),
-                              child: Text(
-                                info.description!,
-                                style: const TextStyle(fontSize: 16),
+                              child: MarkdownBody(
+                                data: info.description!,
+                                selectable: true,
+                                styleSheet: MarkdownStyleSheet(
+                                  p: const TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                  strong: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                onTapLink: (_, link, __) {
+                                  if (link != null) launch(link);
+                                },
                               ),
                             )
                         ],
