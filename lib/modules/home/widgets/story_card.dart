@@ -1,5 +1,5 @@
 import 'package:andax/models/story.dart';
-import 'package:andax/shared/widgets/gradient_cover_image.dart';
+import 'package:andax/modules/home/widgets/gradient_cover_image.dart';
 import 'package:flutter/material.dart';
 
 class StoryCard extends StatefulWidget {
