@@ -57,6 +57,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Provider.value(
       value: this,
       child: WillPopScope(
@@ -81,6 +82,8 @@ class StoryEditorState extends State<StoryEditorScreen> {
             ],
           ),
           bottomNavigationBar: BottomNavigationBar(
+            selectedItemColor: textTheme.bodyText1?.color,
+            unselectedItemColor: textTheme.caption?.color,
             items: const [
               BottomNavigationBarItem(
                 icon: Icon(Icons.history_edu_rounded),
