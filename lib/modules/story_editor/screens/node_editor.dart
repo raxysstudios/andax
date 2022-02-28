@@ -200,6 +200,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
               title: const Text('Auto transition'),
               subtitle: const Text('Chooses randomly'),
             ),
+            const Divider(),
           ],
           for (final transition in transitions)
             Column(
