@@ -98,11 +98,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> openSearch() {
-    return Navigator.push<void>(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const SearchScreen(),
-      ),
+    return showScrollableModalSheet(
+      context: context,
+      builder: (context, scroll) {
+        return SearchScreen(
+          onSelect: (info) => showStorySheet(context, info),
+        );
+      },
     );
   }
 

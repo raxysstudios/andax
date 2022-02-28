@@ -13,7 +13,12 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({Key? key}) : super(key: key);
+  const SearchScreen({
+    required this.onSelect,
+    Key? key,
+  }) : super(key: key);
+
+  final ValueSetter<StoryInfo> onSelect;
 
   @override
   _SearchScreenState createState() => _SearchScreenState();
@@ -119,7 +124,7 @@ class _SearchScreenState extends State<SearchScreen> {
         builder: (context, info, index) {
           return StoryTile(
             info,
-            onTap: () => showStorySheet(context, info),
+            onTap: () => widget.onSelect(info),
           );
         },
       ),

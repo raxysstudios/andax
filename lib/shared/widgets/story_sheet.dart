@@ -18,7 +18,7 @@ Future<void> showStorySheet(BuildContext context, StoryInfo info) async {
   });
   await showModalScrollableSheet<void>(
     context: context,
-    minSize: .5,
+    minSize: .6,
     builder: (context, scroll) {
       return Scaffold(
         floatingActionButton: FloatingActionButton.extended(
