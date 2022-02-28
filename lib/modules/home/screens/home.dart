@@ -10,7 +10,7 @@ import 'package:andax/shared/widgets/loading_builder.dart';
 import 'package:andax/shared/widgets/paging_list.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:andax/shared/widgets/scrollable_modal_sheet.dart';
-import 'package:andax/shared/widgets/story_dialog.dart';
+import 'package:andax/shared/widgets/story_sheet.dart';
 import 'package:andax/shared/widgets/story_tile.dart';
 import 'package:andax/store.dart';
 import 'package:firebase_auth/firebase_auth.dart';

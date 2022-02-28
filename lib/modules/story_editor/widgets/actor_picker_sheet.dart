@@ -1,7 +1,7 @@
 import 'package:andax/models/actor.dart';
 import 'package:andax/modules/story_editor/screens/story_editor.dart';
 import 'package:andax/modules/story_editor/widgets/actor_tile.dart';
-import 'package:andax/shared/widgets/modal_picker.dart';
+import 'package:andax/shared/widgets/modal_scrollable_sheet.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,9 +12,9 @@ Future<Actor?> showActorPickerSheet(
   String? selectedId,
 ]) {
   final editor = context.read<StoryEditorState>();
-  return showModalPicker<Actor>(
-    context,
-    (context, scroll) {
+  return showModalScrollableSheet<Actor>(
+    context: context,
+    builder: (context, scroll) {
       final actors = editor.story.actors.values.toList();
       return Provider.value(
         value: editor,
