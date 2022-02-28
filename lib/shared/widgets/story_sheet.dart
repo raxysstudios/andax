@@ -24,13 +24,12 @@ Future<void> showStorySheet(BuildContext context, StoryInfo info) async {
         appBar: AppBar(
           leading: const RoundedBackButton(),
           bottom: const PreferredSize(
-            preferredSize: Size.fromHeight(kToolbarHeight + 3),
+            preferredSize: Size.fromHeight(1.5 * kToolbarHeight),
             child: SizedBox(),
           ),
           flexibleSpace: FlexibleSpaceBar(
             background: GradientCoverImage(
               info.imageUrl,
-              opacity: .5,
               reversed: true,
               placeholderSize: 128,
             ),
