@@ -1,21 +1,23 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
-Future<T?> showModalPicker<T>(
-  BuildContext context,
-  Widget Function(BuildContext, ScrollController) builder,
-) {
+Future<T?> showModalScrollableSheet<T>({
+  required BuildContext context,
+  required Widget Function(BuildContext, ScrollController) builder,
+  double? minSize,
+}) {
   final media = MediaQuery.of(context);
-  final childSize =
-      1 - (kToolbarHeight + media.padding.top) / media.size.height;
+  final maxSize = 1 - (kToolbarHeight + media.padding.top) / media.size.height;
   return showModalBottomSheet<T>(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (context) {
       return DraggableScrollableSheet(
-        minChildSize: childSize - .1,
-        initialChildSize: childSize,
-        maxChildSize: childSize,
+        minChildSize: max((minSize ?? maxSize) - .1, .1),
+        initialChildSize: minSize ?? maxSize,
+        maxChildSize: maxSize,
         builder: (context, controller) {
           return Material(
             shape: const RoundedRectangleBorder(

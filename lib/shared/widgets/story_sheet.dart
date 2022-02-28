@@ -8,7 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'loading_dialog.dart';
-import 'modal_picker.dart';
+import 'modal_scrollable_sheet.dart';
 
 Future<void> showStorySheet(BuildContext context, StoryInfo info) async {
   late bool liked;
@@ -16,9 +16,10 @@ Future<void> showStorySheet(BuildContext context, StoryInfo info) async {
   await likeService.updateLikedState().then((l) {
     liked = l ?? false;
   });
-  await showModalPicker<void>(
-    context,
-    (context, scroll) {
+  await showModalScrollableSheet<void>(
+    context: context,
+    minSize: .5,
+    builder: (context, scroll) {
       return Scaffold(
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () async {
