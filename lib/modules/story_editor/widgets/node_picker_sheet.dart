@@ -37,6 +37,7 @@ Future<Node?> showNodePickerSheet(
                 child: const Icon(Icons.add_circle_rounded),
               ),
               body: ListView.builder(
+                controller: scroll,
                 padding: const EdgeInsets.only(bottom: 76),
                 itemCount: nodes.length,
                 itemBuilder: (context, index) {
