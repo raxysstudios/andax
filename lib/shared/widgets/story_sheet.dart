@@ -1,7 +1,6 @@
 import 'package:andax/models/story.dart';
 import 'package:andax/modules/store_play/screens/play.dart';
 import 'package:andax/modules/story_editor/screens/story_editor.dart';
-import 'package:andax/modules/story_translator/screens/crowdsourcing.dart';
 import 'package:andax/shared/services/likes.dart';
 import 'package:andax/shared/services/story_loader.dart';
 import 'package:andax/shared/utils.dart';
@@ -12,7 +11,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'loading_dialog.dart';
 import 'modal_scrollable_sheet.dart';
 
 Future<void> showStorySheet(BuildContext context, StoryInfo info) async {
@@ -39,6 +37,7 @@ Future<void> showStorySheet(BuildContext context, StoryInfo info) async {
               info.imageUrl,
               opacity: .5,
               reversed: true,
+              placeholderSize: 128,
             ),
           ),
           actions: [
@@ -172,22 +171,45 @@ Future<void> showStorySheet(BuildContext context, StoryInfo info) async {
           controller: scroll,
           padding: const EdgeInsets.only(bottom: 76),
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(
-                info.title,
-                style: textTheme.headline5,
-              ),
-            ),
-            if (info.description != null)
-              Padding(
+            Card(
+              margin: const EdgeInsets.all(8),
+              child: Padding(
                 padding: const EdgeInsets.all(16),
-                child: Text(
-                  info.description!,
-                  style: const TextStyle(fontSize: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      info.title,
+                      style: textTheme.headline5,
+                    ),
+                    if (info.description != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 16),
+                        child: Text(
+                          info.description!,
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      )
+                  ],
                 ),
               ),
-            const Divider(),
+            ),
+            // Padding(
+            //   padding: const EdgeInsets.all(16),
+            //   child: Text(
+            //     info.title,
+            //     style: textTheme.headline5,
+            //   ),
+            // ),
+            // if (info.description != null)
+            //   Padding(
+            //     padding: const EdgeInsets.all(16),
+            //     child: Text(
+            //       info.description!,
+            //       style: const TextStyle(fontSize: 16),
+            //     ),
+            //   ),
+            // const Divider(),
             Padding(
               padding: const EdgeInsets.all(16),
               child: RichText(
