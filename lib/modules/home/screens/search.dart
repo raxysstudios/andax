@@ -6,6 +6,7 @@ import 'package:andax/modules/home/services/searching.dart';
 import 'package:andax/modules/home/services/stories.dart';
 import 'package:andax/shared/extensions.dart';
 import 'package:andax/shared/widgets/paging_list.dart';
+import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:andax/shared/widgets/story_sheet.dart';
 import 'package:andax/shared/widgets/story_tile.dart';
 import 'package:badges/badges.dart';
@@ -71,6 +72,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: const RoundedBackButton(),
         title: TextField(
           controller: textController,
           autofocus: true,
