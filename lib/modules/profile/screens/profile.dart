@@ -1,7 +1,7 @@
 import 'package:andax/models/story.dart';
-import 'package:andax/modules/story_info/screens/story_info.dart';
 import 'package:andax/shared/widgets/paging_list.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
+import 'package:andax/shared/widgets/story_dialog.dart';
 import 'package:andax/shared/widgets/story_tile.dart';
 import 'package:andax/store.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -103,15 +103,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             body: PagingList<StoryInfo>(
               onRequest: getter,
-              builder: (context, story, index) {
+              builder: (context, info, index) {
                 return StoryTile(
-                  story,
-                  onTap: () => Navigator.push<void>(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => StoryScreen(story),
-                    ),
-                  ),
+                  info,
+                  onTap: () => showStorySheet(context, info),
                 );
               },
             ),
@@ -146,12 +141,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   builder: (context, item, index) {
                     return StoryTile(
                       item.value,
-                      onTap: () => Navigator.push<void>(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => StoryScreen(item.value),
-                        ),
-                      ),
+                      onTap: () => showStorySheet(context, item.value),
                     );
                   },
                 ),
