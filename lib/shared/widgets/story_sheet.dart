@@ -59,8 +59,8 @@ Future<void> showStorySheet(BuildContext context, StoryInfo info) async {
               flexibleSpace: FlexibleSpaceBar(
                 background: GradientCoverImage(
                   info.imageUrl,
-                  reversed: true,
                   placeholderSize: 128,
+                  step: 0,
                 ),
               ),
               actions: [

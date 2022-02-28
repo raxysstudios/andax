@@ -19,9 +19,9 @@ class GradientCoverImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = [
+      Colors.transparent,
+      Colors.transparent,
       Colors.black.withOpacity(opacity),
-      Colors.transparent,
-      Colors.transparent,
     ];
 
     return ShaderMask(
