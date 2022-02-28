@@ -1,4 +1,5 @@
 import 'package:andax/models/story.dart';
+import 'package:andax/shared/widgets/gradient_cover_image.dart';
 import 'package:flutter/material.dart';
 
 class StoryCard extends StatefulWidget {
@@ -23,33 +24,9 @@ class _StoryCardState extends State<StoryCard> {
         onTap: widget.onTap,
         child: Stack(
           children: [
-            if (widget.story.imageUrl != null)
-              Positioned.fill(
-                child: ShaderMask(
-                  shaderCallback: (rect) {
-                    return const LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.black,
-                          Colors.transparent,
-                          Colors.transparent,
-                        ],
-                        stops: [
-                          0,
-                          .75,
-                          1,
-                        ]).createShader(
-                      Rect.fromLTRB(0, 0, rect.width, rect.height),
-                    );
-                  },
-                  blendMode: BlendMode.dstIn,
-                  child: Image.network(
-                    widget.story.imageUrl!,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
+            Positioned.fill(
+              child: GradientCoverImage(widget.story.imageUrl),
+            ),
             Positioned.fill(
               child: Padding(
                 padding: const EdgeInsets.all(8),
