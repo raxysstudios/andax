@@ -1,6 +1,7 @@
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
+import 'package:andax/modules/store_play/screens/play.dart';
 import 'package:andax/modules/story_editor/screens/actors_editor.dart';
 import 'package:andax/modules/story_editor/screens/info_editor.dart';
 import 'package:andax/modules/story_editor/screens/narrative_editor.dart';
@@ -93,16 +94,36 @@ class StoryEditorState extends State<StoryEditorScreen> {
                 icon: Icon(Icons.groups_rounded),
                 label: 'Actors',
               ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.play_arrow_rounded),
+                label: 'Play',
+              ),
             ],
             currentIndex: _page,
-            onTap: (i) => setState(() {
-              _page = i;
-              _paging.animateToPage(
-                i,
-                duration: const Duration(milliseconds: 250),
-                curve: standardEasing,
-              );
-            }),
+            onTap: (i) {
+              if (i == 3) {
+                Navigator.push<void>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return PlayScreen(
+                        story: story,
+                        translation: translation,
+                      );
+                    },
+                  ),
+                );
+                return;
+              }
+              setState(() {
+                _page = i;
+                _paging.animateToPage(
+                  i,
+                  duration: const Duration(milliseconds: 250),
+                  curve: standardEasing,
+                );
+              });
+            },
           ),
         ),
       ),
