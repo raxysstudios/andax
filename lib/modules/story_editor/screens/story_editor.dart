@@ -90,7 +90,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
                 label: 'Narrative',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.person_rounded),
+                icon: Icon(Icons.groups_rounded),
                 label: 'Actors',
               ),
             ],
