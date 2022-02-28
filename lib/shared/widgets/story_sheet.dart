@@ -52,8 +52,6 @@ Future<void> showStorySheet(BuildContext context, StoryInfo info) async {
           slivers: [
             SliverAppBar(
               pinned: true,
-              snap: true,
-              floating: true,
               leading: const RoundedBackButton(),
               expandedHeight: 3 * kToolbarHeight,
               flexibleSpace: FlexibleSpaceBar(
@@ -194,11 +192,6 @@ Future<void> showStorySheet(BuildContext context, StoryInfo info) async {
                       ),
                     ),
                   ),
-                  for (var i = 0; i < 10; i++)
-                    Padding(
-                      padding: const EdgeInsets.all(32),
-                      child: Text('aeae'),
-                    )
                 ],
               ),
             ),
