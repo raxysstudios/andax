@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:algolia/algolia.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/modules/home/services/searching.dart';
+import 'package:andax/modules/home/services/sheets.dart';
 import 'package:andax/shared/extensions.dart';
 import 'package:andax/shared/widgets/paging_list.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
@@ -12,12 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({
-    required this.onSelect,
-    Key? key,
-  }) : super(key: key);
-
-  final ValueSetter<StoryInfo> onSelect;
+  const SearchScreen({Key? key}) : super(key: key);
 
   @override
   _SearchScreenState createState() => _SearchScreenState();
@@ -124,7 +120,7 @@ class _SearchScreenState extends State<SearchScreen> {
         builder: (context, info, index) {
           return StoryTile(
             info,
-            onTap: () => widget.onSelect(info),
+            onTap: () => showStorySheet(context, info),
           );
         },
       ),
