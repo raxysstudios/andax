@@ -41,7 +41,7 @@ class _StoryCardState extends State<StoryCard> {
                     Text(
                       widget.story.title,
                       style: const TextStyle(
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
