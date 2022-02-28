@@ -4,10 +4,7 @@ import 'package:andax/modules/home/screens/story.dart';
 import 'package:andax/shared/widgets/scrollable_modal_sheet.dart';
 import 'package:flutter/material.dart';
 
-Future<void> showStorySheet(
-  BuildContext context,
-  StoryInfo info,
-) async {
+Future<void> showStorySheet(BuildContext context, StoryInfo info) async {
   await showScrollableModalSheet<void>(
     context: context,
     minSize: .6,
@@ -20,16 +17,11 @@ Future<void> showStorySheet(
   );
 }
 
-Future<void> showSearchSheet(
-  BuildContext context, [
-  ValueSetter<StoryInfo>? onSelect,
-]) async {
+Future<void> showSearchSheet(BuildContext context) async {
   await showScrollableModalSheet<void>(
     context: context,
     builder: (context, scroll) {
-      return SearchScreen(
-        onSelect: onSelect ?? (i) => showStorySheet(context, i),
-      );
+      return const SearchScreen();
     },
   );
 }
