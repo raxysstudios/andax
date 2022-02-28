@@ -5,12 +5,12 @@ import 'package:andax/modules/home/widgets/raxys_logo.dart';
 import 'package:andax/modules/home/widgets/story_card.dart';
 import 'package:andax/modules/profile/screens/auth_gate.dart';
 import 'package:andax/modules/story_editor/screens/story_editor.dart';
-import 'package:andax/modules/story_info/screens/story_info.dart';
 import 'package:andax/shared/extensions.dart';
 import 'package:andax/shared/widgets/loading_builder.dart';
 import 'package:andax/shared/widgets/paging_list.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:andax/shared/widgets/scrollable_modal_sheet.dart';
+import 'package:andax/shared/widgets/story_dialog.dart';
 import 'package:andax/shared/widgets/story_tile.dart';
 import 'package:andax/store.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -41,19 +41,19 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         LoadingBuilder<List<StoryInfo>>(
           future: getStories(index, hitsPerPage: 10),
-          builder: (context, stories) {
+          builder: (context, infos) {
             return SizedBox(
               height: 128,
               child: ListView.builder(
                 itemExtent: 200,
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 scrollDirection: Axis.horizontal,
-                itemCount: stories.length,
+                itemCount: infos.length,
                 itemBuilder: (context, index) {
-                  final story = stories[index];
+                  final info = infos[index];
                   return StoryCard(
-                    story,
-                    onTap: () => openStory(story),
+                    info,
+                    onTap: () => showStorySheet(context, info),
                   );
                 },
               ),
@@ -88,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
             builder: (context, info, index) {
               return StoryTile(
                 info,
-                onTap: () => openStory(info),
+                onTap: () => showStorySheet(context, info),
               );
             },
           ),
@@ -102,15 +102,6 @@ class _HomeScreenState extends State<HomeScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => const SearchScreen(),
-      ),
-    );
-  }
-
-  Future<void> openStory(StoryInfo info) {
-    return Navigator.push<void>(
-      context,
-      MaterialPageRoute(
-        builder: (context) => StoryScreen(info),
       ),
     );
   }
@@ -206,13 +197,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   hitsPerPage: 30,
                 );
               }),
-              builder: (context, stories) {
+              builder: (context, infos) {
                 return Column(
                   children: [
-                    for (var story in stories)
+                    for (var info in infos)
                       StoryTile(
-                        story,
-                        onTap: () => openStory(story),
+                        info,
+                        onTap: () => showStorySheet(context, info),
                       )
                   ],
                 );

@@ -5,6 +5,7 @@ import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/models/transition.dart';
+import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/store_play/widgets/happiness_slider.dart';
 import 'package:andax/modules/store_play/widgets/node_card.dart';
@@ -14,21 +15,21 @@ import 'package:simple_animations/simple_animations.dart';
 import '../utils/get_translation.dart';
 
 class PlayScreen extends StatefulWidget {
-  final Story story;
-  final List<TranslationAsset> translations;
-
   const PlayScreen({
     required this.story,
-    required this.translations,
+    required this.translation,
     Key? key,
   }) : super(key: key);
+
+  final Story story;
+  final Translation translation;
 
   @override
   _PlayScreenState createState() => _PlayScreenState();
 }
 
 class _PlayScreenState extends State<PlayScreen> {
-  late final Map<String, TranslationAsset> translations;
+  Map<String, TranslationAsset> get translations => widget.translation.assets;
   Map<String, Node> get nodes => widget.story.nodes;
   Map<String, Actor> get actors => widget.story.actors;
   late Node currentNode;
@@ -41,10 +42,6 @@ class _PlayScreenState extends State<PlayScreen> {
   @override
   void initState() {
     super.initState();
-    translations = {
-      for (final translation in widget.translations)
-        translation.id: translation,
-    };
     currentNode = widget.story.startNodeId == null
         ? nodes.values.first
         : nodes[widget.story.startNodeId]!;
