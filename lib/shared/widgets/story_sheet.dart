@@ -68,7 +68,9 @@ Future<void> showStorySheet(BuildContext context, StoryInfo info) async {
             PopupMenuButton<void>(itemBuilder: (context) {
               return [
                 PopupMenuItem(
-                  onTap: () {},
+                  onTap: () {
+                    // Should point to cloud function probably.
+                  },
                   child: Row(
                     children: const [
                       Icon(Icons.report_rounded),
@@ -81,23 +83,24 @@ Future<void> showStorySheet(BuildContext context, StoryInfo info) async {
                   const PopupMenuDivider(),
                   PopupMenuItem(
                     onTap: () async {
-                      final t = await showLoadingDialog(
-                        context,
-                        loadTranslation(info),
-                      );
-                      if (t != null) {
-                        Navigator.push<void>(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return CrowdsourcingScreen(
-                                storyId: info.storyID,
-                                translations: t.assets.values.toList(),
-                              );
-                            },
-                          ),
-                        );
-                      }
+                      // Crowdsroucing is broken
+                      // final t = await showLoadingDialog(
+                      //   context,
+                      //   loadTranslation(info),
+                      // );
+                      // if (t != null) {
+                      //   Navigator.push<void>(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //       builder: (context) {
+                      //         return CrowdsourcingScreen(
+                      //           storyId: info.storyID,
+                      //           translations: t.assets.values.toList(),
+                      //         );
+                      //       },
+                      //     ),
+                      //   );
+                      // }
                     },
                     child: Row(
                       children: const [
