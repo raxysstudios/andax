@@ -1,6 +1,4 @@
 import 'package:andax/models/story.dart';
-import 'package:andax/modules/home/screens/search.dart';
-import 'package:andax/modules/home/services/stories.dart';
 import 'package:andax/modules/home/widgets/raxys_logo.dart';
 import 'package:andax/modules/home/widgets/story_card.dart';
 import 'package:andax/modules/profile/screens/auth_gate.dart';
@@ -10,11 +8,13 @@ import 'package:andax/shared/widgets/loading_builder.dart';
 import 'package:andax/shared/widgets/paging_list.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:andax/shared/widgets/scrollable_modal_sheet.dart';
-import 'package:andax/shared/widgets/story_sheet.dart';
 import 'package:andax/shared/widgets/story_tile.dart';
 import 'package:andax/store.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../services/searching.dart';
+import '../services/sheets.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
             title: Text(title.titleCase),
             actions: [
               IconButton(
-                onPressed: openSearch,
+                onPressed: () => showSearchSheet(context),
                 icon: const Icon(Icons.search_rounded),
                 tooltip: 'Search stories',
               ),
@@ -92,17 +92,6 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             },
           ),
-        );
-      },
-    );
-  }
-
-  Future<void> openSearch() {
-    return showScrollableModalSheet(
-      context: context,
-      builder: (context, scroll) {
-        return SearchScreen(
-          onSelect: (info) => showStorySheet(context, info),
         );
       },
     );
@@ -128,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('Ændax'),
         actions: [
           IconButton(
-            onPressed: openSearch,
+            onPressed: () => showSearchSheet(context),
             icon: const Icon(Icons.search_rounded),
             tooltip: 'Search stories',
           ),
@@ -184,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: Theme.of(context).textTheme.headline6,
               ),
               trailing: const Icon(Icons.search_rounded),
-              onTap: openSearch,
+              onTap: () => showSearchSheet(context),
             ),
             LoadingBuilder<List<StoryInfo>>(
               future: algolia
