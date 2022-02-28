@@ -155,23 +155,25 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
               );
             },
           ),
-          TextFormField(
-            maxLines: null,
-            decoration: const InputDecoration(
-              labelText: 'Message text',
-              prefixIcon: Icon(Icons.notes_rounded),
-            ),
-            autofocus: true,
-            initialValue: MessageTranslation.get(
-              editor.translation,
-              node.id,
-            )?.text,
-            onChanged: (s) {
-              MessageTranslation.get(
+          ListTile(
+            title: TextFormField(
+              maxLines: null,
+              decoration: const InputDecoration(
+                labelText: 'Message text',
+                prefixIcon: Icon(Icons.notes_rounded),
+              ),
+              autofocus: true,
+              initialValue: MessageTranslation.get(
                 editor.translation,
                 node.id,
-              )?.text = s;
-            },
+              )?.text,
+              onChanged: (s) {
+                MessageTranslation.get(
+                  editor.translation,
+                  node.id,
+                )?.text = s;
+              },
+            ),
           ),
           SwitchListTile(
             value: editor.story.startNodeId == node.id,
@@ -226,23 +228,25 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
                     tooltip: 'Delete transition',
                   ),
                 ),
-                TextFormField(
-                  maxLines: null,
-                  decoration: const InputDecoration(
-                    labelText: 'Transition text',
-                    prefixIcon: Icon(Icons.short_text_rounded),
-                  ),
-                  initialValue: MessageTranslation.getText(
-                    editor.translation,
-                    transition.id,
-                    '',
-                  ),
-                  onChanged: (s) {
-                    MessageTranslation.get(
+                ListTile(
+                  title: TextFormField(
+                    maxLines: null,
+                    decoration: const InputDecoration(
+                      labelText: 'Transition text',
+                      prefixIcon: Icon(Icons.short_text_rounded),
+                    ),
+                    initialValue: MessageTranslation.getText(
                       editor.translation,
                       transition.id,
-                    )?.text = s;
-                  },
+                      '',
+                    ),
+                    onChanged: (s) {
+                      MessageTranslation.get(
+                        editor.translation,
+                        transition.id,
+                      )?.text = s;
+                    },
+                  ),
                 ),
                 const Divider(),
               ],
