@@ -1,10 +1,10 @@
 import 'package:andax/models/story.dart';
 import 'package:andax/modules/store_play/screens/play.dart';
 import 'package:andax/modules/story_editor/screens/story_editor.dart';
-import 'package:andax/shared/services/likes.dart';
 import 'package:andax/shared/services/story_loader.dart';
 import 'package:andax/shared/utils.dart';
 import 'package:andax/shared/widgets/gradient_cover_image.dart';
+import 'package:andax/shared/widgets/like_chip.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:andax/shared/widgets/span_icon.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,11 +14,6 @@ import 'package:flutter/material.dart';
 import 'modal_scrollable_sheet.dart';
 
 Future<void> showStorySheet(BuildContext context, StoryInfo info) async {
-  late bool liked;
-  final likeService = LikeService(info);
-  await likeService.updateLikedState().then((l) {
-    liked = l ?? false;
-  });
   final textTheme = Theme.of(context).textTheme;
   final user = FirebaseAuth.instance.currentUser;
   await showModalScrollableSheet<void>(
@@ -46,23 +41,7 @@ Future<void> showStorySheet(BuildContext context, StoryInfo info) async {
               label: Text(info.views.toString()),
             ),
             const SizedBox(width: 8),
-            StatefulBuilder(
-              builder: (context, setState) {
-                final likes = info.likes + (liked ? 1 : 0);
-                return InputChip(
-                  avatar: Icon(
-                    liked
-                        ? Icons.favorite_rounded
-                        : Icons.favorite_border_rounded,
-                  ),
-                  label: Text(likes.toString()),
-                  onPressed: () => setState(() {
-                    liked = !liked;
-                    likeService.toggleLike(liked);
-                  }),
-                );
-              },
-            ),
+            LikeChip(info),
             const SizedBox(width: 8),
             PopupMenuButton<void>(itemBuilder: (context) {
               return [
