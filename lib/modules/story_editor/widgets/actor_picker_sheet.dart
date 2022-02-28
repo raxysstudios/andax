@@ -34,37 +34,30 @@ Future<Actor?> showActorPickerSheet(
                 tooltip: 'Add actor',
                 child: const Icon(Icons.person_add_rounded),
               ),
-              body: CustomScrollView(
+              body: ListView.builder(
                 controller: scroll,
-                slivers: [
-                  SliverList(
-                    delegate: SliverChildListDelegate([
-                      ListTile(
-                        leading: const Icon(Icons.person_outline_rounded),
-                        title: const Text('None'),
-                        onTap: () => Navigator.pop<Actor?>(context, null),
-                      ),
-                      const Divider(),
-                    ]),
-                  ),
-                  SliverPadding(
-                    padding: const EdgeInsets.only(bottom: 76),
-                    sliver: SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          final actor = actors[index];
-                          return ActorTile(
-                            actor,
-                            onTap: () => Navigator.pop<Actor>(context, actor),
-                            index: index,
-                            selected: actor.id == selectedId,
-                          );
-                        },
-                        childCount: actors.length,
-                      ),
-                    ),
-                  ),
-                ],
+                padding: const EdgeInsets.only(bottom: 76),
+                itemCount: actors.length + 1,
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    return ListTile(
+                      leading: const Icon(Icons.person_outline_rounded),
+                      title: const Text('None'),
+                      onTap: () {
+                        Navigator.pop(context, null);
+                      },
+                    );
+                  }
+                  final actor = actors[index - 1];
+                  return ActorTile(
+                    actor,
+                    onTap: () {
+                      Navigator.pop<Actor>(context, actor);
+                    },
+                    index: index,
+                    selected: actor.id == selectedId,
+                  );
+                },
               ),
             );
           },
