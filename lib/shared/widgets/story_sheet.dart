@@ -6,6 +6,7 @@ import 'package:andax/shared/services/likes.dart';
 import 'package:andax/shared/services/story_loader.dart';
 import 'package:andax/shared/widgets/gradient_cover_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'loading_dialog.dart';
@@ -18,6 +19,7 @@ Future<void> showStorySheet(BuildContext context, StoryInfo info) async {
     liked = l ?? false;
   });
   final textTheme = Theme.of(context).textTheme;
+  final user = FirebaseAuth.instance.currentUser;
   await showModalScrollableSheet<void>(
     context: context,
     minSize: .6,
@@ -36,51 +38,6 @@ Future<void> showStorySheet(BuildContext context, StoryInfo info) async {
             ),
           ),
           actions: [
-            IconButton(
-              onPressed: () async {
-                final t = await showLoadingDialog(
-                  context,
-                  loadTranslation(info),
-                );
-                if (t != null) {
-                  Navigator.push<void>(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return CrowdsourcingScreen(
-                          storyId: info.storyID,
-                          translations: t.assets.values.toList(),
-                        );
-                      },
-                    ),
-                  );
-                }
-              },
-              tooltip: 'Translate story',
-              icon: const Icon(Icons.translate_rounded),
-            ),
-            const SizedBox(width: 8),
-            IconButton(
-              onPressed: () => loadStory(
-                context,
-                info,
-                (s, t) => Navigator.push<void>(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return StoryEditorScreen(
-                        story: s,
-                        translation: t,
-                        info: info,
-                      );
-                    },
-                  ),
-                ),
-              ),
-              tooltip: 'Edit story',
-              icon: const Icon(Icons.edit_rounded),
-            ),
-            const SizedBox(width: 8),
             StatefulBuilder(
               builder: (context, setState) {
                 return IconButton(
@@ -96,6 +53,78 @@ Future<void> showStorySheet(BuildContext context, StoryInfo info) async {
                 );
               },
             ),
+            const SizedBox(width: 8),
+            PopupMenuButton<void>(itemBuilder: (context) {
+              return [
+                PopupMenuItem(
+                  onTap: () {},
+                  child: Row(
+                    children: const [
+                      Icon(Icons.report_rounded),
+                      SizedBox(width: 16),
+                      Text('Report'),
+                    ],
+                  ),
+                ),
+                if (user != null) ...[
+                  const PopupMenuDivider(),
+                  PopupMenuItem(
+                    onTap: () async {
+                      final t = await showLoadingDialog(
+                        context,
+                        loadTranslation(info),
+                      );
+                      if (t != null) {
+                        Navigator.push<void>(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return CrowdsourcingScreen(
+                                storyId: info.storyID,
+                                translations: t.assets.values.toList(),
+                              );
+                            },
+                          ),
+                        );
+                      }
+                    },
+                    child: Row(
+                      children: const [
+                        Icon(Icons.translate_rounded),
+                        SizedBox(width: 16),
+                        Text('Add translation'),
+                      ],
+                    ),
+                  ),
+                  if (user.uid == info.storyAuthorID)
+                    PopupMenuItem(
+                      onTap: () => loadStory(
+                        context,
+                        info,
+                        (s, t) => Navigator.push<void>(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return StoryEditorScreen(
+                                story: s,
+                                translation: t,
+                                info: info,
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      child: Row(
+                        children: const [
+                          Icon(Icons.edit_rounded),
+                          SizedBox(width: 16),
+                          Text('Edit story'),
+                        ],
+                      ),
+                    ),
+                ]
+              ];
+            }),
             const SizedBox(width: 4),
           ],
         ),
