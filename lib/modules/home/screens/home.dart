@@ -1,11 +1,11 @@
 import 'package:andax/models/story.dart';
 import 'package:andax/modules/home/widgets/raxys_logo.dart';
 import 'package:andax/modules/home/widgets/story_category_list.dart';
+import 'package:andax/modules/home/widgets/story_tile.dart';
 import 'package:andax/modules/profile/screens/auth_gate.dart';
 import 'package:andax/modules/story_editor/screens/story_editor.dart';
 import 'package:andax/shared/extensions.dart';
 import 'package:andax/shared/widgets/loading_builder.dart';
-import 'package:andax/modules/home/widgets/story_tile.dart';
 import 'package:andax/store.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
