@@ -9,8 +9,8 @@ import '../widgets/actor_editor_dialog.dart';
 import '../widgets/actor_tile.dart';
 import 'story.dart';
 
-class StoryActorsEditorScreen extends StatelessWidget {
-  const StoryActorsEditorScreen(
+class ActorsEditorScreen extends StatelessWidget {
+  const ActorsEditorScreen(
     this.onSelect, {
     this.selectedId,
     this.scroll,

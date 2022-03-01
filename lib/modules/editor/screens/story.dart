@@ -78,11 +78,11 @@ class StoryEditorState extends State<StoryEditorScreen> {
                 // ignore: prefer_const_literals_to_create_immutables
                 children: [
                   // ignore: prefer_const_constructors
-                  StoryInfoEditorScreen(),
+                  InfoEditorScreen(),
                   // ignore: prefer_const_constructors
-                  StoryNarrativeEditorScreen(),
+                  NarrativeEditorScreen(),
                   // ignore: prefer_const_constructors
-                  StoryActorsEditorScreen((actor, [isNew = false]) async {
+                  ActorsEditorScreen((actor, [isNew = false]) async {
                     if (!isNew) {
                       await showActorEditorDialog(
                         context,

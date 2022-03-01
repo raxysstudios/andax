@@ -80,7 +80,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
           value: editor,
           child: Builder(
             builder: (context) {
-              return StoryActorsEditorScreen(
+              return ActorsEditorScreen(
                 (actor, isNew) {
                   Navigator.pop(context);
                   setState(() {

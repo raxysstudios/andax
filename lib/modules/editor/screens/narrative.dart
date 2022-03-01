@@ -8,16 +8,16 @@ import '../widgets/node_tile.dart';
 import 'node.dart';
 import 'story.dart';
 
-class StoryNarrativeEditorScreen extends StatefulWidget {
-  const StoryNarrativeEditorScreen({Key? key}) : super(key: key);
+class NarrativeEditorScreen extends StatefulWidget {
+  const NarrativeEditorScreen({Key? key}) : super(key: key);
 
   @override
-  _StoryNarrativeEditorScreenState createState() =>
-      _StoryNarrativeEditorScreenState();
+  _NarrativeEditorScreenState createState() =>
+      _NarrativeEditorScreenState();
 }
 
-class _StoryNarrativeEditorScreenState
-    extends State<StoryNarrativeEditorScreen> {
+class _NarrativeEditorScreenState
+    extends State<NarrativeEditorScreen> {
   final choices = <String, String>{};
   var interactive = false;
 

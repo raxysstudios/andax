@@ -9,8 +9,8 @@ import 'package:provider/provider.dart';
 import '../screens/story.dart';
 import '../services/story.dart';
 
-class StoryInfoEditorScreen extends StatelessWidget {
-  const StoryInfoEditorScreen({Key? key}) : super(key: key);
+class InfoEditorScreen extends StatelessWidget {
+  const InfoEditorScreen({Key? key}) : super(key: key);
 
   void promptStoryDelete(
     BuildContext context,
