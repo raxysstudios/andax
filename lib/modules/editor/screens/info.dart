@@ -54,11 +54,7 @@ class InfoEditorScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           await showLoadingDialog(context, uploadStory(editor));
-          showSnackbar(
-            context,
-            icon: Icons.cloud_done_rounded,
-            text: 'Uploaded!',
-          );
+          showSnackbar(context, Icons.cloud_done_rounded, 'Uploaded!');
         },
         icon: const Icon(Icons.upload_rounded),
         label: const Text('Save story'),
