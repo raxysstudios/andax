@@ -65,10 +65,7 @@ class StoryScreen extends StatelessWidget {
             flexibleSpace: info.imageUrl == null
                 ? null
                 : FlexibleSpaceBar(
-                    background: GradientCoverImage(
-                      info.imageUrl!,
-                      step: 0,
-                    ),
+                    background: GradientCoverImage(info.imageUrl!),
                   ),
             actions: [
               Chip(
