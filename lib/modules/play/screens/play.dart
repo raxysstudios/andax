@@ -42,7 +42,7 @@ class _PlayScreenState extends State<PlayScreen> {
   @override
   void initState() {
     super.initState();
-    currentNode = widget.story.startNodeId?.isEmpty ?? false
+    currentNode = widget.story.startNodeId?.isEmpty ?? true
         ? nodes.values.first
         : nodes[widget.story.startNodeId]!;
 
