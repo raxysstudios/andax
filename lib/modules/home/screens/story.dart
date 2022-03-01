@@ -59,6 +59,7 @@ class StoryScreen extends StatelessWidget {
         slivers: [
           SliverAppBar(
             pinned: true,
+            forceElevated: true,
             leading: const RoundedBackButton(),
             expandedHeight: info.imageUrl == null ? null : 3 * kToolbarHeight,
             flexibleSpace: info.imageUrl == null
@@ -77,63 +78,65 @@ class StoryScreen extends StatelessWidget {
               const SizedBox(width: 8),
               LikeChip(info),
               const SizedBox(width: 8),
-              PopupMenuButton<void>(itemBuilder: (context) {
-                return [
-                  PopupMenuItem(
-                    onTap: () {
-                      // Should point to a cloud function probably.
-                    },
-                    child: Row(
-                      children: const [
-                        Icon(Icons.report_rounded),
-                        SizedBox(width: 16),
-                        Text('Report'),
-                      ],
-                    ),
-                  ),
-                  if (user != null) ...[
-                    const PopupMenuDivider(),
+              PopupMenuButton<void>(
+                itemBuilder: (context) {
+                  return [
                     PopupMenuItem(
                       onTap: () {
-                        // Crowdsroucing is broken at the moment.
+                        // Should point to a cloud function probably.
                       },
                       child: Row(
                         children: const [
-                          Icon(Icons.translate_rounded),
+                          Icon(Icons.report_rounded),
                           SizedBox(width: 16),
-                          Text('Add translation'),
+                          Text('Report'),
                         ],
                       ),
                     ),
-                    if (user.uid == info.storyAuthorID)
+                    if (user != null) ...[
+                      const PopupMenuDivider(),
                       PopupMenuItem(
-                        onTap: () => loadStory(
-                          context,
-                          info,
-                          (s, t) => Navigator.push<void>(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return StoryEditorScreen(
-                                  story: s,
-                                  translation: t,
-                                  info: info,
-                                );
-                              },
-                            ),
-                          ),
-                        ),
+                        onTap: () {
+                          // Crowdsroucing is broken at the moment.
+                        },
                         child: Row(
                           children: const [
-                            Icon(Icons.edit_rounded),
+                            Icon(Icons.translate_rounded),
                             SizedBox(width: 16),
-                            Text('Edit story'),
+                            Text('Add translation'),
                           ],
                         ),
                       ),
-                  ]
-                ];
-              }),
+                      if (user.uid == info.storyAuthorID)
+                        PopupMenuItem(
+                          onTap: () => loadStory(
+                            context,
+                            info,
+                            (s, t) => Navigator.push<void>(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return StoryEditorScreen(
+                                    story: s,
+                                    translation: t,
+                                    info: info,
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                          child: Row(
+                            children: const [
+                              Icon(Icons.edit_rounded),
+                              SizedBox(width: 16),
+                              Text('Edit story'),
+                            ],
+                          ),
+                        ),
+                    ]
+                  ];
+                },
+              ),
               const SizedBox(width: 4),
             ],
           ),
@@ -211,6 +214,7 @@ class StoryScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+       
               ],
             ),
           ),
