@@ -3,6 +3,7 @@ import 'package:andax/models/node.dart';
 import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/editor/screens/actors.dart';
+import 'package:andax/modules/editor/screens/narrative.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:andax/shared/widgets/scrollable_modal_sheet.dart';
 import 'package:flutter/material.dart';
@@ -11,32 +12,30 @@ import 'package:provider/provider.dart';
 
 import '../widgets/actor_editor_dialog.dart';
 import '../widgets/actor_tile.dart';
-import '../widgets/node_picker_sheet.dart';
 import 'story.dart';
 
-Future<void> openNode(
-  BuildContext context,
-  Node node,
-) async {
+Future<Node> openNodeEditor(
+  BuildContext context, [
+  Node? node,
+]) async {
   final editor = context.read<StoryEditorState>();
+  if (node == null) {
+    final id = editor.uuid.v4();
+    node = Node(id);
+    editor.story.nodes[id] = node;
+    editor.translation[id] = MessageTranslation(id: id);
+  }
   await Navigator.push<void>(
     context,
     MaterialPageRoute(
       builder: (context) {
         return Provider.value(
           value: editor,
-          child: NodeEditorScreen(node),
+          child: NodeEditorScreen(node!),
         );
       },
     ),
   );
-}
-
-Node createNode(StoryEditorState editor) {
-  final id = editor.uuid.v4();
-  final node = Node(id);
-  editor.story.nodes[id] = node;
-  editor.translation[id] = MessageTranslation(id: id);
   return node;
 }
 
@@ -72,12 +71,25 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
   }
 
   void selectTransitionNode(Transition transition) {
-    showNodePickerSheet(
-      context,
-      (n) => setState(() {
-        transition.targetNodeId = n.id;
-      }),
-      transition.targetNodeId,
+    final editor = context.read<StoryEditorState>();
+    showScrollableModalSheet<Actor>(
+      context: context,
+      builder: (context, scroll) {
+        return Provider.value(
+          value: editor,
+          child: Builder(
+            builder: (context) {
+              return NarrativeEditorScreen(
+                (n, _) => setState(() {
+                  transition.targetNodeId = n.id;
+                }),
+                scroll: scroll,
+                selectedId: transition.targetNodeId,
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
