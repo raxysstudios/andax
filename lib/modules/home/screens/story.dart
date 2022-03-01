@@ -214,7 +214,6 @@ class StoryScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-       
               ],
             ),
           ),
