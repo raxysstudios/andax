@@ -72,7 +72,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
 
   void selectTransitionNode(Transition transition) {
     final editor = context.read<StoryEditorState>();
-    showScrollableModalSheet<Actor>(
+    showScrollableModalSheet<Node>(
       context: context,
       builder: (context, scroll) {
         return Provider.value(
@@ -80,9 +80,12 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
           child: Builder(
             builder: (context) {
               return NarrativeEditorScreen(
-                (n, _) => setState(() {
-                  transition.targetNodeId = n.id;
-                }),
+                (n, _) {
+                  Navigator.pop(context);
+                  setState(() {
+                    transition.targetNodeId = n.id;
+                  });
+                },
                 scroll: scroll,
                 selectedId: transition.targetNodeId,
               );
