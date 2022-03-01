@@ -12,12 +12,10 @@ class NarrativeEditorScreen extends StatefulWidget {
   const NarrativeEditorScreen({Key? key}) : super(key: key);
 
   @override
-  _NarrativeEditorScreenState createState() =>
-      _NarrativeEditorScreenState();
+  _NarrativeEditorScreenState createState() => _NarrativeEditorScreenState();
 }
 
-class _NarrativeEditorScreenState
-    extends State<NarrativeEditorScreen> {
+class _NarrativeEditorScreenState extends State<NarrativeEditorScreen> {
   final choices = <String, String>{};
   var interactive = false;
 
