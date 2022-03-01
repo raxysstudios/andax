@@ -60,14 +60,15 @@ class StoryScreen extends StatelessWidget {
           SliverAppBar(
             pinned: true,
             leading: const RoundedBackButton(),
-            expandedHeight: 3 * kToolbarHeight,
-            flexibleSpace: FlexibleSpaceBar(
-              background: GradientCoverImage(
-                info.imageUrl,
-                placeholderSize: 128,
-                step: 0,
-              ),
-            ),
+            expandedHeight: info.imageUrl == null ? null : 3 * kToolbarHeight,
+            flexibleSpace: info.imageUrl == null
+                ? null
+                : FlexibleSpaceBar(
+                    background: GradientCoverImage(
+                      info.imageUrl!,
+                      step: 0,
+                    ),
+                  ),
             actions: [
               Chip(
                 avatar: const Icon(Icons.visibility_rounded),

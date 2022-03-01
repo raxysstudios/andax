@@ -5,15 +5,13 @@ class GradientCoverImage extends StatelessWidget {
     this.url, {
     this.opacity = 1,
     this.reversed = false,
-    this.placeholderSize = 24,
     this.step = .25,
     Key? key,
   }) : super(key: key);
 
-  final String? url;
+  final String url;
   final double opacity;
   final bool reversed;
-  final double placeholderSize;
   final double step;
 
   @override
@@ -38,12 +36,7 @@ class GradientCoverImage extends StatelessWidget {
         ).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));
       },
       blendMode: BlendMode.dstIn,
-      child: url == null
-          ? Icon(
-              Icons.landscape_rounded,
-              size: placeholderSize,
-            )
-          : Image.network(url!, fit: BoxFit.cover),
+      child: Image.network(url, fit: BoxFit.cover),
     );
   }
 }

@@ -25,11 +25,16 @@ class _StoryCardState extends State<StoryCard> {
         child: Stack(
           children: [
             Positioned.fill(
-              child: GradientCoverImage(
-                widget.story.imageUrl,
-                reversed: true,
-                placeholderSize: 64,
-              ),
+              child: widget.story.imageUrl == null
+                  ? Icon(
+                      Icons.history_edu_rounded,
+                      size: 48,
+                      color: Theme.of(context).textTheme.caption?.color,
+                    )
+                  : GradientCoverImage(
+                      widget.story.imageUrl!,
+                      reversed: true,
+                    ),
             ),
             Positioned.fill(
               child: Padding(
