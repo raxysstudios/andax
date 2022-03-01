@@ -1,8 +1,8 @@
 import 'package:andax/models/story.dart';
+import 'package:andax/modules/editor/screens/story_editor.dart';
 import 'package:andax/modules/home/widgets/gradient_cover_image.dart';
 import 'package:andax/modules/home/widgets/like_chip.dart';
-import 'package:andax/modules/store_play/screens/play.dart';
-import 'package:andax/modules/story_editor/screens/story_editor.dart';
+import 'package:andax/modules/play/screens/play.dart';
 import 'package:andax/shared/services/story_loader.dart';
 import 'package:andax/shared/utils.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';

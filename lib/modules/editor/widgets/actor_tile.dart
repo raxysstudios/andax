@@ -1,8 +1,9 @@
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:andax/modules/story_editor/screens/story_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../screens/story_editor.dart';
 
 class ActorTile extends StatelessWidget {
   const ActorTile(

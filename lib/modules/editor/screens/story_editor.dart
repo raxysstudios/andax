@@ -1,14 +1,15 @@
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:andax/modules/store_play/screens/play.dart';
-import 'package:andax/modules/story_editor/screens/actors_editor.dart';
-import 'package:andax/modules/story_editor/screens/info_editor.dart';
-import 'package:andax/modules/story_editor/screens/narrative_editor.dart';
+import 'package:andax/modules/play/screens/play.dart';
 import 'package:andax/shared/widgets/danger_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
+
+import 'actors_editor.dart';
+import 'info_editor.dart';
+import 'narrative_editor.dart';
 
 class StoryEditorScreen extends StatefulWidget {
   const StoryEditorScreen({

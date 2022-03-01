@@ -1,11 +1,12 @@
 import 'package:andax/models/node.dart';
-import 'package:andax/modules/story_editor/screens/node_editor.dart';
-import 'package:andax/modules/story_editor/screens/story_editor.dart';
-import 'package:andax/modules/story_editor/widgets/node_tile.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:andax/shared/widgets/scrollable_modal_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../screens/node_editor.dart';
+import '../screens/story_editor.dart';
+import 'node_tile.dart';
 
 Future<Node?> showNodePickerSheet(
   BuildContext context,
