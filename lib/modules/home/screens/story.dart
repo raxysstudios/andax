@@ -74,6 +74,7 @@ class StoryScreen extends StatelessWidget {
               Chip(
                 avatar: const Icon(Icons.visibility_rounded),
                 label: Text(info.views.toString()),
+                backgroundColor: Colors.transparent,
               ),
               const SizedBox(width: 8),
               LikeChip(info),
