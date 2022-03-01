@@ -2,7 +2,7 @@ import 'package:andax/models/story.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../screens/story_editor.dart';
+import '../screens/story.dart';
 
 Future<void> uploadStory(StoryEditorState editor) async {
   final uid = FirebaseAuth.instance.currentUser?.uid;
