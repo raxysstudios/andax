@@ -61,17 +61,21 @@ class _LikeChipState extends State<LikeChip> {
   @override
   Widget build(BuildContext context) {
     final likes = widget.info.likes + (liked ? 1 : 0) - (initialLike ? 1 : 0);
+    if (user == null) {
+      return Chip(
+          avatar: const Icon(Icons.favorite_border_rounded),
+          label: Text(likes.toString()),
+          backgroundColor: Colors.transparent);
+    }
     return InputChip(
       avatar: Icon(
         liked ? Icons.favorite_rounded : Icons.favorite_border_rounded,
       ),
       label: Text(likes.toString()),
-      onPressed: user == null
-          ? null
-          : () => setState(() {
-                liked = !liked;
-                toggleLike(liked);
-              }),
+      onPressed: () => setState(() {
+        liked = !liked;
+        toggleLike(liked);
+      }),
     );
   }
 }
