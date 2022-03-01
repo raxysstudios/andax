@@ -25,8 +25,6 @@ class ActorsEditorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final editor = context.watch<StoryEditorState>();
-    final actors = editor.story.actors.values.toList();
     return Scaffold(
       appBar: AppBar(
         leading: const RoundedBackButton(),
@@ -56,19 +54,29 @@ class ActorsEditorScreen extends StatelessWidget {
                 ],
               ),
             ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final actor = actors[index];
-                return ActorTile(
-                  actor,
-                  onTap: () => onSelect(actor, false),
-                  selected: selectedId == actor.id,
-                  index: index,
-                );
-              },
-              childCount: actors.length,
-            ),
+          Builder(
+            builder: (context) {
+              final actors = context
+                  .watch<StoryEditorState>()
+                  .story
+                  .actors
+                  .values
+                  .toList();
+              return SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final actor = actors[index];
+                    return ActorTile(
+                      actor,
+                      onTap: () => onSelect(actor, false),
+                      selected: selectedId == actor.id,
+                      index: index,
+                    );
+                  },
+                  childCount: actors.length,
+                ),
+              );
+            },
           ),
           const SliverToBoxAdapter(
             child: SizedBox(
