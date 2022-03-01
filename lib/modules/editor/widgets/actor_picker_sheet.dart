@@ -1,12 +1,12 @@
 import 'package:andax/models/actor.dart';
-import 'package:andax/modules/story_editor/screens/story_editor.dart';
-import 'package:andax/modules/story_editor/widgets/actor_tile.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:andax/shared/widgets/scrollable_modal_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../screens/story_editor.dart';
 import 'actor_editor_dialog.dart';
+import 'actor_tile.dart';
 
 Future<Actor?> showActorPickerSheet(
   BuildContext context, [

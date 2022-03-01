@@ -1,12 +1,12 @@
 import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:andax/modules/story_editor/screens/node_editor.dart';
-import 'package:andax/modules/story_editor/screens/story_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/node_tile.dart';
+import 'node_editor.dart';
+import 'story_editor.dart';
 
 class StoryNarrativeEditorScreen extends StatefulWidget {
   const StoryNarrativeEditorScreen({Key? key}) : super(key: key);

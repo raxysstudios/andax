@@ -1,8 +1,9 @@
-import 'package:andax/modules/story_editor/screens/story_editor.dart';
-import 'package:andax/modules/story_editor/widgets/actor_editor_dialog.dart';
-import 'package:andax/modules/story_editor/widgets/actor_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../widgets/actor_editor_dialog.dart';
+import '../widgets/actor_tile.dart';
+import 'story_editor.dart';
 
 class StoryActorsEditorScreen extends StatelessWidget {
   const StoryActorsEditorScreen({Key? key}) : super(key: key);
