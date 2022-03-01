@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 Future<void> showStorySheet(BuildContext context, StoryInfo info) async {
   await showScrollableModalSheet<void>(
     context: context,
-    minSize: .6,
     builder: (context, scroll) {
       return StoryScreen(
         info,
