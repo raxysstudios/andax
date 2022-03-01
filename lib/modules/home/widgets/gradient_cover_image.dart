@@ -20,17 +20,13 @@ class GradientCoverImage extends StatelessWidget {
       Colors.transparent,
       Colors.black.withOpacity(opacity),
     ];
-
     return ShaderMask(
       shaderCallback: (rect) {
         return LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: reversed ? colors.reversed.toList() : colors,
-          stops: [
-            0,
-            (reversed ? 1 - border : border),
-          ],
+          stops: [border, 1],
         ).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));
       },
       blendMode: BlendMode.dstIn,
