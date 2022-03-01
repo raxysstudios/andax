@@ -6,11 +6,11 @@ import 'package:provider/provider.dart';
 
 import '../screens/story_editor.dart';
 
-void showActorEditorDialog(
+Future<void> showActorEditorDialog(
   BuildContext context,
   ValueSetter<Actor?> onResult, [
   Actor? value,
-]) {
+]) async {
   final editor = context.read<StoryEditorState>();
   late Actor actor;
   late ActorTranslation translation;
@@ -27,7 +27,7 @@ void showActorEditorDialog(
     translation = ActorTranslation.get(editor.translation, actor.id)!;
   }
 
-  showEditorDialog<Actor>(
+  await showEditorDialog<Actor>(
     context,
     result: () => actor,
     callback: (result) {

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
+import '../widgets/actor_editor_dialog.dart';
 import 'actors_editor.dart';
 import 'info_editor.dart';
 import 'narrative_editor.dart';
@@ -61,75 +62,88 @@ class StoryEditorState extends State<StoryEditorScreen> {
     final textTheme = Theme.of(context).textTheme;
     return Provider.value(
       value: this,
-      child: WillPopScope(
-        onWillPop: () => showDangerDialog(
-          context,
-          'Leave editor? Unsaved progress will be lost!',
-          confirmText: 'Exit',
-          rejectText: 'Stay',
-        ),
-        child: Scaffold(
-          body: PageView(
-            controller: _paging,
-            physics: const NeverScrollableScrollPhysics(),
-            // ignore: prefer_const_literals_to_create_immutables
-            children: [
-              // ignore: prefer_const_constructors
-              StoryInfoEditorScreen(),
-              // ignore: prefer_const_constructors
-              StoryNarrativeEditorScreen(),
-              // ignore: prefer_const_constructors
-              StoryActorsEditorScreen(),
-            ],
-          ),
-          bottomNavigationBar: BottomNavigationBar(
-            selectedItemColor: textTheme.bodyText1?.color,
-            unselectedItemColor: textTheme.caption?.color,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.history_edu_rounded),
-                label: 'Info',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.insights_rounded),
-                label: 'Narrative',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.groups_rounded),
-                label: 'Actors',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.play_arrow_rounded),
-                label: 'Play',
-              ),
-            ],
-            currentIndex: _page,
-            onTap: (i) {
-              if (i == 3) {
-                Navigator.push<void>(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return PlayScreen(
-                        story: story,
-                        translation: translation,
+      child: Builder(
+        builder: (context) {
+          return WillPopScope(
+            onWillPop: () => showDangerDialog(
+              context,
+              'Leave editor? Unsaved progress will be lost!',
+              confirmText: 'Exit',
+              rejectText: 'Stay',
+            ),
+            child: Scaffold(
+              body: PageView(
+                controller: _paging,
+                physics: const NeverScrollableScrollPhysics(),
+                // ignore: prefer_const_literals_to_create_immutables
+                children: [
+                  // ignore: prefer_const_constructors
+                  StoryInfoEditorScreen(),
+                  // ignore: prefer_const_constructors
+                  StoryNarrativeEditorScreen(),
+                  // ignore: prefer_const_constructors
+                  StoryActorsEditorScreen((actor, [isNew = false]) async {
+                    if (!isNew) {
+                      await showActorEditorDialog(
+                        context,
+                        (a) {},
+                        actor,
                       );
-                    },
+                    }
+                    setState(() {});
+                  }),
+                ],
+              ),
+              bottomNavigationBar: BottomNavigationBar(
+                selectedItemColor: textTheme.bodyText1?.color,
+                unselectedItemColor: textTheme.caption?.color,
+                items: const [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.history_edu_rounded),
+                    label: 'Info',
                   ),
-                );
-                return;
-              }
-              setState(() {
-                _page = i;
-                _paging.animateToPage(
-                  i,
-                  duration: const Duration(milliseconds: 250),
-                  curve: standardEasing,
-                );
-              });
-            },
-          ),
-        ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.insights_rounded),
+                    label: 'Narrative',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.groups_rounded),
+                    label: 'Actors',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.play_arrow_rounded),
+                    label: 'Play',
+                  ),
+                ],
+                currentIndex: _page,
+                onTap: (i) {
+                  if (i == 3) {
+                    Navigator.push<void>(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return PlayScreen(
+                            story: story,
+                            translation: translation,
+                          );
+                        },
+                      ),
+                    );
+                    return;
+                  }
+                  setState(() {
+                    _page = i;
+                    _paging.animateToPage(
+                      i,
+                      duration: const Duration(milliseconds: 250),
+                      curve: standardEasing,
+                    );
+                  });
+                },
+              ),
+            ),
+          );
+        },
       ),
     );
   }
