@@ -11,8 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'story.dart';
 
-class StoryInfoEditorScreen extends StatelessWidget {
-  const StoryInfoEditorScreen({Key? key}) : super(key: key);
+class InfoEditorScreen extends StatelessWidget {
+  const InfoEditorScreen({Key? key}) : super(key: key);
 
   Future<void> uploadStory(StoryEditorState editor) async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
