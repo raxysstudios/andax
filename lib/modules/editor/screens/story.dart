@@ -76,7 +76,6 @@ class StoryEditorState extends State<StoryEditorScreen> {
               body: PageView(
                 controller: _paging,
                 physics: const NeverScrollableScrollPhysics(),
-                // ignore: prefer_const_literals_to_create_immutables
                 children: [
                   // ignore: prefer_const_constructors
                   InfoEditorScreen(),
