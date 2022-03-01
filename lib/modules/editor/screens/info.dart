@@ -4,6 +4,7 @@ import 'package:andax/shared/utils.dart';
 import 'package:andax/shared/widgets/danger_dialog.dart';
 import 'package:andax/shared/widgets/loading_dialog.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
+import 'package:andax/shared/widgets/snackbar_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../screens/story.dart';
@@ -53,7 +54,11 @@ class InfoEditorScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           await showLoadingDialog(context, uploadStory(editor));
-          Navigator.pop(context);
+          showSnackbar(
+            context,
+            icon: Icons.cloud_done_rounded,
+            text: 'Uploaded!',
+          );
         },
         icon: const Icon(Icons.upload_rounded),
         label: const Text('Save story'),
