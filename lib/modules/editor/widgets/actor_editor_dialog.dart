@@ -4,7 +4,7 @@ import 'package:andax/shared/widgets/editor_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../screens/story_editor.dart';
+import '../screens/story.dart';
 
 Future<Actor?> showActorEditorDialog(
   BuildContext context, [

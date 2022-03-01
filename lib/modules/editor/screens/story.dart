@@ -8,9 +8,9 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 import '../widgets/actor_editor_dialog.dart';
-import 'actors_editor.dart';
-import 'info_editor.dart';
-import 'narrative_editor.dart';
+import 'actors.dart';
+import 'info.dart';
+import 'narrative.dart';
 
 class StoryEditorScreen extends StatefulWidget {
   const StoryEditorScreen({

@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../widgets/actor_editor_dialog.dart';
 import '../widgets/actor_tile.dart';
-import 'story_editor.dart';
+import 'story.dart';
 
 class StoryActorsEditorScreen extends StatelessWidget {
   const StoryActorsEditorScreen(

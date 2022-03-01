@@ -6,8 +6,8 @@ import 'package:andax/shared/widgets/loading_dialog.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../screens/story.dart';
 import '../services/story.dart';
-import 'story_editor.dart';
 
 class StoryInfoEditorScreen extends StatelessWidget {
   const StoryInfoEditorScreen({Key? key}) : super(key: key);
