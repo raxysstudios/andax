@@ -72,10 +72,9 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
     }
   }
 
-  Future<Node> selectTransitionNode() {
-    final completer = Completer<Node>();
+  Future<Node?> selectTransitionNode() {
     final editor = context.read<StoryEditorState>();
-    showScrollableModalSheet<Actor>(
+    return showScrollableModalSheet<Node>(
       context: context,
       builder: (context, scroll) {
         return Provider.value(
@@ -83,7 +82,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
           child: Builder(
             builder: (context) {
               return NarrativeEditorScreen(
-                (n, _) => completer.complete(n),
+                (n, _) => Navigator.pop(context, n),
                 scroll: scroll,
               );
             },
@@ -91,7 +90,6 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
         );
       },
     );
-    return completer.future;
   }
 
   void selectActor() {
@@ -171,6 +169,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
           final id = editor.uuid.v4();
           node.transitions ??= [];
           final selectedNode = await selectTransitionNode();
+          if (selectedNode == null) return;
           final transition = Transition(id, targetNodeId: selectedNode.id);
           setState(() {
             node.transitions!.add(transition);
@@ -249,6 +248,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
                 ListTile(
                   onTap: () async {
                     final selectedNode = await selectTransitionNode();
+                    if (selectedNode == null) return;
                     setState(() {
                       transition.targetNodeId = selectedNode.id;
                     });
