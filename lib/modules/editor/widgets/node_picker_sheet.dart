@@ -4,8 +4,8 @@ import 'package:andax/shared/widgets/scrollable_modal_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../screens/node_editor.dart';
-import '../screens/story_editor.dart';
+import '../screens/node.dart';
+import '../screens/story.dart';
 import 'node_tile.dart';
 
 Future<Node?> showNodePickerSheet(

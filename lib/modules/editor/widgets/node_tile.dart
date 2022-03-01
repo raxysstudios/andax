@@ -4,7 +4,7 @@ import 'package:andax/models/translation_asset.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../screens/story_editor.dart';
+import '../screens/story.dart';
 
 class NodeTile extends StatelessWidget {
   const NodeTile(

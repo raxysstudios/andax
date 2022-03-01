@@ -2,7 +2,7 @@ import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:andax/modules/editor/screens/actors_editor.dart';
+import 'package:andax/modules/editor/screens/actors.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:andax/shared/widgets/scrollable_modal_sheet.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 import '../widgets/actor_editor_dialog.dart';
 import '../widgets/actor_tile.dart';
 import '../widgets/node_picker_sheet.dart';
-import 'story_editor.dart';
+import 'story.dart';
 
 Future<void> openNode(
   BuildContext context,

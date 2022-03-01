@@ -1,5 +1,5 @@
 import 'package:andax/models/story.dart';
-import 'package:andax/modules/editor/screens/story_editor.dart';
+import 'package:andax/modules/editor/screens/story.dart';
 import 'package:andax/modules/home/widgets/raxys_logo.dart';
 import 'package:andax/modules/home/widgets/story_category_list.dart';
 import 'package:andax/modules/home/widgets/story_tile.dart';

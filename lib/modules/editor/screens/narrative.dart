@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/node_tile.dart';
-import 'node_editor.dart';
-import 'story_editor.dart';
+import 'node.dart';
+import 'story.dart';
 
 class StoryNarrativeEditorScreen extends StatefulWidget {
   const StoryNarrativeEditorScreen({Key? key}) : super(key: key);
