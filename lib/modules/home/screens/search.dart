@@ -7,7 +7,7 @@ import 'package:andax/modules/home/services/sheets.dart';
 import 'package:andax/shared/extensions.dart';
 import 'package:andax/shared/widgets/paging_list.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
-import 'package:andax/shared/widgets/story_tile.dart';
+import 'package:andax/modules/home/widgets/story_tile.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
