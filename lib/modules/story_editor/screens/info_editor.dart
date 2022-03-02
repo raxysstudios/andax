@@ -1,75 +1,36 @@
-import 'package:andax/models/story.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/home/screens/home.dart';
 import 'package:andax/shared/utils.dart';
 import 'package:andax/shared/widgets/danger_dialog.dart';
 import 'package:andax/shared/widgets/loading_dialog.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../services/story.dart';
 import 'story_editor.dart';
 
 class StoryInfoEditorScreen extends StatelessWidget {
   const StoryInfoEditorScreen({Key? key}) : super(key: key);
 
-  Future<void> uploadStory(StoryEditorState editor) async {
-    final uid = FirebaseAuth.instance.currentUser?.uid;
-    final sdb = FirebaseFirestore.instance.collection('stories');
-    var sid = editor.info?.storyID;
-    if (sid == null) {
-      sid = await sdb.add(editor.story.toJson()).then((r) => r.id);
-    } else {
-      await sdb.doc(editor.info?.storyID).update(editor.story.toJson());
-    }
-    await sdb.doc(sid).update({
-      'metaData.lastUpdateAt': FieldValue.serverTimestamp(),
-      'metaData.authorId': uid,
-    });
-
-    final tdb = sdb.doc(sid).collection('translations');
-    var tid = editor.info?.translationID;
-    if (tid == null) {
-      tid = await tdb.add(editor.translation.toJson()).then((r) => r.id);
-    } else {
-      await tdb.doc(tid).update(editor.translation.toJson());
-    }
-    await tdb.doc(tid).update({
-      'metaData.lastUpdateAt': FieldValue.serverTimestamp(),
-      'metaData.authorId': uid,
-    });
-
-    final adb = tdb.doc(tid).collection('assets');
-    await Future.wait([
-      for (final entry in editor.translation.assets.entries)
-        adb.doc(entry.key).set(entry.value.toJson())
-    ]);
-    editor.setState(() {
-      editor.info ??= StoryInfo(
-        storyID: sid!,
-        storyAuthorID: '',
-        translationID: tid!,
-        translationAuthorID: '',
-        title: '',
-      );
-    });
-  }
-
-  Future<void> deleteStory(StoryEditorState editor) async {
-    if (editor.info == null) return;
-    final story = FirebaseFirestore.instance.doc(
-      'stories/' + editor.info!.storyID,
+  void promptStoryDelete(
+    BuildContext context,
+    StoryEditorState editor,
+  ) {
+    showDangerDialog(
+      context,
+      'Completely delete the story and all of its translations?',
+      onConfirm: () async {
+        await showLoadingDialog(context, deleteStory(editor));
+        Navigator.pushReplacement<void, void>(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return const HomeScreen();
+            },
+          ),
+        );
+      },
     );
-    final translations = await story.collection('translations').get();
-    for (final t in translations.docs) {
-      final assets = await t.reference.collection('assets').get();
-      for (final a in assets.docs) {
-        await a.reference.delete();
-      }
-      t.reference.delete();
-    }
-    story.delete();
   }
 
   @override
@@ -82,23 +43,7 @@ class StoryInfoEditorScreen extends StatelessWidget {
         actions: [
           if (editor.info != null)
             IconButton(
-              onPressed: () async {
-                bool delete = await showDangerDialog(
-                  context,
-                  'Completely delete the story and all of its translations?',
-                );
-                if (delete) {
-                  await showLoadingDialog(context, deleteStory(editor));
-                  Navigator.pushReplacement<void, void>(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return const HomeScreen();
-                      },
-                    ),
-                  );
-                }
-              },
+              onPressed: () => promptStoryDelete(context, editor),
               tooltip: 'Delete story',
               icon: const Icon(Icons.delete_forever_rounded),
             ),
@@ -111,7 +56,7 @@ class StoryInfoEditorScreen extends StatelessWidget {
           Navigator.pop(context);
         },
         icon: const Icon(Icons.upload_rounded),
-        label: const Text('Upload story'),
+        label: const Text('Save story'),
       ),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 72),
