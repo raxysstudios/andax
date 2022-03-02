@@ -11,15 +11,15 @@ void showActorEditorDialog(
   Actor? value,
 ]) {
   final editor = context.read<StoryEditorState>();
-  late Actor actor;
-  late ActorTranslation translation;
+  Actor actor;
+  ActorTranslation translation;
 
   if (value == null) {
     final id = editor.uuid.v4();
     actor = Actor(id: id);
     translation = ActorTranslation(
       id: id,
-      name: 'Actor #${editor.story.actors.length}',
+      name: 'Actor #${editor.story.actors.length + 1}',
     );
   } else {
     actor = Actor.fromJson(value.toJson());
@@ -75,7 +75,7 @@ void showActorEditorDialog(
           contentPadding: const EdgeInsets.symmetric(horizontal: 24),
           horizontalTitleGap: 12,
           leading: const Icon(Icons.smart_toy_rounded),
-          title: const Text('NPC actor'),
+          title: const Text('Computer actor'),
           subtitle: const Text('Follows the narrative'),
         ),
         ListTile(
@@ -87,7 +87,7 @@ void showActorEditorDialog(
           contentPadding: const EdgeInsets.symmetric(horizontal: 24),
           horizontalTitleGap: 12,
           leading: const Icon(Icons.face_rounded),
-          title: const Text('Payer actor'),
+          title: const Text('Player actor'),
           subtitle: const Text('Controlled by the player'),
         ),
       ];
