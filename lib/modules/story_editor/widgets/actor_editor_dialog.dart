@@ -10,8 +10,8 @@ Future<Actor?> showActorEditorDialog(
   Actor? value,
 ]) async {
   final editor = context.read<StoryEditorState>();
-  Actor actor;
-  ActorTranslation translation;
+  final Actor actor;
+  final ActorTranslation translation;
 
   if (value == null) {
     final id = editor.uuid.v4();
