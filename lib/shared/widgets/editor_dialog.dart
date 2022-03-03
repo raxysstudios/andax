@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 String? emptyValidator(String? value) {
@@ -6,10 +8,9 @@ String? emptyValidator(String? value) {
   return null;
 }
 
-Future<void> showEditorDialog<T>(
+Future<T?> showEditorDialog<T>(
   BuildContext context, {
   required ValueGetter<T?> result,
-  required ValueSetter<T?> callback,
   required String title,
   required List<Widget> Function(
     BuildContext context,
@@ -18,6 +19,7 @@ Future<void> showEditorDialog<T>(
       builder,
   EdgeInsets padding = const EdgeInsets.fromLTRB(24, 20, 24, 24),
 }) async {
+  final completer = Completer<T?>();
   final form = GlobalKey<FormState>();
   final theme = Theme.of(context);
   await showDialog<void>(
@@ -47,7 +49,7 @@ Future<void> showEditorDialog<T>(
               IconButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  callback(null);
+                  completer.complete(null);
                 },
                 icon: const Icon(Icons.delete_rounded),
                 color: theme.colorScheme.error,
@@ -69,7 +71,7 @@ Future<void> showEditorDialog<T>(
                 onPressed: () {
                   if (form.currentState?.validate() ?? false) {
                     Navigator.pop(context);
-                    callback(result());
+                    completer.complete(result());
                   }
                 },
                 icon: const Icon(Icons.done_rounded),
@@ -81,4 +83,5 @@ Future<void> showEditorDialog<T>(
       );
     },
   );
+  return completer.future;
 }

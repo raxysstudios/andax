@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/story_editor/screens/story_editor.dart';
@@ -10,8 +8,7 @@ import 'package:provider/provider.dart';
 Future<Actor?> showActorEditorDialog(
   BuildContext context, [
   Actor? value,
-]) {
-  final completer = Completer<Actor?>();
+]) async {
   final editor = context.read<StoryEditorState>();
   Actor actor;
   ActorTranslation translation;
@@ -28,21 +25,9 @@ Future<Actor?> showActorEditorDialog(
     translation = ActorTranslation.get(editor.translation, actor.id)!;
   }
 
-  showEditorDialog<Actor>(
+  final result = await showEditorDialog<Actor>(
     context,
     result: () => actor,
-    callback: (result) {
-      if (result == null) {
-        if (value != null) {
-          editor.story.actors.remove(value.id);
-          editor.translation.assets.remove(value.id);
-        }
-      } else {
-        editor.story.actors[result.id] = result;
-        editor.translation[result.id] = translation;
-      }
-      completer.complete(result);
-    },
     title: value == null ? 'Create actor' : 'Edit actor',
     padding: EdgeInsets.zero,
     builder: (context, setState) {
@@ -95,5 +80,14 @@ Future<Actor?> showActorEditorDialog(
       ];
     },
   );
-  return completer.future;
+  if (result == null) {
+    if (value != null) {
+      editor.story.actors.remove(value.id);
+      editor.translation.assets.remove(value.id);
+    }
+  } else {
+    editor.story.actors[result.id] = result;
+    editor.translation[result.id] = translation;
+  }
+  return result;
 }
