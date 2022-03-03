@@ -27,15 +27,12 @@ void showActorPickerSheet(
                 title: const Text('Pick actor'),
               ),
               floatingActionButton: FloatingActionButton(
-                onPressed: () => showActorEditorDialog(
-                  context,
-                  (r) {
-                    if (r != null) {
-                      Navigator.pop(context);
-                      onSelect(r);
-                    }
-                  },
-                ),
+                onPressed: () => showActorEditorDialog(context).then((r) {
+                  if (r != null) {
+                    Navigator.pop(context);
+                    onSelect(r);
+                  }
+                }),
                 tooltip: 'Add actor',
                 child: const Icon(Icons.person_add_rounded),
               ),

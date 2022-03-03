@@ -17,10 +17,8 @@ class StoryActorsEditorScreen extends StatelessWidget {
         title: const Text('Story actors'),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => showActorEditorDialog(
-          context,
-          (r) => editor.setState(() {}),
-        ),
+        onPressed: () =>
+            showActorEditorDialog(context).then((r) => editor.setState(() {})),
         icon: const Icon(Icons.person_add_rounded),
         label: const Text('Add actor'),
       ),
@@ -30,11 +28,8 @@ class StoryActorsEditorScreen extends StatelessWidget {
           final actor = actors[index];
           return ActorTile(
             actor,
-            onTap: () => showActorEditorDialog(
-              context,
-              (r) => editor.setState(() {}),
-              actor,
-            ),
+            onTap: () => showActorEditorDialog(context, actor)
+                .then((r) => editor.setState(() {})),
             index: index,
           );
         },

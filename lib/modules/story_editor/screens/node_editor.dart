@@ -157,11 +157,8 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
                 onTap: selectActor,
                 onLongPress: actor == null
                     ? null
-                    : () => showActorEditorDialog(
-                          context,
-                          (r) => setState(() {}),
-                          actor,
-                        ),
+                    : () => showActorEditorDialog(context, actor)
+                        .then((r) => setState(() {})),
               );
             },
           ),

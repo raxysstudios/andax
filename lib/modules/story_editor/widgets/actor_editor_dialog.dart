@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/story_editor/screens/story_editor.dart';
@@ -5,11 +7,11 @@ import 'package:andax/shared/widgets/editor_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-void showActorEditorDialog(
-  BuildContext context,
-  ValueSetter<Actor?> onResult, [
+Future<Actor?> showActorEditorDialog(
+  BuildContext context, [
   Actor? value,
 ]) {
+  final completer = Completer<Actor?>();
   final editor = context.read<StoryEditorState>();
   Actor actor;
   ActorTranslation translation;
@@ -39,7 +41,7 @@ void showActorEditorDialog(
         editor.story.actors[result.id] = result;
         editor.translation[result.id] = translation;
       }
-      onResult(result);
+      completer.complete(result);
     },
     title: value == null ? 'Create actor' : 'Edit actor',
     padding: EdgeInsets.zero,
@@ -93,4 +95,5 @@ void showActorEditorDialog(
       ];
     },
   );
+  return completer.future;
 }
