@@ -69,18 +69,6 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
     }
   }
 
-  void selectTransitionNode(Transition transition) async {
-    final node = await showNodePickerSheet(
-      context,
-      transition.targetNodeId,
-    );
-    setState(() {
-      if (node != null) {
-        transition.targetNodeId = node.id;
-      }
-    });
-  }
-
   void selectActor() async {
     final actor = await showActorPickerSheet(
       context,
@@ -137,14 +125,17 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => setState(() {
+        onPressed: () async {
           final id = editor.uuid.v4();
           node.transitions ??= [];
-          final transition = Transition(id, targetNodeId: node.id);
-          node.transitions!.add(transition);
-          editor.translation[id] = MessageTranslation(id: id);
-          selectTransitionNode(transition);
-        }),
+          final selectedNode = await showNodePickerSheet(context);
+          if (selectedNode == null) return;
+          final transition = Transition(id, targetNodeId: selectedNode.id);
+          setState(() {
+            node.transitions!.add(transition);
+            editor.translation[id] = MessageTranslation(id: id);
+          });
+        },
         icon: const Icon(Icons.add_location_rounded),
         label: const Text('Add transition'),
       ),
@@ -212,7 +203,14 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
             Column(
               children: [
                 ListTile(
-                  onTap: () => selectTransitionNode(transition),
+                  onTap: () async {
+                    final selectedNode = await showNodePickerSheet(
+                        context, transition.targetNodeId);
+                    if (selectedNode == null) return;
+                    setState(() {
+                      transition.targetNodeId = selectedNode.id;
+                    });
+                  },
                   leading: const Icon(Icons.place_rounded),
                   title: Text(
                     MessageTranslation.getText(
