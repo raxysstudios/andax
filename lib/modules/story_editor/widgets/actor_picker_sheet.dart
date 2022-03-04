@@ -7,13 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'actor_editor_dialog.dart';
 
-void showActorPickerSheet(
-  BuildContext context,
-  ValueSetter<Actor?> onSelect, [
+Future<Actor?> showActorPickerSheet(
+  BuildContext context, [
   String? selectedId,
 ]) {
   final editor = context.read<StoryEditorState>();
-  showModalPicker<Actor>(
+  return showModalPicker<Actor>(
     context,
     (context, scroll) {
       final actors = editor.story.actors.values.toList();
@@ -29,8 +28,7 @@ void showActorPickerSheet(
               floatingActionButton: FloatingActionButton(
                 onPressed: () => showActorEditorDialog(context).then((r) {
                   if (r != null) {
-                    Navigator.pop(context);
-                    onSelect(r);
+                    Navigator.pop<Actor>(context, r);
                   }
                 }),
                 tooltip: 'Add actor',
@@ -45,8 +43,7 @@ void showActorPickerSheet(
                         leading: const Icon(Icons.person_outline_rounded),
                         title: const Text('None'),
                         onTap: () {
-                          Navigator.pop(context);
-                          onSelect(null);
+                          Navigator.pop<Actor?>(context, null);
                         },
                       ),
                       const Divider(),
@@ -61,8 +58,7 @@ void showActorPickerSheet(
                           return ActorTile(
                             actor,
                             onTap: () {
-                              Navigator.pop(context);
-                              onSelect(actor);
+                              Navigator.pop<Actor>(context, actor);
                             },
                             index: index,
                             selected: actor.id == selectedId,

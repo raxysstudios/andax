@@ -79,14 +79,14 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
     );
   }
 
-  void selectActor() {
-    showActorPickerSheet(
+  void selectActor() async {
+    final actor = await showActorPickerSheet(
       context,
-      (a) => setState(() {
-        node.actorId = a?.id;
-      }),
       node.actorId,
     );
+    setState(() {
+      node.actorId = actor?.id;
+    });
   }
 
   @override
