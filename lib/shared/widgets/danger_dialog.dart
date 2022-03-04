@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 Future<bool> showDangerDialog(
   BuildContext context,
   String title, {
-  VoidCallback? onConfirm,
   String confirmText = 'Delete',
   String rejectText = 'Keep',
 }) {
@@ -17,7 +16,6 @@ Future<bool> showDangerDialog(
           TextButton.icon(
             onPressed: () {
               Navigator.pop(context, true);
-              onConfirm?.call();
             },
             icon: const Icon(Icons.delete_rounded),
             label: Text(confirmText),
@@ -29,7 +27,7 @@ Future<bool> showDangerDialog(
             ),
           ),
           TextButton.icon(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(context, false),
             icon: const Icon(Icons.edit_rounded),
             label: Text(rejectText),
           ),

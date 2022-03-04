@@ -15,22 +15,22 @@ class StoryInfoEditorScreen extends StatelessWidget {
   void promptStoryDelete(
     BuildContext context,
     StoryEditorState editor,
-  ) {
-    showDangerDialog(
+  ) async {
+    final confirmed = await showDangerDialog(
       context,
       'Completely delete the story and all of its translations?',
-      onConfirm: () async {
-        await showLoadingDialog(context, deleteStory(editor));
-        Navigator.pushReplacement<void, void>(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return const HomeScreen();
-            },
-          ),
-        );
-      },
     );
+    if (confirmed) {
+      await showLoadingDialog(context, deleteStory(editor));
+      Navigator.pushReplacement<void, void>(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return const HomeScreen();
+          },
+        ),
+      );
+    }
   }
 
   @override
