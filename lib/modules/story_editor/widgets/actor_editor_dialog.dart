@@ -25,6 +25,7 @@ Future<Actor?> showActorEditorDialog(
     translation = ActorTranslation.get(editor.translation, actor.id)!;
   }
 
+  String newName = translation.name;
   final result = await showEditorDialog<Actor>(
     context,
     result: () => actor,
@@ -43,7 +44,7 @@ Future<Actor?> showActorEditorDialog(
             initialValue: translation.name,
             validator: emptyValidator,
             onChanged: (s) {
-              translation.name = s;
+              newName = s;
             },
           ),
         ),
@@ -86,7 +87,8 @@ Future<Actor?> showActorEditorDialog(
       editor.story.actors.remove(value.id);
       editor.translation.assets.remove(value.id);
     }
-  } else {
+  } else if (result != value) {
+    translation.name = newName;
     editor.story.actors[result.id] = result;
     editor.translation[result.id] = translation;
   }
