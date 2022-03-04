@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 
 Future<T?> showScrollableModalSheet<T>({
   required BuildContext context,
-  required Widget Function(
-    BuildContext context,
-    ScrollController scroll,
-  )
-      builder,
+  required ScrollableWidgetBuilder builder,
 }) async {
   final media = MediaQuery.of(context);
   final childSize =
