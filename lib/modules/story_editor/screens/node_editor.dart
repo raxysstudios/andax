@@ -69,14 +69,16 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
     }
   }
 
-  void selectTransitionNode(Transition transition) {
-    showNodePickerSheet(
+  void selectTransitionNode(Transition transition) async {
+    final node = await showNodePickerSheet(
       context,
-      (n) => setState(() {
-        transition.targetNodeId = n.id;
-      }),
       transition.targetNodeId,
     );
+    setState(() {
+      if (node != null) {
+        transition.targetNodeId = node.id;
+      }
+    });
   }
 
   void selectActor() async {

@@ -8,8 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 Future<Node?> showNodePickerSheet(
-  BuildContext context,
-  ValueSetter<Node> onSelect, [
+  BuildContext context, [
   String? selectedId,
 ]) {
   final editor = context.read<StoryEditorState>();
@@ -30,8 +29,7 @@ Future<Node?> showNodePickerSheet(
                 onPressed: () async {
                   final node = createNode(editor);
                   await openNode(context, node);
-                  Navigator.pop(context);
-                  onSelect(node);
+                  Navigator.pop<Node>(context, node);
                 },
                 tooltip: 'Add node',
                 child: const Icon(Icons.add_circle_rounded),
@@ -44,8 +42,7 @@ Future<Node?> showNodePickerSheet(
                   return NodeTile(
                     node,
                     onTap: () {
-                      Navigator.pop(context);
-                      onSelect(node);
+                      Navigator.pop<Node>(context, node);
                     },
                     selected: selectedId == node.id,
                   );
