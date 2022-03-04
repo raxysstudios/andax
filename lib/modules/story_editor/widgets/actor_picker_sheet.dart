@@ -42,9 +42,7 @@ Future<Actor?> showActorPickerSheet(
                       ListTile(
                         leading: const Icon(Icons.person_outline_rounded),
                         title: const Text('None'),
-                        onTap: () {
-                          Navigator.pop<Actor?>(context, null);
-                        },
+                        onTap: () => Navigator.pop<Actor?>(context, null),
                       ),
                       const Divider(),
                     ]),
@@ -57,9 +55,7 @@ Future<Actor?> showActorPickerSheet(
                           final actor = actors[index];
                           return ActorTile(
                             actor,
-                            onTap: () {
-                              Navigator.pop<Actor>(context, actor);
-                            },
+                            onTap: () => Navigator.pop<Actor>(context, actor),
                             index: index,
                             selected: actor.id == selectedId,
                           );
