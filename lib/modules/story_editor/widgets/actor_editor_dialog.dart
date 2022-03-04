@@ -29,6 +29,7 @@ Future<Actor?> showActorEditorDialog(
     context,
     result: () => actor,
     title: value == null ? 'Create actor' : 'Edit actor',
+    exists: value != null,
     padding: EdgeInsets.zero,
     builder: (context, setState) {
       return [

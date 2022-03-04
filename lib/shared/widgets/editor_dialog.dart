@@ -18,6 +18,7 @@ Future<T?> showEditorDialog<T>(
   )
       builder,
   EdgeInsets padding = const EdgeInsets.fromLTRB(24, 20, 24, 24),
+  bool exists = false,
 }) async {
   final completer = Completer<T?>();
   final form = GlobalKey<FormState>();
@@ -46,15 +47,16 @@ Future<T?> showEditorDialog<T>(
           Row(
             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  completer.complete(null);
-                },
-                icon: const Icon(Icons.delete_rounded),
-                color: theme.colorScheme.error,
-                splashColor: theme.colorScheme.error.withOpacity(0.1),
-              ),
+              if (exists)
+                IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    completer.complete(null);
+                  },
+                  icon: const Icon(Icons.delete_rounded),
+                  color: theme.colorScheme.error,
+                  splashColor: theme.colorScheme.error.withOpacity(0.1),
+                ),
               const Spacer(),
               TextButton.icon(
                 onPressed: () => Navigator.pop(context),
