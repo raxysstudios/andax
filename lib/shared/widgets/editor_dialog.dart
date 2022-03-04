@@ -45,7 +45,6 @@ Future<T?> showEditorDialog<T>(
         ),
         actions: [
           Row(
-            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               if (exists)
                 IconButton(
