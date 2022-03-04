@@ -45,9 +45,7 @@ Future<T?> showEditorDialog<T>(
             children: [
               if (initial != null)
                 IconButton(
-                  onPressed: () {
-                    Navigator.pop(context, null);
-                  },
+                  onPressed: () => Navigator.pop(context, null),
                   icon: const Icon(Icons.delete_rounded),
                   color: theme.colorScheme.error,
                   splashColor: theme.colorScheme.error.withOpacity(0.1),
