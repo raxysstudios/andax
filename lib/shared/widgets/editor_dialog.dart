@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 String? emptyValidator(String? value) {
@@ -18,12 +16,11 @@ Future<T?> showEditorDialog<T>(
   )
       builder,
   EdgeInsets padding = const EdgeInsets.fromLTRB(24, 20, 24, 24),
-  bool exists = false,
+  T? initial,
 }) async {
-  final completer = Completer<T?>();
   final form = GlobalKey<FormState>();
   final theme = Theme.of(context);
-  await showDialog<void>(
+  return showDialog<T>(
     context: context,
     builder: (context) {
       return AlertDialog(
@@ -46,11 +43,10 @@ Future<T?> showEditorDialog<T>(
         actions: [
           Row(
             children: [
-              if (exists)
+              if (initial != null)
                 IconButton(
                   onPressed: () {
-                    Navigator.pop(context);
-                    completer.complete(null);
+                    Navigator.pop(context, null);
                   },
                   icon: const Icon(Icons.delete_rounded),
                   color: theme.colorScheme.error,
@@ -58,7 +54,7 @@ Future<T?> showEditorDialog<T>(
                 ),
               const Spacer(),
               TextButton.icon(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => Navigator.pop(context, initial),
                 icon: const Icon(Icons.close_rounded),
                 label: const Text('Cancel'),
                 style: ButtonStyle(
@@ -71,8 +67,7 @@ Future<T?> showEditorDialog<T>(
               TextButton.icon(
                 onPressed: () {
                   if (form.currentState?.validate() ?? false) {
-                    Navigator.pop(context);
-                    completer.complete(result());
+                    Navigator.pop<T?>(context, result());
                   }
                 },
                 icon: const Icon(Icons.done_rounded),
@@ -84,5 +79,4 @@ Future<T?> showEditorDialog<T>(
       );
     },
   );
-  return completer.future;
 }
