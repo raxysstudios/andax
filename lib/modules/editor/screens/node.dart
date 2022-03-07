@@ -1,40 +1,41 @@
+import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:andax/modules/story_editor/widgets/actor_editor_dialog.dart';
-import 'package:andax/modules/story_editor/widgets/actor_tile.dart';
+import 'package:andax/modules/editor/screens/actors.dart';
+import 'package:andax/modules/editor/screens/narrative.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
+import 'package:andax/shared/widgets/scrollable_modal_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
-import '../widgets/actor_picker_sheet.dart';
-import '../widgets/node_picker_sheet.dart';
-import 'story_editor.dart';
+import '../widgets/actor_editor_dialog.dart';
+import '../widgets/actor_tile.dart';
+import 'story.dart';
 
-Future<void> openNode(
-  BuildContext context,
-  Node node,
-) async {
+Future<Node> openNodeEditor(
+  BuildContext context, [
+  Node? node,
+]) async {
   final editor = context.read<StoryEditorState>();
+  if (node == null) {
+    final id = editor.uuid.v4();
+    node = Node(id);
+    editor.story.nodes[id] = node;
+    editor.translation[id] = MessageTranslation(id: id);
+  }
   await Navigator.push<void>(
     context,
     MaterialPageRoute(
       builder: (context) {
         return Provider.value(
           value: editor,
-          child: NodeEditorScreen(node),
+          child: NodeEditorScreen(node!),
         );
       },
     ),
   );
-}
-
-Node createNode(StoryEditorState editor) {
-  final id = editor.uuid.v4();
-  final node = Node(id);
-  editor.story.nodes[id] = node;
-  editor.translation[id] = MessageTranslation(id: id);
   return node;
 }
 
@@ -69,14 +70,51 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
     }
   }
 
-  void selectActor() async {
-    final actor = await showActorPickerSheet(
-      context,
-      node.actorId,
+  Future<Node?> selectTransitionNode() {
+    final editor = context.read<StoryEditorState>();
+    return showScrollableModalSheet<Node>(
+      context: context,
+      builder: (context, scroll) {
+        return Provider.value(
+          value: editor,
+          child: Builder(
+            builder: (context) {
+              return NarrativeEditorScreen(
+                (n, _) => Navigator.pop(context, n),
+                scroll: scroll,
+              );
+            },
+          ),
+        );
+      },
     );
-    setState(() {
-      node.actorId = actor?.id;
-    });
+  }
+
+  void selectActor() {
+    final editor = context.read<StoryEditorState>();
+    showScrollableModalSheet<Actor>(
+      context: context,
+      builder: (context, scroll) {
+        return Provider.value(
+          value: editor,
+          child: Builder(
+            builder: (context) {
+              return ActorsEditorScreen(
+                (actor, isNew) {
+                  Navigator.pop(context);
+                  setState(() {
+                    node.actorId = actor?.id;
+                  });
+                },
+                scroll: scroll,
+                allowNone: true,
+                selectedId: node.actorId,
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -128,7 +166,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
         onPressed: () async {
           final id = editor.uuid.v4();
           node.transitions ??= [];
-          final selectedNode = await showNodePickerSheet(context);
+          final selectedNode = await selectTransitionNode();
           if (selectedNode == null) return;
           final transition = Transition(id, targetNodeId: selectedNode.id);
           setState(() {
@@ -155,23 +193,25 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
               );
             },
           ),
-          TextFormField(
-            maxLines: null,
-            decoration: const InputDecoration(
-              labelText: 'Message text',
-              prefixIcon: Icon(Icons.notes_rounded),
-            ),
-            autofocus: true,
-            initialValue: MessageTranslation.get(
-              editor.translation,
-              node.id,
-            )?.text,
-            onChanged: (s) {
-              MessageTranslation.get(
+          ListTile(
+            title: TextFormField(
+              maxLines: null,
+              decoration: const InputDecoration(
+                labelText: 'Message text',
+                prefixIcon: Icon(Icons.notes_rounded),
+              ),
+              autofocus: true,
+              initialValue: MessageTranslation.get(
                 editor.translation,
                 node.id,
-              )?.text = s;
-            },
+              )?.text,
+              onChanged: (s) {
+                MessageTranslation.get(
+                  editor.translation,
+                  node.id,
+                )?.text = s;
+              },
+            ),
           ),
           SwitchListTile(
             value: editor.story.startNodeId == node.id,
@@ -198,14 +238,14 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
               title: const Text('Auto transition'),
               subtitle: const Text('Chooses randomly'),
             ),
+            const Divider(),
           ],
           for (final transition in transitions)
             Column(
               children: [
                 ListTile(
                   onTap: () async {
-                    final selectedNode = await showNodePickerSheet(
-                        context, transition.targetNodeId);
+                    final selectedNode = await selectTransitionNode();
                     if (selectedNode == null) return;
                     setState(() {
                       transition.targetNodeId = selectedNode.id;
@@ -226,23 +266,25 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
                     tooltip: 'Delete transition',
                   ),
                 ),
-                TextFormField(
-                  maxLines: null,
-                  decoration: const InputDecoration(
-                    labelText: 'Transition text',
-                    prefixIcon: Icon(Icons.short_text_rounded),
-                  ),
-                  initialValue: MessageTranslation.getText(
-                    editor.translation,
-                    transition.id,
-                    '',
-                  ),
-                  onChanged: (s) {
-                    MessageTranslation.get(
+                ListTile(
+                  title: TextFormField(
+                    maxLines: null,
+                    decoration: const InputDecoration(
+                      labelText: 'Transition text',
+                      prefixIcon: Icon(Icons.short_text_rounded),
+                    ),
+                    initialValue: MessageTranslation.getText(
                       editor.translation,
                       transition.id,
-                    )?.text = s;
-                  },
+                      '',
+                    ),
+                    onChanged: (s) {
+                      MessageTranslation.get(
+                        editor.translation,
+                        transition.id,
+                      )?.text = s;
+                    },
+                  ),
                 ),
                 const Divider(),
               ],

@@ -20,7 +20,7 @@ Future<Translation> loadTranslation(StoryInfo info) async {
       );
 }
 
-Future<Story> loadStory(StoryInfo info) async {
+Future<Story> loadNarrative(StoryInfo info) async {
   final document = await FirebaseFirestore.instance
       .doc('stories/${info.storyID}')
       .withConverter<Story>(
@@ -34,7 +34,7 @@ Future<Story> loadStory(StoryInfo info) async {
   return document.data()!;
 }
 
-Future<void> loadExperience(
+Future<void> loadStory(
   BuildContext context,
   StoryInfo info,
   Future<void> Function(Story, Translation) onLoaded,
@@ -44,7 +44,7 @@ Future<void> loadExperience(
   await showLoadingDialog<void>(
     context,
     (() async {
-      story = await loadStory(info);
+      story = await loadNarrative(info);
       translation = await loadTranslation(info);
     })(),
   );

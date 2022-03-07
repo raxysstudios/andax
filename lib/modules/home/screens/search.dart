@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:algolia/algolia.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/modules/home/services/searching.dart';
-import 'package:andax/modules/home/services/stories.dart';
-import 'package:andax/modules/story_info/screens/story_info.dart';
+import 'package:andax/modules/home/services/sheets.dart';
+import 'package:andax/modules/home/widgets/story_tile.dart';
 import 'package:andax/shared/extensions.dart';
 import 'package:andax/shared/widgets/paging_list.dart';
-import 'package:andax/shared/widgets/story_tile.dart';
+import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -54,15 +54,6 @@ class _SearchScreenState extends State<SearchScreen> {
     updateQuery();
   }
 
-  Future<void> openStory(StoryInfo info) {
-    return Navigator.push<void>(
-      context,
-      MaterialPageRoute(
-        builder: (context) => StoryScreen(info),
-      ),
-    );
-  }
-
   void updateQuery() {
     timer.cancel();
     setState(() {
@@ -75,6 +66,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: const RoundedBackButton(),
         title: TextField(
           controller: textController,
           autofocus: true,
@@ -128,7 +120,7 @@ class _SearchScreenState extends State<SearchScreen> {
         builder: (context, info, index) {
           return StoryTile(
             info,
-            onTap: () => openStory(info),
+            onTap: () => showStorySheet(context, info),
           );
         },
       ),

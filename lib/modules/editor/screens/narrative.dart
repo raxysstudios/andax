@@ -1,25 +1,37 @@
+import 'dart:async';
+
 import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:andax/modules/story_editor/screens/node_editor.dart';
-import 'package:andax/modules/story_editor/screens/story_editor.dart';
+import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/node_tile.dart';
+import 'node.dart';
+import 'story.dart';
 
-class StoryNarrativeEditorScreen extends StatefulWidget {
-  const StoryNarrativeEditorScreen({Key? key}) : super(key: key);
+class NarrativeEditorScreen extends StatefulWidget {
+  const NarrativeEditorScreen(
+    this.onSelect, {
+    this.selectedId,
+    this.scroll,
+    this.allowInteractive = false,
+    Key? key,
+  }) : super(key: key);
+
+  final FutureOr<void> Function(Node, bool isNew) onSelect;
+  final String? selectedId;
+  final ScrollController? scroll;
+  final bool allowInteractive;
 
   @override
-  _StoryNarrativeEditorScreenState createState() =>
-      _StoryNarrativeEditorScreenState();
+  _NarrativeEditorScreenState createState() => _NarrativeEditorScreenState();
 }
 
-class _StoryNarrativeEditorScreenState
-    extends State<StoryNarrativeEditorScreen> {
+class _NarrativeEditorScreenState extends State<NarrativeEditorScreen> {
   final choices = <String, String>{};
-  var interactive = false;
+  late var interactive = widget.allowInteractive;
 
   List<Node> computeThread(Story story) {
     final thread = <Node>{};
@@ -53,27 +65,30 @@ class _StoryNarrativeEditorScreenState
 
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        leading: const RoundedBackButton(),
         title: const Text('Story narrative'),
         actions: [
-          IconButton(
-            onPressed: () => setState(() {
-              interactive = !interactive;
-            }),
-            tooltip: 'Toggle view',
-            icon: Icon(
-              interactive
-                  ? Icons.view_list_rounded
-                  : Icons.account_tree_rounded,
+          if (widget.allowInteractive)
+            IconButton(
+              onPressed: () => setState(() {
+                interactive = !interactive;
+              }),
+              tooltip: 'Toggle view',
+              icon: Icon(
+                interactive
+                    ? Icons.view_list_rounded
+                    : Icons.account_tree_rounded,
+              ),
             ),
-          ),
           const SizedBox(width: 4),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
-          final node = createNode(editor);
-          await openNode(context, node);
+          await widget.onSelect(
+            await openNodeEditor(context),
+            true,
+          );
           setState(() {});
         },
         icon: const Icon(Icons.add_circle_rounded),
@@ -81,6 +96,7 @@ class _StoryNarrativeEditorScreenState
       ),
       body: ListView.builder(
         padding: const EdgeInsets.only(bottom: 76),
+        controller: widget.scroll,
         itemCount: nodes.length,
         itemBuilder: (context, index) {
           final node = nodes[index];
@@ -93,9 +109,10 @@ class _StoryNarrativeEditorScreenState
               NodeTile(
                 node,
                 onTap: () async {
-                  await openNode(context, node);
+                  await widget.onSelect(node, false);
                   setState(() {});
                 },
+                selected: widget.selectedId == node.id,
               ),
               if (interactive && transitions.length > 1)
                 SizedBox(
