@@ -16,9 +16,9 @@ Future<Actor?> showActorEditorDialog(
 
   if (value == null) {
     final id = editor.uuid.v4();
-    actor = Actor(id: id);
+    actor = Actor(id);
     translation = ActorTranslation(
-      id: id,
+      id,
       name: 'Actor #${editor.story.actors.length + 1}',
     );
   } else {

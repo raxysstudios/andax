@@ -9,8 +9,8 @@ class Actor {
   final String id;
   ActorType type;
 
-  Actor({
-    required this.id,
+  Actor(
+    this.id, {
     this.type = ActorType.npc,
   });
 

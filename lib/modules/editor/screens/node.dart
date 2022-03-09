@@ -23,7 +23,7 @@ Future<Node> openNodeEditor(
     final id = editor.uuid.v4();
     node = Node(id);
     editor.story.nodes[id] = node;
-    editor.translation[id] = MessageTranslation(id: id);
+    editor.translation[id] = MessageTranslation( id);
   }
   await Navigator.push<void>(
     context,
@@ -171,7 +171,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
           final transition = Transition(id, targetNodeId: selectedNode.id);
           setState(() {
             node.transitions!.add(transition);
-            editor.translation[id] = MessageTranslation(id: id);
+            editor.translation[id] = MessageTranslation( id);
           });
         },
         icon: const Icon(Icons.add_location_rounded),

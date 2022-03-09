@@ -18,7 +18,7 @@ Future<Cell?> showCellEditorDialog(
     final id = editor.uuid.v4();
     cell = Cell(id);
     translation = MessageTranslation(
-      id: id,
+      id,
       text: 'Cell #${editor.story.cells.length + 1}',
     );
   } else {

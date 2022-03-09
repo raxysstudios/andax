@@ -123,10 +123,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
           icon: Icons.notes_rounded,
           title: 'message',
           onEdit: (r) {
-            translations[id] = MessageTranslation(
-              id: id,
-              text: r,
-            );
+            translations[id] = MessageTranslation(id, text: r);
           },
         );
       case AssetType.actor:
@@ -138,10 +135,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
           icon: Icons.person_outline_rounded,
           title: 'actor',
           onEdit: (r) {
-            translations[id] = ActorTranslation(
-              id: id,
-              name: r,
-            );
+            translations[id] = ActorTranslation(id, name: r);
           },
         );
       case AssetType.story:
@@ -155,7 +149,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
             title: 'story title',
             onEdit: (r) {
               translations[id] = StoryTranslation(
-                id: id,
+                id,
                 title: r,
                 description: translation?.description,
                 tags: translation?.tags,
@@ -169,7 +163,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
             title: 'story description',
             onEdit: (r) {
               translations[id] = StoryTranslation(
-                id: id,
+                id,
                 title: translation?.title ?? '<title>',
                 description: r,
                 tags: translation?.tags,
@@ -183,7 +177,7 @@ class _CrowdsourcingScreenState extends State<CrowdsourcingScreen> {
             title: 'story tags',
             onEdit: (r) {
               translations[id] = StoryTranslation(
-                id: id,
+                id,
                 title: translation?.title ?? '<title>',
                 description: translation?.description,
                 tags: r.isEmpty

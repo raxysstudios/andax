@@ -14,8 +14,8 @@ abstract class TranslationAsset {
   final String id;
   final AssetType assetType;
 
-  const TranslationAsset({
-    required this.id,
+  const TranslationAsset(
+    this.id, {
     required this.assetType,
   });
 
@@ -39,7 +39,7 @@ abstract class TranslationAsset {
         return StoryTranslation.fromJson(json);
       default:
         return MessageTranslation(
-          id: json['id'] as String,
+          json['id'] as String,
           text: 'ERROR',
         );
     }
@@ -54,12 +54,12 @@ class StoryTranslation extends TranslationAsset {
   String? description;
   List<String>? tags;
 
-  StoryTranslation({
-    required String id,
+  StoryTranslation(
+    String id, {
     required this.title,
     this.description,
     this.tags,
-  }) : super(id: id, assetType: AssetType.story);
+  }) : super(id, assetType: AssetType.story);
 
   factory StoryTranslation.fromJson(Map<String, dynamic> json) =>
       _$StoryTranslationFromJson(json);
@@ -79,11 +79,11 @@ class MessageTranslation extends TranslationAsset {
   String? text;
   String? audioUrl;
 
-  MessageTranslation({
-    required String id,
+  MessageTranslation(
+    String id, {
     this.text,
     this.audioUrl,
-  }) : super(id: id, assetType: AssetType.message);
+  }) : super(id, assetType: AssetType.message);
 
   factory MessageTranslation.fromJson(Map<String, dynamic> json) =>
       _$MessageTranslationFromJson(json);
@@ -110,10 +110,10 @@ class MessageTranslation extends TranslationAsset {
 class ActorTranslation extends TranslationAsset {
   String name;
 
-  ActorTranslation({
-    required String id,
+  ActorTranslation(
+    String id, {
     this.name = '',
-  }) : super(id: id, assetType: AssetType.actor);
+  }) : super(id, assetType: AssetType.actor);
 
   factory ActorTranslation.fromJson(Map<String, dynamic> json) =>
       _$ActorTranslationFromJson(json);
