@@ -46,7 +46,8 @@ class _PlayScreenState extends State<PlayScreen> {
         ? nodes.values.first
         : nodes[widget.story.startNodeId]!;
 
-    if (currentNode.autoTransition && currentNode.transitions != null) {
+    if (currentNode.transitionInputSource == TransitionInputSource.random &&
+        currentNode.transitions != null) {
       moveAuto(currentNode.transitions!);
     }
   }
@@ -59,7 +60,8 @@ class _PlayScreenState extends State<PlayScreen> {
       currentNode = nodes[transition.targetNodeId]!;
       isFinished =
           totalScore == 0 || (currentNode.transitions?.isEmpty ?? true);
-      if (currentNode.autoTransition && currentNode.transitions != null) {
+      if (currentNode.transitionInputSource == TransitionInputSource.random &&
+          currentNode.transitions != null) {
         moveAuto(currentNode.transitions!);
       }
     });
@@ -130,7 +132,8 @@ class _PlayScreenState extends State<PlayScreen> {
             actors: actors,
           )),
           if (currentNode.transitions != null &&
-              !currentNode.autoTransition &&
+              currentNode.transitionInputSource !=
+                  TransitionInputSource.random &&
               autoAdvance == null)
             fadeOut(Padding(
               padding: const EdgeInsets.all(8),
