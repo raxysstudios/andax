@@ -33,12 +33,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
   final uuid = const Uuid();
 
   late StoryInfo? info = widget.info;
-  late final Story story = widget.story ??
-      Story(
-        nodes: [],
-        startNodeId: '',
-        actors: [],
-      );
+  late final Story story = widget.story ?? Story();
   late final Translation translation = widget.translation ??
       Translation(
         language: '',

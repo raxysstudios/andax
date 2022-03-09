@@ -1,10 +1,14 @@
 import 'dart:core';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'storage_cell.g.dart';
+
+@JsonSerializable()
 class StorageCell {
   StorageCell(this.id, {this.max});
 
   final String id;
-  final int? max;
+  int? max;
 
   bool get numeric => max != null;
 
@@ -33,4 +37,9 @@ class StorageCell {
     }
     _value = num.clamp(0, max!).toString();
   }
+
+  factory StorageCell.fromJson(Map<String, dynamic> json) =>
+      _$StorageCellFromJson(json);
+
+  Map<String, dynamic> toJson() => _$StorageCellToJson(this);
 }

@@ -2,10 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'actor.g.dart';
 
-enum ActorType {
-  npc,
-  player,
-}
+enum ActorType { npc, player }
 
 @JsonSerializable()
 class Actor {
