@@ -2,6 +2,8 @@ import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/editor/screens/node.dart';
+import 'package:andax/modules/editor/screens/storage.dart';
+import 'package:andax/modules/editor/widgets/storage_cell_dialog.dart';
 import 'package:andax/modules/play/screens/play.dart';
 import 'package:andax/shared/widgets/danger_dialog.dart';
 import 'package:flutter/material.dart';
@@ -94,6 +96,17 @@ class StoryEditorState extends State<StoryEditorScreen> {
                       setState(() {});
                     },
                   ),
+                  StorageEditorScreen(
+                    (cell, isNew) async {
+                      if (!isNew) {
+                        await showStorageCellEditorDialog(
+                          context,
+                          cell,
+                        );
+                      }
+                      setState(() {});
+                    },
+                  ),
                 ],
               ),
               bottomNavigationBar: BottomNavigationBar(
@@ -111,6 +124,10 @@ class StoryEditorState extends State<StoryEditorScreen> {
                   BottomNavigationBarItem(
                     icon: Icon(Icons.groups_rounded),
                     label: 'Actors',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.inventory_2_rounded),
+                    label: 'Cells',
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.play_arrow_rounded),
