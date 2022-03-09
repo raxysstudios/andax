@@ -1,5 +1,5 @@
 import 'package:algolia/algolia.dart';
-import 'package:andax/models/storage_cell.dart';
+import 'package:andax/models/cell.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'actor.dart';
@@ -13,18 +13,18 @@ class Story {
   Map<String, Node> nodes;
   @JsonKey(toJson: _actorsToJson)
   Map<String, Actor> actors;
-  @JsonKey(toJson: _storageToJson)
-  Map<String, StorageCell> storage;
+  @JsonKey(toJson: _cellsToJson)
+  Map<String, Cell> cells;
   String? startNodeId;
 
   Story({
     this.startNodeId,
     List<Node> nodes = const [],
     List<Actor> actors = const [],
-    List<StorageCell> storage = const [],
+    List<Cell> cells = const [],
   })  : nodes = {for (final node in nodes) node.id: node},
         actors = {for (final actor in actors) actor.id: actor},
-        storage = {for (final cell in storage) cell.id: cell};
+        cells = {for (final cell in cells) cell.id: cell};
 
   factory Story.fromJson(Map<String, dynamic> json) => _$StoryFromJson(json);
 
@@ -36,9 +36,8 @@ class Story {
   static List<Map<String, dynamic>> _actorsToJson(Map<String, Actor> actors) =>
       actors.values.map((node) => node.toJson()).toList();
 
-  static List<Map<String, dynamic>> _storageToJson(
-          Map<String, StorageCell> storage) =>
-      storage.values.map((cell) => cell.toJson()).toList();
+  static List<Map<String, dynamic>> _cellsToJson(Map<String, Cell> cells) =>
+      cells.values.map((cell) => cell.toJson()).toList();
 }
 
 // Workaround since json_serializable doesn't support constructor tearoff

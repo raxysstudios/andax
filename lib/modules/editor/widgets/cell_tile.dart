@@ -1,14 +1,14 @@
-import 'package:andax/models/storage_cell.dart';
+import 'package:andax/models/cell.dart';
 import 'package:flutter/material.dart';
 
-class StorageCellTile extends StatelessWidget {
-  const StorageCellTile(
+class CellTile extends StatelessWidget {
+  const CellTile(
     this.cell, {
     this.onTap,
     Key? key,
   }) : super(key: key);
 
-  final StorageCell cell;
+  final Cell cell;
   final VoidCallback? onTap;
 
   @override

@@ -1,4 +1,4 @@
-import 'package:andax/models/storage_cell.dart';
+import 'package:andax/models/cell.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/shared/widgets/editor_dialog.dart';
 import 'package:flutter/material.dart';
@@ -6,28 +6,28 @@ import 'package:provider/provider.dart';
 
 import '../screens/story.dart';
 
-Future<StorageCell?> showStorageCellEditorDialog(
+Future<Cell?> showCellEditorDialog(
   BuildContext context, [
-  StorageCell? value,
+  Cell? value,
 ]) async {
   final editor = context.read<StoryEditorState>();
-  final StorageCell cell;
+  final Cell cell;
   final MessageTranslation translation;
 
   if (value == null) {
     final id = editor.uuid.v4();
-    cell = StorageCell(id);
+    cell = Cell(id);
     translation = MessageTranslation(
       id: id,
-      text: 'Cell #${editor.story.storage.length + 1}',
+      text: 'Cell #${editor.story.cells.length + 1}',
     );
   } else {
-    cell = StorageCell.fromJson(value.toJson());
+    cell = Cell.fromJson(value.toJson());
     translation = MessageTranslation.get(editor.translation, cell.id)!;
   }
 
   String? newName = translation.text;
-  final result = await showEditorDialog<StorageCell>(
+  final result = await showEditorDialog<Cell>(
     context,
     result: () => cell,
     title: value == null ? 'Create cell' : 'Edit cell',
@@ -71,12 +71,12 @@ Future<StorageCell?> showStorageCellEditorDialog(
   );
   if (result == null) {
     if (value != null) {
-      editor.story.storage.remove(value.id);
+      editor.story.cells.remove(value.id);
       editor.translation.assets.remove(value.id);
     }
   } else if (result != value) {
     translation.text = newName;
-    editor.story.storage[result.id] = result;
+    editor.story.cells[result.id] = result;
     editor.translation[result.id] = translation;
   }
   return result;

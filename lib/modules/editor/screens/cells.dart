@@ -1,36 +1,36 @@
 import 'dart:async';
-import 'package:andax/models/storage_cell.dart';
-import 'package:andax/modules/editor/widgets/storage_cell_tile.dart';
+import 'package:andax/models/cell.dart';
+import 'package:andax/modules/editor/widgets/cell_tile.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../widgets/storage_cell_dialog.dart';
+import '../widgets/cell_dialog.dart';
 import 'story.dart';
 
-class StorageEditorScreen extends StatelessWidget {
-  const StorageEditorScreen(
+class CellsEditorScreen extends StatelessWidget {
+  const CellsEditorScreen(
     this.onSelect, {
     this.selectedId,
     this.scroll,
     Key? key,
   }) : super(key: key);
 
-  final FutureOr<void> Function(StorageCell?, bool isNew) onSelect;
+  final FutureOr<void> Function(Cell?, bool isNew) onSelect;
   final String? selectedId;
   final ScrollController? scroll;
 
   @override
   Widget build(BuildContext context) {
     final cells =
-        context.watch<StoryEditorState>().story.storage.values.toList();
+        context.watch<StoryEditorState>().story.cells.values.toList();
     return Scaffold(
       appBar: AppBar(
         leading: const RoundedBackButton(),
         title: const Text('Storage cells'),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => showStorageCellEditorDialog(
+        onPressed: () => showCellEditorDialog(
           context
         ).then((r) => onSelect(r, true)),
         icon: const Icon(Icons.person_add_rounded),
@@ -42,7 +42,7 @@ class StorageEditorScreen extends StatelessWidget {
         itemCount: cells.length,
         itemBuilder: (context, index) {
           final cell = cells[index];
-          return StorageCellTile(
+          return CellTile(
             cell,
             onTap: () => onSelect(cell, false),
           );

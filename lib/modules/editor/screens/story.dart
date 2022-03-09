@@ -2,8 +2,8 @@ import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/editor/screens/node.dart';
-import 'package:andax/modules/editor/screens/storage.dart';
-import 'package:andax/modules/editor/widgets/storage_cell_dialog.dart';
+import 'package:andax/modules/editor/screens/cells.dart';
+import 'package:andax/modules/editor/widgets/cell_dialog.dart';
 import 'package:andax/modules/play/screens/play.dart';
 import 'package:andax/shared/widgets/danger_dialog.dart';
 import 'package:flutter/material.dart';
@@ -96,10 +96,10 @@ class StoryEditorState extends State<StoryEditorScreen> {
                       setState(() {});
                     },
                   ),
-                  StorageEditorScreen(
+                  CellsEditorScreen(
                     (cell, isNew) async {
                       if (!isNew) {
-                        await showStorageCellEditorDialog(
+                        await showCellEditorDialog(
                           context,
                           cell,
                         );
