@@ -1,7 +1,7 @@
 import 'dart:core';
 
-class StoreCell {
-  StoreCell(this.id, {this.max});
+class StorageCell {
+  StorageCell(this.id, {this.max});
 
   final String id;
   final int? max;
