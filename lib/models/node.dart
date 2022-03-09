@@ -5,19 +5,20 @@ import 'transition.dart';
 part 'node.g.dart';
 
 enum EndingType { win, loss }
+enum TransitionInputSource { random, select, store }
 
 @JsonSerializable(explicitToJson: true)
 class Node {
   final String id;
   String? actorId;
   List<Transition>? transitions;
-  bool autoTransition;
+  TransitionInputSource transitionInputSource;
 
   Node(
     this.id, {
     this.actorId,
     this.transitions,
-    this.autoTransition = false,
+    this.transitionInputSource = TransitionInputSource.random,
   });
 
   factory Node.fromJson(Map<String, dynamic> json) => _$NodeFromJson(json);
