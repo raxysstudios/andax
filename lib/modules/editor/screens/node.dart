@@ -225,21 +225,6 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
             title: const Text('Story entry'),
             subtitle: const Text('Players start from this node'),
           ),
-          if (transitions.isNotEmpty) ...[
-            SwitchListTile(
-              value: node.autoTransition,
-              onChanged: (v) => setState(() {
-                node.autoTransition = v;
-              }),
-              secondary: const Padding(
-                padding: EdgeInsets.only(top: 8),
-                child: Icon(Icons.skip_next_rounded),
-              ),
-              title: const Text('Auto transition'),
-              subtitle: const Text('Chooses randomly'),
-            ),
-            const Divider(),
-          ],
           for (final transition in transitions)
             Column(
               children: [
