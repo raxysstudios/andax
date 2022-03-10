@@ -45,7 +45,7 @@ Future<Actor?> showActorEditorDialog(
             initialValue: translation.name,
             validator: emptyValidator,
             onChanged: (s) {
-              newName = s;
+              newName = s.trim();
             },
           ),
         ),
