@@ -6,12 +6,10 @@ part 'transition.g.dart';
 class Transition {
   final String id;
   String targetNodeId;
-  final int score;
 
   Transition(
     this.id, {
     required this.targetNodeId,
-    this.score = 0,
   });
 
   factory Transition.fromJson(Map<String, dynamic> json) =>
