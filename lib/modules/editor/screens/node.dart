@@ -4,6 +4,7 @@ import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/editor/services/node.dart';
 import 'package:andax/modules/editor/services/pickers.dart';
 import 'package:andax/modules/editor/widgets/transition_dialog.dart';
+import 'package:andax/shared/extensions.dart';
 import 'package:andax/shared/widgets/options_button.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
@@ -72,6 +73,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
             );
           },
         ),
+        const Divider(),
         ListTile(
           title: TextFormField(
             maxLines: null,
@@ -115,6 +117,56 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
       ),
       body: ListView(
         children: [
+          ListTile(
+            leading: const Icon(Icons.functions_rounded),
+            title: Text(node.transitionInputSource.name.titleCase),
+            onTap: () => showDialog<TransitionInputSource>(
+                context: context,
+                builder: (BuildContext context) {
+                  return ListTileTheme(
+                    data: const ListTileThemeData(
+                      contentPadding: EdgeInsets.zero,
+                      horizontalTitleGap: 0,
+                    ),
+                    child: SimpleDialog(
+                      title: const Text('Select input source'),
+                      children: <Widget>[
+                        SimpleDialogOption(
+                          onPressed: () => Navigator.pop(
+                            context,
+                            TransitionInputSource.random,
+                          ),
+                          child: const ListTile(
+                            leading: Icon(Icons.shuffle_rounded),
+                            title: Text('Random choice'),
+                          ),
+                        ),
+                        SimpleDialogOption(
+                          onPressed: () => Navigator.pop(
+                            context,
+                            TransitionInputSource.select,
+                          ),
+                          child: const ListTile(
+                            leading: Icon(Icons.touch_app_rounded),
+                            title: Text('Selected by user'),
+                          ),
+                        ),
+                        SimpleDialogOption(
+                          onPressed: () => Navigator.pop(
+                            context,
+                            TransitionInputSource.store,
+                          ),
+                          child: const ListTile(
+                            leading: Icon(Icons.rule_rounded),
+                            title: Text("Based on cells' values"),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+          ),
+          const Divider(),
           for (var i = 0; i < transitions.length; i++)
             ListTile(
               title: Text(
