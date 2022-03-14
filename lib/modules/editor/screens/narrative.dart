@@ -7,8 +7,8 @@ import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../services/node.dart';
 import '../widgets/node_tile.dart';
-import 'node.dart';
 import 'story.dart';
 
 class NarrativeEditorScreen extends StatefulWidget {
@@ -86,7 +86,7 @@ class _NarrativeEditorScreenState extends State<NarrativeEditorScreen> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           await widget.onSelect(
-            await openNodeEditor(context),
+            await editNode(context),
             true,
           );
           setState(() {});

@@ -1,12 +1,9 @@
-import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:andax/modules/editor/screens/actors.dart';
-import 'package:andax/modules/editor/screens/narrative.dart';
+import 'package:andax/modules/editor/services/pickers.dart';
 import 'package:andax/modules/editor/widgets/transition_dialog.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
-import 'package:andax/shared/widgets/scrollable_modal_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
@@ -14,31 +11,6 @@ import 'package:provider/provider.dart';
 import '../widgets/actor_dialog.dart';
 import '../widgets/actor_tile.dart';
 import 'story.dart';
-
-Future<Node> openNodeEditor(
-  BuildContext context, [
-  Node? node,
-]) async {
-  final editor = context.read<StoryEditorState>();
-  if (node == null) {
-    final id = editor.uuid.v4();
-    node = Node(id);
-    editor.story.nodes[id] = node;
-    editor.translation[id] = MessageTranslation(id);
-  }
-  await Navigator.push<void>(
-    context,
-    MaterialPageRoute(
-      builder: (context) {
-        return Provider.value(
-          value: editor,
-          child: NodeEditorScreen(node!),
-        );
-      },
-    ),
-  );
-  return node;
-}
 
 class NodeEditorScreen extends StatefulWidget {
   const NodeEditorScreen(
@@ -66,56 +38,13 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
           '',
         ).isEmpty) {
       SchedulerBinding.instance?.addPostFrameCallback(
-        (_) => selectActor(),
+        (_) => pickActor(context, node).then(
+          (r) => setState(() {
+            node.actorId = r?.id;
+          }),
+        ),
       );
     }
-  }
-
-  Future<Node?> selectTransitionNode() {
-    final editor = context.read<StoryEditorState>();
-    return showScrollableModalSheet<Node>(
-      context: context,
-      builder: (context, scroll) {
-        return Provider.value(
-          value: editor,
-          child: Builder(
-            builder: (context) {
-              return NarrativeEditorScreen(
-                (n, _) => Navigator.pop(context, n),
-                scroll: scroll,
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
-
-  void selectActor() {
-    final editor = context.read<StoryEditorState>();
-    showScrollableModalSheet<Actor>(
-      context: context,
-      builder: (context, scroll) {
-        return Provider.value(
-          value: editor,
-          child: Builder(
-            builder: (context) {
-              return ActorsEditorScreen(
-                (actor, isNew) {
-                  Navigator.pop(context);
-                  setState(() {
-                    node.actorId = actor?.id;
-                  });
-                },
-                scroll: scroll,
-                allowNone: true,
-                selectedId: node.actorId,
-              );
-            },
-          ),
-        );
-      },
-    );
   }
 
   Widget buildContentsTab(StoryEditorState editor) {
@@ -126,7 +55,11 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
             final actor = editor.story.actors[node.actorId];
             return ActorTile(
               actor,
-              onTap: selectActor,
+              onTap: () => pickActor(context, node).then(
+                (r) => setState(() {
+                  node.actorId = r?.id;
+                }),
+              ),
               onLongPress: actor == null
                   ? null
                   : () => showActorEditorDialog(context, actor)

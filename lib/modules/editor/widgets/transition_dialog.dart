@@ -1,14 +1,13 @@
 import 'package:andax/models/node.dart';
 import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:andax/modules/editor/screens/narrative.dart';
 import 'package:andax/modules/editor/widgets/node_tile.dart';
 import 'package:andax/shared/widgets/editor_dialog.dart';
-import 'package:andax/shared/widgets/scrollable_modal_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../screens/story.dart';
+import '../services/pickers.dart';
 
 Future<Transition?> showTransitionEditorDialog(
   BuildContext context,
@@ -21,9 +20,11 @@ Future<Transition?> showTransitionEditorDialog(
 
   if (value == null) {
     final id = editor.uuid.v4();
+    final target = await pickNode(context);
+    if (target == null) return value;
     transition = Transition(
       id,
-      targetNodeId: editor.story.nodes.values.first.id,
+      targetNodeId: target.id,
     );
     translation = MessageTranslation(
       id,
@@ -68,22 +69,7 @@ Future<Transition?> showTransitionEditorDialog(
           value: editor,
           child: NodeTile(
             node,
-            onTap: () => showScrollableModalSheet<Node>(
-              context: context,
-              builder: (context, scroll) {
-                return Provider.value(
-                  value: editor,
-                  child: Builder(
-                    builder: (context) {
-                      return NarrativeEditorScreen(
-                        (n, _) => Navigator.pop(context, n),
-                        scroll: scroll,
-                      );
-                    },
-                  ),
-                );
-              },
-            ).then((r) {
+            onTap: () => pickNode(context).then((r) {
               if (r != null) {
                 setState(() {
                   transition.targetNodeId = r.id;
