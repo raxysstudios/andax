@@ -33,8 +33,8 @@ class CellsEditorScreen extends StatelessWidget {
         onPressed: () => showCellEditorDialog(
           context
         ).then((r) => onSelect(r, true)),
-        icon: const Icon(Icons.person_add_rounded),
-        label: const Text('Add actor'),
+        icon: const Icon(Icons.post_add_rounded),
+        label: const Text('Add cell'),
       ),
       body: ListView.builder(
         controller: scroll,

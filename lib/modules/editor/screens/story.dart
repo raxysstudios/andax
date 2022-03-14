@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
-import '../widgets/actor_editor_dialog.dart';
+import '../widgets/actor_dialog.dart';
 import 'actors.dart';
 import 'info.dart';
 import 'narrative.dart';
@@ -126,7 +126,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
                     label: 'Actors',
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.inventory_2_rounded),
+                    icon: Icon(Icons.library_books_rounded),
                     label: 'Cells',
                   ),
                   BottomNavigationBarItem(
@@ -136,7 +136,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
                 ],
                 currentIndex: _page,
                 onTap: (i) {
-                  if (i == 3) {
+                  if (i == 4) {
                     Navigator.push<void>(
                       context,
                       MaterialPageRoute(

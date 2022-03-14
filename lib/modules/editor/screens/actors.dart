@@ -5,7 +5,7 @@ import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../widgets/actor_editor_dialog.dart';
+import '../widgets/actor_dialog.dart';
 import '../widgets/actor_tile.dart';
 import 'story.dart';
 

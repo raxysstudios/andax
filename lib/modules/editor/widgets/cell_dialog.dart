@@ -40,6 +40,7 @@ Future<Cell?> showCellEditorDialog(
           child: TextFormField(
             decoration: const InputDecoration(
               labelText: 'Cell name',
+              prefixIcon: Icon(Icons.label_rounded),
             ),
             autofocus: true,
             initialValue: translation.text,
@@ -52,15 +53,12 @@ Future<Cell?> showCellEditorDialog(
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: TextFormField(
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Cell max numeric value',
-              prefixIcon: Icon(cell.numeric
-                  ? Icons.calculate_rounded
-                  : Icons.text_fields_rounded),
+              prefixIcon: Icon(Icons.score_rounded),
             ),
             autofocus: true,
             initialValue: cell.max?.toString(),
-            validator: emptyValidator,
             onChanged: (s) {
               cell.max = int.tryParse(s.trim());
             },
