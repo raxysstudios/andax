@@ -1,8 +1,11 @@
 import 'package:andax/models/node.dart';
+import 'package:andax/models/story.dart';
 import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation_asset.dart';
+import 'package:andax/modules/editor/services/node.dart';
 import 'package:andax/modules/editor/services/pickers.dart';
 import 'package:andax/modules/editor/widgets/transition_dialog.dart';
+import 'package:andax/shared/widgets/options_button.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -145,13 +148,33 @@ class _NodeEditorScreenState extends State<NodeEditorScreen> {
         appBar: AppBar(
           leading: const RoundedBackButton(icon: Icons.done_all_rounded),
           title: const Text('Node editor'),
-          bottom: const TabBar(
-            tabs: [
-              Tab(icon: Icon(Icons.directions_car)),
-              Tab(icon: Icon(Icons.directions_transit)),
-              Tab(icon: Icon(Icons.directions_bike)),
-            ],
-          ),
+          actions: [
+            OptionsButton(
+              [
+                OptionItem.simple(
+                  Icons.delete_rounded,
+                  'Delete node',
+                  () => deleteNode(
+                    context,
+                    node,
+                    () => Navigator.pop(context),
+                  ),
+                ),
+                OptionItem(
+                  SwitchListTile(
+                    secondary: const Icon(Icons.play_circle_rounded),
+                    title: const Text('Story entry'),
+                    value: editor.story.startNodeId == node.id,
+                    onChanged: (r) => setState(() {
+                      editor.story.startNodeId = r ? node.id : null;
+                      Navigator.pop(context);
+                    }),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(width: 4),
+          ],
         ),
         body: TabBarView(
           children: [
