@@ -79,14 +79,20 @@ class StoryScreen extends StatelessWidget {
               const SizedBox(width: 8),
               OptionsButton(
                 [
-                  OptionItem(Icons.report_rounded, 'Report'),
+                  OptionItem.simple(
+                    Icons.report_rounded,
+                    'Report',
+                  ),
                   if (user != null) ...[
-                    OptionItem(Icons.translate_rounded, 'Add translation'),
+                    OptionItem.simple(
+                      Icons.translate_rounded,
+                      'Add translation',
+                    ),
                     if (user.uid == info.storyAuthorID)
-                      OptionItem(
+                      OptionItem.simple(
                         Icons.edit_rounded,
                         'Edit story',
-                        onTap: () => loadStory(
+                        () => loadStory(
                           context,
                           info,
                           (s, t) => Navigator.push<void>(

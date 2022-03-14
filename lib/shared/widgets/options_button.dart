@@ -1,15 +1,27 @@
 import 'package:flutter/material.dart';
 
 class OptionItem {
-  final IconData icon;
-  final String text;
+  late final Widget widget;
   final VoidCallback? onTap;
 
   OptionItem(
-    this.icon,
-    this.text, {
+    this.widget, [
     this.onTap,
-  });
+  ]);
+
+  OptionItem.simple(
+    IconData icon,
+    String text, [
+    this.onTap,
+  ]) : widget = Row(
+          children: [
+            const SizedBox(width: 16),
+            Icon(icon),
+            const SizedBox(width: 16),
+            Text(text),
+            const SizedBox(width: 16),
+          ],
+        );
 }
 
 class OptionsButton extends StatelessWidget {
@@ -24,23 +36,22 @@ class OptionsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PopupMenuButton<void>(
-      icon: Icon(icon),
-      itemBuilder: (context) {
-        return [
-          for (final option in options)
-            PopupMenuItem(
-              onTap: option.onTap,
-              child: Row(
-                children: [
-                  Icon(option.icon),
-                  const SizedBox(width: 16),
-                  Text(option.text),
-                ],
+    return ListTileTheme(
+      data: const ListTileThemeData(horizontalTitleGap: 0),
+      child: PopupMenuButton<int>(
+        icon: Icon(icon),
+        onSelected: (i) => options[i].onTap?.call(),
+        itemBuilder: (context) {
+          return [
+            for (var i = 0; i < options.length; i++)
+              PopupMenuItem(
+                padding: EdgeInsets.zero,
+                value: i,
+                child: options[i].widget,
               ),
-            ),
-        ];
-      },
+          ];
+        },
+      ),
     );
   }
 }
