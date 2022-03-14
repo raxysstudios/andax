@@ -7,9 +7,6 @@ import 'package:andax/store.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterfire_ui/auth.dart' as flutterfire_auth;
-
-import '../config/auth_providers.dart';
 
 typedef LikeItem = MapEntry<DocumentSnapshot, StoryInfo>;
 
@@ -118,51 +115,70 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return flutterfire_auth.ProfileScreen(
-      providerConfigs: providerConfigs,
-      avatarSize: 100,
-      children: [
-        const SizedBox(height: 16),
-        const Divider(),
-        ListTile(
-          leading: const Icon(Icons.favorite_rounded),
-          title: const Text('Liked stories'),
-          trailing: loadingChip(likes),
-          onTap: () => Navigator.push<void>(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Scaffold(
-                appBar: AppBar(
-                  leading: const RoundedBackButton(),
-                  title: const Text('Liked Stories'),
-                ),
-                body: PagingList<LikeItem>(
-                  onRequest: getLikes,
-                  builder: (context, item, index) {
-                    return StoryTile(
-                      item.value,
-                      onTap: () => showStorySheet(context, item.value),
-                    );
-                  },
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Profile'),
+        automaticallyImplyLeading: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout_rounded),
+            onPressed: () => FirebaseAuth.instance.signOut(),
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          const SizedBox(height: 16),
+          CircleAvatar(
+            backgroundImage:
+                user.photoURL == null ? null : NetworkImage(user.photoURL!),
+            backgroundColor: Colors.transparent,
+            radius: 48,
+          ),
+          Text(user.displayName ?? '[no name]'),
+          Text(user.email ?? '[no email]'),
+          const SizedBox(height: 16),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.favorite_rounded),
+            title: const Text('Liked stories'),
+            trailing: loadingChip(likes),
+            onTap: () => Navigator.push<void>(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Scaffold(
+                  appBar: AppBar(
+                    leading: const RoundedBackButton(),
+                    title: const Text('Liked Stories'),
+                  ),
+                  body: PagingList<LikeItem>(
+                    onRequest: getLikes,
+                    builder: (context, item, index) {
+                      return StoryTile(
+                        item.value,
+                        onTap: () => showStorySheet(context, item.value),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        buildStoriesTile(
-          Icons.history_edu_rounded,
-          'Created stories',
-          stories,
-          getStories,
-        ),
-        buildStoriesTile(
-          Icons.translate_rounded,
-          'Created translations',
-          translations,
-          getTranslations,
-        ),
-        const Divider(),
-      ],
+          buildStoriesTile(
+            Icons.history_edu_rounded,
+            'Created stories',
+            stories,
+            getStories,
+          ),
+          buildStoriesTile(
+            Icons.translate_rounded,
+            'Created translations',
+            translations,
+            getTranslations,
+          ),
+          const Divider(),
+        ],
+      ),
     );
   }
 
