@@ -47,7 +47,7 @@ void deleteNode(
   }
 }
 
-void selectTransitionInputSource(BuildContext context, Node node) async {
+Future<void> selectTransitionInputSource(BuildContext context, Node node) async {
   final source = await showDialog<TransitionInputSource>(
     context: context,
     builder: (BuildContext context) {

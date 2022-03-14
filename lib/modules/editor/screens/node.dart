@@ -120,7 +120,10 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
           ListTile(
             leading: const Icon(Icons.functions_rounded),
             title: Text(node.transitionInputSource.name.titleCase),
-            onTap: () => selectTransitionInputSource(context, node),
+            subtitle: const Text('Transition input source'),
+            onTap: () => selectTransitionInputSource(context, node).then(
+              (r) => setState(() {}),
+            ),
           ),
           const Divider(),
           for (var i = 0; i < transitions.length; i++)
