@@ -120,51 +120,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
           ListTile(
             leading: const Icon(Icons.functions_rounded),
             title: Text(node.transitionInputSource.name.titleCase),
-            onTap: () => showDialog<TransitionInputSource>(
-                context: context,
-                builder: (BuildContext context) {
-                  return ListTileTheme(
-                    data: const ListTileThemeData(
-                      contentPadding: EdgeInsets.zero,
-                      horizontalTitleGap: 0,
-                    ),
-                    child: SimpleDialog(
-                      title: const Text('Select input source'),
-                      children: <Widget>[
-                        SimpleDialogOption(
-                          onPressed: () => Navigator.pop(
-                            context,
-                            TransitionInputSource.random,
-                          ),
-                          child: const ListTile(
-                            leading: Icon(Icons.shuffle_rounded),
-                            title: Text('Random choice'),
-                          ),
-                        ),
-                        SimpleDialogOption(
-                          onPressed: () => Navigator.pop(
-                            context,
-                            TransitionInputSource.select,
-                          ),
-                          child: const ListTile(
-                            leading: Icon(Icons.touch_app_rounded),
-                            title: Text('Selected by user'),
-                          ),
-                        ),
-                        SimpleDialogOption(
-                          onPressed: () => Navigator.pop(
-                            context,
-                            TransitionInputSource.store,
-                          ),
-                          child: const ListTile(
-                            leading: Icon(Icons.rule_rounded),
-                            title: Text("Based on cells' values"),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }),
+            onTap: () => selectTransitionInputSource(context, node),
           ),
           const Divider(),
           for (var i = 0; i < transitions.length; i++)
