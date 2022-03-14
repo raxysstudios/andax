@@ -1,10 +1,10 @@
+import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/editor/services/node.dart';
 import 'package:andax/modules/editor/services/pickers.dart';
 import 'package:andax/modules/editor/widgets/transition_dialog.dart';
-import 'package:andax/shared/extensions.dart';
 import 'package:andax/shared/widgets/options_button.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
@@ -62,9 +62,15 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
             return ActorTile(
               actor,
               onTap: () => pickActor(context, node).then(
-                (r) => setState(() {
+                (r) {
+                  if (r?.type != ActorType.player &&
+                      node.transitionInputSource ==
+                          TransitionInputSource.select) {
+                    node.transitionInputSource = TransitionInputSource.random;
+                  }
                   node.actorId = r?.id;
-                }),
+                  setState(() {});
+                },
               ),
               onLongPress: actor == null
                   ? null
@@ -119,7 +125,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
         children: [
           ListTile(
             leading: const Icon(Icons.functions_rounded),
-            title: Text(node.transitionInputSource.name.titleCase),
+            title: Text('Determined by "${node.transitionInputSource.name}"'),
             subtitle: const Text('Transition input source'),
             onTap: () => selectTransitionInputSource(context, node).then(
               (r) => setState(() {}),

@@ -1,3 +1,4 @@
+import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/editor/screens/node.dart';
@@ -47,7 +48,11 @@ void deleteNode(
   }
 }
 
-Future<void> selectTransitionInputSource(BuildContext context, Node node) async {
+Future<void> selectTransitionInputSource(
+  BuildContext context,
+  Node node,
+) async {
+  final editor = context.read<StoryEditorState>();
   final source = await showDialog<TransitionInputSource>(
     context: context,
     builder: (BuildContext context) {
@@ -69,20 +74,28 @@ Future<void> selectTransitionInputSource(BuildContext context, Node node) async 
                 title: Text('Random choice'),
               ),
             ),
+            Builder(builder: (context) {
+              final player =
+                  editor.story.actors[node.actorId]?.type == ActorType.player;
+              return SimpleDialogOption(
+                onPressed: player
+                    ? () => Navigator.pop(
+                          context,
+                          TransitionInputSource.select,
+                        )
+                    : null,
+                child: ListTile(
+                  leading: const Icon(Icons.touch_app_rounded),
+                  subtitle:
+                      player ? null : const Text("Only for 'player' actors"),
+                  title: const Text('Selected by user'),
+                ),
+              );
+            }),
             SimpleDialogOption(
               onPressed: () => Navigator.pop(
                 context,
-                TransitionInputSource.select,
-              ),
-              child: const ListTile(
-                leading: Icon(Icons.touch_app_rounded),
-                title: Text('Selected by user'),
-              ),
-            ),
-            SimpleDialogOption(
-              onPressed: () => Navigator.pop(
-                context,
-                TransitionInputSource.store,
+                TransitionInputSource.cells,
               ),
               child: const ListTile(
                 leading: Icon(Icons.rule_rounded),
