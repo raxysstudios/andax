@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class OptionItem {
-  late final Widget widget;
+  late final Widget? widget;
   final VoidCallback? onTap;
 
   OptionItem(
@@ -32,7 +32,16 @@ class OptionsButton extends StatelessWidget {
   }) : super(key: key);
 
   final IconData icon;
-  final List<OptionItem> options;
+  final List<OptionItem?> options;
+
+  PopupMenuEntry<int> getMenuEntry(int i) {
+    if (options[i] == null) return const PopupMenuDivider();
+    return PopupMenuItem(
+      padding: EdgeInsets.zero,
+      value: i,
+      child: options[i]!.widget,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,15 +49,10 @@ class OptionsButton extends StatelessWidget {
       data: const ListTileThemeData(horizontalTitleGap: 0),
       child: PopupMenuButton<int>(
         icon: Icon(icon),
-        onSelected: (i) => options[i].onTap?.call(),
+        onSelected: (i) => options[i]?.onTap?.call(),
         itemBuilder: (context) {
           return [
-            for (var i = 0; i < options.length; i++)
-              PopupMenuItem(
-                padding: EdgeInsets.zero,
-                value: i,
-                child: options[i].widget,
-              ),
+            for (var i = 0; i < options.length; i++) getMenuEntry(i),
           ];
         },
       ),

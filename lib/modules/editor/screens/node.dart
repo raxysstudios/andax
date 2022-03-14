@@ -188,6 +188,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
                   () => Navigator.pop(context),
                 ),
               ),
+              null,
               OptionItem(
                 SwitchListTile(
                   secondary: const Icon(Icons.play_circle_rounded),
