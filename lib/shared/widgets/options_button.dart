@@ -25,7 +25,7 @@ class OptionsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<void>(
-      child: Icon(icon),
+      icon: Icon(icon),
       itemBuilder: (context) {
         return [
           for (final option in options)
