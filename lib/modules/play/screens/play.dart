@@ -8,6 +8,7 @@ import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/play/widgets/cells_list.dart';
+import 'package:andax/modules/play/widgets/typing_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:simple_animations/simple_animations.dart';
@@ -37,7 +38,7 @@ class _PlayScreenState extends State<PlayScreen> {
 
   final List<Node> storyline = [];
 
-  Timer? autoAdvance;
+  Timer autoAdvance = Timer(Duration.zero, () {});
 
   @override
   void initState() {
@@ -55,25 +56,35 @@ class _PlayScreenState extends State<PlayScreen> {
       }
     }
     setState(() {});
-    autoAdvance?.cancel();
+    autoAdvance.cancel();
 
-    if (node.transitions == null ||
+    final transitions = node.transitions;
+    if (transitions == null ||
         node.transitionInputSource == TransitionInputSource.select) return;
 
+    Node? next;
+    if (node.transitionInputSource == TransitionInputSource.random) {
+      final index = Random().nextInt(transitions.length);
+      next = nodes[transitions[index].targetNodeId];
+    } else {
+      // for (final transition in transitions) {
+      //   final transition.text
+      // }
+    }
+    if (next != null) scheduleAvdancement(next);
+  }
+
+  void scheduleAvdancement(Node node) {
+    final typing = 50 *
+        MessageTranslation.getText(
+          widget.translation,
+          node.id,
+        ).length;
     autoAdvance = Timer(
-      const Duration(milliseconds: 500),
-      () {
-        final transitions = node.transitions!;
-        if (node.transitionInputSource == TransitionInputSource.random) {
-          final index = Random().nextInt(transitions.length);
-          advanceNode(nodes[transitions[index].targetNodeId]!);
-        } else {
-          // for (final transition in transitions) {
-          //   final transition.text
-          // }
-        }
-      },
+      Duration(milliseconds: max(500, typing)),
+      () => advanceNode(node),
     );
+    setState(() {});
   }
 
   Widget animateMessage(Widget child) {
@@ -141,7 +152,8 @@ class _PlayScreenState extends State<PlayScreen> {
             translations: translations,
             actors: actors,
           )),
-          if (storyline.last.transitions != null &&
+          if (!autoAdvance.isActive &&
+              storyline.last.transitions != null &&
               storyline.last.transitionInputSource ==
                   TransitionInputSource.select)
             animateMessage(Padding(
@@ -154,7 +166,7 @@ class _PlayScreenState extends State<PlayScreen> {
                   for (final transition in storyline.last.transitions!)
                     InputChip(
                       onPressed: () =>
-                          advanceNode(nodes[transition.targetNodeId]!),
+                          scheduleAvdancement(nodes[transition.targetNodeId]!),
                       label: Text(
                         getTranslation<MessageTranslation>(
                           translations,
@@ -166,6 +178,7 @@ class _PlayScreenState extends State<PlayScreen> {
                 ],
               ),
             )),
+          if (autoAdvance.isActive) const TypingIndicator(),
           if (storyline.last.transitions == null)
             animateMessage(
               Column(
