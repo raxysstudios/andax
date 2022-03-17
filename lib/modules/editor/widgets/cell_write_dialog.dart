@@ -48,7 +48,7 @@ Future<Cell?> showCellWriteDialog(
                 ),
             child: CellTile(
               cell,
-              onTap: () => pickCell(context).then((r) {
+              onTap: () => pickCell(context, cell).then((r) {
                 if (r != null) {
                   setState(() {
                     cell = r;

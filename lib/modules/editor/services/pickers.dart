@@ -32,7 +32,7 @@ Future<Actor?> pickActor(BuildContext context, [Node? node]) {
   );
 }
 
-Future<Node?> pickNode(BuildContext context) {
+Future<Node?> pickNode(BuildContext context, [Node? node]) {
   final editor = context.read<StoryEditorState>();
   return showScrollableModalSheet<Node>(
     context: context,
@@ -44,6 +44,7 @@ Future<Node?> pickNode(BuildContext context) {
             return NarrativeEditorScreen(
               (n, _) => Navigator.pop(context, n),
               scroll: scroll,
+              selectedId: node?.id,
             );
           },
         ),
@@ -52,7 +53,7 @@ Future<Node?> pickNode(BuildContext context) {
   );
 }
 
-Future<Cell?> pickCell(BuildContext context) {
+Future<Cell?> pickCell(BuildContext context, [Cell? cell]) {
   final editor = context.read<StoryEditorState>();
   return showScrollableModalSheet<Cell>(
     context: context,
@@ -64,6 +65,7 @@ Future<Cell?> pickCell(BuildContext context) {
             return CellsEditorScreen(
               (n, _) => Navigator.pop(context, n),
               scroll: scroll,
+              selectedId: cell?.id,
             );
           },
         ),

@@ -71,16 +71,19 @@ Future<Transition?> showTransitionEditorDialog(
             data: Theme.of(context).listTileTheme.copyWith(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 24),
                 ),
-            child: NodeTile(
-              editor.story.nodes[transition.targetNodeId]!,
-              onTap: () => pickNode(context).then((r) {
-                if (r != null) {
-                  setState(() {
-                    transition.targetNodeId = r.id;
-                  });
-                }
-              }),
-            ),
+            child: Builder(builder: (context) {
+              final node = editor.story.nodes[transition.targetNodeId]!;
+              return NodeTile(
+                node,
+                onTap: () => pickNode(context, node).then((r) {
+                  if (r != null) {
+                    setState(() {
+                      transition.targetNodeId = r.id;
+                    });
+                  }
+                }),
+              );
+            }),
           ),
         ),
       ];
