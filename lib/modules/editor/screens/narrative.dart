@@ -59,9 +59,11 @@ class _NarrativeEditorScreenState extends State<NarrativeEditorScreen> {
   @override
   Widget build(BuildContext context) {
     final editor = context.watch<StoryEditorState>();
-    final nodes = interactive
-        ? computeThread(editor.story)
-        : editor.story.nodes.values.toList();
+    final nodes = editor.story.nodes.isEmpty
+        ? <Node>[]
+        : interactive
+            ? computeThread(editor.story)
+            : editor.story.nodes.values.toList();
 
     return Scaffold(
       appBar: AppBar(
