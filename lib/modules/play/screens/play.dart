@@ -9,8 +9,8 @@ import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/play/widgets/cells_list.dart';
 import 'package:flutter/material.dart';
-import 'package:simple_animations/simple_animations.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:simple_animations/simple_animations.dart';
 
 import '../utils/get_translation.dart';
 import '../widgets/node_card.dart';
@@ -51,7 +51,7 @@ class _PlayScreenState extends State<PlayScreen> {
     storyline.add(node);
     if (node.cellWrites != null) {
       for (final write in node.cellWrites!.entries) {
-        cells[write.key]!.value = write.value;
+        cells[write.key]?.value = write.value;
       }
     }
     setState(() {});
