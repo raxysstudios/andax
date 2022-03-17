@@ -117,7 +117,10 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
     return Scaffold(
       primary: false,
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () => showTransitionEditorDialog(
+          context,
+          node,
+        ).then((r) => setState(() {})),
         icon: const Icon(Icons.control_point_rounded),
         label: const Text('Add transition'),
       ),

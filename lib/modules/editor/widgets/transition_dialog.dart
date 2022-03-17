@@ -42,7 +42,7 @@ Future<Transition?> showTransitionEditorDialog(
     title: value == null ? 'Create actor' : 'Edit actor',
     initial: value,
     padding: EdgeInsets.zero,
-    builder: (context, setState) {
+    builder: (_, setState) {
       return [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -67,15 +67,20 @@ Future<Transition?> showTransitionEditorDialog(
         ),
         Provider.value(
           value: editor,
-          child: NodeTile(
-            node,
-            onTap: () => pickNode(context).then((r) {
-              if (r != null) {
-                setState(() {
-                  transition.targetNodeId = r.id;
-                });
-              }
-            }),
+          child: ListTileTheme(
+            data: Theme.of(context).listTileTheme.copyWith(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 24),
+                ),
+            child: NodeTile(
+              editor.story.nodes[transition.targetNodeId]!,
+              onTap: () => pickNode(context).then((r) {
+                if (r != null) {
+                  setState(() {
+                    transition.targetNodeId = r.id;
+                  });
+                }
+              }),
+            ),
           ),
         ),
       ];
