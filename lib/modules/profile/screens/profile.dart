@@ -128,16 +128,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       body: Column(
         children: [
-          const SizedBox(height: 16),
-          CircleAvatar(
-            backgroundImage:
-                user.photoURL == null ? null : NetworkImage(user.photoURL!),
-            backgroundColor: Colors.transparent,
-            radius: 48,
+          ListTile(
+            leading: CircleAvatar(
+              backgroundImage:
+                  user.photoURL == null ? null : NetworkImage(user.photoURL!),
+              backgroundColor: Colors.transparent,
+            ),
+            title: Text(user.displayName ?? '[no name]'),
+            subtitle: Text(user.email ?? '[no email]'),
           ),
-          Text(user.displayName ?? '[no name]'),
-          Text(user.email ?? '[no email]'),
-          const SizedBox(height: 16),
           const Divider(),
           ListTile(
             leading: const Icon(Icons.favorite_rounded),
