@@ -22,13 +22,13 @@ class CellTile extends StatelessWidget {
       leading: cell == null
           ? null
           : Icon(
-              cell!.display == CellDisplay.none
+              cell!.display == null
                   ? Icons.visibility_off_rounded
                   : cell!.display == CellDisplay.check
                       ? Icons.check_circle_rounded
                       : cell!.display == CellDisplay.text
-                          ? Icons.linear_scale_rounded
-                          : Icons.short_text_rounded,
+                          ? Icons.short_text_rounded
+                          : Icons.linear_scale_rounded,
             ),
       title: Text(
         cell == null

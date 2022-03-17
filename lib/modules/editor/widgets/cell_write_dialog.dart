@@ -8,26 +8,32 @@ import 'package:provider/provider.dart';
 import '../screens/story.dart';
 import '../services/pickers.dart';
 
-Future<Cell?> showCellWriteDialog(
+Future<MapEntry<String, String>?> showCellWriteDialog(
   BuildContext context,
   Node node, [
-  Cell? value,
+  MapEntry<String, String>? value,
 ]) async {
   final editor = context.read<StoryEditorState>();
   Cell cell;
+  String write;
 
+  if (editor.story.cells[value?.key] == null) {
+    node.cellWrites?.remove(value?.key);
+    value = null;
+  }
   if (value == null) {
     final c = await pickCell(context);
     if (c == null) return value;
     cell = c;
+    write = '';
   } else {
-    cell = value;
+    cell = editor.story.cells[value.key]!;
+    write = node.cellWrites?[cell.id] ?? '';
   }
 
-  var write = '';
-  final result = await showEditorDialog<Cell>(
+  final result = await showEditorDialog<MapEntry<String, String>>(
     context,
-    result: () => cell,
+    result: () => MapEntry(cell.id, write),
     title: value == null ? 'Create cell write' : 'Edit cell write',
     initial: value,
     padding: EdgeInsets.zero,
@@ -77,14 +83,14 @@ Future<Cell?> showCellWriteDialog(
   );
   if (result == null) {
     if (value != null) {
-      node.cellWrites?.remove(value.id);
+      node.cellWrites?.remove(value.key);
     }
   } else {
     node.cellWrites ??= {};
     node.cellWrites!.update(
-      result.id,
-      (_) => write,
-      ifAbsent: () => write,
+      result.key,
+      (_) => result.value,
+      ifAbsent: () => result.value,
     );
   }
   return result;

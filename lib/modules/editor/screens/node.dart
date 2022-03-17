@@ -166,7 +166,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
   }
 
   Widget buildCellsTab(StoryEditorState editor) {
-    final cellIds = node.cellWrites?.keys ?? [];
+    final writes = node.cellWrites?.entries ?? [];
     return Scaffold(
       primary: false,
       floatingActionButton: FloatingActionButton.extended(
@@ -179,14 +179,14 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
       ),
       body: ListView(
         children: [
-          for (final id in cellIds)
+          for (final write in writes)
             CellTile(
-              editor.story.cells[id]!,
-              subtitle: Text(node.cellWrites![id]!),
+              editor.story.cells[write.key],
+              subtitle: Text(node.cellWrites![write.key] ?? ''),
               onTap: () => showCellWriteDialog(
                 context,
                 node,
-                editor.story.cells[id],
+                write,
               ).then((r) => setState(() {})),
             ),
         ],

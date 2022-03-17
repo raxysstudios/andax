@@ -3,18 +3,18 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'cell.g.dart';
 
-enum CellDisplay { none, check, text, range }
+enum CellDisplay { check, text, range }
 
 @JsonSerializable()
 class Cell {
   Cell(
     this.id, {
     this.max,
-    this.display = CellDisplay.none,
+    this.display,
   });
 
   final String id;
-  CellDisplay display;
+  CellDisplay? display;
   int? max;
 
   bool get numeric => max != null;

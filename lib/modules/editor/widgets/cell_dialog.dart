@@ -2,6 +2,7 @@ import 'package:andax/models/cell.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/shared/widgets/editor_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../screens/story.dart';
@@ -62,6 +63,10 @@ Future<Cell?> showCellEditorDialog(
             onChanged: (s) {
               cell.max = int.tryParse(s.trim());
             },
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly
+            ], // Only numbers can be entered
           ),
         ),
         Padding(
@@ -80,30 +85,19 @@ Future<Cell?> showCellEditorDialog(
               Icon(Icons.short_text_rounded),
               Icon(Icons.linear_scale_rounded),
             ],
-            onPressed: (int index) {
+            onPressed: (int i) {
               setState(() {
-                cell.display = CellDisplay.values[index];
+                cell.display = i == 0 ? null : CellDisplay.values[i - 1];
               });
             },
-            isSelected:
-                CellDisplay.values.map((e) => e == cell.display).toList(),
+            isSelected: [
+              cell.display == null,
+              ...CellDisplay.values.map((e) => e == cell.display),
+            ],
             renderBorder: false,
             borderRadius: BorderRadius.circular(16),
           ),
         ),
-        // for (final display in CellDisplay.values)
-        //   RadioListTile<CellDisplay>(
-        //     title: Text(display.name),
-        //     value: display,
-        //     groupValue: cell.display,
-        //     onChanged: (value) {
-        //       if (value != null) {
-        //         setState(() {
-        //           cell.display = value;
-        //         });
-        //       }
-        //     },
-        //   ),
       ];
     },
   );

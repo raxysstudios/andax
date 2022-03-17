@@ -7,6 +7,7 @@ import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
+import 'package:andax/modules/play/widgets/cells_list.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_animations/simple_animations.dart';
@@ -143,19 +144,31 @@ class _PlayScreenState extends State<PlayScreen> {
               ),
             )),
           if (storyline.last.transitions == null)
-            animateMessage(const Center(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Text(
-                  'End',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.w500,
+            animateMessage(
+              Column(
+                children: [
+                  const SizedBox(height: 16),
+                  const Divider(),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      'End',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
                   ),
-                ),
+                  Card(
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 4,
+                      horizontal: 32,
+                    ),
+                    child: CellsList(
+                      cells: cells.values.toList(),
+                      translation: widget.translation,
+                    ),
+                  ),
+                ],
               ),
-            )),
+            ),
         ],
       ),
     );
