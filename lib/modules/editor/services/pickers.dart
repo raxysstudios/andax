@@ -1,6 +1,8 @@
 import 'package:andax/models/actor.dart';
+import 'package:andax/models/cell.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/modules/editor/screens/actors.dart';
+import 'package:andax/modules/editor/screens/cells.dart';
 import 'package:andax/shared/widgets/scrollable_modal_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -40,6 +42,26 @@ Future<Node?> pickNode(BuildContext context) {
         child: Builder(
           builder: (context) {
             return NarrativeEditorScreen(
+              (n, _) => Navigator.pop(context, n),
+              scroll: scroll,
+            );
+          },
+        ),
+      );
+    },
+  );
+}
+
+Future<Cell?> pickCell(BuildContext context) {
+  final editor = context.read<StoryEditorState>();
+  return showScrollableModalSheet<Cell>(
+    context: context,
+    builder: (context, scroll) {
+      return Provider.value(
+        value: editor,
+        child: Builder(
+          builder: (context) {
+            return CellsEditorScreen(
               (n, _) => Navigator.pop(context, n),
               scroll: scroll,
             );

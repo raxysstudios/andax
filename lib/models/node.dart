@@ -12,12 +12,14 @@ class Node {
   final String id;
   String? actorId;
   List<Transition>? transitions;
+  Map<String, String>? cellWrites;
   TransitionInputSource transitionInputSource;
 
   Node(
     this.id, {
     this.actorId,
     this.transitions,
+    this.cellWrites,
     this.transitionInputSource = TransitionInputSource.random,
   });
 
