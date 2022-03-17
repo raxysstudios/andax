@@ -6,20 +6,22 @@ class TypingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MirrorAnimation<double>(
-      tween: Tween(begin: 0, end: 1),
-      curve: Curves.easeInOut,
-      duration: const Duration(milliseconds: 900),
-      builder: (context, child, tween) {
-        var text = '';
-        for (var i = 1; i < 4; i++) {
-          if (tween > .3 * i) text += ' •';
-        }
-        return Padding(
-          padding: const EdgeInsets.all(16),
-          child: Text(text),
-        );
-      },
+    return Center(
+      child: MirrorAnimation<double>(
+        tween: Tween(begin: 0, end: 1),
+        curve: Curves.easeInOut,
+        duration: const Duration(milliseconds: 900),
+        builder: (context, child, tween) {
+          var text = '';
+          for (var i = 1; i < 4; i++) {
+            if (tween > .3 * i) text += ' •';
+          }
+          return Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text(text),
+          );
+        },
+      ),
     );
   }
 }
