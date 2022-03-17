@@ -1,9 +1,6 @@
 import 'package:andax/models/cell.dart';
 import 'package:andax/models/node.dart';
-import 'package:andax/models/transition.dart';
-import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/editor/widgets/cell_tile.dart';
-import 'package:andax/modules/editor/widgets/node_tile.dart';
 import 'package:andax/shared/widgets/editor_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,7 +8,7 @@ import 'package:provider/provider.dart';
 import '../screens/story.dart';
 import '../services/pickers.dart';
 
-Future<Cell?> showTransitionEditorDialog(
+Future<Cell?> showCellWriteDialog(
   BuildContext context,
   Node node, [
   Cell? value,
@@ -65,7 +62,7 @@ Future<Cell?> showTransitionEditorDialog(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: TextFormField(
             decoration: const InputDecoration(
-              labelText: 'Transition text',
+              labelText: 'Write value',
             ),
             autofocus: true,
             initialValue: write,
@@ -83,7 +80,8 @@ Future<Cell?> showTransitionEditorDialog(
       node.cellWrites?.remove(value.id);
     }
   } else {
-    node.cellWrites?.update(
+    node.cellWrites ??= {};
+    node.cellWrites!.update(
       result.id,
       (_) => write,
       ifAbsent: () => write,

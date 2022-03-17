@@ -7,11 +7,13 @@ import 'package:provider/provider.dart';
 class CellTile extends StatelessWidget {
   const CellTile(
     this.cell, {
+    this.subtitle,
     this.onTap,
     Key? key,
   }) : super(key: key);
 
   final Cell cell;
+  final Widget? subtitle;
   final VoidCallback? onTap;
 
   @override
@@ -26,6 +28,7 @@ class CellTile extends StatelessWidget {
           cell.id,
         ),
       ),
+      subtitle: subtitle,
       trailing: cell.numeric
           ? Text(
               '/ ${cell.max}',

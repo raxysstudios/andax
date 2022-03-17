@@ -4,6 +4,7 @@ import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/editor/services/node.dart';
 import 'package:andax/modules/editor/services/pickers.dart';
+import 'package:andax/modules/editor/widgets/cell_tile.dart';
 import 'package:andax/modules/editor/widgets/transition_dialog.dart';
 import 'package:andax/shared/widgets/options_button.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
@@ -13,6 +14,7 @@ import 'package:provider/provider.dart';
 
 import '../widgets/actor_dialog.dart';
 import '../widgets/actor_tile.dart';
+import '../widgets/cell_write_dialog.dart';
 import 'story.dart';
 
 class NodeEditorScreen extends StatefulWidget {
@@ -164,16 +166,29 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
   }
 
   Widget buildCellsTab(StoryEditorState editor) {
+    final cellIds = node.cellWrites?.keys ?? [];
     return Scaffold(
       primary: false,
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () => showCellWriteDialog(
+          context,
+          node,
+        ).then((r) => setState(() {})),
         icon: const Icon(Icons.control_point_rounded),
         label: const Text('Add cell write'),
       ),
       body: ListView(
-        children: const [
-          Text('Cells tab'),
+        children: [
+          for (final id in cellIds)
+            CellTile(
+              editor.story.cells[id]!,
+              subtitle: Text(node.cellWrites![id]!),
+              onTap: () => showCellWriteDialog(
+                context,
+                node,
+                editor.story.cells[id],
+              ).then((r) => setState(() {})),
+            ),
         ],
       ),
     );
