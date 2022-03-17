@@ -12,7 +12,7 @@ class CellTile extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  final Cell cell;
+  final Cell? cell;
   final Widget? subtitle;
   final VoidCallback? onTap;
 
@@ -20,18 +20,22 @@ class CellTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: Icon(
-        cell.numeric ? Icons.calculate_rounded : Icons.text_fields_rounded,
+        cell?.numeric ?? false
+            ? Icons.calculate_rounded
+            : Icons.text_fields_rounded,
       ),
       title: Text(
-        MessageTranslation.getText(
-          context.watch<StoryEditorState>().translation,
-          cell.id,
-        ),
+        cell == null
+            ? '<NO CELL>'
+            : MessageTranslation.getText(
+                context.watch<StoryEditorState>().translation,
+                cell!.id,
+              ),
       ),
       subtitle: subtitle,
-      trailing: cell.numeric
+      trailing: cell?.numeric ?? false
           ? Text(
-              '/ ${cell.max}',
+              '/ ${cell!.max}',
               style: Theme.of(context).textTheme.subtitle2,
             )
           : null,

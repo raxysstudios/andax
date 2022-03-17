@@ -47,7 +47,7 @@ class ActorTile extends StatelessWidget {
       ),
       title: Text(
         actor == null
-            ? '<no actor>'
+            ? '<NO ACTOR>'
             : ActorTranslation.getName(
                 editor.translation,
                 actor!.id,
