@@ -64,6 +64,46 @@ Future<Cell?> showCellEditorDialog(
             },
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(24, 18, 24, 8),
+          child: Text(
+            'Display mode',
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: ToggleButtons(
+            children: const [
+              Icon(Icons.visibility_off_rounded),
+              Icon(Icons.check_circle_rounded),
+              Icon(Icons.short_text_rounded),
+              Icon(Icons.linear_scale_rounded),
+            ],
+            onPressed: (int index) {
+              setState(() {
+                cell.display = CellDisplay.values[index];
+              });
+            },
+            isSelected:
+                CellDisplay.values.map((e) => e == cell.display).toList(),
+            renderBorder: false,
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
+        // for (final display in CellDisplay.values)
+        //   RadioListTile<CellDisplay>(
+        //     title: Text(display.name),
+        //     value: display,
+        //     groupValue: cell.display,
+        //     onChanged: (value) {
+        //       if (value != null) {
+        //         setState(() {
+        //           cell.display = value;
+        //         });
+        //       }
+        //     },
+        //   ),
       ];
     },
   );

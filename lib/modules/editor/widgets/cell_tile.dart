@@ -19,11 +19,17 @@ class CellTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(
-        cell?.numeric ?? false
-            ? Icons.calculate_rounded
-            : Icons.text_fields_rounded,
-      ),
+      leading: cell == null
+          ? null
+          : Icon(
+              cell!.display == CellDisplay.none
+                  ? Icons.visibility_off_rounded
+                  : cell!.display == CellDisplay.check
+                      ? Icons.check_circle_rounded
+                      : cell!.display == CellDisplay.text
+                          ? Icons.linear_scale_rounded
+                          : Icons.short_text_rounded,
+            ),
       title: Text(
         cell == null
             ? '<NO CELL>'

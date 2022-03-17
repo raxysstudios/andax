@@ -3,11 +3,18 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'cell.g.dart';
 
+enum CellDisplay { none, check, text, range }
+
 @JsonSerializable()
 class Cell {
-  Cell(this.id, {this.max});
+  Cell(
+    this.id, {
+    this.max,
+    this.display = CellDisplay.none,
+  });
 
   final String id;
+  CellDisplay display;
   int? max;
 
   bool get numeric => max != null;
@@ -38,8 +45,7 @@ class Cell {
     _value = num.clamp(0, max!).toString();
   }
 
-  factory Cell.fromJson(Map<String, dynamic> json) =>
-      _$CellFromJson(json);
+  factory Cell.fromJson(Map<String, dynamic> json) => _$CellFromJson(json);
 
   Map<String, dynamic> toJson() => _$CellToJson(this);
 }
