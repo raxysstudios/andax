@@ -103,10 +103,12 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
         const ListTile(
           leading: Icon(Icons.image_rounded),
           title: Text('Select image'),
+          subtitle: Text('NOT IMPLEMENTED'),
         ),
         const ListTile(
           leading: Icon(Icons.audiotrack_rounded),
           title: Text('Select audio'),
+          subtitle: Text('NOT IMPLEMENTED'),
         ),
       ],
     );
