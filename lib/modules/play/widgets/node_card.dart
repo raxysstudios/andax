@@ -49,6 +49,7 @@ class _NodeCardState extends State<NodeCard> {
   ) {
     final thread = actor.id == widget.previousNode?.actorId;
     return Card(
+      elevation: .5,
       margin: isPlayer
           ? EdgeInsets.fromLTRB(48, thread ? 4 : 16, 0, 0)
           : EdgeInsets.fromLTRB(0, thread ? 4 : 16, 48, 0),
