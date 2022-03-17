@@ -6,6 +6,7 @@ import 'package:andax/modules/editor/services/node.dart';
 import 'package:andax/modules/editor/widgets/cell_dialog.dart';
 import 'package:andax/modules/play/screens/play.dart';
 import 'package:andax/shared/widgets/danger_dialog.dart';
+import 'package:andax/shared/widgets/snackbar_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
@@ -137,6 +138,14 @@ class StoryEditorState extends State<StoryEditorScreen> {
                 currentIndex: _page,
                 onTap: (i) {
                   if (i == 4) {
+                    if (story.nodes.isEmpty) {
+                      showSnackbar(
+                        context,
+                        Icons.error_rounded,
+                        'Error: Empty narrative!',
+                      );
+                      return;
+                    }
                     Navigator.push<void>(
                       context,
                       MaterialPageRoute(

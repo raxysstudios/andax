@@ -53,6 +53,14 @@ class InfoEditorScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
+          if (editor.story.nodes.isEmpty) {
+            showSnackbar(
+              context,
+              Icons.error_rounded,
+              'Error: Empty narrative!',
+            );
+            return;
+          }
           await showLoadingDialog(context, uploadStory(editor));
           showSnackbar(context, Icons.cloud_done_rounded, 'Uploaded!');
         },
