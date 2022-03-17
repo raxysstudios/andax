@@ -8,9 +8,9 @@ import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/play/widgets/cells_list.dart';
-import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_animations/simple_animations.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../utils/get_translation.dart';
 import '../widgets/node_card.dart';
@@ -96,13 +96,36 @@ class _PlayScreenState extends State<PlayScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(
-        leading: const RoundedBackButton(),
-        title: Text(StoryTranslation.get(widget.translation)!.title),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(top: 16),
+        child: SpeedDial(
+          icon: Icons.pause_rounded,
+          activeIcon: Icons.play_arrow_rounded,
+          backgroundColor: theme.colorScheme.primary,
+          foregroundColor: theme.colorScheme.onPrimary,
+          activeBackgroundColor: theme.colorScheme.primary,
+          activeForegroundColor: theme.colorScheme.onPrimary,
+          spaceBetweenChildren: 9,
+          switchLabelPosition: true,
+          label: const Text('Pause'),
+          activeLabel: const Text('Resume'),
+          buttonSize: const Size.square(48),
+          spacing: 7,
+          direction: SpeedDialDirection.down,
+          children: [
+            SpeedDialChild(
+              child: const Icon(Icons.close_rounded),
+              label: 'Exit',
+              onTap: () => Navigator.pop(context),
+            ),
+          ],
+        ),
       ),
       body: ListView(
-        padding: const EdgeInsets.only(bottom: 76),
+        padding: const EdgeInsets.only(top: 108),
         children: [
           for (var i = 0; i < storyline.length - 1; i++)
             NodeCard(
@@ -149,11 +172,22 @@ class _PlayScreenState extends State<PlayScreen> {
                 children: [
                   const SizedBox(height: 16),
                   const Divider(),
+                  const SizedBox(height: 16),
                   Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text(
-                      'End',
-                      style: Theme.of(context).textTheme.headline6,
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                    child: Row(
+                      children: [
+                        Text(
+                          'End',
+                          style: theme.textTheme.headline6,
+                        ),
+                        const Spacer(),
+                        TextButton.icon(
+                          onPressed: () => Navigator.pop(context),
+                          icon: const Icon(Icons.done_all_rounded),
+                          label: const Text('Finish play'),
+                        ),
+                      ],
                     ),
                   ),
                   Card(

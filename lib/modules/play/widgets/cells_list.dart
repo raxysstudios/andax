@@ -1,6 +1,7 @@
 import 'package:andax/models/cell.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
+import 'package:andax/shared/extensions.dart';
 import 'package:flutter/material.dart';
 
 class CellsList extends StatelessWidget {
@@ -24,7 +25,7 @@ class CellsList extends StatelessWidget {
               MessageTranslation.getText(
                 translation,
                 cell.id,
-              ),
+              ).titleCase,
             ),
             trailing: Builder(
               builder: (context) {
