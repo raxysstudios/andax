@@ -1,3 +1,4 @@
+import 'package:algolia/algolia.dart' show AlgoliaError;
 import 'package:flutter/material.dart';
 
 class LoadingBuilder<T> extends StatelessWidget {
@@ -24,7 +25,11 @@ class LoadingBuilder<T> extends StatelessWidget {
           );
         }
         if (snapshot.data == null) {
-          return const Text('Error...');
+          final error = snapshot.error;
+          if (error is AlgoliaError) {
+            return Text('Error: ${error.error}');
+          }
+          return const Text('An unknown error occurred');
         }
         return builder(context, snapshot.data!);
       },
