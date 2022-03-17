@@ -378,15 +378,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_xlider:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: ef4a358f84bb6a6119b213fef6f759f22246c882
-      url: "https://github.com/Ali-Azmoud/flutter_xlider.git"
-    source: git
-    version: "3.4.0"
   flutterfire_ui:
     dependency: "direct main"
     description:
