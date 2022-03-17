@@ -2,16 +2,16 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:andax/models/actor.dart';
+import 'package:andax/models/cell.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
-import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
+import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 import '../utils/get_translation.dart';
-import '../widgets/happiness_slider.dart';
 import '../widgets/node_card.dart';
 
 class PlayScreen extends StatefulWidget {
@@ -32,62 +32,62 @@ class _PlayScreenState extends State<PlayScreen> {
   Map<String, TranslationAsset> get translations => widget.translation.assets;
   Map<String, Node> get nodes => widget.story.nodes;
   Map<String, Actor> get actors => widget.story.actors;
-  late Node currentNode;
+  Map<String, Cell> get cells => widget.story.cells;
+
   final List<Node> storyline = [];
-  int totalScore = 50;
 
   Timer? autoAdvance;
-  bool isFinished = false;
 
   @override
   void initState() {
     super.initState();
-    currentNode = widget.story.startNodeId?.isEmpty ?? true
+    advanceNode(widget.story.startNodeId?.isEmpty ?? true
         ? nodes.values.first
-        : nodes[widget.story.startNodeId]!;
-
-    if (currentNode.transitionInputSource == TransitionInputSource.random &&
-        currentNode.transitions != null) {
-      moveAuto(currentNode.transitions!);
-    }
+        : nodes[widget.story.startNodeId]!);
   }
 
-  void advanceStory(Transition transition) {
-    setState(() {
-      autoAdvance?.cancel();
-      storyline.add(currentNode);
-      currentNode = nodes[transition.targetNodeId]!;
-      isFinished =
-          totalScore == 0 || (currentNode.transitions?.isEmpty ?? true);
-      if (currentNode.transitionInputSource == TransitionInputSource.random &&
-          currentNode.transitions != null) {
-        moveAuto(currentNode.transitions!);
+  void advanceNode(Node node) {
+    storyline.add(node);
+    if (node.cellWrites != null) {
+      for (final write in node.cellWrites!.entries) {
+        cells[write.key]!.value = write.value;
       }
-    });
-  }
-
-  void moveAuto(List<Transition> transition) {
+    }
+    setState(() {});
     autoAdvance?.cancel();
+
+    if (node.transitions == null ||
+        node.transitionInputSource == TransitionInputSource.select) return;
+
     autoAdvance = Timer(
       const Duration(milliseconds: 500),
       () {
-        final index = Random().nextInt(transition.length);
-        advanceStory(transition[index]);
-        autoAdvance = null;
+        final transitions = node.transitions!;
+        if (node.transitionInputSource == TransitionInputSource.random) {
+          final index = Random().nextInt(transitions.length);
+          advanceNode(nodes[transitions[index].targetNodeId]!);
+        } else {
+          // for (final transition in transitions) {
+          //   final transition.text
+          // }
+        }
       },
     );
   }
 
-  Widget fadeOut(Widget child) {
+  Widget animateMessage(Widget child) {
     return PlayAnimation<double>(
       tween: Tween(begin: 0, end: 1),
-      curve: Curves.easeOutCubic,
-      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOutQuad,
+      duration: const Duration(milliseconds: 200),
       child: child,
-      builder: (context, child, value) {
+      builder: (context, child, tween) {
         return Opacity(
-          opacity: value,
-          child: child,
+          opacity: tween,
+          child: Transform.translate(
+            offset: Offset(0, 32 * (1 - tween)),
+            child: child,
+          ),
         );
       },
     );
@@ -97,54 +97,41 @@ class _PlayScreenState extends State<PlayScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: HappinessSlider(value: totalScore),
-        titleSpacing: 0,
-        actions: [
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(
-                totalScore.toString(),
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          )
-        ],
+        leading: const RoundedBackButton(),
+        title: Text(StoryTranslation.get(widget.translation)!.title),
       ),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 76),
         children: [
-          for (var i = 0; i < storyline.length; i++)
+          for (var i = 0; i < storyline.length - 1; i++)
             NodeCard(
               node: storyline[i],
               previousNode: i > 0 ? storyline[i - 1] : null,
               translations: translations,
               actors: actors,
             ),
-          fadeOut(NodeCard(
-            node: currentNode,
-            previousNode: storyline.isEmpty ? null : storyline.last,
+          animateMessage(NodeCard(
+            node: storyline.last,
+            previousNode:
+                storyline.length > 1 ? storyline[storyline.length - 2] : null,
             translations: translations,
             actors: actors,
           )),
-          if (currentNode.transitions != null &&
-              currentNode.transitionInputSource !=
-                  TransitionInputSource.random &&
-              autoAdvance == null)
-            fadeOut(Padding(
-              padding: const EdgeInsets.all(8),
+          if (storyline.last.transitions != null &&
+              storyline.last.transitionInputSource ==
+                  TransitionInputSource.select)
+            animateMessage(Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Wrap(
                 alignment: WrapAlignment.end,
                 spacing: 8,
                 runSpacing: 8,
                 children: [
-                  for (final transition in currentNode.transitions!)
-                    ElevatedButton(
-                      onPressed: () => advanceStory(transition),
-                      child: Text(
+                  for (final transition in storyline.last.transitions!)
+                    InputChip(
+                      onPressed: () =>
+                          advanceNode(nodes[transition.targetNodeId]!),
+                      label: Text(
                         getTranslation<MessageTranslation>(
                           translations,
                           transition.id,
@@ -155,8 +142,8 @@ class _PlayScreenState extends State<PlayScreen> {
                 ],
               ),
             )),
-          if (isFinished)
-            fadeOut(const Center(
+          if (storyline.last.transitions == null)
+            animateMessage(const Center(
               child: Padding(
                 padding: EdgeInsets.all(16),
                 child: Text(

@@ -47,10 +47,11 @@ class _NodeCardState extends State<NodeCard> {
     Actor actor,
     bool isPlayer,
   ) {
+    final thread = actor.id == widget.previousNode?.actorId;
     return Card(
       margin: isPlayer
-          ? const EdgeInsets.fromLTRB(48, 8, 0, 8)
-          : const EdgeInsets.fromLTRB(0, 8, 48, 8),
+          ? EdgeInsets.fromLTRB(48, thread ? 4 : 16, 0, 0)
+          : EdgeInsets.fromLTRB(0, thread ? 4 : 16, 48, 0),
       shape: isPlayer
           ? const RoundedRectangleBorder(
               borderRadius: BorderRadius.horizontal(
@@ -62,7 +63,6 @@ class _NodeCardState extends State<NodeCard> {
                 right: Radius.circular(4),
               ),
             ),
-      color: isPlayer ? Theme.of(context).backgroundColor : null,
       child: Padding(
         padding: isPlayer
             ? const EdgeInsets.fromLTRB(8, 8, 20, 8)
@@ -71,7 +71,7 @@ class _NodeCardState extends State<NodeCard> {
           crossAxisAlignment:
               isPlayer ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
-            if (!isPlayer && actor.id != widget.previousNode?.actorId)
+            if (!thread)
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
@@ -80,9 +80,11 @@ class _NodeCardState extends State<NodeCard> {
                     actor.id,
                     (t) => t.name,
                   ),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontStyle: FontStyle.italic,
+                    color:
+                        isPlayer ? Theme.of(context).colorScheme.primary : null,
                   ),
                 ),
               ),
