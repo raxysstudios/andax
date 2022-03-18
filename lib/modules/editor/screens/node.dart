@@ -1,10 +1,10 @@
 import 'package:andax/models/actor.dart';
+import 'package:andax/models/cell_write.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/editor/services/node.dart';
 import 'package:andax/modules/editor/services/pickers.dart';
-import 'package:andax/modules/editor/widgets/cell_tile.dart';
 import 'package:andax/modules/editor/widgets/transition_dialog.dart';
 import 'package:andax/shared/widgets/options_button.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
@@ -173,18 +173,24 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
         onPressed: () => showCellWriteDialog(
           context,
           node,
-        ).then((r) => setState(() {
-              print('WRTS ${node.cellWrites}');
-            })),
+        ).then((r) => setState(() {})),
         icon: const Icon(Icons.control_point_rounded),
         label: const Text('Add cell write'),
       ),
       body: ListView(
         children: [
           for (final write in writes)
-            CellTile(
-              editor.story.cells[write.targetCellId],
-              subtitle: Text(write.value),
+            ListTile(
+              leading: Icon(
+                write.mode == CellWriteMode.overwrite
+                    ? Icons.drive_file_rename_outline_rounded
+                    : write.mode == CellWriteMode.add
+                        ? Icons.add_circle_outline_rounded
+                        : Icons.remove_circle_outline_rounded,
+              ),
+              title: Text(write.value),
+              subtitle: Text(MessageTranslation.getText(
+                  editor.translation, write.targetCellId)),
               onTap: () => showCellWriteDialog(
                 context,
                 node,
