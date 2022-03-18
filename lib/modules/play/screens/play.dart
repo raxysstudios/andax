@@ -97,11 +97,7 @@ class PlayScreenState extends State<PlayScreen> {
     if (node.transitionInputSource == TransitionInputSource.random) {
       final index = Random().nextInt(transitions.length);
       next = nodes[transitions[index].targetNodeId];
-    } else {
-      // for (final transition in transitions) {
-      //   final transition.text
-      // }
-    }
+    } else {}
     if (next != null) scheduleAvdancement(next);
   }
 
