@@ -4,13 +4,14 @@ void showSnackbar(
   BuildContext context, [
   IconData icon = Icons.error_outline_outlined,
   String text = 'Error!',
+  bool floating = true,
 ]) {
   final theme = Theme.of(context);
   final messenger = ScaffoldMessenger.of(context);
   messenger.hideCurrentSnackBar();
   messenger.showSnackBar(
     SnackBar(
-      behavior: SnackBarBehavior.floating,
+      behavior: floating ? SnackBarBehavior.floating : SnackBarBehavior.fixed,
       backgroundColor: theme.colorScheme.surface,
       content: Row(
         children: [
