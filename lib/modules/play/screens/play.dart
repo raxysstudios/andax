@@ -51,7 +51,7 @@ class _PlayScreenState extends State<PlayScreen> {
   void advanceNode(Node node) {
     storyline.add(node);
     for (final write in node.cellWrites) {
-      cells[write.targetCellId]?.value = write.value;
+      cells[write.targetCellId]?.apply(write);
     }
 
     setState(() {});

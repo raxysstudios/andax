@@ -39,12 +39,12 @@ class CellTile extends StatelessWidget {
               ),
       ),
       subtitle: subtitle,
-      trailing: cell?.numeric ?? false
-          ? Text(
+      trailing: cell?.max == null
+          ? null
+          : Text(
               '/ ${cell!.max}',
               style: Theme.of(context).textTheme.subtitle2,
-            )
-          : null,
+            ),
       onTap: onTap,
     );
   }

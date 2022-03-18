@@ -80,16 +80,26 @@ Future<Cell?> showCellEditorDialog(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: ToggleButtons(
             children: const [
-              Icon(Icons.visibility_off_rounded),
-              Icon(Icons.check_circle_rounded),
-              Icon(Icons.short_text_rounded),
-              Icon(Icons.linear_scale_rounded),
+              Tooltip(
+                message: 'Hidden',
+                child: Icon(Icons.visibility_off_rounded),
+              ),
+              Tooltip(
+                message: 'Check (true/false)',
+                child: Icon(Icons.check_circle_rounded),
+              ),
+              Tooltip(
+                message: 'Text (as is)',
+                child: Icon(Icons.short_text_rounded),
+              ),
+              Tooltip(
+                message: 'Range (with max)',
+                child: Icon(Icons.linear_scale_rounded),
+              ),
             ],
-            onPressed: (int i) {
-              setState(() {
-                cell.display = i == 0 ? null : CellDisplay.values[i - 1];
-              });
-            },
+            onPressed: (int i) => setState(() {
+              cell.display = i == 0 ? null : CellDisplay.values[i - 1];
+            }),
             isSelected: [
               cell.display == null,
               ...CellDisplay.values.map((e) => e == cell.display),

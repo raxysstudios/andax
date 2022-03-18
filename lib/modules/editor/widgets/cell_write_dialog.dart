@@ -61,6 +61,39 @@ Future<CellWrite?> showCellWriteDialog(
           ),
         ),
         Padding(
+          padding: const EdgeInsets.fromLTRB(24, 18, 24, 8),
+          child: Text(
+            'Write mode',
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: ToggleButtons(
+            children: const [
+              Tooltip(
+                message: 'Overwrite',
+                child: Icon(Icons.drive_file_rename_outline_rounded),
+              ),
+              Tooltip(
+                message: 'Add (fallback to 0)',
+                child: Icon(Icons.add_circle_outline_rounded),
+              ),
+              Tooltip(
+                message: 'Subtract (fallback to 0)',
+                child: Icon(Icons.remove_circle_outline_rounded),
+              ),
+            ],
+            onPressed: (int i) => setState(() {
+              write.mode = CellWriteMode.values[i];
+            }),
+            isSelected:
+                CellWriteMode.values.map((e) => e == write.mode).toList(),
+            renderBorder: false,
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
+        Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: TextFormField(
             decoration: const InputDecoration(

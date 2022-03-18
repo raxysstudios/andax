@@ -173,7 +173,9 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
         onPressed: () => showCellWriteDialog(
           context,
           node,
-        ).then((r) => setState(() {})),
+        ).then((r) => setState(() {
+              print('WRTS ${node.cellWrites}');
+            })),
         icon: const Icon(Icons.control_point_rounded),
         label: const Text('Add cell write'),
       ),

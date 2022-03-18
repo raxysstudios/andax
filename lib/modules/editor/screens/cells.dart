@@ -22,17 +22,15 @@ class CellsEditorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cells =
-        context.watch<StoryEditorState>().story.cells.values.toList();
+    final cells = context.watch<StoryEditorState>().story.cells.values.toList();
     return Scaffold(
       appBar: AppBar(
         leading: const RoundedBackButton(),
         title: const Text('Storage cells'),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => showCellEditorDialog(
-          context
-        ).then((r) => onSelect(r, true)),
+        onPressed: () =>
+            showCellEditorDialog(context).then((r) => onSelect(r, true)),
         icon: const Icon(Icons.post_add_rounded),
         label: const Text('Add cell'),
       ),
