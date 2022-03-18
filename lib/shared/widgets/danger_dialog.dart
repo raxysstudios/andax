@@ -13,12 +13,11 @@ Future<bool> showDangerDialog(
       return AlertDialog(
         title: Text(title),
         actions: [
-          TextButton.icon(
+          TextButton(
             onPressed: () {
               Navigator.pop(context, true);
             },
-            icon: const Icon(Icons.delete_rounded),
-            label: Text(confirmText),
+            child: Text(confirmText),
             style: ButtonStyle(
               foregroundColor: MaterialStateProperty.all(theme.error),
               overlayColor: MaterialStateProperty.all(
@@ -26,10 +25,9 @@ Future<bool> showDangerDialog(
               ),
             ),
           ),
-          TextButton.icon(
+          TextButton(
             onPressed: () => Navigator.pop(context, false),
-            icon: const Icon(Icons.edit_rounded),
-            label: Text(rejectText),
+            child: Text(rejectText),
           ),
         ],
       );
