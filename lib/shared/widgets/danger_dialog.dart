@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 Future<bool> showDangerDialog(
   BuildContext context,
   String title, {
+  IconData confirmIcon = Icons.delete_rounded,
   String confirmText = 'Delete',
+  IconData rejectIcon = Icons.edit_rounded,
   String rejectText = 'Keep',
 }) {
   return showDialog<bool>(
@@ -13,11 +15,10 @@ Future<bool> showDangerDialog(
       return AlertDialog(
         title: Text(title),
         actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context, true);
-            },
-            child: Text(confirmText),
+          TextButton.icon(
+            onPressed: () => Navigator.pop(context, true),
+            icon: Icon(confirmIcon),
+            label: Text(confirmText),
             style: ButtonStyle(
               foregroundColor: MaterialStateProperty.all(theme.error),
               overlayColor: MaterialStateProperty.all(
@@ -25,9 +26,10 @@ Future<bool> showDangerDialog(
               ),
             ),
           ),
-          TextButton(
+          TextButton.icon(
             onPressed: () => Navigator.pop(context, false),
-            child: Text(rejectText),
+            icon: Icon(rejectIcon),
+            label: Text(rejectText),
           ),
         ],
       );
