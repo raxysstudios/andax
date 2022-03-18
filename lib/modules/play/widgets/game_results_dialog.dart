@@ -12,7 +12,9 @@ String _cellsToText(PlayScreenState play) {
   var text = (StoryTranslation.get(translation)?.title ?? '') + '\n';
 
   for (final cell in play.cells.values) {
-    text += '\n' + MessageTranslation.getText(translation, cell.id) + ': ';
+    text += '\n' +
+        MessageTranslation.getText(translation, cell.id).titleCase +
+        ': ';
     switch (cell.display) {
       case CellDisplay.check:
         text += cell.value.isEmpty ? '✔️' : '❌';
