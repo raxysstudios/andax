@@ -28,8 +28,10 @@ String _cellsToText(PlayScreenState play) {
   return text;
 }
 
-Future<void> showGameResultsDialog(BuildContext context) async {
-  final play = context.read<PlayScreenState>();
+Future<void> showGameResultsDialog(
+  BuildContext context,
+  PlayScreenState play,
+) async {
   final copied = await showDialog<bool>(
     context: context,
     builder: (context) {

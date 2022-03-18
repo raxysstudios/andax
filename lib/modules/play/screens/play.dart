@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math';
 
 import 'package:andax/models/actor.dart';
@@ -14,6 +13,7 @@ import 'package:andax/modules/play/widgets/transitions_chips.dart';
 import 'package:andax/modules/play/widgets/typing_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:pausable_timer/pausable_timer.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/node_card.dart';
@@ -43,9 +43,8 @@ class PlayScreenState extends State<PlayScreen> {
   };
   final List<Node> storyline = [];
 
-  Timer autoAdvance = Timer(Duration.zero, () {});
-  bool get finished =>
-      storyline.last.transitions.isEmpty && !autoAdvance.isActive;
+  PausableTimer timer = PausableTimer(Duration.zero, () {});
+  bool get finished => storyline.last.transitions.isEmpty && !timer.isActive;
 
   @override
   void initState() {
@@ -54,7 +53,7 @@ class PlayScreenState extends State<PlayScreen> {
   }
 
   void reset() {
-    autoAdvance.cancel();
+    timer.cancel();
     storyline.clear();
     for (final cell in cells.values) {
       cell.reset();
@@ -71,13 +70,20 @@ class PlayScreenState extends State<PlayScreen> {
     for (final write in node.cellWrites) {
       cells[write.targetCellId]?.apply(write);
     }
-
     setState(() {});
-    autoAdvance.cancel();
+    timer.cancel();
 
     final transitions = node.transitions;
-    if (transitions.isEmpty ||
-        node.transitionInputSource == TransitionInputSource.select) return;
+    if (transitions.isEmpty) {
+      PausableTimer(
+        const Duration(milliseconds: 500),
+        () => showGameResultsDialog(context, this),
+      ).start();
+      return;
+    }
+    if (node.transitionInputSource == TransitionInputSource.select) {
+      return;
+    }
 
     Node? next;
     if (node.transitionInputSource == TransitionInputSource.random) {
@@ -97,10 +103,10 @@ class PlayScreenState extends State<PlayScreen> {
           widget.translation,
           node.id,
         ).length;
-    autoAdvance = Timer(
+    timer = PausableTimer(
       Duration(milliseconds: max(500, typing)),
       () => advanceNode(node),
-    );
+    )..start();
     setState(() {});
   }
 
@@ -115,6 +121,8 @@ class PlayScreenState extends State<PlayScreen> {
           floatingActionButton: Padding(
             padding: const EdgeInsets.only(top: 16),
             child: SpeedDial(
+              onOpen: () => setState(timer.pause),
+              onClose: () => setState(timer.start),
               icon: Icons.pause_rounded,
               activeIcon: Icons.play_arrow_rounded,
               backgroundColor: theme.colorScheme.primary,
@@ -146,7 +154,7 @@ class PlayScreenState extends State<PlayScreen> {
                   SpeedDialChild(
                     child: const Icon(Icons.query_stats_rounded),
                     label: 'Results',
-                    onTap: () => showGameResultsDialog(context),
+                    onTap: () => showGameResultsDialog(context, this),
                   ),
               ],
             ),
@@ -171,7 +179,7 @@ class PlayScreenState extends State<PlayScreen> {
                   actors: actors,
                 ),
               ),
-              if (!autoAdvance.isActive &&
+              if (!timer.isActive &&
                   storyline.last.transitions.isNotEmpty &&
                   storyline.last.transitionInputSource ==
                       TransitionInputSource.select)
@@ -181,7 +189,7 @@ class PlayScreenState extends State<PlayScreen> {
                     onTap: (t) => scheduleAvdancement(nodes[t.targetNodeId]!),
                   ),
                 ),
-              if (autoAdvance.isActive) const TypingIndicator(),
+              if (timer.isActive) const TypingIndicator(),
               if (finished)
                 slideUp(
                   Column(
