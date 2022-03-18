@@ -7,13 +7,15 @@ import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:andax/modules/play/widgets/cells_list.dart';
+import 'package:andax/modules/play/utils/alert.dart';
+import 'package:andax/modules/play/utils/animator.dart';
+import 'package:andax/modules/play/widgets/game_results_dialog.dart';
+import 'package:andax/modules/play/widgets/transitions_chips.dart';
 import 'package:andax/modules/play/widgets/typing_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:simple_animations/simple_animations.dart';
+import 'package:provider/provider.dart';
 
-import '../utils/get_translation.dart';
 import '../widgets/node_card.dart';
 
 class PlayScreen extends StatefulWidget {
@@ -27,10 +29,10 @@ class PlayScreen extends StatefulWidget {
   final Translation translation;
 
   @override
-  _PlayScreenState createState() => _PlayScreenState();
+  PlayScreenState createState() => PlayScreenState();
 }
 
-class _PlayScreenState extends State<PlayScreen> {
+class PlayScreenState extends State<PlayScreen> {
   Map<String, TranslationAsset> get translations => widget.translation.assets;
   Map<String, Node> get nodes => widget.story.nodes;
   Map<String, Actor> get actors => widget.story.actors;
@@ -39,6 +41,8 @@ class _PlayScreenState extends State<PlayScreen> {
   final List<Node> storyline = [];
 
   Timer autoAdvance = Timer(Duration.zero, () {});
+  bool get finished =>
+      storyline.last.transitions.isEmpty && !autoAdvance.isActive;
 
   @override
   void initState() {
@@ -47,6 +51,8 @@ class _PlayScreenState extends State<PlayScreen> {
         ? nodes.values.first
         : nodes[widget.story.startNodeId]!);
   }
+
+  void reset() {}
 
   void advanceNode(Node node) {
     storyline.add(node);
@@ -86,137 +92,100 @@ class _PlayScreenState extends State<PlayScreen> {
     setState(() {});
   }
 
-  Widget animateMessage(Widget child) {
-    return PlayAnimation<double>(
-      tween: Tween(begin: 0, end: 1),
-      curve: Curves.easeInOutQuad,
-      duration: const Duration(milliseconds: 200),
-      child: child,
-      builder: (context, child, tween) {
-        return Opacity(
-          opacity: tween,
-          child: Transform.translate(
-            offset: Offset(0, 32 * (1 - tween)),
-            child: child,
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(top: 16),
-        child: SpeedDial(
-          icon: Icons.pause_rounded,
-          activeIcon: Icons.play_arrow_rounded,
-          backgroundColor: theme.colorScheme.primary,
-          foregroundColor: theme.colorScheme.onPrimary,
-          activeBackgroundColor: theme.colorScheme.primary,
-          activeForegroundColor: theme.colorScheme.onPrimary,
-          spaceBetweenChildren: 9,
-          switchLabelPosition: true,
-          label: const Text('Pause'),
-          activeLabel: const Text('Resume'),
-          buttonSize: const Size.square(48),
-          spacing: 7,
-          direction: SpeedDialDirection.down,
-          children: [
-            SpeedDialChild(
-              child: const Icon(Icons.close_rounded),
-              label: 'Exit',
-              onTap: () => Navigator.pop(context),
+    return Provider.value(
+      value: this,
+      child: Builder(builder: (context) {
+        return Scaffold(
+          floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: SpeedDial(
+              icon: Icons.pause_rounded,
+              activeIcon: Icons.play_arrow_rounded,
+              backgroundColor: theme.colorScheme.primary,
+              foregroundColor: theme.colorScheme.onPrimary,
+              activeBackgroundColor: theme.colorScheme.primary,
+              activeForegroundColor: theme.colorScheme.onPrimary,
+              spaceBetweenChildren: 9,
+              switchLabelPosition: true,
+              label: const Text('Pause'),
+              activeLabel: const Text('Resume'),
+              buttonSize: const Size.square(48),
+              spacing: 7,
+              direction: SpeedDialDirection.down,
+              children: [
+                SpeedDialChild(
+                  child: const Icon(Icons.replay_rounded),
+                  label: 'Restart',
+                  onTap: () => showProgressAlert(context, reset),
+                ),
+                SpeedDialChild(
+                  child: const Icon(Icons.close_rounded),
+                  label: 'Exit',
+                  onTap: () => showProgressAlert(
+                    context,
+                    () => Navigator.pop(context),
+                  ),
+                ),
+                if (finished)
+                  SpeedDialChild(
+                    child: const Icon(Icons.query_stats_rounded),
+                    label: 'Results',
+                    onTap: () => showGameResultsDialog(context),
+                  ),
+              ],
             ),
-          ],
-        ),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.only(top: 108),
-        children: [
-          for (var i = 0; i < storyline.length - 1; i++)
-            NodeCard(
-              node: storyline[i],
-              previousNode: i > 0 ? storyline[i - 1] : null,
-              translations: translations,
-              actors: actors,
-            ),
-          animateMessage(NodeCard(
-            node: storyline.last,
-            previousNode:
-                storyline.length > 1 ? storyline[storyline.length - 2] : null,
-            translations: translations,
-            actors: actors,
-          )),
-          if (!autoAdvance.isActive &&
-              storyline.last.transitions.isNotEmpty &&
-              storyline.last.transitionInputSource ==
-                  TransitionInputSource.select)
-            animateMessage(Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Wrap(
-                alignment: WrapAlignment.end,
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  for (final transition in storyline.last.transitions)
-                    InputChip(
-                      onPressed: () =>
-                          scheduleAvdancement(nodes[transition.targetNodeId]!),
-                      label: Text(
-                        getTranslation<MessageTranslation>(
-                          translations,
-                          transition.id,
-                          (t) => t.text,
-                        ),
+          ),
+          body: ListView(
+            padding: const EdgeInsets.only(top: 98),
+            children: [
+              for (var i = 0; i < storyline.length - 1; i++)
+                NodeCard(
+                  node: storyline[i],
+                  previousNode: i > 0 ? storyline[i - 1] : null,
+                  translations: translations,
+                  actors: actors,
+                ),
+              slideUp(
+                NodeCard(
+                  node: storyline.last,
+                  previousNode: storyline.length > 1
+                      ? storyline[storyline.length - 2]
+                      : null,
+                  translations: translations,
+                  actors: actors,
+                ),
+              ),
+              if (!autoAdvance.isActive &&
+                  storyline.last.transitions.isNotEmpty &&
+                  storyline.last.transitionInputSource ==
+                      TransitionInputSource.select)
+                slideUp(
+                  TransitionsChips(
+                    transitions: storyline.last.transitions,
+                    onTap: (t) => scheduleAvdancement(nodes[t.targetNodeId]!),
+                  ),
+                ),
+              if (autoAdvance.isActive) const TypingIndicator(),
+              if (finished)
+                slideUp(
+                  Column(
+                    children: [
+                      const Divider(height: 32),
+                      Text(
+                        'End',
+                        style: theme.textTheme.headline6,
                       ),
-                    ),
-                ],
-              ),
-            )),
-          if (autoAdvance.isActive) const TypingIndicator(),
-          if (storyline.last.transitions.isEmpty)
-            animateMessage(
-              Column(
-                children: [
-                  const SizedBox(height: 16),
-                  const Divider(),
-                  const SizedBox(height: 16),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32),
-                    child: Row(
-                      children: [
-                        Text(
-                          'End',
-                          style: theme.textTheme.headline6,
-                        ),
-                        const Spacer(),
-                        TextButton.icon(
-                          onPressed: () => Navigator.pop(context),
-                          icon: const Icon(Icons.done_all_rounded),
-                          label: const Text('Finish play'),
-                        ),
-                      ],
-                    ),
+                    ],
                   ),
-                  Card(
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 4,
-                      horizontal: 32,
-                    ),
-                    child: CellsList(
-                      cells: cells.values.toList(),
-                      translation: widget.translation,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-        ],
-      ),
+                ),
+            ],
+          ),
+        );
+      }),
     );
   }
 }
