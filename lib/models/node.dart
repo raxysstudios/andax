@@ -19,10 +19,11 @@ class Node {
   Node(
     this.id, {
     this.actorId,
-    this.transitions = const [],
-    this.cellWrites = const [],
+    List<Transition> transitions = const [],
+    List<CellWrite> cellWrites = const [],
     this.transitionInputSource = TransitionInputSource.random,
-  });
+  })  : transitions = transitions.toList(),
+        cellWrites = cellWrites.toList();
 
   factory Node.fromJson(Map<String, dynamic> json) => _$NodeFromJson(json);
 

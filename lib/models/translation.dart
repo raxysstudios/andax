@@ -10,8 +10,8 @@ class Translation {
 
   Translation({
     required this.language,
-    this.assets = const {},
-  });
+    Map<String, TranslationAsset> assets = const {},
+  }) : assets = Map<String, TranslationAsset>.of(assets);
 
   TranslationAsset? operator [](String id) => assets[id];
   void operator []=(String id, TranslationAsset asset) => assets[id] = asset;
