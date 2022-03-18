@@ -36,8 +36,11 @@ class PlayScreenState extends State<PlayScreen> {
   Map<String, TranslationAsset> get translations => widget.translation.assets;
   Map<String, Node> get nodes => widget.story.nodes;
   Map<String, Actor> get actors => widget.story.actors;
-  Map<String, Cell> get cells => widget.story.cells;
 
+  late Map<String, Cell> cells = {
+    for (final c in widget.story.cells.entries)
+      c.key: Cell.fromJson(c.value.toJson())
+  };
   final List<Node> storyline = [];
 
   Timer autoAdvance = Timer(Duration.zero, () {});
@@ -47,12 +50,21 @@ class PlayScreenState extends State<PlayScreen> {
   @override
   void initState() {
     super.initState();
-    advanceNode(widget.story.startNodeId?.isEmpty ?? true
-        ? nodes.values.first
-        : nodes[widget.story.startNodeId]!);
+    reset();
   }
 
-  void reset() {}
+  void reset() {
+    autoAdvance.cancel();
+    storyline.clear();
+    for (final cell in cells.values) {
+      cell.reset();
+    }
+    advanceNode(
+      widget.story.startNodeId?.isEmpty ?? true
+          ? nodes.values.first
+          : nodes[widget.story.startNodeId]!,
+    );
+  }
 
   void advanceNode(Node node) {
     storyline.add(node);

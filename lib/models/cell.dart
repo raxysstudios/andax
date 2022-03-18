@@ -36,6 +36,10 @@ class Cell {
     _value = num.toString();
   }
 
+  void reset() {
+    _value = '';
+  }
+
   factory Cell.fromJson(Map<String, dynamic> json) => _$CellFromJson(json);
 
   Map<String, dynamic> toJson() => _$CellToJson(this);
