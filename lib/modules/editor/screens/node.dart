@@ -34,7 +34,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
   late final tabs = TabController(vsync: this, length: 3);
 
   Node get node => widget.node;
-  List<Transition> get transitions => node.transitions ?? [];
+  List<Transition> get transitions => node.transitions;
 
   @override
   void initState() {
@@ -117,7 +117,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
   }
 
   Widget buildTransitionsTab(StoryEditorState editor) {
-    final transitions = node.transitions ?? [];
+    final transitions = node.transitions;
     return Scaffold(
       primary: false,
       floatingActionButton: FloatingActionButton.extended(
@@ -166,7 +166,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
   }
 
   Widget buildCellsTab(StoryEditorState editor) {
-    final writes = node.cellWrites?.entries ?? [];
+    final writes = node.cellWrites;
     return Scaffold(
       primary: false,
       floatingActionButton: FloatingActionButton.extended(
@@ -181,8 +181,8 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
         children: [
           for (final write in writes)
             CellTile(
-              editor.story.cells[write.key],
-              subtitle: Text(node.cellWrites![write.key] ?? ''),
+              editor.story.cells[write.targetCellId],
+              subtitle: Text(write.value),
               onTap: () => showCellWriteDialog(
                 context,
                 node,

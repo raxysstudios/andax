@@ -42,7 +42,7 @@ class _NarrativeEditorScreenState extends State<NarrativeEditorScreen> {
     while (node != null) {
       thread.add(node);
 
-      final transitions = node.transitions ?? [];
+      final transitions = node.transitions;
       if (transitions.isEmpty) break;
 
       final choice = choices[node.id];
@@ -102,7 +102,7 @@ class _NarrativeEditorScreenState extends State<NarrativeEditorScreen> {
         itemCount: nodes.length,
         itemBuilder: (context, index) {
           final node = nodes[index];
-          final transitions = node.transitions ?? [];
+          final transitions = node.transitions;
           final choice = choices[node.id] ??
               (transitions.isEmpty ? null : transitions.first.id);
           return Column(

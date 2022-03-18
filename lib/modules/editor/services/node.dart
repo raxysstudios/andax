@@ -41,9 +41,9 @@ void deleteNode(
     final editor = context.read<StoryEditorState>();
     editor.story.nodes.remove(node.id);
     editor.translation.assets.remove(node.id);
-    node.transitions?.forEach(
-      (t) => editor.translation.assets.remove(t.id),
-    );
+    for (var t in node.transitions) {
+      editor.translation.assets.remove(t.id);
+    }
     onDone?.call();
   }
 }

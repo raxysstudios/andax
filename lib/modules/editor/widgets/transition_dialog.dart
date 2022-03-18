@@ -94,7 +94,7 @@ Future<Transition?> showTransitionEditorDialog(
       node.transitions.remove(value);
       editor.translation.assets.remove(value.id);
     }
-  } else if (result != value) {
+  } else {
     translation.text = newText;
     if (value == null) {
       node.transitions.add(result);

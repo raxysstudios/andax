@@ -1,4 +1,4 @@
-import 'package:andax/models/cell.dart';
+import 'package:andax/models/cell_write.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/modules/editor/widgets/cell_tile.dart';
 import 'package:andax/shared/widgets/editor_dialog.dart';
@@ -8,32 +8,25 @@ import 'package:provider/provider.dart';
 import '../screens/story.dart';
 import '../services/pickers.dart';
 
-Future<MapEntry<String, String>?> showCellWriteDialog(
+Future<CellWrite?> showCellWriteDialog(
   BuildContext context,
   Node node, [
-  MapEntry<String, String>? value,
+  CellWrite? value,
 ]) async {
   final editor = context.read<StoryEditorState>();
-  Cell cell;
-  String write;
+  CellWrite write;
 
-  if (editor.story.cells[value?.key] == null) {
-    node.cellWrites?.remove(value?.key);
-    value = null;
-  }
   if (value == null) {
-    final c = await pickCell(context);
-    if (c == null) return value;
-    cell = c;
-    write = '';
+    final target = await pickCell(context);
+    if (target == null) return value;
+    write = CellWrite(target.id);
   } else {
-    cell = editor.story.cells[value.key]!;
-    write = node.cellWrites?[cell.id] ?? '';
+    write = CellWrite.fromJson(value.toJson());
   }
 
-  final result = await showEditorDialog<MapEntry<String, String>>(
+  final result = await showEditorDialog<CellWrite>(
     context,
-    result: () => MapEntry(cell.id, write),
+    result: () => write,
     title: value == null ? 'Create cell write' : 'Edit cell write',
     initial: value,
     padding: EdgeInsets.zero,
@@ -52,16 +45,19 @@ Future<MapEntry<String, String>?> showCellWriteDialog(
             data: Theme.of(context).listTileTheme.copyWith(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 24),
                 ),
-            child: CellTile(
-              cell,
-              onTap: () => pickCell(context, cell).then((r) {
-                if (r != null) {
-                  setState(() {
-                    cell = r;
-                  });
-                }
-              }),
-            ),
+            child: Builder(builder: (context) {
+              final cell = editor.story.cells[write.targetCellId];
+              return CellTile(
+                cell,
+                onTap: () => pickCell(context, cell).then((r) {
+                  if (r != null) {
+                    setState(() {
+                      write.targetCellId = r.id;
+                    });
+                  }
+                }),
+              );
+            }),
           ),
         ),
         Padding(
@@ -71,10 +67,10 @@ Future<MapEntry<String, String>?> showCellWriteDialog(
               labelText: 'Write value',
             ),
             autofocus: true,
-            initialValue: write,
+            initialValue: write.value,
             validator: emptyValidator,
             onChanged: (s) {
-              write = s.trim();
+              write.value = s.trim();
             },
           ),
         ),
@@ -83,15 +79,12 @@ Future<MapEntry<String, String>?> showCellWriteDialog(
   );
   if (result == null) {
     if (value != null) {
-      node.cellWrites?.remove(value.key);
+      node.cellWrites.remove(value);
     }
+  } else if (value == null) {
+    node.cellWrites.add(result);
   } else {
-    node.cellWrites ??= {};
-    node.cellWrites!.update(
-      result.key,
-      (_) => result.value,
-      ifAbsent: () => result.value,
-    );
+    node.cellWrites[node.cellWrites.indexOf(value)] = result;
   }
   return result;
 }

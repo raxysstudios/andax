@@ -42,7 +42,8 @@ class Cell {
     } else {
       num = int.tryParse(v) ?? 0;
     }
-    _value = num.clamp(0, max!).toString();
+    if (max! > 0) num = num.clamp(0, max!);
+    _value = num.toString();
   }
 
   factory Cell.fromJson(Map<String, dynamic> json) => _$CellFromJson(json);
