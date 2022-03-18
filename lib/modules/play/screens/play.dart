@@ -43,12 +43,20 @@ class PlayScreenState extends State<PlayScreen> {
   };
   final List<Node> storyline = [];
 
-  PausableTimer timer = PausableTimer(Duration.zero, () {});
   bool get finished => storyline.last.transitions.isEmpty && !timer.isActive;
+  var timer = PausableTimer(Duration.zero, () {});
+  var dial = ValueNotifier(false);
 
   @override
   void initState() {
     super.initState();
+    dial.addListener(() {
+      if (dial.value) {
+        timer.pause();
+      } else {
+        timer.start();
+      }
+    });
     reset();
   }
 
@@ -116,93 +124,100 @@ class PlayScreenState extends State<PlayScreen> {
     return Provider.value(
       value: this,
       child: Builder(builder: (context) {
-        return Scaffold(
-          floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.only(top: 16),
-            child: SpeedDial(
-              onOpen: () => setState(timer.pause),
-              onClose: () => setState(timer.start),
-              icon: Icons.pause_rounded,
-              activeIcon: Icons.play_arrow_rounded,
-              backgroundColor: theme.colorScheme.primary,
-              foregroundColor: theme.colorScheme.onPrimary,
-              activeBackgroundColor: theme.colorScheme.primary,
-              activeForegroundColor: theme.colorScheme.onPrimary,
-              spaceBetweenChildren: 9,
-              switchLabelPosition: true,
-              label: const Text('Pause'),
-              activeLabel: const Text('Resume'),
-              buttonSize: const Size.square(48),
-              spacing: 7,
-              direction: SpeedDialDirection.down,
+        return WillPopScope(
+          onWillPop: () {
+            dial.value = true;
+            return Future.sync(() => false);
+          },
+          child: Scaffold(
+            floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
+            floatingActionButton: Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: SpeedDial(
+                openCloseDial: dial,
+                onOpen: () => setState(timer.pause),
+                onClose: () => setState(timer.start),
+                icon: Icons.pause_rounded,
+                activeIcon: Icons.play_arrow_rounded,
+                backgroundColor: theme.colorScheme.primary,
+                foregroundColor: theme.colorScheme.onPrimary,
+                activeBackgroundColor: theme.colorScheme.primary,
+                activeForegroundColor: theme.colorScheme.onPrimary,
+                spaceBetweenChildren: 9,
+                switchLabelPosition: true,
+                label: const Text('Pause'),
+                activeLabel: const Text('Resume'),
+                buttonSize: const Size.square(48),
+                spacing: 7,
+                direction: SpeedDialDirection.down,
+                children: [
+                  SpeedDialChild(
+                    child: const Icon(Icons.replay_rounded),
+                    label: 'Restart',
+                    onTap: () => showProgressAlert(context, reset),
+                  ),
+                  SpeedDialChild(
+                    child: const Icon(Icons.close_rounded),
+                    label: 'Exit',
+                    onTap: () => showProgressAlert(
+                      context,
+                      () => Navigator.pop(context),
+                    ),
+                  ),
+                  if (finished)
+                    SpeedDialChild(
+                      child: const Icon(Icons.query_stats_rounded),
+                      label: 'Results',
+                      onTap: () => showGameResultsDialog(context, this),
+                    ),
+                ],
+              ),
+            ),
+            body: ListView(
+              padding: const EdgeInsets.only(top: 98),
               children: [
-                SpeedDialChild(
-                  child: const Icon(Icons.replay_rounded),
-                  label: 'Restart',
-                  onTap: () => showProgressAlert(context, reset),
-                ),
-                SpeedDialChild(
-                  child: const Icon(Icons.close_rounded),
-                  label: 'Exit',
-                  onTap: () => showProgressAlert(
-                    context,
-                    () => Navigator.pop(context),
+                for (var i = 0; i < storyline.length - 1; i++)
+                  NodeCard(
+                    node: storyline[i],
+                    previousNode: i > 0 ? storyline[i - 1] : null,
+                    translations: translations,
+                    actors: actors,
+                  ),
+                slideUp(
+                  NodeCard(
+                    node: storyline.last,
+                    previousNode: storyline.length > 1
+                        ? storyline[storyline.length - 2]
+                        : null,
+                    translations: translations,
+                    actors: actors,
                   ),
                 ),
+                if (!timer.isActive &&
+                    storyline.last.transitions.isNotEmpty &&
+                    storyline.last.transitionInputSource ==
+                        TransitionInputSource.select)
+                  slideUp(
+                    TransitionsChips(
+                      transitions: storyline.last.transitions,
+                      onTap: (t) => scheduleAvdancement(nodes[t.targetNodeId]!),
+                    ),
+                  ),
+                if (timer.isActive) const TypingIndicator(),
                 if (finished)
-                  SpeedDialChild(
-                    child: const Icon(Icons.query_stats_rounded),
-                    label: 'Results',
-                    onTap: () => showGameResultsDialog(context, this),
+                  slideUp(
+                    Column(
+                      children: [
+                        const Divider(height: 32),
+                        Text(
+                          'End',
+                          style: theme.textTheme.headline6,
+                        ),
+                      ],
+                    ),
                   ),
               ],
             ),
-          ),
-          body: ListView(
-            padding: const EdgeInsets.only(top: 98),
-            children: [
-              for (var i = 0; i < storyline.length - 1; i++)
-                NodeCard(
-                  node: storyline[i],
-                  previousNode: i > 0 ? storyline[i - 1] : null,
-                  translations: translations,
-                  actors: actors,
-                ),
-              slideUp(
-                NodeCard(
-                  node: storyline.last,
-                  previousNode: storyline.length > 1
-                      ? storyline[storyline.length - 2]
-                      : null,
-                  translations: translations,
-                  actors: actors,
-                ),
-              ),
-              if (!timer.isActive &&
-                  storyline.last.transitions.isNotEmpty &&
-                  storyline.last.transitionInputSource ==
-                      TransitionInputSource.select)
-                slideUp(
-                  TransitionsChips(
-                    transitions: storyline.last.transitions,
-                    onTap: (t) => scheduleAvdancement(nodes[t.targetNodeId]!),
-                  ),
-                ),
-              if (timer.isActive) const TypingIndicator(),
-              if (finished)
-                slideUp(
-                  Column(
-                    children: [
-                      const Divider(height: 32),
-                      Text(
-                        'End',
-                        style: theme.textTheme.headline6,
-                      ),
-                    ],
-                  ),
-                ),
-            ],
           ),
         );
       }),
