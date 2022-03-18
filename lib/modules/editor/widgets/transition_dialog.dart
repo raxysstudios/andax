@@ -91,16 +91,15 @@ Future<Transition?> showTransitionEditorDialog(
   );
   if (result == null) {
     if (value != null) {
-      node.transitions?.remove(value);
+      node.transitions.remove(value);
       editor.translation.assets.remove(value.id);
     }
   } else if (result != value) {
     translation.text = newText;
-    node.transitions ??= [];
     if (value == null) {
-      node.transitions!.add(result);
+      node.transitions.add(result);
     } else {
-      node.transitions![node.transitions!.indexOf(value)] = result;
+      node.transitions[node.transitions.indexOf(value)] = result;
     }
     editor.translation[result.id] = translation;
   }

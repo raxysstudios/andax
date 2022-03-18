@@ -50,16 +50,15 @@ class _PlayScreenState extends State<PlayScreen> {
 
   void advanceNode(Node node) {
     storyline.add(node);
-    if (node.cellWrites != null) {
-      for (final write in node.cellWrites!.entries) {
-        cells[write.key]?.value = write.value;
-      }
+    for (final write in node.cellWrites) {
+      cells[write.targetCellId]?.value = write.value;
     }
+
     setState(() {});
     autoAdvance.cancel();
 
     final transitions = node.transitions;
-    if (transitions == null ||
+    if (transitions.isEmpty ||
         node.transitionInputSource == TransitionInputSource.select) return;
 
     Node? next;
@@ -153,7 +152,7 @@ class _PlayScreenState extends State<PlayScreen> {
             actors: actors,
           )),
           if (!autoAdvance.isActive &&
-              storyline.last.transitions != null &&
+              storyline.last.transitions.isNotEmpty &&
               storyline.last.transitionInputSource ==
                   TransitionInputSource.select)
             animateMessage(Padding(
@@ -163,7 +162,7 @@ class _PlayScreenState extends State<PlayScreen> {
                 spacing: 8,
                 runSpacing: 8,
                 children: [
-                  for (final transition in storyline.last.transitions!)
+                  for (final transition in storyline.last.transitions)
                     InputChip(
                       onPressed: () =>
                           scheduleAvdancement(nodes[transition.targetNodeId]!),
@@ -179,7 +178,7 @@ class _PlayScreenState extends State<PlayScreen> {
               ),
             )),
           if (autoAdvance.isActive) const TypingIndicator(),
-          if (storyline.last.transitions == null)
+          if (storyline.last.transitions.isEmpty)
             animateMessage(
               Column(
                 children: [

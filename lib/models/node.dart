@@ -1,3 +1,4 @@
+import 'package:andax/models/cell_write.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'transition.dart';
@@ -11,15 +12,15 @@ enum TransitionInputSource { random, select, cells }
 class Node {
   final String id;
   String? actorId;
-  List<Transition>? transitions;
-  Map<String, String>? cellWrites;
+  List<Transition> transitions;
+  List<CellWrite> cellWrites;
   TransitionInputSource transitionInputSource;
 
   Node(
     this.id, {
     this.actorId,
-    this.transitions,
-    this.cellWrites,
+    this.transitions = const [],
+    this.cellWrites = const [],
     this.transitionInputSource = TransitionInputSource.random,
   });
 
