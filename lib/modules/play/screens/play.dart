@@ -134,7 +134,7 @@ class PlayScreenState extends State<PlayScreen> {
         return WillPopScope(
           onWillPop: () {
             _dial.value = true;
-            return Future.sync(() => false);
+            return Future.value(false);
           },
           child: Scaffold(
             floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
