@@ -25,11 +25,19 @@ class NodeCard extends StatefulWidget {
 }
 
 class _NodeCardState extends State<NodeCard> {
-  Widget buildNotificaion(String text) {
-    return Column(
-      children: [
-        const Divider(height: 16),
-        Text(
+  @override
+  Widget build(BuildContext context) {
+    final actor = widget.actors[widget.node.actorId];
+    final text = getTranslation<MessageTranslation>(
+      widget.translations,
+      widget.node.id,
+      (t) => t.text,
+    );
+    if (text.isEmpty) return const SizedBox();
+    if (actor == null) {
+      return Padding(
+        padding: const EdgeInsets.all(8),
+        child: Text(
           text,
           textAlign: TextAlign.center,
           style: const TextStyle(
@@ -37,17 +45,11 @@ class _NodeCardState extends State<NodeCard> {
             fontStyle: FontStyle.italic,
           ),
         ),
-        const Divider(height: 16),
-      ],
-    );
-  }
+      );
+    }
 
-  Widget buildMessage(
-    String text,
-    Actor actor,
-    bool isPlayer,
-  ) {
     final thread = actor.id == widget.previousNode?.actorId;
+    final isPlayer = actor.type == ActorType.player;
     return Card(
       elevation: .5,
       margin: isPlayer
@@ -103,23 +105,6 @@ class _NodeCardState extends State<NodeCard> {
           ],
         ),
       ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final actor = widget.actors[widget.node.actorId];
-    final text = getTranslation<MessageTranslation>(
-      widget.translations,
-      widget.node.id,
-      (t) => t.text,
-    );
-    if (text.isEmpty) return const SizedBox();
-    if (actor == null) return buildNotificaion(text);
-    return buildMessage(
-      text,
-      actor,
-      actor.type == ActorType.player,
     );
   }
 }

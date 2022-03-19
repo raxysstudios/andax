@@ -170,7 +170,7 @@ class PlayScreenState extends State<PlayScreen> {
               ),
             ),
             body: ListView(
-              padding: const EdgeInsets.only(top: 98),
+              padding: const EdgeInsets.only(top: 98, bottom: 32),
               children: [
                 for (var i = 0; i < storyline.length - 1; i++)
                   NodeCard(
@@ -204,7 +204,11 @@ class PlayScreenState extends State<PlayScreen> {
                   slideUp(
                     Column(
                       children: [
-                        const Divider(height: 32),
+                        const Divider(
+                          height: 32,
+                          indent: 32,
+                          endIndent: 32,
+                        ),
                         Text(
                           'End',
                           style: theme.textTheme.headline6,
