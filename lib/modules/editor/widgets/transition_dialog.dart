@@ -28,7 +28,7 @@ Future<Transition?> showTransitionEditorDialog(
     );
     translation = MessageTranslation(
       id,
-      text: 'Transition #${editor.story.actors.length + 1}',
+      text: 'Transition #${node.transitions.length + 1}',
     );
   } else {
     transition = Transition.fromJson(value.toJson());
