@@ -3,35 +3,27 @@ import 'package:andax/models/node.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:provider/provider.dart';
 
-import '../utils/get_translation.dart';
+import '../screens/play.dart';
 
-class NodeCard extends StatefulWidget {
-  final Node node;
-  final Node? previousNode;
-  final Map<String, TranslationAsset> translations;
-  final Map<String, Actor> actors;
-
+class NodeCard extends StatelessWidget {
   const NodeCard({
     Key? key,
     required this.node,
     required this.previousNode,
-    required this.translations,
-    required this.actors,
   }) : super(key: key);
 
-  @override
-  _NodeCardState createState() => _NodeCardState();
-}
+  final Node node;
+  final Node? previousNode;
 
-class _NodeCardState extends State<NodeCard> {
   @override
   Widget build(BuildContext context) {
-    final actor = widget.actors[widget.node.actorId];
-    final text = getTranslation<MessageTranslation>(
-      widget.translations,
-      widget.node.id,
-      (t) => t.text,
+    final play = context.watch<PlayScreenState>();
+    final actor = play.actors[node.actorId];
+    final text = MessageTranslation.getText(
+      play.widget.translation,
+      node.id,
     );
     if (text.isEmpty) return const SizedBox();
     if (actor == null) {
@@ -48,7 +40,7 @@ class _NodeCardState extends State<NodeCard> {
       );
     }
 
-    final thread = actor.id == widget.previousNode?.actorId;
+    final thread = actor.id == previousNode?.actorId;
     final isPlayer = actor.type == ActorType.player;
     return Card(
       elevation: .5,
@@ -78,10 +70,9 @@ class _NodeCardState extends State<NodeCard> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
-                  getTranslation<ActorTranslation>(
-                    widget.translations,
+                  ActorTranslation.getName(
+                    play.widget.translation,
                     actor.id,
-                    (t) => t.name,
                   ),
                   style: TextStyle(
                     fontWeight: FontWeight.w500,

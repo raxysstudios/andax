@@ -34,7 +34,6 @@ class PlayScreen extends StatefulWidget {
 }
 
 class PlayScreenState extends State<PlayScreen> {
-  Map<String, TranslationAsset> get translations => widget.translation.assets;
   Map<String, Node> get nodes => widget.story.nodes;
   Map<String, Actor> get actors => widget.story.actors;
 
@@ -188,8 +187,6 @@ class PlayScreenState extends State<PlayScreen> {
                   NodeCard(
                     node: storyline[i],
                     previousNode: i > 0 ? storyline[i - 1] : null,
-                    translations: translations,
-                    actors: actors,
                   ),
                 slideUp(
                   NodeCard(
@@ -197,8 +194,6 @@ class PlayScreenState extends State<PlayScreen> {
                     previousNode: storyline.length > 1
                         ? storyline[storyline.length - 2]
                         : null,
-                    translations: translations,
-                    actors: actors,
                   ),
                 ),
                 if (!_timer.isActive &&

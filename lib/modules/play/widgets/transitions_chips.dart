@@ -1,6 +1,5 @@
 import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:andax/modules/play/utils/get_translation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -30,10 +29,9 @@ class TransitionsChips extends StatelessWidget {
             InputChip(
               onPressed: () => onTap(transition),
               label: Text(
-                getTranslation<MessageTranslation>(
-                  play.translations,
+                MessageTranslation.getText(
+                  play.widget.translation,
                   transition.id,
-                  (t) => t.text,
                 ),
               ),
             ),
