@@ -12,6 +12,7 @@ import 'package:andax/modules/play/widgets/game_results_dialog.dart';
 import 'package:andax/modules/play/widgets/transitions_chips.dart';
 import 'package:andax/modules/play/widgets/typing_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:pausable_timer/pausable_timer.dart';
 import 'package:provider/provider.dart';
@@ -43,25 +44,26 @@ class PlayScreenState extends State<PlayScreen> {
   };
   final List<Node> storyline = [];
 
-  bool get finished => storyline.last.transitions.isEmpty && !timer.isActive;
-  var timer = PausableTimer(Duration.zero, () {});
-  var dial = ValueNotifier(false);
+  bool get finished => storyline.last.transitions.isEmpty && !_timer.isActive;
+  var _timer = PausableTimer(Duration.zero, () {});
+  final _dial = ValueNotifier(false);
+  final _scroll = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    dial.addListener(() {
-      if (dial.value) {
-        timer.pause();
+    _dial.addListener(() {
+      if (_dial.value) {
+        _timer.pause();
       } else {
-        timer.start();
+        _timer.start();
       }
     });
     reset();
   }
 
   void reset() {
-    timer.cancel();
+    _timer.cancel();
     storyline.clear();
     for (final cell in cells.values) {
       cell.reset();
@@ -79,7 +81,7 @@ class PlayScreenState extends State<PlayScreen> {
       cells[write.targetCellId]?.apply(write);
     }
     setState(() {});
-    timer.cancel();
+    _timer.cancel();
 
     final transitions = node.transitions;
     if (transitions.isEmpty) {
@@ -107,9 +109,18 @@ class PlayScreenState extends State<PlayScreen> {
           widget.translation,
           node.id,
         ).length;
-    timer = PausableTimer(
+    _timer = PausableTimer(
       Duration(milliseconds: max(500, typing)),
-      () => advanceNode(node),
+      () {
+        advanceNode(node);
+        SchedulerBinding.instance?.addPostFrameCallback(
+          (_) => _scroll.animateTo(
+            _scroll.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.fastOutSlowIn,
+          ),
+        );
+      },
     )..start();
     setState(() {});
   }
@@ -122,7 +133,7 @@ class PlayScreenState extends State<PlayScreen> {
       child: Builder(builder: (context) {
         return WillPopScope(
           onWillPop: () {
-            dial.value = true;
+            _dial.value = true;
             return Future.sync(() => false);
           },
           child: Scaffold(
@@ -130,9 +141,9 @@ class PlayScreenState extends State<PlayScreen> {
             floatingActionButton: Padding(
               padding: const EdgeInsets.only(top: 16),
               child: SpeedDial(
-                openCloseDial: dial,
-                onOpen: () => setState(timer.pause),
-                onClose: () => setState(timer.start),
+                openCloseDial: _dial,
+                onOpen: () => setState(_timer.pause),
+                onClose: () => setState(_timer.start),
                 icon: Icons.pause_rounded,
                 activeIcon: Icons.play_arrow_rounded,
                 backgroundColor: theme.colorScheme.primary,
@@ -170,6 +181,7 @@ class PlayScreenState extends State<PlayScreen> {
               ),
             ),
             body: ListView(
+              controller: _scroll,
               padding: const EdgeInsets.only(top: 98, bottom: 32),
               children: [
                 for (var i = 0; i < storyline.length - 1; i++)
@@ -189,7 +201,7 @@ class PlayScreenState extends State<PlayScreen> {
                     actors: actors,
                   ),
                 ),
-                if (!timer.isActive &&
+                if (!_timer.isActive &&
                     storyline.last.transitions.isNotEmpty &&
                     storyline.last.transitionInputSource ==
                         TransitionInputSource.select)
@@ -199,15 +211,15 @@ class PlayScreenState extends State<PlayScreen> {
                       onTap: (t) => scheduleAvdancement(nodes[t.targetNodeId]!),
                     ),
                   ),
-                if (timer.isActive) const TypingIndicator(),
+                if (_timer.isActive) const TypingIndicator(),
                 if (finished)
                   slideUp(
                     Column(
                       children: [
                         const Divider(
                           height: 32,
-                          indent: 32,
-                          endIndent: 32,
+                          indent: 64,
+                          endIndent: 64,
                         ),
                         Text(
                           'End',
