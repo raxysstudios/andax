@@ -29,8 +29,7 @@ class CellsEditorScreen extends StatelessWidget {
         title: const Text('Storage cells'),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () =>
-            showCellEditor(context).then((r) => onSelect(r, true)),
+        onPressed: () => showCellEditor(context).then((r) => onSelect(r, true)),
         icon: const Icon(Icons.post_add_rounded),
         label: const Text('Add cell'),
       ),
