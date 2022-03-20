@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../screens/story.dart';
 
-Future<Cell?> showCellEditorDialog(
+Future<Cell?> showCellEditor(
   BuildContext context, [
   Cell? value,
 ]) {
@@ -46,9 +46,8 @@ Future<Cell?> showCellEditorDialog(
           },
     builder: (context, setState) {
       return [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: TextFormField(
+        ListTile(
+          title: TextFormField(
             decoration: const InputDecoration(
               labelText: 'Cell name',
               prefixIcon: Icon(Icons.label_rounded),
@@ -61,9 +60,8 @@ Future<Cell?> showCellEditorDialog(
             },
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: TextFormField(
+        ListTile(
+          title: TextFormField(
             decoration: const InputDecoration(
               labelText: 'Cell max numeric value',
               prefixIcon: Icon(Icons.score_rounded),
@@ -79,15 +77,9 @@ Future<Cell?> showCellEditorDialog(
             ], // Only numbers can be entered
           ),
         ),
+        buildTitle(context, 'Display mode'),
         Padding(
-          padding: const EdgeInsets.fromLTRB(24, 18, 24, 8),
-          child: Text(
-            'Display mode',
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: ToggleButtons(
             children: const [
               Tooltip(

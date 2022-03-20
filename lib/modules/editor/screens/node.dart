@@ -5,16 +5,16 @@ import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/editor/utils/node.dart';
 import 'package:andax/modules/editor/utils/pickers.dart';
-import 'package:andax/modules/editor/widgets/transition_dialog.dart';
+import 'package:andax/modules/editor/widgets/transition_editor.dart';
 import 'package:andax/shared/widgets/options_button.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
-import '../widgets/actor_dialog.dart';
+import '../widgets/actor_editor.dart';
 import '../widgets/actor_tile.dart';
-import '../widgets/cell_write_dialog.dart';
+import '../widgets/cell_write_editor.dart';
 import 'story.dart';
 
 class NodeEditorScreen extends StatefulWidget {
@@ -76,7 +76,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
               ),
               onLongPress: actor == null
                   ? null
-                  : () => showActorEditorDialog(context, actor)
+                  : () => showActorEditor(context, actor)
                       .then((r) => setState(() {})),
             );
           },
@@ -121,7 +121,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
     return Scaffold(
       primary: false,
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => showTransitionEditorDialog(
+        onPressed: () => showTransitionEditor(
           context,
           node,
         ).then((r) => setState(() {})),
@@ -153,7 +153,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
                   transitions[i].targetNodeId,
                 ),
               ),
-              onTap: () => showTransitionEditorDialog(
+              onTap: () => showTransitionEditor(
                 context,
                 node,
                 transitions[i],
@@ -170,7 +170,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
     return Scaffold(
       primary: false,
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => showCellWriteDialog(
+        onPressed: () => showCellWrite(
           context,
           node,
         ).then((r) => setState(() {})),
@@ -191,7 +191,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
               title: Text(write.value),
               subtitle: Text(MessageTranslation.getText(
                   editor.translation, write.targetCellId)),
-              onTap: () => showCellWriteDialog(
+              onTap: () => showCellWrite(
                 context,
                 node,
                 write,

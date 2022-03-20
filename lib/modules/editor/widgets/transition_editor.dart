@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import '../screens/story.dart';
 import '../utils/pickers.dart';
 
-Future<Transition?> showTransitionEditorDialog(
+Future<Transition?> showTransitionEditor(
   BuildContext context,
   Node node, [
   Transition? value,
@@ -38,7 +38,7 @@ Future<Transition?> showTransitionEditorDialog(
   String newText = translation.text ?? '';
   return showEditorSheet<Transition>(
     context: context,
-    title: value == null ? 'Create actor' : 'Edit actor',
+    title: value == null ? 'Create transition' : 'Edit transition',
     initial: value,
     onSave: () {
       translation.text = newText;
@@ -58,9 +58,8 @@ Future<Transition?> showTransitionEditorDialog(
           },
     builder: (_, setState) {
       return [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: TextFormField(
+        ListTile(
+          title: TextFormField(
             decoration: const InputDecoration(
               labelText: 'Transition text',
             ),
@@ -72,31 +71,20 @@ Future<Transition?> showTransitionEditorDialog(
             },
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(24, 18, 24, 8),
-          child: Text(
-            'Target node',
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-        ),
+        buildTitle(context, 'Target node'),
         Provider.value(
           value: editor,
-          child: ListTileTheme(
-            data: Theme.of(context).listTileTheme.copyWith(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 24),
-                ),
-            child: Builder(builder: (context) {
-              final node = editor.story.nodes[result.targetNodeId]!;
-              return NodeTile(
-                node,
-                onTap: () => pickNode(context, node).then((r) {
-                  if (r != null) {
-                    setState(() {
-                      result.targetNodeId = r.id;
-                    });
-                  }
-                }),
-              );
+          child: NodeTile(
+            editor.story.nodes[result.targetNodeId],
+            onTap: () => pickNode(
+              context,
+              editor.story.nodes[result.targetNodeId],
+            ).then((r) {
+              if (r != null) {
+                setState(() {
+                  result.targetNodeId = r.id;
+                });
+              }
             }),
           ),
         ),

@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import '../screens/story.dart';
 import '../utils/pickers.dart';
 
-Future<CellWrite?> showCellWriteDialog(
+Future<CellWrite?> showCellWrite(
   BuildContext context,
   Node node, [
   CellWrite? value,
@@ -39,43 +39,26 @@ Future<CellWrite?> showCellWriteDialog(
     onDelete: value == null ? null : () => node.cellWrites.remove(value),
     builder: (_, setState) {
       return [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(24, 18, 24, 8),
-          child: Text(
-            'Target cell',
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-        ),
+        buildTitle(context, 'Target cell'),
         Provider.value(
           value: editor,
-          child: ListTileTheme(
-            data: Theme.of(context).listTileTheme.copyWith(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 24),
-                ),
-            child: Builder(builder: (context) {
-              final cell = editor.story.cells[result.targetCellId];
-              return CellTile(
-                cell,
-                onTap: () => pickCell(context, cell).then((r) {
-                  if (r != null) {
-                    setState(() {
-                      result.targetCellId = r.id;
-                    });
-                  }
-                }),
-              );
+          child: CellTile(
+            editor.story.cells[result.targetCellId],
+            onTap: () => pickCell(
+              context,
+              editor.story.cells[result.targetCellId],
+            ).then((r) {
+              if (r != null) {
+                setState(() {
+                  result.targetCellId = r.id;
+                });
+              }
             }),
           ),
         ),
+        buildTitle(context, 'Write mode'),
         Padding(
-          padding: const EdgeInsets.fromLTRB(24, 18, 24, 8),
-          child: Text(
-            'Write mode',
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: ToggleButtons(
             children: const [
               Tooltip(
@@ -100,9 +83,8 @@ Future<CellWrite?> showCellWriteDialog(
             borderRadius: BorderRadius.circular(16),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: TextFormField(
+        ListTile(
+          title: TextFormField(
             decoration: const InputDecoration(
               labelText: 'Write value',
             ),

@@ -5,7 +5,7 @@ import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../widgets/cell_dialog.dart';
+import '../widgets/cell_editor.dart';
 import 'story.dart';
 
 class CellsEditorScreen extends StatelessWidget {
@@ -30,7 +30,7 @@ class CellsEditorScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () =>
-            showCellEditorDialog(context).then((r) => onSelect(r, true)),
+            showCellEditor(context).then((r) => onSelect(r, true)),
         icon: const Icon(Icons.post_add_rounded),
         label: const Text('Add cell'),
       ),

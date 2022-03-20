@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import '../screens/story.dart';
 import '../utils/editor_sheet.dart';
 
-Future<Actor?> showActorEditorDialog(
+Future<Actor?> showActorEditor(
   BuildContext context, [
   Actor? value,
 ]) {
@@ -45,11 +45,11 @@ Future<Actor?> showActorEditorDialog(
           },
     builder: (context, setState) {
       return [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: TextFormField(
+        ListTile(
+          title: TextFormField(
             decoration: const InputDecoration(
               labelText: 'Actor name',
+              prefixIcon: Icon(Icons.label_rounded),
             ),
             autofocus: true,
             initialValue: translation.name,
@@ -59,21 +59,12 @@ Future<Actor?> showActorEditorDialog(
             },
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(24, 18, 24, 8),
-          child: Text(
-            'Actor mode',
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-        ),
+        buildTitle(context, 'Actor mode'),
         ListTile(
           selected: result.type == ActorType.npc,
           onTap: () => setState(() {
             result.type = ActorType.npc;
           }),
-          dense: true,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 24),
-          horizontalTitleGap: 12,
           leading: const Icon(Icons.smart_toy_rounded),
           title: const Text('Computer actor'),
           subtitle: const Text('Follows the narrative'),
@@ -83,9 +74,6 @@ Future<Actor?> showActorEditorDialog(
           onTap: () => setState(() {
             result.type = ActorType.player;
           }),
-          dense: true,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 24),
-          horizontalTitleGap: 12,
           leading: const Icon(Icons.face_rounded),
           title: const Text('Player actor'),
           subtitle: const Text('Controlled by the player'),
