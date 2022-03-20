@@ -9,27 +9,34 @@ import '../utils/editor_sheet.dart';
 Future<Actor?> showActorEditorDialog(
   BuildContext context, [
   Actor? value,
-]) async {
+]) {
   final editor = context.read<StoryEditorState>();
-  final Actor actor;
+  final Actor result;
   final ActorTranslation translation;
 
   if (value == null) {
     final id = editor.uuid.v4();
-    actor = Actor(id);
+    result = Actor(id);
     translation = ActorTranslation(
       id,
       name: 'Actor #${editor.story.actors.length + 1}',
     );
   } else {
-    actor = Actor.fromJson(value.toJson());
-    translation = ActorTranslation.get(editor.translation, actor.id)!;
+    result = Actor.fromJson(value.toJson());
+    translation = ActorTranslation.get(editor.translation, result.id)!;
   }
 
   String newName = translation.name;
-  final keep = await showEditorSheet(
+  return showEditorSheet<Actor>(
     context: context,
     title: value == null ? 'Create actor' : 'Edit actor',
+    initial: value,
+    onSave: () {
+      translation.name = newName;
+      editor.story.actors[result.id] = result;
+      editor.translation[result.id] = translation;
+      return result;
+    },
     onDelete: value == null
         ? null
         : () {
@@ -60,9 +67,9 @@ Future<Actor?> showActorEditorDialog(
           ),
         ),
         ListTile(
-          selected: actor.type == ActorType.npc,
+          selected: result.type == ActorType.npc,
           onTap: () => setState(() {
-            actor.type = ActorType.npc;
+            result.type = ActorType.npc;
           }),
           dense: true,
           contentPadding: const EdgeInsets.symmetric(horizontal: 24),
@@ -72,9 +79,9 @@ Future<Actor?> showActorEditorDialog(
           subtitle: const Text('Follows the narrative'),
         ),
         ListTile(
-          selected: actor.type == ActorType.player,
+          selected: result.type == ActorType.player,
           onTap: () => setState(() {
-            actor.type = ActorType.player;
+            result.type = ActorType.player;
           }),
           dense: true,
           contentPadding: const EdgeInsets.symmetric(horizontal: 24),
@@ -86,13 +93,4 @@ Future<Actor?> showActorEditorDialog(
       ];
     },
   );
-
-  if (keep == null) return value;
-  if (keep) {
-    translation.name = newName;
-    editor.story.actors[actor.id] = actor;
-    editor.translation[actor.id] = translation;
-    return actor;
-  }
-  return null;
 }

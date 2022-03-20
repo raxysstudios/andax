@@ -15,14 +15,14 @@ Future<Transition?> showTransitionEditorDialog(
   Transition? value,
 ]) async {
   final editor = context.read<StoryEditorState>();
-  final Transition transition;
+  final Transition result;
   final MessageTranslation translation;
 
   if (value == null) {
     final id = editor.uuid.v4();
     final target = await pickNode(context);
     if (target == null) return value;
-    transition = Transition(
+    result = Transition(
       id,
       targetNodeId: target.id,
     );
@@ -31,14 +31,25 @@ Future<Transition?> showTransitionEditorDialog(
       text: 'Transition #${node.transitions.length + 1}',
     );
   } else {
-    transition = Transition.fromJson(value.toJson());
-    translation = MessageTranslation.get(editor.translation, transition.id)!;
+    result = Transition.fromJson(value.toJson());
+    translation = MessageTranslation.get(editor.translation, result.id)!;
   }
 
   String newText = translation.text ?? '';
-  final keep = await showEditorSheet(
+  return showEditorSheet<Transition>(
     context: context,
     title: value == null ? 'Create actor' : 'Edit actor',
+    initial: value,
+    onSave: () {
+      translation.text = newText;
+      if (value == null) {
+        node.transitions.add(result);
+      } else {
+        node.transitions[node.transitions.indexOf(value)] = result;
+      }
+      editor.translation[result.id] = translation;
+      return result;
+    },
     onDelete: value == null
         ? null
         : () {
@@ -75,13 +86,13 @@ Future<Transition?> showTransitionEditorDialog(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 24),
                 ),
             child: Builder(builder: (context) {
-              final node = editor.story.nodes[transition.targetNodeId]!;
+              final node = editor.story.nodes[result.targetNodeId]!;
               return NodeTile(
                 node,
                 onTap: () => pickNode(context, node).then((r) {
                   if (r != null) {
                     setState(() {
-                      transition.targetNodeId = r.id;
+                      result.targetNodeId = r.id;
                     });
                   }
                 }),
@@ -92,16 +103,4 @@ Future<Transition?> showTransitionEditorDialog(
       ];
     },
   );
-
-  if (keep == null) return value;
-  if (keep) {
-    translation.text = newText;
-    if (value == null) {
-      node.transitions.add(transition);
-    } else {
-      node.transitions[node.transitions.indexOf(value)] = transition;
-    }
-    editor.translation[transition.id] = translation;
-  }
-  return null;
 }

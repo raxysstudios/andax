@@ -9,9 +9,11 @@ String? emptyValidator(String? value) {
   return null;
 }
 
-Future<bool?> showEditorSheet({
+Future<T?> showEditorSheet<T>({
   required BuildContext context,
   required String title,
+  T? initial,
+  required ValueGetter<T> onSave,
   VoidCallback? onDelete,
   required List<Widget> Function(
     BuildContext context,
@@ -20,14 +22,14 @@ Future<bool?> showEditorSheet({
       builder,
 }) async {
   final form = GlobalKey<FormState>();
-  return showScrollableModalSheet<bool>(
+  final keep = await showScrollableModalSheet<bool>(
     context: context,
     builder: (context, scroll) {
       return WillPopScope(
         onWillPop: () => showDangerDialog(
           context,
           'Discard usaved edits?',
-          confirmText: 'Exit',
+          confirmText: 'Discard',
           rejectText: 'Stay',
         ),
         child: Scaffold(
@@ -71,4 +73,7 @@ Future<bool?> showEditorSheet({
       );
     },
   );
+  if (keep == null) return initial;
+  if (keep) return onSave();
+  return null;
 }

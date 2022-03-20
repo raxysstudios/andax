@@ -14,19 +14,28 @@ Future<CellWrite?> showCellWriteDialog(
   CellWrite? value,
 ]) async {
   final editor = context.read<StoryEditorState>();
-  CellWrite write;
+  CellWrite result;
 
   if (value == null) {
     final target = await pickCell(context);
     if (target == null) return value;
-    write = CellWrite(target.id);
+    result = CellWrite(target.id);
   } else {
-    write = CellWrite.fromJson(value.toJson());
+    result = CellWrite.fromJson(value.toJson());
   }
 
-  final keep = await showEditorSheet(
+  return showEditorSheet<CellWrite>(
     context: context,
     title: value == null ? 'Create cell write' : 'Edit cell write',
+    initial: value,
+    onSave: () {
+      if (value == null) {
+        node.cellWrites.add(result);
+      } else {
+        node.cellWrites[node.cellWrites.indexOf(value)] = result;
+      }
+      return result;
+    },
     onDelete: value == null ? null : () => node.cellWrites.remove(value),
     builder: (_, setState) {
       return [
@@ -44,13 +53,13 @@ Future<CellWrite?> showCellWriteDialog(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 24),
                 ),
             child: Builder(builder: (context) {
-              final cell = editor.story.cells[write.targetCellId];
+              final cell = editor.story.cells[result.targetCellId];
               return CellTile(
                 cell,
                 onTap: () => pickCell(context, cell).then((r) {
                   if (r != null) {
                     setState(() {
-                      write.targetCellId = r.id;
+                      result.targetCellId = r.id;
                     });
                   }
                 }),
@@ -83,10 +92,10 @@ Future<CellWrite?> showCellWriteDialog(
               ),
             ],
             onPressed: (int i) => setState(() {
-              write.mode = CellWriteMode.values[i];
+              result.mode = CellWriteMode.values[i];
             }),
             isSelected:
-                CellWriteMode.values.map((e) => e == write.mode).toList(),
+                CellWriteMode.values.map((e) => e == result.mode).toList(),
             renderBorder: false,
             borderRadius: BorderRadius.circular(16),
           ),
@@ -98,25 +107,14 @@ Future<CellWrite?> showCellWriteDialog(
               labelText: 'Write value',
             ),
             autofocus: true,
-            initialValue: write.value,
+            initialValue: result.value,
             validator: emptyValidator,
             onChanged: (s) {
-              write.value = s.trim();
+              result.value = s.trim();
             },
           ),
         ),
       ];
     },
   );
-  
-  if (keep == null) return value;
-  if (keep) {
-    if (value == null) {
-      node.cellWrites.add(write);
-    } else {
-      node.cellWrites[node.cellWrites.indexOf(value)] = write;
-    }
-    return write;
-  }
-  return null;
 }

@@ -10,27 +10,34 @@ import '../screens/story.dart';
 Future<Cell?> showCellEditorDialog(
   BuildContext context, [
   Cell? value,
-]) async {
+]) {
   final editor = context.read<StoryEditorState>();
-  final Cell cell;
+  final Cell result;
   final MessageTranslation translation;
 
   if (value == null) {
     final id = editor.uuid.v4();
-    cell = Cell(id);
+    result = Cell(id);
     translation = MessageTranslation(
       id,
       text: 'Cell #${editor.story.cells.length + 1}',
     );
   } else {
-    cell = Cell.fromJson(value.toJson());
-    translation = MessageTranslation.get(editor.translation, cell.id)!;
+    result = Cell.fromJson(value.toJson());
+    translation = MessageTranslation.get(editor.translation, result.id)!;
   }
 
   String? newName = translation.text;
-  final keep = await showEditorSheet(
+  return showEditorSheet<Cell>(
     context: context,
     title: value == null ? 'Create cell' : 'Edit cell',
+    initial: value,
+    onSave: () {
+      translation.text = newName;
+      editor.story.cells[result.id] = result;
+      editor.translation[result.id] = translation;
+      return result;
+    },
     onDelete: value == null
         ? null
         : () {
@@ -62,9 +69,9 @@ Future<Cell?> showCellEditorDialog(
               prefixIcon: Icon(Icons.score_rounded),
             ),
             autofocus: true,
-            initialValue: cell.max?.toString(),
+            initialValue: result.max?.toString(),
             onChanged: (s) {
-              cell.max = int.tryParse(s.trim());
+              result.max = int.tryParse(s.trim());
             },
             keyboardType: TextInputType.number,
             inputFormatters: [
@@ -101,11 +108,11 @@ Future<Cell?> showCellEditorDialog(
               ),
             ],
             onPressed: (int i) => setState(() {
-              cell.display = i == 0 ? null : CellDisplay.values[i - 1];
+              result.display = i == 0 ? null : CellDisplay.values[i - 1];
             }),
             isSelected: [
-              cell.display == null,
-              ...CellDisplay.values.map((e) => e == cell.display),
+              result.display == null,
+              ...CellDisplay.values.map((e) => e == result.display),
             ],
             renderBorder: false,
             borderRadius: BorderRadius.circular(16),
@@ -114,12 +121,4 @@ Future<Cell?> showCellEditorDialog(
       ];
     },
   );
-  
-  if (keep == null) return value;
-  if (keep) {
-    translation.text = newName;
-    editor.story.cells[cell.id] = cell;
-    editor.translation[cell.id] = translation;
-  }
-  return null;
 }
