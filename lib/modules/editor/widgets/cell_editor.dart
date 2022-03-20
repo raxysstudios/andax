@@ -45,6 +45,9 @@ Future<Cell?> showCellEditor(
             editor.translation.assets.remove(value.id);
           },
     builder: (context, setState) {
+      void setDisplay(CellDisplay? v) => setState(() {
+            result.display = v;
+          });
       return [
         ListTile(
           title: TextFormField(
@@ -77,38 +80,42 @@ Future<Cell?> showCellEditor(
             ], // Only numbers can be entered
           ),
         ),
-        buildTitle(context, 'Display mode'),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: ToggleButtons(
-            children: const [
-              Tooltip(
-                message: 'Hidden',
-                child: Icon(Icons.visibility_off_rounded),
-              ),
-              Tooltip(
-                message: 'Check (true/false)',
-                child: Icon(Icons.check_circle_rounded),
-              ),
-              Tooltip(
-                message: 'Text (as is)',
-                child: Icon(Icons.short_text_rounded),
-              ),
-              Tooltip(
-                message: 'Range (with max)',
-                child: Icon(Icons.linear_scale_rounded),
-              ),
-            ],
-            onPressed: (int i) => setState(() {
-              result.display = i == 0 ? null : CellDisplay.values[i - 1];
-            }),
-            isSelected: [
-              result.display == null,
-              ...CellDisplay.values.map((e) => e == result.display),
-            ],
-            renderBorder: false,
-            borderRadius: BorderRadius.circular(16),
-          ),
+        buildExplanationTile(
+          context,
+          'Display mode',
+          'Controls the presentation on post-game scoreboard',
+        ),
+        RadioListTile<CellDisplay?>(
+          value: null,
+          groupValue: result.display,
+          title: const Text('Hidden'),
+          subtitle: const Text('Internal logic, not shown to player'),
+          secondary: const Icon(Icons.visibility_off_rounded),
+          onChanged: setDisplay,
+        ),
+        RadioListTile<CellDisplay>(
+          value: CellDisplay.check,
+          groupValue: result.display,
+          title: const Text('Check'),
+          subtitle: const Text('Displays objectives, marks events'),
+          secondary: const Icon(Icons.check_circle_rounded),
+          onChanged: setDisplay,
+        ),
+        RadioListTile<CellDisplay>(
+          value: CellDisplay.range,
+          groupValue: result.display,
+          title: const Text('Range'),
+          subtitle: const Text('For numeric scores, better with max value'),
+          secondary: const Icon(Icons.short_text_rounded),
+          onChanged: setDisplay,
+        ),
+        RadioListTile<CellDisplay>(
+          value: CellDisplay.text,
+          groupValue: result.display,
+          title: const Text('Text'),
+          subtitle: const Text('Plain text, for general use'),
+          secondary: const Icon(Icons.linear_scale_rounded),
+          onChanged: setDisplay,
         ),
       ];
     },

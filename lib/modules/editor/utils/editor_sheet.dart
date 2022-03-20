@@ -9,13 +9,33 @@ String? emptyValidator(String? value) {
   return null;
 }
 
-Widget buildTitle(BuildContext context, String text) {
-  return Padding(
-    padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-    child: Text(
-      text,
-      style: Theme.of(context).textTheme.titleSmall,
-    ),
+Widget buildExplanationTile(
+  BuildContext context,
+  String title, [
+  String? subtitle,
+]) {
+  final theme = Theme.of(context).textTheme;
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Divider(height: 32),
+      Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
+        child: Text(
+          title,
+          style: theme.bodyText1,
+        ),
+      ),
+      if (subtitle != null)
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
+          child: Text(
+            subtitle,
+            style: theme.bodyText2,
+          ),
+        ),
+      const SizedBox(height: 4),
+    ],
   );
 }
 
@@ -80,6 +100,7 @@ Future<T?> showEditorSheet<T>({
                 key: form,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: ListView(
+                  controller: scroll,
                   padding: const EdgeInsets.only(bottom: 76),
                   children: builder(context, setState),
                 ),

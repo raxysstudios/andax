@@ -44,6 +44,9 @@ Future<Actor?> showActorEditor(
             editor.translation.assets.remove(value.id);
           },
     builder: (context, setState) {
+      void setType(ActorType? v) => setState(() {
+            result.type = v ?? result.type;
+          });
       return [
         ListTile(
           title: TextFormField(
@@ -59,22 +62,24 @@ Future<Actor?> showActorEditor(
             },
           ),
         ),
-        buildTitle(context, 'Actor mode'),
-        ListTile(
-          selected: result.type == ActorType.npc,
-          onTap: () => setState(() {
-            result.type = ActorType.npc;
-          }),
-          leading: const Icon(Icons.smart_toy_rounded),
+        buildExplanationTile(
+          context,
+          'Actor mode',
+          'Sets the look of its messages, restricts some options for them.',
+        ),
+        RadioListTile<ActorType>(
+          value: ActorType.npc,
+          groupValue: result.type,
+          onChanged: setType,
+          secondary: const Icon(Icons.smart_toy_rounded),
           title: const Text('Computer actor'),
           subtitle: const Text('Follows the narrative'),
         ),
-        ListTile(
-          selected: result.type == ActorType.player,
-          onTap: () => setState(() {
-            result.type = ActorType.player;
-          }),
-          leading: const Icon(Icons.face_rounded),
+        RadioListTile<ActorType>(
+          value: ActorType.player,
+          groupValue: result.type,
+          onChanged: setType,
+          secondary: const Icon(Icons.face_rounded),
           title: const Text('Player actor'),
           subtitle: const Text('Controlled by the player'),
         ),

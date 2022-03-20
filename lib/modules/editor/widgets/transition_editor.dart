@@ -62,6 +62,7 @@ Future<Transition?> showTransitionEditor(
           title: TextFormField(
             decoration: const InputDecoration(
               labelText: 'Transition text',
+              prefixIcon: Icon(Icons.short_text_rounded),
             ),
             autofocus: true,
             initialValue: translation.text,
@@ -71,7 +72,7 @@ Future<Transition?> showTransitionEditor(
             },
           ),
         ),
-        buildTitle(context, 'Target node'),
+        buildExplanationTile(context, 'Target node'),
         Provider.value(
           value: editor,
           child: NodeTile(

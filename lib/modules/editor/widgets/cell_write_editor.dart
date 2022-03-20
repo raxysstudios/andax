@@ -38,8 +38,25 @@ Future<CellWrite?> showCellWrite(
     },
     onDelete: value == null ? null : () => node.cellWrites.remove(value),
     builder: (_, setState) {
+      void setMode(CellWriteMode? v) => setState(() {
+            result.mode = v ?? result.mode;
+          });
       return [
-        buildTitle(context, 'Target cell'),
+        ListTile(
+          title: TextFormField(
+            decoration: const InputDecoration(
+              labelText: 'Write value',
+              prefixIcon: Icon(Icons.edit_rounded),
+            ),
+            autofocus: true,
+            initialValue: result.value,
+            validator: emptyValidator,
+            onChanged: (s) {
+              result.value = s.trim();
+            },
+          ),
+        ),
+        buildExplanationTile(context, 'Target cell'),
         Provider.value(
           value: editor,
           child: CellTile(
@@ -56,45 +73,34 @@ Future<CellWrite?> showCellWrite(
             }),
           ),
         ),
-        buildTitle(context, 'Write mode'),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: ToggleButtons(
-            children: const [
-              Tooltip(
-                message: 'Overwrite',
-                child: Icon(Icons.drive_file_rename_outline_rounded),
-              ),
-              Tooltip(
-                message: 'Add (fallback to 0)',
-                child: Icon(Icons.add_circle_outline_rounded),
-              ),
-              Tooltip(
-                message: 'Subtract (fallback to 0)',
-                child: Icon(Icons.remove_circle_outline_rounded),
-              ),
-            ],
-            onPressed: (int i) => setState(() {
-              result.mode = CellWriteMode.values[i];
-            }),
-            isSelected:
-                CellWriteMode.values.map((e) => e == result.mode).toList(),
-            renderBorder: false,
-            borderRadius: BorderRadius.circular(16),
-          ),
+        buildExplanationTile(
+          context,
+          'Write mode',
+          'Controls how the new value is set',
         ),
-        ListTile(
-          title: TextFormField(
-            decoration: const InputDecoration(
-              labelText: 'Write value',
-            ),
-            autofocus: true,
-            initialValue: result.value,
-            validator: emptyValidator,
-            onChanged: (s) {
-              result.value = s.trim();
-            },
-          ),
+        RadioListTile<CellWriteMode?>(
+          value: CellWriteMode.overwrite,
+          groupValue: result.mode,
+          title: const Text('Overwrite'),
+          subtitle: const Text('Completely replaces old value'),
+          secondary: const Icon(Icons.save_alt_rounded),
+          onChanged: setMode,
+        ),
+        RadioListTile<CellWriteMode?>(
+          value: null,
+          groupValue: result.mode,
+          title: const Text('Add'),
+          subtitle: const Text('Numerically adds to old value or 0'),
+          secondary: const Icon(Icons.add_circle_outline_rounded),
+          onChanged: setMode,
+        ),
+        RadioListTile<CellWriteMode?>(
+          value: null,
+          groupValue: result.mode,
+          title: const Text('Subtract'),
+          subtitle: const Text('Numerically subtracts from old value or 0'),
+          secondary: const Icon(Icons.remove_circle_outline_rounded),
+          onChanged: setMode,
         ),
       ];
     },
