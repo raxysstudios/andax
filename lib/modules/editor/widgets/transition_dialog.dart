@@ -1,8 +1,8 @@
 import 'package:andax/models/node.dart';
 import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation_asset.dart';
+import 'package:andax/modules/editor/utils/editor_sheet.dart';
 import 'package:andax/modules/editor/widgets/node_tile.dart';
-import 'package:andax/shared/widgets/editor_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -36,12 +36,15 @@ Future<Transition?> showTransitionEditorDialog(
   }
 
   String newText = translation.text ?? '';
-  final result = await showEditorDialog<Transition>(
-    context,
-    result: () => transition,
+  final keep = await showEditorSheet(
+    context: context,
     title: value == null ? 'Create actor' : 'Edit actor',
-    initial: value,
-    padding: EdgeInsets.zero,
+    onDelete: value == null
+        ? null
+        : () {
+            node.transitions.remove(value);
+            editor.translation.assets.remove(value.id);
+          },
     builder: (_, setState) {
       return [
         Padding(
@@ -89,19 +92,16 @@ Future<Transition?> showTransitionEditorDialog(
       ];
     },
   );
-  if (result == null) {
-    if (value != null) {
-      node.transitions.remove(value);
-      editor.translation.assets.remove(value.id);
-    }
-  } else {
+
+  if (keep == null) return value;
+  if (keep) {
     translation.text = newText;
     if (value == null) {
-      node.transitions.add(result);
+      node.transitions.add(transition);
     } else {
-      node.transitions[node.transitions.indexOf(value)] = result;
+      node.transitions[node.transitions.indexOf(value)] = transition;
     }
-    editor.translation[result.id] = translation;
+    editor.translation[transition.id] = translation;
   }
-  return result;
+  return null;
 }

@@ -1,10 +1,10 @@
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:andax/shared/widgets/editor_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../screens/story.dart';
+import '../utils/editor_sheet.dart';
 
 Future<Actor?> showActorEditorDialog(
   BuildContext context, [
@@ -27,12 +27,15 @@ Future<Actor?> showActorEditorDialog(
   }
 
   String newName = translation.name;
-  final result = await showEditorDialog<Actor>(
-    context,
-    result: () => actor,
+  final keep = await showEditorSheet(
+    context: context,
     title: value == null ? 'Create actor' : 'Edit actor',
-    initial: value,
-    padding: EdgeInsets.zero,
+    onDelete: value == null
+        ? null
+        : () {
+            editor.story.actors.remove(value.id);
+            editor.translation.assets.remove(value.id);
+          },
     builder: (context, setState) {
       return [
         Padding(
@@ -83,15 +86,13 @@ Future<Actor?> showActorEditorDialog(
       ];
     },
   );
-  if (result == null) {
-    if (value != null) {
-      editor.story.actors.remove(value.id);
-      editor.translation.assets.remove(value.id);
-    }
-  } else if (result != value) {
+
+  if (keep == null) return value;
+  if (keep) {
     translation.name = newName;
-    editor.story.actors[result.id] = result;
-    editor.translation[result.id] = translation;
+    editor.story.actors[actor.id] = actor;
+    editor.translation[actor.id] = translation;
+    return actor;
   }
-  return result;
+  return null;
 }

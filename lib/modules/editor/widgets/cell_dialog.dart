@@ -1,6 +1,6 @@
 import 'package:andax/models/cell.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:andax/shared/widgets/editor_dialog.dart';
+import 'package:andax/modules/editor/utils/editor_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -28,12 +28,15 @@ Future<Cell?> showCellEditorDialog(
   }
 
   String? newName = translation.text;
-  final result = await showEditorDialog<Cell>(
-    context,
-    result: () => cell,
+  final keep = await showEditorSheet(
+    context: context,
     title: value == null ? 'Create cell' : 'Edit cell',
-    initial: value,
-    padding: EdgeInsets.zero,
+    onDelete: value == null
+        ? null
+        : () {
+            editor.story.cells.remove(value.id);
+            editor.translation.assets.remove(value.id);
+          },
     builder: (context, setState) {
       return [
         Padding(
@@ -111,15 +114,12 @@ Future<Cell?> showCellEditorDialog(
       ];
     },
   );
-  if (result == null) {
-    if (value != null) {
-      editor.story.cells.remove(value.id);
-      editor.translation.assets.remove(value.id);
-    }
-  } else if (result != value) {
+  
+  if (keep == null) return value;
+  if (keep) {
     translation.text = newName;
-    editor.story.cells[result.id] = result;
-    editor.translation[result.id] = translation;
+    editor.story.cells[cell.id] = cell;
+    editor.translation[cell.id] = translation;
   }
-  return result;
+  return null;
 }

@@ -1,7 +1,7 @@
 import 'package:andax/models/cell_write.dart';
 import 'package:andax/models/node.dart';
+import 'package:andax/modules/editor/utils/editor_sheet.dart';
 import 'package:andax/modules/editor/widgets/cell_tile.dart';
-import 'package:andax/shared/widgets/editor_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,12 +24,10 @@ Future<CellWrite?> showCellWriteDialog(
     write = CellWrite.fromJson(value.toJson());
   }
 
-  final result = await showEditorDialog<CellWrite>(
-    context,
-    result: () => write,
+  final keep = await showEditorSheet(
+    context: context,
     title: value == null ? 'Create cell write' : 'Edit cell write',
-    initial: value,
-    padding: EdgeInsets.zero,
+    onDelete: value == null ? null : () => node.cellWrites.remove(value),
     builder: (_, setState) {
       return [
         Padding(
@@ -110,14 +108,15 @@ Future<CellWrite?> showCellWriteDialog(
       ];
     },
   );
-  if (result == null) {
-    if (value != null) {
-      node.cellWrites.remove(value);
+  
+  if (keep == null) return value;
+  if (keep) {
+    if (value == null) {
+      node.cellWrites.add(write);
+    } else {
+      node.cellWrites[node.cellWrites.indexOf(value)] = write;
     }
-  } else if (value == null) {
-    node.cellWrites.add(result);
-  } else {
-    node.cellWrites[node.cellWrites.indexOf(value)] = result;
+    return write;
   }
-  return result;
+  return null;
 }
