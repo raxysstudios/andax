@@ -2,7 +2,7 @@ import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/editor/screens/cells.dart';
-import 'package:andax/modules/editor/services/node.dart';
+import 'package:andax/modules/editor/utils/node.dart';
 import 'package:andax/modules/editor/widgets/cell_dialog.dart';
 import 'package:andax/modules/play/screens/play.dart';
 import 'package:andax/shared/widgets/danger_dialog.dart';

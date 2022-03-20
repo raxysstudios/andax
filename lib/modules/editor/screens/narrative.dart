@@ -7,7 +7,7 @@ import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../services/node.dart';
+import '../utils/node.dart';
 import '../widgets/node_tile.dart';
 import 'story.dart';
 
