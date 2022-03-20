@@ -9,6 +9,16 @@ String? emptyValidator(String? value) {
   return null;
 }
 
+Widget buildTitle(BuildContext context, String text) {
+  return Padding(
+    padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+    child: Text(
+      text,
+      style: Theme.of(context).textTheme.titleSmall,
+    ),
+  );
+}
+
 Future<T?> showEditorSheet<T>({
   required BuildContext context,
   required String title,
@@ -39,9 +49,16 @@ Future<T?> showEditorSheet<T>({
             actions: [
               if (onDelete != null)
                 IconButton(
-                  onPressed: () {
-                    onDelete();
-                    Navigator.pop(context, false);
+                  onPressed: () async {
+                    if (await showDangerDialog(
+                      context,
+                      'Delete the object?',
+                      confirmText: 'Delete',
+                      rejectText: 'Keep',
+                    )) {
+                      onDelete();
+                      Navigator.pop(context, false);
+                    }
                   },
                   icon: const Icon(Icons.delete_rounded),
                 ),
@@ -54,7 +71,7 @@ Future<T?> showEditorSheet<T>({
                 Navigator.pop(context, true);
               }
             },
-            child: const Icon(Icons.check_circle_outline_rounded),
+            child: const Icon(Icons.done_all_rounded),
             tooltip: 'Save',
           ),
           body: StatefulBuilder(
