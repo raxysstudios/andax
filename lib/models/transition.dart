@@ -30,7 +30,7 @@ class CelledTransition extends Transition {
     String id, {
     required String targetNodeId,
     this.targetCellId = '',
-    this.comparision = ComparisionMode.equal,
+    this.comparision,
     this.value = '',
   }) : super(id, targetNodeId: targetNodeId);
 

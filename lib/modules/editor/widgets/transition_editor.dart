@@ -24,18 +24,9 @@ Future<Transition?> showTransitionEditor(
     final targetNode = await pickNode(context);
     if (targetNode == null) return value;
     if (node.transitionInputSource == TransitionInputSource.cell) {
-      final targetCell = await pickCell(context);
-      if (targetCell == null) return value;
-      result = CelledTransition(
-        id,
-        targetNodeId: targetNode.id,
-        targetCellId: targetCell.id,
-      );
+      result = CelledTransition(id, targetNodeId: targetNode.id);
     } else {
-      result = Transition(
-        id,
-        targetNodeId: targetNode.id,
-      );
+      result = Transition(id, targetNodeId: targetNode.id);
     }
     translation = MessageTranslation(
       id,
@@ -73,20 +64,21 @@ Future<Transition?> showTransitionEditor(
           },
     builder: (_, setState) {
       return [
-        ListTile(
-          title: TextFormField(
-            decoration: const InputDecoration(
-              labelText: 'Transition text',
-              prefixIcon: Icon(Icons.short_text_rounded),
+        if (node.transitionInputSource == TransitionInputSource.select)
+          ListTile(
+            title: TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Transition text',
+                prefixIcon: Icon(Icons.short_text_rounded),
+              ),
+              autofocus: true,
+              initialValue: translation.text,
+              validator: emptyValidator,
+              onChanged: (s) {
+                newText = s.trim();
+              },
             ),
-            autofocus: true,
-            initialValue: translation.text,
-            validator: emptyValidator,
-            onChanged: (s) {
-              newText = s.trim();
-            },
           ),
-        ),
         buildExplanationTile(context, 'Target node'),
         Provider.value(
           value: editor,
@@ -105,8 +97,9 @@ Future<Transition?> showTransitionEditor(
           ),
         ),
         if (node.transitionInputSource == TransitionInputSource.cell)
-          Builder(
-            builder: (context) {
+          Provider.value(
+            value: editor,
+            builder: (context, _) {
               final celled = result as CelledTransition;
               void setMode(ComparisionMode? v) => setState(() {
                     celled.comparision = v;
@@ -114,22 +107,19 @@ Future<Transition?> showTransitionEditor(
               return Column(
                 children: [
                   buildExplanationTile(context, 'Cell-controlled logic'),
-                  Provider.value(
-                    value: editor,
-                    child: CellTile(
-                      editor.story.cells[celled.targetCellId],
-                      onTap: () => pickCell(context).then(
-                        (v) => setState(() {
-                          celled.targetCellId = v?.id ?? celled.targetCellId;
-                        }),
-                      ),
+                  CellTile(
+                    editor.story.cells[celled.targetCellId],
+                    onTap: () => pickCell(context).then(
+                      (v) => setState(() {
+                        celled.targetCellId = v?.id ?? celled.targetCellId;
+                      }),
                     ),
                   ),
                   RadioListTile<ComparisionMode?>(
                     value: null,
                     groupValue: celled.comparision,
-                    title: const Text('OK'),
-                    subtitle: const Text('Always passes (use for default)'),
+                    title: const Text('Pass'),
+                    subtitle: const Text('Always true (use for default)'),
                     onChanged: setMode,
                   ),
                   RadioListTile<ComparisionMode?>(
@@ -161,7 +151,6 @@ Future<Transition?> showTransitionEditor(
                       ),
                       autofocus: true,
                       initialValue: celled.value,
-                      validator: emptyValidator,
                       onChanged: (s) {
                         celled.value = s.trim();
                       },
