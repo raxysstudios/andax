@@ -17,3 +17,27 @@ class Transition {
 
   Map<String, dynamic> toJson() => _$TransitionToJson(this);
 }
+
+enum ComparisionMode { equal, lesser, greater }
+
+@JsonSerializable()
+class CelledTransition extends Transition {
+  String targetCellId;
+  ComparisionMode? comparision;
+  String value;
+
+  CelledTransition(
+    String id, {
+    required String targetNodeId,
+    this.targetCellId = '',
+    this.comparision = ComparisionMode.equal,
+    this.value = '',
+  }) : super(id, targetNodeId: targetNodeId);
+
+  factory CelledTransition.fromJson(Map<String, dynamic> json) =>
+      _$CelledTransitionFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() =>
+      super.toJson()..addAll(_$CelledTransitionToJson(this));
+}
