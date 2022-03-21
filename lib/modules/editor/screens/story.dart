@@ -77,6 +77,15 @@ class StoryEditorState extends State<StoryEditorScreen> {
                 children: [
                   // ignore: prefer_const_constructors
                   InfoEditorScreen(),
+                  NarrativeEditorScreen(
+                    (node, isNew) async {
+                      if (!isNew) {
+                        await editNode(context, node);
+                      }
+                      setState(() {});
+                    },
+                    allowInteractive: true,
+                  ),
                   ActorsEditorScreen(
                     (actor, isNew) async {
                       if (!isNew) {
@@ -99,21 +108,16 @@ class StoryEditorState extends State<StoryEditorScreen> {
                       setState(() {});
                     },
                   ),
-                  NarrativeEditorScreen(
-                    (node, isNew) async {
-                      if (!isNew) {
-                        await editNode(context, node);
-                      }
-                      setState(() {});
-                    },
-                    allowInteractive: true,
-                  ),
                 ],
               ),
               bottomNavigationBar: BottomNavigationBar(
                 selectedItemColor: textTheme.bodyText1?.color,
                 unselectedItemColor: textTheme.caption?.color,
                 items: const [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.insights_rounded),
+                    label: 'Narrative',
+                  ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.history_edu_rounded),
                     label: 'Info',
@@ -125,10 +129,6 @@ class StoryEditorState extends State<StoryEditorScreen> {
                   BottomNavigationBarItem(
                     icon: Icon(Icons.library_books_rounded),
                     label: 'Cells',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.insights_rounded),
-                    label: 'Narrative',
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.play_arrow_rounded),
