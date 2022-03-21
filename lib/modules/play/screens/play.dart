@@ -4,6 +4,7 @@ import 'package:andax/models/actor.dart';
 import 'package:andax/models/cell.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
+import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/play/utils/alert.dart';
@@ -94,12 +95,34 @@ class PlayScreenState extends State<PlayScreen> {
       return;
     }
 
-    Node? next;
+    final next = makeTransition(node)?.targetNodeId;
+    if (nodes[next] != null) scheduleAvdancement(nodes[next]!);
+  }
+
+  Transition? makeTransition(Node node) {
+    final transitions = node.transitions;
     if (node.transitionInputSource == TransitionInputSource.random) {
       final index = Random().nextInt(transitions.length);
-      next = nodes[transitions[index].targetNodeId];
-    } else {}
-    if (next != null) scheduleAvdancement(next);
+      return transitions[index];
+    } else {
+      for (final transition in transitions.map((e) => e as CelledTransition)) {
+        if (transition.comparision == null) return transition;
+        final target = cells[transition.targetCellId]?.value;
+        if (target == null) continue;
+        if (transition.comparision == ComparisionMode.equal) {
+          if (target == transition.value) return transition;
+        } else {
+          final l = int.tryParse(transition.value) ?? 0;
+          final r = int.tryParse(target) ?? 0;
+          if (transition.comparision == ComparisionMode.lesser
+              ? l < r
+              : l > r) {
+            return transition;
+          }
+        }
+      }
+    }
+    return null;
   }
 
   void scheduleAvdancement(Node node) {
