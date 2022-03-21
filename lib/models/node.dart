@@ -6,7 +6,7 @@ import 'transition.dart';
 part 'node.g.dart';
 
 enum EndingType { win, loss }
-enum TransitionInputSource { random, select, cells }
+enum TransitionInputSource { random, select, cell }
 
 @JsonSerializable(explicitToJson: true)
 class Node {

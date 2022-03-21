@@ -71,7 +71,8 @@ Future<void> selectTransitionInputSource(
               ),
               child: const ListTile(
                 leading: Icon(Icons.shuffle_rounded),
-                title: Text('Random choice'),
+                title: Text('Random'),
+                subtitle: Text('Picks any transition'),
               ),
             ),
             Builder(builder: (context) {
@@ -86,20 +87,26 @@ Future<void> selectTransitionInputSource(
                     : null,
                 child: ListTile(
                   leading: const Icon(Icons.touch_app_rounded),
-                  subtitle:
-                      player ? null : const Text("Only for 'player' actors"),
-                  title: const Text('Selected by user'),
+                  title: Text(
+                    'User' +
+                        (node.transitionInputSource ==
+                                TransitionInputSource.select
+                            ? ''
+                            : ' [for player-actor]'),
+                  ),
+                  subtitle: const Text('Selected by player on UI'),
                 ),
               );
             }),
             SimpleDialogOption(
               onPressed: () => Navigator.pop(
                 context,
-                TransitionInputSource.cells,
+                TransitionInputSource.cell,
               ),
               child: const ListTile(
                 leading: Icon(Icons.rule_rounded),
-                title: Text("Based on cells' values"),
+                title: Text('Cell'),
+                subtitle: Text('Based on cell values'),
               ),
             ),
           ],
