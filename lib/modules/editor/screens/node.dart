@@ -43,7 +43,6 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
         MessageTranslation.getText(
           context.read<StoryEditorState>().translation,
           node.id,
-          '',
         ).isEmpty) {
       SchedulerBinding.instance?.addPostFrameCallback(
         (_) => pickActor(context, node).then(
