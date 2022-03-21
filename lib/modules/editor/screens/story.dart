@@ -115,12 +115,12 @@ class StoryEditorState extends State<StoryEditorScreen> {
                 unselectedItemColor: textTheme.caption?.color,
                 items: const [
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.insights_rounded),
-                    label: 'Narrative',
-                  ),
-                  BottomNavigationBarItem(
                     icon: Icon(Icons.history_edu_rounded),
                     label: 'Info',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.insights_rounded),
+                    label: 'Narrative',
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.groups_rounded),
