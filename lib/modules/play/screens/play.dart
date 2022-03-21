@@ -107,16 +107,16 @@ class PlayScreenState extends State<PlayScreen> {
     } else {
       for (final transition in transitions.map((e) => e as CelledTransition)) {
         if (transition.comparision == null) return transition;
-        final target = cells[transition.targetCellId]?.value;
-        if (target == null) continue;
+        final cell = cells[transition.targetCellId]?.value;
+        if (cell == null) continue;
         if (transition.comparision == ComparisionMode.equal) {
-          if (target == transition.value) return transition;
+          if (cell == transition.value) return transition;
         } else {
-          final l = int.tryParse(transition.value) ?? 0;
-          final r = int.tryParse(target) ?? 0;
+          final c = int.tryParse(cell) ?? 0;
+          final v = int.tryParse(transition.value) ?? 0;
           if (transition.comparision == ComparisionMode.lesser
-              ? l < r
-              : l > r) {
+              ? c < v
+              : c > v) {
             return transition;
           }
         }
