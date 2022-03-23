@@ -1,7 +1,11 @@
-import 'package:andax/models/story.dart';
+import 'package:andax/models/cell.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'cell_check.g.dart';
 
 enum CheckOperator { pass, equal, less, greater }
 
+@JsonSerializable()
 class CellCheck {
   String cellId;
   CheckOperator operator;
@@ -13,8 +17,13 @@ class CellCheck {
     this.value = '',
   });
 
-  bool check(Story story) {
-    final x = story.cells[cellId]?.value;
+  factory CellCheck.fromJson(Map<String, dynamic> json) =>
+      _$CellCheckFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CellCheckToJson(this);
+
+  bool check(Map<String, Cell> cells) {
+    final x = cells[cellId]?.value;
     if (x == null) return false;
     switch (operator) {
       case CheckOperator.pass:
