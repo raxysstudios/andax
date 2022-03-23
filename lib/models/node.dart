@@ -6,7 +6,7 @@ import 'transition.dart';
 part 'node.g.dart';
 
 enum EndingType { win, loss }
-enum TransitionInputSource { random, select, cell }
+enum NodeInputType { random, select, none }
 
 @JsonSerializable(explicitToJson: true)
 class Node {
@@ -14,14 +14,14 @@ class Node {
   String? actorId;
   List<Transition> transitions;
   List<CellWrite> cellWrites;
-  TransitionInputSource transitionInputSource;
+  NodeInputType input;
 
   Node(
     this.id, {
     this.actorId,
     List<Transition> transitions = const [],
     List<CellWrite> cellWrites = const [],
-    this.transitionInputSource = TransitionInputSource.random,
+    this.input = NodeInputType.random,
   })  : transitions = transitions.toList(),
         cellWrites = cellWrites.toList();
 
