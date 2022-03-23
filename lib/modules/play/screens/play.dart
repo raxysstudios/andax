@@ -4,7 +4,6 @@ import 'package:andax/models/actor.dart';
 import 'package:andax/models/cell.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
-import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/play/utils/alert.dart';
@@ -40,7 +39,8 @@ class PlayScreenState extends State<PlayScreen> {
 
   late Map<String, Cell> cells = {
     for (final c in widget.story.cells.entries)
-      c.key: Cell.fromJson(c.value.toJson())
+      c.key: Cell.fromJson(c.value.toJson()),
+    'node': Cell('node'),
   };
   final List<Node> storyline = [];
 
@@ -66,66 +66,50 @@ class PlayScreenState extends State<PlayScreen> {
     _timer.cancel();
     storyline.clear();
     for (final cell in cells.values) {
-      cell.reset();
+      cell.value = '';
     }
-    advanceNode(
+    moveAt(
       widget.story.startNodeId?.isEmpty ?? true
           ? nodes.values.first
           : nodes[widget.story.startNodeId]!,
     );
   }
 
-  void advanceNode(Node node) {
+  void moveAt(Node node) {
     storyline.add(node);
     for (final write in node.cellWrites) {
       cells[write.targetCellId]?.apply(write);
     }
     setState(() {});
+    cells['node']?.value = '';
     _timer.cancel();
 
-    final transitions = node.transitions;
-    if (transitions.isEmpty) {
+    if (node.transitions.isEmpty) {
       PausableTimer(
         const Duration(milliseconds: 500),
         () => showGameResultsDialog(context, this),
       ).start();
       return;
     }
-    if (node.transitionInputSource == TransitionInputSource.select) {
-      return;
+    if (node.input == NodeInputType.select) return;
+    if (node.input == NodeInputType.random) {
+      cells['node']?.value =
+          Random().nextInt(node.transitions.length).toString();
     }
-
-    final next = makeTransition(node)?.targetNodeId;
-    if (nodes[next] != null) scheduleAvdancement(nodes[next]!);
+    attemptMove();
   }
 
-  Transition? makeTransition(Node node) {
-    final transitions = node.transitions;
-    if (node.transitionInputSource == TransitionInputSource.random) {
-      final index = Random().nextInt(transitions.length);
-      return transitions[index];
-    } else {
-      for (final transition in transitions.map((e) => e as CelledTransition)) {
-        if (transition.comparision == null) return transition;
-        final cell = cells[transition.targetCellId]?.value;
-        if (cell == null) continue;
-        if (transition.comparision == ComparisionMode.equal) {
-          if (cell == transition.value) return transition;
-        } else {
-          final c = int.tryParse(cell) ?? 0;
-          final v = int.tryParse(transition.value) ?? 0;
-          if (transition.comparision == ComparisionMode.lesser
-              ? c < v
-              : c > v) {
-            return transition;
-          }
-        }
+  void attemptMove() {
+    final transitions = storyline.last.transitions;
+    for (final transition in transitions) {
+      if (transition.condition.check(cells)) {
+        final node = nodes[transition.targetNodeId];
+        if (node != null) scheduleMove(node);
       }
     }
-    return null;
   }
 
-  void scheduleAvdancement(Node node) {
+  void scheduleMove(Node node) {
     final typing = 50 *
         MessageTranslation.getText(
           widget.translation,
@@ -134,7 +118,7 @@ class PlayScreenState extends State<PlayScreen> {
     _timer = PausableTimer(
       Duration(milliseconds: max(500, typing)),
       () {
-        advanceNode(node);
+        moveAt(node);
         SchedulerBinding.instance?.addPostFrameCallback(
           (_) => _scroll.animateTo(
             _scroll.position.maxScrollExtent,
@@ -164,18 +148,14 @@ class PlayScreenState extends State<PlayScreen> {
               padding: const EdgeInsets.only(top: 16),
               child: SpeedDial(
                 openCloseDial: _dial,
-                onOpen: () => setState(_timer.pause),
-                onClose: () => setState(_timer.start),
-                icon: Icons.pause_rounded,
-                activeIcon: Icons.play_arrow_rounded,
+                onOpen: _timer.pause,
+                onClose: _timer.start,
+                icon: Icons.menu_rounded,
                 backgroundColor: theme.colorScheme.primary,
                 foregroundColor: theme.colorScheme.onPrimary,
-                activeBackgroundColor: theme.colorScheme.primary,
-                activeForegroundColor: theme.colorScheme.onPrimary,
                 spaceBetweenChildren: 9,
                 switchLabelPosition: true,
-                label: const Text('Pause'),
-                activeLabel: const Text('Resume'),
+                label: const Text('Menu'),
                 buttonSize: const Size.square(48),
                 spacing: 7,
                 direction: SpeedDialDirection.down,
@@ -221,12 +201,15 @@ class PlayScreenState extends State<PlayScreen> {
                 ),
                 if (!_timer.isActive &&
                     storyline.last.transitions.isNotEmpty &&
-                    storyline.last.transitionInputSource ==
-                        TransitionInputSource.select)
+                    storyline.last.input == NodeInputType.select)
                   slideUp(
                     TransitionsChips(
                       transitions: storyline.last.transitions,
-                      onTap: (t) => scheduleAvdancement(nodes[t.targetNodeId]!),
+                      onTap: (t) {
+                        cells['node']?.value =
+                            storyline.last.transitions.indexOf(t).toString();
+                        attemptMove();
+                      },
                     ),
                   ),
                 if (_timer.isActive) const TypingIndicator(),

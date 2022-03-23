@@ -65,8 +65,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
               onTap: () => pickActor(context, node).then(
                 (r) {
                   if (r?.type != ActorType.player &&
-                      node.input ==
-                          NodeInputType.select) {
+                      node.input == NodeInputType.select) {
                     node.input = NodeInputType.random;
                   }
                   node.actorId = r?.id;
