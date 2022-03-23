@@ -1,3 +1,4 @@
+import 'package:andax/models/cell_check.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation_asset.dart';
@@ -17,43 +18,51 @@ Future<Transition?> showTransitionEditor(
 ]) async {
   final editor = context.read<StoryEditorState>();
   final Transition result;
-  final MessageTranslation translation;
+  final MessageTranslation? translation;
 
   if (value == null) {
     final id = editor.uuid.v4();
     final targetNode = await pickNode(context);
     if (targetNode == null) return value;
-    if (node.transitionInputSource == TransitionInputSource.cell) {
-      result = CelledTransition(id, targetNodeId: targetNode.id);
-    } else {
-      result = Transition(id, targetNodeId: targetNode.id);
-    }
-    translation = MessageTranslation(
+    result = Transition(
       id,
-      text: 'Transition #${node.transitions.length + 1}',
+      targetNodeId: targetNode.id,
+      condition: node.input == NodeInputType.select
+          ? CellCheck(cellId: '')
+          : CellCheck(
+              cellId: 'node',
+              operator: CheckOperator.equal,
+              value: node.transitions.length.toString(),
+            ),
     );
+    translation = node.input == NodeInputType.select
+        ? MessageTranslation(
+            id,
+            text: 'Transition #${node.transitions.length + 1}',
+          )
+        : null;
   } else {
-    if (node.transitionInputSource == TransitionInputSource.cell) {
-      result = CelledTransition.fromJson(value.toJson());
-    } else {
-      result = Transition.fromJson(value.toJson());
-    }
-    translation = MessageTranslation.get(editor.translation, result.id)!;
+    result = Transition.fromJson(value.toJson());
+    translation = node.input == NodeInputType.select
+        ? MessageTranslation.get(editor.translation, result.id)!
+        : null;
   }
 
-  String newText = translation.text ?? '';
+  String newText = translation?.text ?? '';
   return showEditorSheet<Transition>(
     context: context,
     title: value == null ? 'Create transition' : 'Edit transition',
     initial: value,
     onSave: () {
-      translation.text = newText;
       if (value == null) {
         node.transitions.add(result);
       } else {
         node.transitions[node.transitions.indexOf(value)] = result;
       }
-      editor.translation[result.id] = translation;
+      if (translation != null) {
+        translation.text = newText;
+        editor.translation[result.id] = translation;
+      }
       return result;
     },
     onDelete: value == null
@@ -64,7 +73,7 @@ Future<Transition?> showTransitionEditor(
           },
     builder: (_, setState) {
       return [
-        if (node.transitionInputSource == TransitionInputSource.select)
+        if (translation != null)
           ListTile(
             title: TextFormField(
               decoration: const InputDecoration(
@@ -96,63 +105,63 @@ Future<Transition?> showTransitionEditor(
             }),
           ),
         ),
-        if (node.transitionInputSource == TransitionInputSource.cell)
+        if (node.input == NodeInputType.none)
           Provider.value(
             value: editor,
             builder: (context, _) {
-              final celled = result as CelledTransition;
-              void setMode(ComparisionMode? v) => setState(() {
-                    celled.comparision = v;
+              final condition = result.condition;
+              void setOperator(CheckOperator? v) => setState(() {
+                    condition.operator = v ?? condition.operator;
                   });
               return Column(
                 children: [
-                  buildExplanationTile(context, 'Cell-controlled logic'),
+                  buildExplanationTile(context, 'Cell-based condition'),
                   CellTile(
-                    editor.story.cells[celled.targetCellId],
+                    editor.story.cells[condition.cellId],
                     onTap: () => pickCell(context).then(
                       (v) => setState(() {
-                        celled.targetCellId = v?.id ?? celled.targetCellId;
+                        condition.cellId = v?.id ?? condition.cellId;
                       }),
                     ),
                   ),
-                  RadioListTile<ComparisionMode?>(
-                    value: null,
-                    groupValue: celled.comparision,
+                  RadioListTile<CheckOperator>(
+                    value: CheckOperator.pass,
+                    groupValue: condition.operator,
                     title: const Text('Pass'),
                     subtitle: const Text('Always true (use for default)'),
-                    onChanged: setMode,
+                    onChanged: setOperator,
                   ),
-                  RadioListTile<ComparisionMode?>(
-                    value: ComparisionMode.equal,
-                    groupValue: celled.comparision,
+                  RadioListTile<CheckOperator?>(
+                    value: CheckOperator.equal,
+                    groupValue: condition.operator,
                     title: const Text('[=] Equal'),
                     subtitle: const Text('Are the values exactly the same?'),
-                    onChanged: setMode,
+                    onChanged: setOperator,
                   ),
-                  RadioListTile<ComparisionMode?>(
-                    value: ComparisionMode.lesser,
-                    groupValue: celled.comparision,
+                  RadioListTile<CheckOperator?>(
+                    value: CheckOperator.less,
+                    groupValue: condition.operator,
                     title: const Text('[<] Lesser'),
                     subtitle: const Text('Is the number in the cell smaller?'),
-                    onChanged: setMode,
+                    onChanged: setOperator,
                   ),
-                  RadioListTile<ComparisionMode?>(
-                    value: ComparisionMode.greater,
-                    groupValue: celled.comparision,
+                  RadioListTile<CheckOperator?>(
+                    value: CheckOperator.greater,
+                    groupValue: condition.operator,
                     title: const Text('[>] Greater'),
                     subtitle: const Text('Is the number in the cell greater?'),
-                    onChanged: setMode,
+                    onChanged: setOperator,
                   ),
                   ListTile(
                     title: TextFormField(
                       decoration: const InputDecoration(
-                        labelText: 'Comparision value',
+                        labelText: 'Comparison value',
                         prefixIcon: Icon(Icons.turned_in_rounded),
                       ),
                       autofocus: true,
-                      initialValue: celled.value,
+                      initialValue: condition.value,
                       onChanged: (s) {
-                        celled.value = s.trim();
+                        condition.value = s.trim();
                       },
                     ),
                   ),

@@ -53,7 +53,7 @@ Future<void> selectTransitionInputSource(
   Node node,
 ) async {
   final editor = context.read<StoryEditorState>();
-  final source = await showDialog<TransitionInputSource>(
+  final source = await showDialog<NodeInputType>(
     context: context,
     builder: (BuildContext context) {
       return ListTileTheme(
@@ -64,10 +64,13 @@ Future<void> selectTransitionInputSource(
         child: SimpleDialog(
           title: const Text('Select input source'),
           children: <Widget>[
+            const Text(
+              '[Warning] Changing transition type will reset current transitions!',
+            ),
             SimpleDialogOption(
               onPressed: () => Navigator.pop(
                 context,
-                TransitionInputSource.random,
+                NodeInputType.random,
               ),
               child: const ListTile(
                 leading: Icon(Icons.shuffle_rounded),
@@ -82,15 +85,14 @@ Future<void> selectTransitionInputSource(
                 onPressed: player
                     ? () => Navigator.pop(
                           context,
-                          TransitionInputSource.select,
+                          NodeInputType.select,
                         )
                     : null,
                 child: ListTile(
                   leading: const Icon(Icons.touch_app_rounded),
                   title: Text(
                     'User' +
-                        (node.transitionInputSource ==
-                                TransitionInputSource.select
+                        (node.input == NodeInputType.select
                             ? ''
                             : ' [for player-actor]'),
                   ),
@@ -101,7 +103,7 @@ Future<void> selectTransitionInputSource(
             SimpleDialogOption(
               onPressed: () => Navigator.pop(
                 context,
-                TransitionInputSource.cell,
+                NodeInputType.none,
               ),
               child: const ListTile(
                 leading: Icon(Icons.rule_rounded),
@@ -114,5 +116,11 @@ Future<void> selectTransitionInputSource(
       );
     },
   );
-  if (source != null) node.transitionInputSource = source;
+  if (source != null) {
+    node.input = source;
+    for (final t in node.transitions) {
+      editor.translation.assets.remove(t.id);
+    }
+    node.transitions.clear();
+  }
 }

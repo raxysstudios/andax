@@ -65,9 +65,9 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
               onTap: () => pickActor(context, node).then(
                 (r) {
                   if (r?.type != ActorType.player &&
-                      node.transitionInputSource ==
-                          TransitionInputSource.select) {
-                    node.transitionInputSource = TransitionInputSource.random;
+                      node.input ==
+                          NodeInputType.select) {
+                    node.input = NodeInputType.random;
                   }
                   node.actorId = r?.id;
                   setState(() {});
@@ -131,7 +131,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
         children: [
           ListTile(
             leading: const Icon(Icons.functions_rounded),
-            title: Text('Determined by "${node.transitionInputSource.name}"'),
+            title: Text('Determined by "${node.input.name}"'),
             subtitle: const Text('Transition input source'),
             onTap: () => selectTransitionInputSource(context, node).then(
               (r) => setState(() {}),
