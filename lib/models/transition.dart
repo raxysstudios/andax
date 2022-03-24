@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'transition.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class Transition {
   final String id;
   String targetNodeId;
