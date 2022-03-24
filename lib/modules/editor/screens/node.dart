@@ -142,15 +142,17 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
               title: Text(
                 MessageTranslation.getText(
                   editor.translation,
-                  transitions[i].id,
-                ),
-              ),
-              subtitle: Text(
-                MessageTranslation.getText(
-                  editor.translation,
                   transitions[i].targetNodeId,
                 ),
               ),
+              subtitle: editor.translation[transitions[i].id] == null
+                  ? null
+                  : Text(
+                      MessageTranslation.getText(
+                        editor.translation,
+                        transitions[i].id,
+                      ),
+                    ),
               onTap: () => showTransitionEditor(
                 context,
                 node,
