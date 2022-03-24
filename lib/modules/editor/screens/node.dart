@@ -6,6 +6,7 @@ import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/editor/utils/node.dart';
 import 'package:andax/modules/editor/utils/pickers.dart';
 import 'package:andax/modules/editor/widgets/transition_editor.dart';
+import 'package:andax/shared/extensions.dart';
 import 'package:andax/shared/widgets/options_button.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
@@ -129,11 +130,28 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
       body: ListView(
         children: [
           ListTile(
+            minVerticalPadding: 16,
             leading: const Icon(Icons.functions_rounded),
-            title: Text('Determined by "${node.input.name}"'),
-            subtitle: const Text('Transition input source'),
-            onTap: () => selectTransitionInputSource(context, node).then(
-              (r) => setState(() {}),
+            title: const Text('Transition control'),
+            subtitle: Builder(
+              builder: (context) {
+                final labels = ['Random', 'User select', 'Cells'];
+                return Wrap(
+                  spacing: 4,
+                  runSpacing: 4,
+                  children: [
+                    for (var i = 0; i < labels.length; i++)
+                      InputChip(
+                        onPressed: () => setState(() {
+                          node.input = NodeInputType.values[i];
+                          migrateNodeTransitions(context, node);
+                        }),
+                        selected: node.input == NodeInputType.values[i],
+                        label: Text(labels[i].titleCase),
+                      ),
+                  ],
+                );
+              },
             ),
           ),
           const Divider(),

@@ -124,26 +124,29 @@ class _NarrativeEditorScreenState extends State<NarrativeEditorScreen> {
                     padding: const EdgeInsets.all(8),
                     children: [
                       for (var i = 0; i < node.transitions.length; i++)
-                        Builder(builder: (context) {
-                          final t = node.transitions[i];
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4),
-                            child: InputChip(
-                              onPressed: () => setState(() {
-                                choices[node.id] = t.id;
-                              }),
-                              selected: choice == t.id,
-                              label: Text(
-                                editor.translation[t.id] == null
-                                    ? '[tr-${i + 1}]'
-                                    : MessageTranslation.getText(
-                                        editor.translation,
-                                        t.id,
-                                      ),
+                        Builder(
+                          builder: (context) {
+                            final t = node.transitions[i];
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4),
+                              child: InputChip(
+                                onPressed: () => setState(() {
+                                  choices[node.id] = t.id;
+                                }),
+                                selected: choice == t.id,
+                                label: Text(
+                                  editor.translation[t.id] == null
+                                      ? '[tr-${i + 1}]'
+                                      : MessageTranslation.getText(
+                                          editor.translation,
+                                          t.id,
+                                        ),
+                                ),
                               ),
-                            ),
-                          );
-                        }),
+                            );
+                          },
+                        ),
                     ],
                   ),
                 ),

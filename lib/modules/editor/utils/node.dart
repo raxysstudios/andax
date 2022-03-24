@@ -1,4 +1,3 @@
-import 'package:andax/models/actor.dart';
 import 'package:andax/models/cell_check.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/translation_asset.dart';
@@ -49,87 +48,21 @@ void deleteNode(
   }
 }
 
-Future<void> selectTransitionInputSource(
-  BuildContext context,
-  Node node,
-) async {
+void migrateNodeTransitions(BuildContext context, Node node) {
   final editor = context.read<StoryEditorState>();
-  final source = await showDialog<NodeInputType>(
-    context: context,
-    builder: (BuildContext context) {
-      return ListTileTheme(
-        data: const ListTileThemeData(
-          contentPadding: EdgeInsets.zero,
-          horizontalTitleGap: 0,
-        ),
-        child: SimpleDialog(
-          title: const Text('Select input source'),
-          children: <Widget>[
-            SimpleDialogOption(
-              onPressed: () => Navigator.pop(
-                context,
-                NodeInputType.random,
-              ),
-              child: const ListTile(
-                leading: Icon(Icons.shuffle_rounded),
-                title: Text('Random'),
-                subtitle: Text('Picks any transition'),
-              ),
-            ),
-            Builder(builder: (context) {
-              final player =
-                  editor.story.actors[node.actorId]?.type == ActorType.player;
-              return SimpleDialogOption(
-                onPressed: player
-                    ? () => Navigator.pop(
-                          context,
-                          NodeInputType.select,
-                        )
-                    : null,
-                child: ListTile(
-                  leading: const Icon(Icons.touch_app_rounded),
-                  title: Text(
-                    'User' +
-                        (node.input == NodeInputType.select
-                            ? ''
-                            : ' [for player-actor]'),
-                  ),
-                  subtitle: const Text('Selected by player on UI'),
-                ),
-              );
-            }),
-            SimpleDialogOption(
-              onPressed: () => Navigator.pop(
-                context,
-                NodeInputType.none,
-              ),
-              child: const ListTile(
-                leading: Icon(Icons.rule_rounded),
-                title: Text('Cell'),
-                subtitle: Text('Based on cell values'),
-              ),
-            ),
-          ],
-        ),
+  for (var i = 0; i < node.transitions.length; i++) {
+    final t = node.transitions[i];
+    if (node.input == NodeInputType.select) {
+      t.condition.cellId = '';
+      editor.translation[t.id] = MessageTranslation(
+        t.id,
+        text: 'Transition ${i + 1}',
       );
-    },
-  );
-  if (source != null) {
-    node.input = source;
-    for (var i = 0; i < node.transitions.length; i++) {
-      final t = node.transitions[i];
-      if (source == NodeInputType.select) {
-        t.condition.cellId = '';
-        editor.translation[t.id] = MessageTranslation(
-          t.id,
-          text: 'Transition ${i + 1}',
-        );
-      } else {
-        t.condition.cellId = 'node';
-        t.condition.operator = CheckOperator.equal;
-        t.condition.value = i.toString();
-        editor.translation.assets.remove(t.id);
-      }
+    } else {
+      t.condition.cellId = 'node';
+      t.condition.operator = CheckOperator.equal;
+      t.condition.value = i.toString();
+      editor.translation.assets.remove(t.id);
     }
   }
 }
