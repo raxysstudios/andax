@@ -131,6 +131,5 @@ Future<void> selectTransitionInputSource(
         editor.translation.assets.remove(t.id);
       }
     }
-    node.transitions.clear();
   }
 }
