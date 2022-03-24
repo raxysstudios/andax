@@ -142,10 +142,15 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
                   children: [
                     for (var i = 0; i < labels.length; i++)
                       InputChip(
-                        onPressed: () => setState(() {
-                          node.input = NodeInputType.values[i];
-                          migrateNodeTransitions(context, node);
-                        }),
+                        onPressed: () {
+                          final v = NodeInputType.values[i];
+                          if (node.input != v) {
+                            setState(() {
+                              node.input = v;
+                              migrateNodeTransitions(context, node);
+                            });
+                          }
+                        },
                         selected: node.input == NodeInputType.values[i],
                         label: Text(labels[i].titleCase),
                       ),

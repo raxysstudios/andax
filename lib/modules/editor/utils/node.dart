@@ -53,16 +53,17 @@ void migrateNodeTransitions(BuildContext context, Node node) {
   for (var i = 0; i < node.transitions.length; i++) {
     final t = node.transitions[i];
     if (node.input == NodeInputType.select) {
-      t.condition.cellId = '';
       editor.translation[t.id] = MessageTranslation(
         t.id,
         text: 'Transition ${i + 1}',
       );
     } else {
+      editor.translation.assets.remove(t.id);
+    }
+    if (node.input != NodeInputType.none) {
       t.condition.cellId = 'node';
       t.condition.operator = CheckOperator.equal;
       t.condition.value = i.toString();
-      editor.translation.assets.remove(t.id);
     }
   }
 }
