@@ -1,4 +1,5 @@
 import 'package:andax/models/actor.dart';
+import 'package:andax/models/cell_check.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/editor/screens/node.dart';
@@ -118,8 +119,20 @@ Future<void> selectTransitionInputSource(
   );
   if (source != null) {
     node.input = source;
-    for (final t in node.transitions) {
-      editor.translation.assets.remove(t.id);
+    for (var i = 0; i < node.transitions.length; i++) {
+      final t = node.transitions[i];
+      if (source == NodeInputType.select) {
+        t.condition.cellId = '';
+        editor.translation[t.id] = MessageTranslation(
+          t.id,
+          text: 'Transition ${i + 1}',
+        );
+      } else {
+        t.condition.cellId = 'node';
+        t.condition.operator = CheckOperator.equal;
+        t.condition.value = i.toString();
+        editor.translation.assets.remove(t.id);
+      }
     }
     node.transitions.clear();
   }
