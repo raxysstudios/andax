@@ -141,7 +141,7 @@ Future<Transition?> showTransitionEditor(
                   RadioListTile<CheckOperator?>(
                     value: CheckOperator.less,
                     groupValue: condition.operator,
-                    title: const Text('[<] Lesser'),
+                    title: const Text('[<] Less'),
                     subtitle: const Text('Is the number in the cell smaller?'),
                     onChanged: setOperator,
                   ),
