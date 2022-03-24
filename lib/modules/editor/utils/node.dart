@@ -65,9 +65,6 @@ Future<void> selectTransitionInputSource(
         child: SimpleDialog(
           title: const Text('Select input source'),
           children: <Widget>[
-            const Text(
-              '[Warning] Changing transition type will reset current transitions!',
-            ),
             SimpleDialogOption(
               onPressed: () => Navigator.pop(
                 context,
