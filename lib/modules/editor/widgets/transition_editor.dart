@@ -152,19 +152,20 @@ Future<Transition?> showTransitionEditor(
                     subtitle: const Text('Is the number in the cell greater?'),
                     onChanged: setOperator,
                   ),
-                  ListTile(
-                    title: TextFormField(
-                      decoration: const InputDecoration(
-                        labelText: 'Comparison value',
-                        prefixIcon: Icon(Icons.turned_in_rounded),
+                  if (condition.operator != CheckOperator.pass)
+                    ListTile(
+                      title: TextFormField(
+                        decoration: const InputDecoration(
+                          labelText: 'Comparison value',
+                          prefixIcon: Icon(Icons.turned_in_rounded),
+                        ),
+                        autofocus: true,
+                        initialValue: condition.value,
+                        onChanged: (s) {
+                          condition.value = s.trim();
+                        },
                       ),
-                      autofocus: true,
-                      initialValue: condition.value,
-                      onChanged: (s) {
-                        condition.value = s.trim();
-                      },
                     ),
-                  ),
                 ],
               );
             },
