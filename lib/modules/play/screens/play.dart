@@ -5,7 +5,6 @@ import 'package:andax/models/cell.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
-import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/play/utils/alert.dart';
 import 'package:andax/modules/play/utils/animator.dart';
 import 'package:andax/modules/play/widgets/game_results_dialog.dart';
@@ -36,6 +35,7 @@ class PlayScreen extends StatefulWidget {
 class PlayScreenState extends State<PlayScreen> {
   Map<String, Node> get nodes => widget.story.nodes;
   Map<String, Actor> get actors => widget.story.actors;
+  Translation get tr => widget.translation;
 
   late Map<String, Cell> cells = {
     for (final c in widget.story.cells.entries)
@@ -110,13 +110,13 @@ class PlayScreenState extends State<PlayScreen> {
   }
 
   void scheduleMove(Node node) {
-    final typing = 50 *
-        MessageTranslation.getText(
-          widget.translation,
-          node.id,
-        ).length;
     _timer = PausableTimer(
-      Duration(milliseconds: max(500, typing)),
+      Duration(
+        milliseconds: max(
+          500,
+          50 * tr.node(node).length,
+        ),
+      ),
       () {
         moveAt(node);
         SchedulerBinding.instance?.addPostFrameCallback(

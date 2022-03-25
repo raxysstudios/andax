@@ -1,6 +1,9 @@
+import 'package:andax/models/cell.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'actor.dart';
+import 'node.dart';
+import 'transition.dart';
 
 part 'translation.g.dart';
 
@@ -10,24 +13,21 @@ class Translation {
   final Map<String, String> assets;
 
   Translation({
-    required this.language,
+    this.language = '',
     Map<String, String> assets = const {},
   }) : assets = Map<String, String>.of(assets);
 
   String? operator [](String id) => assets[id];
   void operator []=(String id, String asset) => assets[id] = asset;
 
-  String text(String id) => this[id] ?? '[MISSING TEXT]';
-  String actor(Actor actor) => this[actor.id] ?? '[MISSING ACTOR]';
+  String node(Node n) => this[n.id] ?? '[❌NODE]';
+  String transition(Transition t) => this[t.id] ?? '[❌TRANSITION]';
+  String actor(Actor a) => this[a.id] ?? '[❌ACTOR]';
+  String cell(Cell c) => this[c.id] ?? '[❌CELL]';
 
-  String get title => this['title'] ?? '[MISSING TITLE]';
-  set title(String v) => this['title'] = v;
-
-  String get description => this['description'] ?? '[MISSING DESCRIPTION]';
-  set description(String v) => this['description'] = v;
-
-  String get tags => this['tags'] ?? '[MISSING TAGS]';
-  set tags(String v) => this['tags'] = v;
+  String get title => this['title'] ?? '[❌TITLE]';
+  String get description => this['description'] ?? '[❌DESCRIPTION]';
+  String get tags => this['tags'] ?? '[❌TAGS]';
 
   factory Translation.fromJson(Map<String, dynamic> json) =>
       _$TranslationFromJson(json);
