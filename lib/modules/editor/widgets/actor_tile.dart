@@ -49,7 +49,7 @@ class ActorTile extends StatelessWidget {
         actor == null
             ? '[NO ACTOR]'
             : ActorTranslation.getName(
-                editor.translation,
+                editor.tr,
                 actor!.id,
               ),
       ),

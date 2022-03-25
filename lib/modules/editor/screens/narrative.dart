@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
-import 'package:andax/models/translation_asset.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -135,14 +134,7 @@ class _NarrativeEditorScreenState extends State<NarrativeEditorScreen> {
                                   choices[node.id] = t.id;
                                 }),
                                 selected: choice == t.id,
-                                label: Text(
-                                  editor.translation[t.id] == null
-                                      ? '[tr-${i + 1}]'
-                                      : MessageTranslation.getText(
-                                          editor.translation,
-                                          t.id,
-                                        ),
-                                ),
+                                label: Text(editor.tr[t.id] ?? '[tr-${i + 1}]'),
                               ),
                             );
                           },

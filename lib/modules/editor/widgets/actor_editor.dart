@@ -23,7 +23,7 @@ Future<Actor?> showActorEditor(
     );
   } else {
     result = Actor.fromJson(value.toJson());
-    translation = ActorTranslation.get(editor.translation, result.id)!;
+    translation = ActorTranslation.get(editor.tr, result.id)!;
   }
 
   String newName = translation.name;
@@ -34,14 +34,14 @@ Future<Actor?> showActorEditor(
     onSave: () {
       translation.name = newName;
       editor.story.actors[result.id] = result;
-      editor.translation[result.id] = translation;
+      editor.tr[result.id] = translation;
       return result;
     },
     onDelete: value == null
         ? null
         : () {
             editor.story.actors.remove(value.id);
-            editor.translation.assets.remove(value.id);
+            editor.tr.assets.remove(value.id);
           },
     builder: (context, setState) {
       void setType(ActorType? v) => setState(() {

@@ -1,6 +1,5 @@
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
-import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/editor/screens/cells.dart';
 import 'package:andax/modules/editor/utils/node.dart';
 import 'package:andax/modules/editor/widgets/cell_editor.dart';
@@ -37,15 +36,9 @@ class StoryEditorState extends State<StoryEditorScreen> {
 
   late StoryInfo? info = widget.info;
   late final Story story = widget.story ?? Story();
-  late final Translation translation = widget.translation ??
+  late final Translation tr = widget.translation ??
       Translation(
-        language: '',
-        assets: {
-          'story': StoryTranslation(
-            '',
-            title: 'New story',
-          )
-        },
+        assets: {'title': 'New story'},
       );
 
   var _page = 0;
@@ -152,7 +145,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
                         builder: (context) {
                           return PlayScreen(
                             story: story,
-                            translation: translation,
+                            translation: tr,
                           );
                         },
                       ),

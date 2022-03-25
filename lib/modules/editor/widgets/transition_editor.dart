@@ -44,7 +44,7 @@ Future<Transition?> showTransitionEditor(
   } else {
     result = Transition.fromJson(value.toJson());
     translation = node.input == NodeInputType.select
-        ? MessageTranslation.get(editor.translation, result.id)!
+        ? MessageTranslation.get(editor.tr, result.id)!
         : null;
   }
 
@@ -61,7 +61,7 @@ Future<Transition?> showTransitionEditor(
       }
       if (translation != null) {
         translation.text = newText;
-        editor.translation[result.id] = translation;
+        editor.tr[result.id] = translation;
       }
       return result;
     },
@@ -69,7 +69,7 @@ Future<Transition?> showTransitionEditor(
         ? null
         : () {
             node.transitions.remove(value);
-            editor.translation.assets.remove(value.id);
+            editor.tr.assets.remove(value.id);
           },
     builder: (_, setState) {
       return [

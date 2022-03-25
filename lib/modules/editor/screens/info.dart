@@ -1,4 +1,3 @@
-import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/home/screens/home.dart';
 import 'package:andax/shared/utils.dart';
 import 'package:andax/shared/widgets/danger_dialog.dart';
@@ -76,10 +75,8 @@ class InfoEditorScreen extends StatelessWidget {
                 labelText: 'Initial language',
                 prefixIcon: Icon(Icons.language_rounded),
               ),
-              initialValue: editor.translation.language,
-              onChanged: (s) {
-                editor.translation.language = s.trim();
-              },
+              initialValue: editor.tr.language,
+              onChanged: (s) => editor.tr.language = s.trim(),
             ),
           ),
           ListTile(
@@ -88,10 +85,8 @@ class InfoEditorScreen extends StatelessWidget {
                 labelText: 'Story title',
                 prefixIcon: Icon(Icons.title_rounded),
               ),
-              initialValue: StoryTranslation.get(editor.translation)?.title,
-              onChanged: (s) {
-                StoryTranslation.get(editor.translation)?.title = s.trim();
-              },
+              initialValue: editor.tr.title,
+              onChanged: (s) => editor.tr['title'] = s.trim(),
             ),
           ),
           ListTile(
@@ -101,12 +96,8 @@ class InfoEditorScreen extends StatelessWidget {
                 labelText: 'Story description',
                 prefixIcon: Icon(Icons.description_rounded),
               ),
-              initialValue:
-                  StoryTranslation.get(editor.translation)?.description,
-              onChanged: (s) {
-                StoryTranslation.get(editor.translation)?.description =
-                    s.trim();
-              },
+              initialValue: editor.tr.description,
+              onChanged: (s) => editor.tr['description'] = s.trim(),
             ),
           ),
           ListTile(
@@ -115,14 +106,8 @@ class InfoEditorScreen extends StatelessWidget {
                 labelText: 'Story tags',
                 prefixIcon: Icon(Icons.tag_rounded),
               ),
-              initialValue: prettyTags(
-                StoryTranslation.get(editor.translation)?.tags,
-                separator: ' ',
-              ),
-              onChanged: (s) {
-                StoryTranslation.get(editor.translation)?.tags =
-                    s.trim().split(' ').where((t) => t.isNotEmpty).toList();
-              },
+              initialValue: editor.tr['tags'],
+              onChanged: (s) => editor.tr['tags'] = s.trim(),
             ),
           ),
         ],

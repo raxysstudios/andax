@@ -24,7 +24,7 @@ Future<Cell?> showCellEditor(
     );
   } else {
     result = Cell.fromJson(value.toJson());
-    translation = MessageTranslation.get(editor.translation, result.id)!;
+    translation = MessageTranslation.get(editor.tr, result.id)!;
   }
 
   String? newName = translation.text;
@@ -35,14 +35,14 @@ Future<Cell?> showCellEditor(
     onSave: () {
       translation.text = newName;
       editor.story.cells[result.id] = result;
-      editor.translation[result.id] = translation;
+      editor.tr[result.id] = translation;
       return result;
     },
     onDelete: value == null
         ? null
         : () {
             editor.story.cells.remove(value.id);
-            editor.translation.assets.remove(value.id);
+            editor.tr.assets.remove(value.id);
           },
     builder: (context, setState) {
       void setDisplay(CellDisplay? v) => setState(() {

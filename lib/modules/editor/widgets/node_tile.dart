@@ -40,7 +40,7 @@ class NodeTile extends StatelessWidget {
       onTap: onTap,
       title: Text(
         MessageTranslation.getText(
-          editor.translation,
+          editor.tr,
           node!.id,
         ),
       ),
@@ -69,7 +69,7 @@ class NodeTile extends StatelessWidget {
                   ),
                   Text(
                     ActorTranslation.getName(
-                      editor.translation,
+                      editor.tr,
                       actor.id,
                     ),
                     style: Theme.of(context).textTheme.caption,

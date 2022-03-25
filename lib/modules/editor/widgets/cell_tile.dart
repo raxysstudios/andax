@@ -32,7 +32,7 @@ class CellTile extends StatelessWidget {
         cell == null
             ? '[NO CELL]'
             : MessageTranslation.getText(
-                context.watch<StoryEditorState>().translation,
+                context.watch<StoryEditorState>().tr,
                 cell!.id,
               ),
       ),
