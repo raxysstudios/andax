@@ -2,8 +2,8 @@ import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/editor/screens/cells.dart';
-import 'package:andax/modules/editor/services/node.dart';
-import 'package:andax/modules/editor/widgets/cell_dialog.dart';
+import 'package:andax/modules/editor/utils/node.dart';
+import 'package:andax/modules/editor/widgets/cell_editor.dart';
 import 'package:andax/modules/play/screens/play.dart';
 import 'package:andax/shared/widgets/danger_dialog.dart';
 import 'package:andax/shared/widgets/snackbar_manager.dart';
@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
-import '../widgets/actor_dialog.dart';
+import '../widgets/actor_editor.dart';
 import 'actors.dart';
 import 'info.dart';
 import 'narrative.dart';
@@ -89,7 +89,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
                   ActorsEditorScreen(
                     (actor, isNew) async {
                       if (!isNew) {
-                        await showActorEditorDialog(
+                        await showActorEditor(
                           context,
                           actor,
                         );
@@ -100,7 +100,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
                   CellsEditorScreen(
                     (cell, isNew) async {
                       if (!isNew) {
-                        await showCellEditorDialog(
+                        await showCellEditor(
                           context,
                           cell,
                         );

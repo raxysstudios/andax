@@ -1,11 +1,13 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 
 Future<T?> showScrollableModalSheet<T>({
   required BuildContext context,
   required ScrollableWidgetBuilder builder,
 }) {
-  final media = MediaQuery.of(context);
-  final size = 1 - (kToolbarHeight + media.padding.top) / media.size.height;
+  final media = MediaQueryData.fromWindow(window);
+  final size =
+      1 - (kToolbarHeight + media.viewPadding.vertical) / media.size.height;
   return showModalBottomSheet<T>(
     context: context,
     isScrollControlled: true,

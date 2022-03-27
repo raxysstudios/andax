@@ -5,7 +5,7 @@ import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../widgets/actor_dialog.dart';
+import '../widgets/actor_editor.dart';
 import '../widgets/actor_tile.dart';
 import 'story.dart';
 
@@ -31,7 +31,7 @@ class ActorsEditorScreen extends StatelessWidget {
         title: const Text('Story actors'),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => showActorEditorDialog(
+        onPressed: () => showActorEditor(
           context,
         ).then((r) => onSelect(r, true)),
         icon: const Icon(Icons.person_add_rounded),

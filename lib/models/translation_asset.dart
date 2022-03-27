@@ -94,12 +94,8 @@ class MessageTranslation extends TranslationAsset {
   ) =>
       translation[id] as MessageTranslation?;
 
-  static String getText(
-    Translation translation,
-    String id, [
-    String ifNull = 'None',
-  ]) =>
-      get(translation, id)?.text ?? ifNull;
+  static String getText(Translation translation, String id) =>
+      get(translation, id)?.text ?? '[MISSING TEXT]';
 
   @override
   Map<String, dynamic> toJson() =>
@@ -124,12 +120,8 @@ class ActorTranslation extends TranslationAsset {
   ) =>
       translation[id] as ActorTranslation?;
 
-  static String getName(
-    Translation translation,
-    String id, [
-    String or = 'None',
-  ]) =>
-      get(translation, id)?.name ?? or;
+  static String getName(Translation translation, String id) =>
+      get(translation, id)?.name ?? '[MISSING NAME]';
 
   @override
   Map<String, dynamic> toJson() =>

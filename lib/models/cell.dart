@@ -18,12 +18,11 @@ class Cell {
   CellDisplay? display;
   int? max;
 
-  String _value = '';
-  String get value => _value;
+  String value = '';
 
   void apply(CellWrite write) {
     if (write.mode == CellWriteMode.overwrite) {
-      _value = write.value;
+      value = write.value;
       return;
     }
 
@@ -33,11 +32,7 @@ class Cell {
     num = oldNum + num;
 
     if (max != null && max! > 0) num = num.clamp(0, max!);
-    _value = num.toString();
-  }
-
-  void reset() {
-    _value = '';
+    value = num.toString();
   }
 
   factory Cell.fromJson(Map<String, dynamic> json) => _$CellFromJson(json);
