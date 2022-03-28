@@ -80,7 +80,7 @@ export const indexStories = functions
         language: translation.language,
         title,
         description,
-        tags,
+        tags: tags.split(" "),
       };
       if (change.before.exists) {
         await index.partialUpdateObject(
