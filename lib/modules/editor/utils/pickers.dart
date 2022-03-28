@@ -4,7 +4,7 @@ import 'package:andax/models/node.dart';
 import 'package:andax/modules/editor/screens/actors.dart';
 import 'package:andax/modules/editor/screens/cells.dart';
 import 'package:andax/shared/widgets/scrollable_modal_sheet.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../screens/narrative.dart';
