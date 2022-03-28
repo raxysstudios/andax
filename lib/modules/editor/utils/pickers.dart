@@ -63,7 +63,7 @@ Future<Cell?> pickCell(BuildContext context, [Cell? cell]) {
         child: Builder(
           builder: (context) {
             return CellsEditorScreen(
-              (n, _) => Navigator.pop(context, n),
+              onSelect: (n, _) => Navigator.pop(context, n),
               scroll: scroll,
               selectedId: cell?.id,
             );
