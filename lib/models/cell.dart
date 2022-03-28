@@ -10,13 +10,13 @@ enum CellDisplay { check, text, range }
 class Cell {
   Cell(
     this.id, {
-    this.max,
+    this.max = double.infinity,
     this.display,
   });
 
   final String id;
   CellDisplay? display;
-  int? max;
+  num max;
 
   String value = '';
 
@@ -26,14 +26,11 @@ class Cell {
       return;
     }
 
-    final oldNum = int.tryParse(value) ?? 0;
-    var num = int.tryParse(write.value) ?? 0;
-    if (write.mode == CellWriteMode.subtract) num *= -1;
-    num = oldNum + num;
-
-    final max = this.max;
-    if (max != null && max > 0) num = num.clamp(0, max);
-    value = num.toString();
+    num n = int.tryParse(write.value) ?? 0;
+    if (write.mode == CellWriteMode.subtract) n *= -1;
+    n = (int.tryParse(value) ?? 0) + n;
+    n = n.clamp(0, max);
+    value = n.toString();
   }
 
   factory Cell.fromJson(Map<String, dynamic> json) => _$CellFromJson(json);
