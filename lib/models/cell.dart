@@ -31,7 +31,8 @@ class Cell {
     if (write.mode == CellWriteMode.subtract) num *= -1;
     num = oldNum + num;
 
-    if (max != null && max! > 0) num = num.clamp(0, max!);
+    final max = this.max;
+    if (max != null && max > 0) num = num.clamp(0, max);
     value = num.toString();
   }
 
