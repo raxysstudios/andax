@@ -33,7 +33,7 @@ Future<void> uploadStory(StoryEditorState editor) async {
   final adb = tdb.doc(tid).collection('assets');
   await Future.wait([
     for (final entry in editor.tr.assets.entries)
-      adb.doc(entry.key).set(entry.value.toJson())
+      adb.doc(entry.key).set(<String, String>{'text': entry.value})
   ]);
   editor.setState(() {
     editor.info ??= StoryInfo(

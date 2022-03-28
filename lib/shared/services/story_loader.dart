@@ -12,8 +12,8 @@ Future<Translation> loadTranslation(StoryInfo info) async {
   return await tdc.get().then(
         (r) => Translation.fromJson(<String, dynamic>{
           'id': r.id,
-          'assets': {
-            for (final asset in assets.docs) asset.id: asset.data(),
+          'assets': <String, dynamic>{
+            for (final asset in assets.docs) asset.id: asset.data()['text'],
           },
           ...r.data()!,
         }),
