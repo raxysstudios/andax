@@ -17,13 +17,13 @@ class Translation {
     Map<String, String> assets = const {},
   }) : assets = Map<String, String>.of(assets);
 
-  String? operator [](String id) => assets[id];
+  String? operator [](String? id) => assets[id];
   void operator []=(String id, String asset) => assets[id] = asset;
 
-  String node(Node n) => this[n.id] ?? '[❌NODE]';
-  String transition(Transition t) => this[t.id] ?? '[❌TRANSITION]';
-  String actor(Actor a) => this[a.id] ?? '[❌ACTOR]';
-  String cell(Cell c) => this[c.id] ?? '[❌CELL]';
+  String node(Node? n) => this[n?.id] ?? '[❌NODE]';
+  String transition(Transition? t) => this[t?.id] ?? '[❌TRANSITION]';
+  String actor(Actor? a) => this[a?.id] ?? '[❌ACTOR]';
+  String cell(Cell? c) => this[c?.id] ?? '[❌CELL]';
 
   String get title => this['title'] ?? '[❌TITLE]';
   String get description => this['description'] ?? '[❌DESCRIPTION]';

@@ -1,5 +1,4 @@
 import 'package:andax/models/actor.dart';
-import 'package:andax/models/translation_asset.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -45,14 +44,7 @@ class ActorTile extends StatelessWidget {
                 ? Icons.smart_toy_rounded
                 : Icons.face_rounded,
       ),
-      title: Text(
-        actor == null
-            ? '[NO ACTOR]'
-            : ActorTranslation.getName(
-                editor.tr,
-                actor!.id,
-              ),
-      ),
+      title: Text(editor.tr.actor(actor)),
       trailing: index == null
           ? null
           : Text(

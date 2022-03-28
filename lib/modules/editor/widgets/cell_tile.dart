@@ -1,5 +1,4 @@
 import 'package:andax/models/cell.dart';
-import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/editor/screens/story.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,14 +27,7 @@ class CellTile extends StatelessWidget {
                           ? Icons.short_text_rounded
                           : Icons.linear_scale_rounded,
             ),
-      title: Text(
-        cell == null
-            ? '[NO CELL]'
-            : MessageTranslation.getText(
-                context.watch<StoryEditorState>().tr,
-                cell!.id,
-              ),
-      ),
+      title: Text(context.watch<StoryEditorState>().tr.cell(cell)),
       trailing: cell?.max == null
           ? null
           : Text(

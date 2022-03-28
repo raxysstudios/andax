@@ -1,5 +1,4 @@
 import 'package:andax/models/cell.dart';
-import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/editor/utils/editor_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,29 +12,23 @@ Future<Cell?> showCellEditor(
 ]) {
   final editor = context.read<StoryEditorState>();
   final Cell result;
-  final MessageTranslation translation;
 
   if (value == null) {
     final id = editor.uuid.v4();
     result = Cell(id);
-    translation = MessageTranslation(
-      id,
-      text: 'Cell #${editor.story.cells.length + 1}',
-    );
+    editor.tr[id] = 'Cell #${editor.story.cells.length + 1}';
   } else {
     result = Cell.fromJson(value.toJson());
-    translation = MessageTranslation.get(editor.tr, result.id)!;
   }
 
-  String? newName = translation.text;
+  String newName = editor.tr.cell(result);
   return showEditorSheet<Cell>(
     context: context,
     title: value == null ? 'Create cell' : 'Edit cell',
     initial: value,
     onSave: () {
-      translation.text = newName;
+      editor.tr[result.id] = newName;
       editor.story.cells[result.id] = result;
-      editor.tr[result.id] = translation;
       return result;
     },
     onDelete: value == null
@@ -56,11 +49,9 @@ Future<Cell?> showCellEditor(
               prefixIcon: Icon(Icons.label_rounded),
             ),
             autofocus: true,
-            initialValue: translation.text,
+            initialValue: newName,
             validator: emptyValidator,
-            onChanged: (s) {
-              newName = s.trim();
-            },
+            onChanged: (s) => newName = s.trim(),
           ),
         ),
         ListTile(
@@ -71,9 +62,7 @@ Future<Cell?> showCellEditor(
             ),
             autofocus: true,
             initialValue: result.max?.toString(),
-            onChanged: (s) {
-              result.max = int.tryParse(s.trim());
-            },
+            onChanged: (s) => result.max = int.tryParse(s.trim()),
             keyboardType: TextInputType.number,
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly

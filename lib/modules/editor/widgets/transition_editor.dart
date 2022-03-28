@@ -1,7 +1,6 @@
 import 'package:andax/models/cell_check.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/transition.dart';
-import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/editor/utils/editor_sheet.dart';
 import 'package:andax/modules/editor/widgets/cell_tile.dart';
 import 'package:andax/modules/editor/widgets/node_tile.dart';
@@ -18,7 +17,6 @@ Future<Transition?> showTransitionEditor(
 ]) async {
   final editor = context.read<StoryEditorState>();
   final Transition result;
-  final MessageTranslation? translation;
 
   if (value == null) {
     final id = editor.uuid.v4();
@@ -35,20 +33,13 @@ Future<Transition?> showTransitionEditor(
               value: node.transitions.length.toString(),
             ),
     );
-    translation = node.input == NodeInputType.select
-        ? MessageTranslation(
-            id,
-            text: 'Transition #${node.transitions.length + 1}',
-          )
-        : null;
+    editor.tr[id] = 'Transition #${node.transitions.length + 1}';
   } else {
     result = Transition.fromJson(value.toJson());
-    translation = node.input == NodeInputType.select
-        ? MessageTranslation.get(editor.tr, result.id)!
-        : null;
   }
 
-  String newText = translation?.text ?? '';
+  String? newText =
+      node.input == NodeInputType.select ? editor.tr.transition(result) : null;
   return showEditorSheet<Transition>(
     context: context,
     title: value == null ? 'Create transition' : 'Edit transition',
@@ -59,9 +50,8 @@ Future<Transition?> showTransitionEditor(
       } else {
         node.transitions[node.transitions.indexOf(value)] = result;
       }
-      if (translation != null) {
-        translation.text = newText;
-        editor.tr[result.id] = translation;
+      if (newText != null) {
+        editor.tr[result.id] = newText!;
       }
       return result;
     },
@@ -73,7 +63,7 @@ Future<Transition?> showTransitionEditor(
           },
     builder: (_, setState) {
       return [
-        if (translation != null)
+        if (newText != null)
           ListTile(
             title: TextFormField(
               decoration: const InputDecoration(
@@ -81,11 +71,9 @@ Future<Transition?> showTransitionEditor(
                 prefixIcon: Icon(Icons.short_text_rounded),
               ),
               autofocus: true,
-              initialValue: translation.text,
+              initialValue: newText,
               validator: emptyValidator,
-              onChanged: (s) {
-                newText = s.trim();
-              },
+              onChanged: (s) => newText = s.trim(),
             ),
           ),
         buildExplanationTile(context, 'Target node'),

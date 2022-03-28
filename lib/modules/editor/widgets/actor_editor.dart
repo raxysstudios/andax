@@ -1,5 +1,4 @@
 import 'package:andax/models/actor.dart';
-import 'package:andax/models/translation_asset.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,29 +11,23 @@ Future<Actor?> showActorEditor(
 ]) {
   final editor = context.read<StoryEditorState>();
   final Actor result;
-  final ActorTranslation translation;
 
   if (value == null) {
     final id = editor.uuid.v4();
     result = Actor(id);
-    translation = ActorTranslation(
-      id,
-      name: 'Actor #${editor.story.actors.length + 1}',
-    );
+    editor.tr[id] = 'Actor #${editor.story.actors.length + 1}';
   } else {
     result = Actor.fromJson(value.toJson());
-    translation = ActorTranslation.get(editor.tr, result.id)!;
   }
 
-  String newName = translation.name;
+  String newName = editor.tr.actor(result);
   return showEditorSheet<Actor>(
     context: context,
     title: value == null ? 'Create actor' : 'Edit actor',
     initial: value,
     onSave: () {
-      translation.name = newName;
       editor.story.actors[result.id] = result;
-      editor.tr[result.id] = translation;
+      editor.tr[result.id] = newName;
       return result;
     },
     onDelete: value == null
@@ -55,11 +48,9 @@ Future<Actor?> showActorEditor(
               prefixIcon: Icon(Icons.label_rounded),
             ),
             autofocus: true,
-            initialValue: translation.name,
+            initialValue: newName,
             validator: emptyValidator,
-            onChanged: (s) {
-              newName = s.trim();
-            },
+            onChanged: (s) => newName = s.trim(),
           ),
         ),
         buildExplanationTile(
