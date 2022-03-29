@@ -61,7 +61,8 @@ Future<Cell?> showCellEditor(
               prefixIcon: Icon(Icons.score_rounded),
             ),
             autofocus: true,
-            initialValue: result.max.toString(),
+            initialValue:
+                result.max == double.infinity ? '' : result.max.toString(),
             onChanged: (s) =>
                 result.max = int.tryParse(s.trim()) ?? double.infinity,
             keyboardType: TextInputType.number,

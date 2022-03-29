@@ -25,7 +25,7 @@ class CellTile extends StatelessWidget {
     return ListTile(
       leading: Icon(_displayIcon[cell?.display]),
       title: Text(context.watch<StoryEditorState>().tr.cell(cell)),
-      trailing: cell?.max == null
+      trailing: cell?.max == double.infinity
           ? null
           : Text(
               '/ ${cell!.max}',
