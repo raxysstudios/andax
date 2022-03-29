@@ -5,6 +5,7 @@ import 'package:andax/modules/home/widgets/like_chip.dart';
 import 'package:andax/modules/play/screens/play.dart';
 import 'package:andax/shared/services/story_loader.dart';
 import 'package:andax/shared/utils.dart';
+import 'package:andax/shared/widgets/options_button.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:andax/shared/widgets/span_icon.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -76,64 +77,41 @@ class StoryScreen extends StatelessWidget {
               const SizedBox(width: 8),
               LikeChip(info),
               const SizedBox(width: 8),
-              PopupMenuButton<void>(
-                itemBuilder: (context) {
-                  return [
-                    PopupMenuItem(
-                      onTap: () {
-                        // Should point to a cloud function probably.
-                      },
-                      child: Row(
-                        children: const [
-                          Icon(Icons.report_rounded),
-                          SizedBox(width: 16),
-                          Text('Report'),
-                        ],
-                      ),
+              OptionsButton(
+                [
+                  OptionItem.simple(
+                    Icons.report_rounded,
+                    'Report',
+                  ),
+                  if (user != null) ...[
+                    OptionItem.divider(),
+                    OptionItem.simple(
+                      Icons.translate_rounded,
+                      'Add translation',
                     ),
-                    if (user != null) ...[
-                      const PopupMenuDivider(),
-                      PopupMenuItem(
-                        onTap: () {
-                          // Crowdsroucing is broken at the moment.
-                        },
-                        child: Row(
-                          children: const [
-                            Icon(Icons.translate_rounded),
-                            SizedBox(width: 16),
-                            Text('Add translation'),
-                          ],
-                        ),
-                      ),
-                      if (user.uid == info.storyAuthorID)
-                        PopupMenuItem(
-                          onTap: () => loadStory(
+                    if (user.uid == info.storyAuthorID)
+                      OptionItem.simple(
+                        Icons.edit_rounded,
+                        'Edit story',
+                        () => loadStory(
+                          context,
+                          info,
+                          (s, t) => Navigator.push<void>(
                             context,
-                            info,
-                            (s, t) => Navigator.push<void>(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return StoryEditorScreen(
-                                    story: s,
-                                    translation: t,
-                                    info: info,
-                                  );
-                                },
-                              ),
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return StoryEditorScreen(
+                                  story: s,
+                                  translation: t,
+                                  info: info,
+                                );
+                              },
                             ),
                           ),
-                          child: Row(
-                            children: const [
-                              Icon(Icons.edit_rounded),
-                              SizedBox(width: 16),
-                              Text('Edit story'),
-                            ],
-                          ),
                         ),
-                    ]
-                  ];
-                },
+                      ),
+                  ],
+                ],
               ),
               const SizedBox(width: 4),
             ],

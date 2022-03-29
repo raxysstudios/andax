@@ -15,7 +15,7 @@ class NodeTile extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  final Node node;
+  final Node? node;
   final VoidCallback? onTap;
   final int? index;
   final bool selected;
@@ -24,25 +24,30 @@ class NodeTile extends StatelessWidget {
     if (index != null) {
       return index!;
     }
-    return editor.story.nodes.values.toList().indexOf(node);
+    return editor.story.nodes.values.toList().indexOf(node!);
   }
 
   @override
   Widget build(BuildContext context) {
+    if (node == null) {
+      return const ListTile(
+        title: Text('[MISSING NODE]'),
+      );
+    }
     final editor = context.watch<StoryEditorState>();
-    final actor = editor.story.actors[node.actorId];
+    final actor = editor.story.actors[node!.actorId];
     return ListTile(
       onTap: onTap,
       title: Text(
         MessageTranslation.getText(
           editor.translation,
-          node.id,
+          node!.id,
         ),
       ),
-      subtitle: editor.story.startNodeId == node.id || actor != null
+      subtitle: editor.story.startNodeId == node!.id || actor != null
           ? Row(
               children: [
-                if (editor.story.startNodeId == node.id)
+                if (editor.story.startNodeId == node!.id)
                   Padding(
                     padding: const EdgeInsets.only(right: 8),
                     child: Icon(

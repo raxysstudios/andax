@@ -7,8 +7,8 @@ import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../utils/node.dart';
 import '../widgets/node_tile.dart';
-import 'node.dart';
 import 'story.dart';
 
 class NarrativeEditorScreen extends StatefulWidget {
@@ -42,7 +42,7 @@ class _NarrativeEditorScreenState extends State<NarrativeEditorScreen> {
     while (node != null) {
       thread.add(node);
 
-      final transitions = node.transitions ?? [];
+      final transitions = node.transitions;
       if (transitions.isEmpty) break;
 
       final choice = choices[node.id];
@@ -59,9 +59,11 @@ class _NarrativeEditorScreenState extends State<NarrativeEditorScreen> {
   @override
   Widget build(BuildContext context) {
     final editor = context.watch<StoryEditorState>();
-    final nodes = interactive
-        ? computeThread(editor.story)
-        : editor.story.nodes.values.toList();
+    final nodes = editor.story.nodes.isEmpty
+        ? <Node>[]
+        : interactive
+            ? computeThread(editor.story)
+            : editor.story.nodes.values.toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -86,7 +88,7 @@ class _NarrativeEditorScreenState extends State<NarrativeEditorScreen> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           await widget.onSelect(
-            await openNodeEditor(context),
+            await editNode(context),
             true,
           );
           setState(() {});
@@ -100,7 +102,7 @@ class _NarrativeEditorScreenState extends State<NarrativeEditorScreen> {
         itemCount: nodes.length,
         itemBuilder: (context, index) {
           final node = nodes[index];
-          final transitions = node.transitions ?? [];
+          final transitions = node.transitions;
           final choice = choices[node.id] ??
               (transitions.isEmpty ? null : transitions.first.id);
           return Column(
@@ -121,21 +123,29 @@ class _NarrativeEditorScreenState extends State<NarrativeEditorScreen> {
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.all(8),
                     children: [
-                      for (final transition in transitions)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: InputChip(
-                            onPressed: () => setState(() {
-                              choices[node.id] = transition.id;
-                            }),
-                            selected: choice == transition.id,
-                            label: Text(
-                              MessageTranslation.getText(
-                                editor.translation,
-                                transition.id,
+                      for (var i = 0; i < node.transitions.length; i++)
+                        Builder(
+                          builder: (context) {
+                            final t = node.transitions[i];
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4),
+                              child: InputChip(
+                                onPressed: () => setState(() {
+                                  choices[node.id] = t.id;
+                                }),
+                                selected: choice == t.id,
+                                label: Text(
+                                  editor.translation[t.id] == null
+                                      ? '[tr-${i + 1}]'
+                                      : MessageTranslation.getText(
+                                          editor.translation,
+                                          t.id,
+                                        ),
+                                ),
                               ),
-                            ),
-                          ),
+                            );
+                          },
                         ),
                     ],
                   ),

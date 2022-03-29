@@ -53,6 +53,14 @@ class InfoEditorScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
+          if (editor.story.nodes.isEmpty) {
+            showSnackbar(
+              context,
+              Icons.error_rounded,
+              'Error: Empty narrative!',
+            );
+            return;
+          }
           await showLoadingDialog(context, uploadStory(editor));
           showSnackbar(context, Icons.cloud_done_rounded, 'Uploaded!');
         },
@@ -70,7 +78,7 @@ class InfoEditorScreen extends StatelessWidget {
               ),
               initialValue: editor.translation.language,
               onChanged: (s) {
-                editor.translation.language = s;
+                editor.translation.language = s.trim();
               },
             ),
           ),
@@ -82,7 +90,7 @@ class InfoEditorScreen extends StatelessWidget {
               ),
               initialValue: StoryTranslation.get(editor.translation)?.title,
               onChanged: (s) {
-                StoryTranslation.get(editor.translation)?.title = s;
+                StoryTranslation.get(editor.translation)?.title = s.trim();
               },
             ),
           ),
@@ -96,7 +104,8 @@ class InfoEditorScreen extends StatelessWidget {
               initialValue:
                   StoryTranslation.get(editor.translation)?.description,
               onChanged: (s) {
-                StoryTranslation.get(editor.translation)?.description = s;
+                StoryTranslation.get(editor.translation)?.description =
+                    s.trim();
               },
             ),
           ),
@@ -112,7 +121,7 @@ class InfoEditorScreen extends StatelessWidget {
               ),
               onChanged: (s) {
                 StoryTranslation.get(editor.translation)?.tags =
-                    s.split(' ').where((t) => t.isNotEmpty).toList();
+                    s.trim().split(' ').where((t) => t.isNotEmpty).toList();
               },
             ),
           ),

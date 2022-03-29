@@ -1,17 +1,22 @@
-import 'dart:async';
 import 'dart:math';
 
 import 'package:andax/models/actor.dart';
+import 'package:andax/models/cell.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
-import 'package:andax/models/transition.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
+import 'package:andax/modules/play/utils/alert.dart';
+import 'package:andax/modules/play/utils/animator.dart';
+import 'package:andax/modules/play/widgets/game_results_dialog.dart';
+import 'package:andax/modules/play/widgets/transitions_chips.dart';
+import 'package:andax/modules/play/widgets/typing_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:simple_animations/simple_animations.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:pausable_timer/pausable_timer.dart';
+import 'package:provider/provider.dart';
 
-import '../utils/get_translation.dart';
-import '../widgets/happiness_slider.dart';
 import '../widgets/node_card.dart';
 
 class PlayScreen extends StatefulWidget {
@@ -25,150 +30,210 @@ class PlayScreen extends StatefulWidget {
   final Translation translation;
 
   @override
-  _PlayScreenState createState() => _PlayScreenState();
+  PlayScreenState createState() => PlayScreenState();
 }
 
-class _PlayScreenState extends State<PlayScreen> {
-  Map<String, TranslationAsset> get translations => widget.translation.assets;
+class PlayScreenState extends State<PlayScreen> {
   Map<String, Node> get nodes => widget.story.nodes;
   Map<String, Actor> get actors => widget.story.actors;
-  late Node currentNode;
-  final List<Node> storyline = [];
-  int totalScore = 50;
 
-  Timer? autoAdvance;
-  bool isFinished = false;
+  late Map<String, Cell> cells = {
+    for (final c in widget.story.cells.entries)
+      c.key: Cell.fromJson(c.value.toJson()),
+    'node': Cell('node'),
+  };
+  final List<Node> storyline = [];
+
+  bool get finished => storyline.last.transitions.isEmpty && !_timer.isActive;
+  var _timer = PausableTimer(Duration.zero, () {});
+  final _dial = ValueNotifier(false);
+  final _scroll = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    currentNode = widget.story.startNodeId?.isEmpty ?? true
-        ? nodes.values.first
-        : nodes[widget.story.startNodeId]!;
+    _dial.addListener(() {
+      if (_dial.value) {
+        _timer.pause();
+      } else {
+        _timer.start();
+      }
+    });
+    reset();
+  }
 
-    if (currentNode.autoTransition && currentNode.transitions != null) {
-      moveAuto(currentNode.transitions!);
+  void reset() {
+    _timer.cancel();
+    storyline.clear();
+    for (final cell in cells.values) {
+      cell.value = '';
+    }
+    moveAt(
+      widget.story.startNodeId?.isEmpty ?? true
+          ? nodes.values.first
+          : nodes[widget.story.startNodeId]!,
+    );
+  }
+
+  void moveAt(Node node) {
+    storyline.add(node);
+    for (final write in node.cellWrites) {
+      cells[write.targetCellId]?.apply(write);
+    }
+    setState(() {});
+    cells['node']?.value = '';
+    _timer.cancel();
+
+    if (node.transitions.isEmpty) {
+      PausableTimer(
+        const Duration(milliseconds: 500),
+        () => showGameResultsDialog(context, this),
+      ).start();
+      return;
+    }
+    if (node.input == NodeInputType.select) return;
+    if (node.input == NodeInputType.random) {
+      cells['node']?.value =
+          Random().nextInt(node.transitions.length).toString();
+    }
+    attemptMove();
+  }
+
+  void attemptMove() {
+    final transitions = storyline.last.transitions;
+    for (final transition in transitions) {
+      if (transition.condition.check(cells)) {
+        final node = nodes[transition.targetNodeId];
+        if (node != null) scheduleMove(node);
+      }
     }
   }
 
-  void advanceStory(Transition transition) {
-    setState(() {
-      autoAdvance?.cancel();
-      storyline.add(currentNode);
-      totalScore = max(0, min(totalScore + transition.score, 100));
-      currentNode = nodes[transition.targetNodeId]!;
-      isFinished =
-          totalScore == 0 || (currentNode.transitions?.isEmpty ?? true);
-      if (currentNode.autoTransition && currentNode.transitions != null) {
-        moveAuto(currentNode.transitions!);
-      }
-    });
-  }
-
-  void moveAuto(List<Transition> transition) {
-    autoAdvance?.cancel();
-    autoAdvance = Timer(
-      const Duration(milliseconds: 500),
+  void scheduleMove(Node node) {
+    final typing = 50 *
+        MessageTranslation.getText(
+          widget.translation,
+          node.id,
+        ).length;
+    _timer = PausableTimer(
+      Duration(milliseconds: max(500, typing)),
       () {
-        final index = Random().nextInt(transition.length);
-        advanceStory(transition[index]);
-        autoAdvance = null;
-      },
-    );
-  }
-
-  Widget fadeOut(Widget child) {
-    return PlayAnimation<double>(
-      tween: Tween(begin: 0, end: 1),
-      curve: Curves.easeOutCubic,
-      duration: const Duration(milliseconds: 300),
-      child: child,
-      builder: (context, child, value) {
-        return Opacity(
-          opacity: value,
-          child: child,
+        moveAt(node);
+        SchedulerBinding.instance?.addPostFrameCallback(
+          (_) => _scroll.animateTo(
+            _scroll.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.fastOutSlowIn,
+          ),
         );
       },
-    );
+    )..start();
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: HappinessSlider(value: totalScore),
-        titleSpacing: 0,
-        actions: [
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(
-                totalScore.toString(),
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          )
-        ],
-      ),
-      body: ListView(
-        padding: const EdgeInsets.only(bottom: 76),
-        children: [
-          for (var i = 0; i < storyline.length; i++)
-            NodeCard(
-              node: storyline[i],
-              previousNode: i > 0 ? storyline[i - 1] : null,
-              translations: translations,
-              actors: actors,
-            ),
-          fadeOut(NodeCard(
-            node: currentNode,
-            previousNode: storyline.isEmpty ? null : storyline.last,
-            translations: translations,
-            actors: actors,
-          )),
-          if (currentNode.transitions != null &&
-              !currentNode.autoTransition &&
-              autoAdvance == null)
-            fadeOut(Padding(
-              padding: const EdgeInsets.all(8),
-              child: Wrap(
-                alignment: WrapAlignment.end,
-                spacing: 8,
-                runSpacing: 8,
+    final theme = Theme.of(context);
+    return Provider.value(
+      value: this,
+      child: Builder(builder: (context) {
+        return WillPopScope(
+          onWillPop: () {
+            _dial.value = true;
+            return Future.value(false);
+          },
+          child: Scaffold(
+            floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
+            floatingActionButton: Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: SpeedDial(
+                openCloseDial: _dial,
+                onOpen: _timer.pause,
+                onClose: _timer.start,
+                icon: Icons.menu_rounded,
+                backgroundColor: theme.colorScheme.primary,
+                foregroundColor: theme.colorScheme.onPrimary,
+                spaceBetweenChildren: 9,
+                switchLabelPosition: true,
+                label: const Text('Menu'),
+                buttonSize: const Size.square(48),
+                spacing: 7,
+                direction: SpeedDialDirection.down,
                 children: [
-                  for (final transition in currentNode.transitions!)
-                    ElevatedButton(
-                      onPressed: () => advanceStory(transition),
-                      child: Text(
-                        getTranslation<MessageTranslation>(
-                          translations,
-                          transition.id,
-                          (t) => t.text,
-                        ),
-                      ),
+                  SpeedDialChild(
+                    child: const Icon(Icons.replay_rounded),
+                    label: 'Restart',
+                    onTap: () => showProgressAlert(context, reset),
+                  ),
+                  SpeedDialChild(
+                    child: const Icon(Icons.close_rounded),
+                    label: 'Exit',
+                    onTap: () => showProgressAlert(
+                      context,
+                      () => Navigator.pop(context),
+                    ),
+                  ),
+                  if (finished)
+                    SpeedDialChild(
+                      child: const Icon(Icons.query_stats_rounded),
+                      label: 'Results',
+                      onTap: () => showGameResultsDialog(context, this),
                     ),
                 ],
               ),
-            )),
-          if (isFinished)
-            fadeOut(const Center(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Text(
-                  'End',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.w500,
+            ),
+            body: ListView(
+              controller: _scroll,
+              padding: const EdgeInsets.only(top: 98, bottom: 32),
+              children: [
+                for (var i = 0; i < storyline.length - 1; i++)
+                  NodeCard(
+                    node: storyline[i],
+                    previousNode: i > 0 ? storyline[i - 1] : null,
+                  ),
+                slideUp(
+                  NodeCard(
+                    node: storyline.last,
+                    previousNode: storyline.length > 1
+                        ? storyline[storyline.length - 2]
+                        : null,
                   ),
                 ),
-              ),
-            )),
-        ],
-      ),
+                if (!_timer.isActive &&
+                    storyline.last.transitions.isNotEmpty &&
+                    storyline.last.input == NodeInputType.select)
+                  slideUp(
+                    TransitionsChips(
+                      transitions: storyline.last.transitions,
+                      onTap: (t) {
+                        cells['node']?.value =
+                            storyline.last.transitions.indexOf(t).toString();
+                        attemptMove();
+                      },
+                    ),
+                  ),
+                if (_timer.isActive) const TypingIndicator(),
+                if (finished)
+                  slideUp(
+                    Column(
+                      children: [
+                        const Divider(
+                          height: 32,
+                          indent: 64,
+                          endIndent: 64,
+                        ),
+                        Text(
+                          'End',
+                          style: theme.textTheme.headline6,
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        );
+      }),
     );
   }
 }

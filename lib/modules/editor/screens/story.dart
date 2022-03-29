@@ -1,14 +1,17 @@
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/models/translation_asset.dart';
-import 'package:andax/modules/editor/screens/node.dart';
+import 'package:andax/modules/editor/screens/cells.dart';
+import 'package:andax/modules/editor/utils/node.dart';
+import 'package:andax/modules/editor/widgets/cell_editor.dart';
 import 'package:andax/modules/play/screens/play.dart';
 import 'package:andax/shared/widgets/danger_dialog.dart';
+import 'package:andax/shared/widgets/snackbar_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
-import '../widgets/actor_editor_dialog.dart';
+import '../widgets/actor_editor.dart';
 import 'actors.dart';
 import 'info.dart';
 import 'narrative.dart';
@@ -33,18 +36,13 @@ class StoryEditorState extends State<StoryEditorScreen> {
   final uuid = const Uuid();
 
   late StoryInfo? info = widget.info;
-  late final Story story = widget.story ??
-      Story(
-        nodes: [],
-        startNodeId: '',
-        actors: [],
-      );
+  late final Story story = widget.story ?? Story();
   late final Translation translation = widget.translation ??
       Translation(
         language: '',
         assets: {
           'story': StoryTranslation(
-            id: '',
+            '',
             title: 'New story',
           )
         },
@@ -82,7 +80,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
                   NarrativeEditorScreen(
                     (node, isNew) async {
                       if (!isNew) {
-                        await openNodeEditor(context, node);
+                        await editNode(context, node);
                       }
                       setState(() {});
                     },
@@ -91,9 +89,20 @@ class StoryEditorState extends State<StoryEditorScreen> {
                   ActorsEditorScreen(
                     (actor, isNew) async {
                       if (!isNew) {
-                        await showActorEditorDialog(
+                        await showActorEditor(
                           context,
                           actor,
+                        );
+                      }
+                      setState(() {});
+                    },
+                  ),
+                  CellsEditorScreen(
+                    onSelect: (cell, isNew) async {
+                      if (!isNew) {
+                        await showCellEditor(
+                          context,
+                          cell,
                         );
                       }
                       setState(() {});
@@ -118,13 +127,25 @@ class StoryEditorState extends State<StoryEditorScreen> {
                     label: 'Actors',
                   ),
                   BottomNavigationBarItem(
+                    icon: Icon(Icons.library_books_rounded),
+                    label: 'Cells',
+                  ),
+                  BottomNavigationBarItem(
                     icon: Icon(Icons.play_arrow_rounded),
                     label: 'Play',
                   ),
                 ],
                 currentIndex: _page,
                 onTap: (i) {
-                  if (i == 3) {
+                  if (i == 4) {
+                    if (story.nodes.isEmpty) {
+                      showSnackbar(
+                        context,
+                        Icons.error_rounded,
+                        'Error: Empty narrative!',
+                      );
+                      return;
+                    }
                     Navigator.push<void>(
                       context,
                       MaterialPageRoute(

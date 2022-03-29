@@ -3,33 +3,33 @@ import 'package:andax/models/node.dart';
 import 'package:andax/models/translation_asset.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:provider/provider.dart';
 
-import '../utils/get_translation.dart';
+import '../screens/play.dart';
 
-class NodeCard extends StatefulWidget {
-  final Node node;
-  final Node? previousNode;
-  final Map<String, TranslationAsset> translations;
-  final Map<String, Actor> actors;
-
+class NodeCard extends StatelessWidget {
   const NodeCard({
     Key? key,
     required this.node,
     required this.previousNode,
-    required this.translations,
-    required this.actors,
   }) : super(key: key);
 
-  @override
-  _NodeCardState createState() => _NodeCardState();
-}
+  final Node node;
+  final Node? previousNode;
 
-class _NodeCardState extends State<NodeCard> {
-  Widget buildNotificaion(String text) {
-    return Column(
-      children: [
-        const Divider(height: 16),
-        Text(
+  @override
+  Widget build(BuildContext context) {
+    final play = context.watch<PlayScreenState>();
+    final actor = play.actors[node.actorId];
+    final text = MessageTranslation.getText(
+      play.widget.translation,
+      node.id,
+    );
+    if (text.isEmpty) return const SizedBox();
+    if (actor == null) {
+      return Padding(
+        padding: const EdgeInsets.all(8),
+        child: Text(
           text,
           textAlign: TextAlign.center,
           style: const TextStyle(
@@ -37,20 +37,16 @@ class _NodeCardState extends State<NodeCard> {
             fontStyle: FontStyle.italic,
           ),
         ),
-        const Divider(height: 16),
-      ],
-    );
-  }
+      );
+    }
 
-  Widget buildMessage(
-    String text,
-    Actor actor,
-    bool isPlayer,
-  ) {
+    final thread = actor.id == previousNode?.actorId;
+    final isPlayer = actor.type == ActorType.player;
     return Card(
+      elevation: .5,
       margin: isPlayer
-          ? const EdgeInsets.fromLTRB(48, 8, 0, 8)
-          : const EdgeInsets.fromLTRB(0, 8, 48, 8),
+          ? EdgeInsets.fromLTRB(48, thread ? 4 : 16, 0, 0)
+          : EdgeInsets.fromLTRB(0, thread ? 4 : 16, 48, 0),
       shape: isPlayer
           ? const RoundedRectangleBorder(
               borderRadius: BorderRadius.horizontal(
@@ -62,7 +58,6 @@ class _NodeCardState extends State<NodeCard> {
                 right: Radius.circular(4),
               ),
             ),
-      color: isPlayer ? Theme.of(context).backgroundColor : null,
       child: Padding(
         padding: isPlayer
             ? const EdgeInsets.fromLTRB(8, 8, 20, 8)
@@ -71,18 +66,19 @@ class _NodeCardState extends State<NodeCard> {
           crossAxisAlignment:
               isPlayer ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
-            if (!isPlayer && actor.id != widget.previousNode?.actorId)
+            if (!thread)
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
-                  getTranslation<ActorTranslation>(
-                    widget.translations,
+                  ActorTranslation.getName(
+                    play.widget.translation,
                     actor.id,
-                    (t) => t.name,
                   ),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontStyle: FontStyle.italic,
+                    color:
+                        isPlayer ? Theme.of(context).colorScheme.primary : null,
                   ),
                 ),
               ),
@@ -100,23 +96,6 @@ class _NodeCardState extends State<NodeCard> {
           ],
         ),
       ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final actor = widget.actors[widget.node.actorId];
-    final text = getTranslation<MessageTranslation>(
-      widget.translations,
-      widget.node.id,
-      (t) => t.text,
-    );
-    if (text.isEmpty) return const SizedBox();
-    if (actor == null) return buildNotificaion(text);
-    return buildMessage(
-      text,
-      actor,
-      actor.type == ActorType.player,
     );
   }
 }

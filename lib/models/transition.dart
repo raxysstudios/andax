@@ -1,17 +1,18 @@
+import 'package:andax/models/cell_check.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'transition.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class Transition {
   final String id;
   String targetNodeId;
-  final int score;
+  CellCheck condition;
 
   Transition(
     this.id, {
     required this.targetNodeId,
-    this.score = 0,
+    required this.condition,
   });
 
   factory Transition.fromJson(Map<String, dynamic> json) =>

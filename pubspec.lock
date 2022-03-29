@@ -361,6 +361,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.9"
+  flutter_speed_dial:
+    dependency: "direct main"
+    description:
+      name: flutter_speed_dial
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.0.0+1"
   flutter_svg:
     dependency: transitive
     description:
@@ -378,15 +385,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_xlider:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: ef4a358f84bb6a6119b213fef6f759f22246c882
-      url: "https://github.com/Ali-Azmoud/flutter_xlider.git"
-    source: git
-    version: "3.4.0"
   flutterfire_ui:
     dependency: "direct main"
     description:
@@ -590,6 +588,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  pausable_timer:
+    dependency: "direct main"
+    description:
+      name: pausable_timer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0+4"
   petitparser:
     dependency: transitive
     description:

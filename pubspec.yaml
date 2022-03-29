@@ -1,7 +1,7 @@
 name: andax
 description: Interactive branching narratives.
 publish_to: "none"
-version: 1.2.1+13
+version: 1.3.0+14
 
 environment:
   sdk: ">=2.16.0 <3.0.0"
@@ -18,8 +18,6 @@ dependencies:
   simple_animations: ^4.0.1
   uuid: ^3.0.5
   infinite_scroll_pagination: ^3.1.0
-  flutter_xlider:
-    git: https://github.com/Ali-Azmoud/flutter_xlider.git
   sign_in_with_apple: ^3.3.0
   crypto: ^3.0.1
   json_annotation: ^4.4.0
@@ -27,6 +25,8 @@ dependencies:
   badges: ^2.0.2
   provider: ^6.0.2
   url_launcher: ^6.0.20
+  flutter_speed_dial: ^5.0.0+1
+  pausable_timer: ^1.0.0+4
 
 dev_dependencies:
   flutter_test:
