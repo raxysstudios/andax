@@ -38,7 +38,11 @@ class StoryEditorState extends State<StoryEditorScreen> {
   late final Story story = widget.story ?? Story();
   late final Translation tr = widget.translation ??
       Translation(
-        assets: {'title': 'New story'},
+        language: 'english',
+        assets: {
+          'title': 'New story',
+          'description': 'Some description',
+        },
       );
 
   var _page = 0;
