@@ -84,7 +84,7 @@ class StoryScreen extends StatelessWidget {
                     'Report',
                   ),
                   if (user != null) ...[
-                    null,
+                    OptionItem.divider(),
                     OptionItem.simple(
                       Icons.translate_rounded,
                       'Add translation',
