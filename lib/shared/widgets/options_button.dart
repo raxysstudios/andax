@@ -22,6 +22,10 @@ class OptionItem {
             const SizedBox(width: 16),
           ],
         );
+
+  OptionItem.divider()
+      : widget = null,
+        onTap = null;
 }
 
 class OptionsButton extends StatelessWidget {
@@ -32,14 +36,15 @@ class OptionsButton extends StatelessWidget {
   }) : super(key: key);
 
   final IconData icon;
-  final List<OptionItem?> options;
+  final List<OptionItem> options;
 
   PopupMenuEntry<int> getMenuEntry(int i) {
-    if (options[i] == null) return const PopupMenuDivider();
+    final w = options[i].widget;
+    if (w == null) return const PopupMenuDivider();
     return PopupMenuItem(
       padding: EdgeInsets.zero,
       value: i,
-      child: options[i]!.widget,
+      child: w,
     );
   }
 
@@ -49,7 +54,7 @@ class OptionsButton extends StatelessWidget {
       data: const ListTileThemeData(horizontalTitleGap: 0),
       child: PopupMenuButton<int>(
         icon: Icon(icon),
-        onSelected: (i) => options[i]?.onTap?.call(),
+        onSelected: (i) => options[i].onTap?.call(),
         itemBuilder: (context) {
           return [
             for (var i = 0; i < options.length; i++) getMenuEntry(i),

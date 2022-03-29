@@ -1,5 +1,4 @@
 import 'package:andax/modules/home/screens/home.dart';
-import 'package:andax/shared/utils.dart';
 import 'package:andax/shared/widgets/danger_dialog.dart';
 import 'package:andax/shared/widgets/loading_dialog.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';

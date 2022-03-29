@@ -16,7 +16,7 @@ String _cellsToText(PlayScreenState play) {
         break;
       case CellDisplay.range:
         text += cell.value;
-        if (cell.max != null) text += ' / ${cell.max}';
+        if (cell.max != double.infinity) text += ' / ' + cell.max.toString();
         break;
       default:
         text += cell.value;

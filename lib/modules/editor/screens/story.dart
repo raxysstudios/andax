@@ -91,7 +91,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
                     },
                   ),
                   CellsEditorScreen(
-                    (cell, isNew) async {
+                    onSelect: (cell, isNew) async {
                       if (!isNew) {
                         await showCellEditor(
                           context,

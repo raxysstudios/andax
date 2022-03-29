@@ -9,8 +9,8 @@ import '../widgets/cell_editor.dart';
 import 'story.dart';
 
 class CellsEditorScreen extends StatelessWidget {
-  const CellsEditorScreen(
-    this.onSelect, {
+  const CellsEditorScreen({
+    required this.onSelect,
     this.selectedId,
     this.scroll,
     Key? key,
