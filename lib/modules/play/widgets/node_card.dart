@@ -1,6 +1,5 @@
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
-import 'package:andax/models/translation_asset.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
@@ -21,10 +20,7 @@ class NodeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final play = context.watch<PlayScreenState>();
     final actor = play.actors[node.actorId];
-    final text = MessageTranslation.getText(
-      play.widget.translation,
-      node.id,
-    );
+    final text = play.tr.node(node);
     if (text.isEmpty) return const SizedBox();
     if (actor == null) {
       return Padding(
@@ -70,10 +66,7 @@ class NodeCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
-                  ActorTranslation.getName(
-                    play.widget.translation,
-                    actor.id,
-                  ),
+                  play.tr.actor(actor),
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontStyle: FontStyle.italic,

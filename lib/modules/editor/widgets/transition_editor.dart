@@ -1,7 +1,6 @@
 import 'package:andax/models/cell_check.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/transition.dart';
-import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/editor/utils/editor_sheet.dart';
 import 'package:andax/modules/editor/widgets/cell_tile.dart';
 import 'package:andax/modules/editor/widgets/node_tile.dart';
@@ -17,14 +16,14 @@ Future<Transition?> showTransitionEditor(
   Transition? value,
 ]) async {
   final editor = context.read<StoryEditorState>();
-  final Transition result;
-  final MessageTranslation? translation;
+  final Transition transition;
+  String? label;
 
   if (value == null) {
     final id = editor.uuid.v4();
     final targetNode = await pickNode(context);
     if (targetNode == null) return value;
-    result = Transition(
+    transition = Transition(
       id,
       targetNodeId: targetNode.id,
       condition: node.input == NodeInputType.select
@@ -35,45 +34,37 @@ Future<Transition?> showTransitionEditor(
               value: node.transitions.length.toString(),
             ),
     );
-    translation = node.input == NodeInputType.select
-        ? MessageTranslation(
-            id,
-            text: 'Transition #${node.transitions.length + 1}',
-          )
-        : null;
+    label = 'Transition #${node.transitions.length + 1}';
   } else {
-    result = Transition.fromJson(value.toJson());
-    translation = node.input == NodeInputType.select
-        ? MessageTranslation.get(editor.translation, result.id)!
+    transition = Transition.fromJson(value.toJson());
+    label = node.input == NodeInputType.select
+        ? editor.tr.transition(transition)
         : null;
   }
-
-  String newText = translation?.text ?? '';
   return showEditorSheet<Transition>(
     context: context,
     title: value == null ? 'Create transition' : 'Edit transition',
     initial: value,
     onSave: () {
       if (value == null) {
-        node.transitions.add(result);
+        node.transitions.add(transition);
       } else {
-        node.transitions[node.transitions.indexOf(value)] = result;
+        node.transitions[node.transitions.indexOf(value)] = transition;
       }
-      if (translation != null) {
-        translation.text = newText;
-        editor.translation[result.id] = translation;
+      if (label != null) {
+        editor.tr[transition.id] = label!;
       }
-      return result;
+      return transition;
     },
     onDelete: value == null
         ? null
         : () {
             node.transitions.remove(value);
-            editor.translation.assets.remove(value.id);
+            editor.tr.assets.remove(value.id);
           },
     builder: (_, setState) {
       return [
-        if (translation != null)
+        if (label != null)
           ListTile(
             title: TextFormField(
               decoration: const InputDecoration(
@@ -81,26 +72,22 @@ Future<Transition?> showTransitionEditor(
                 prefixIcon: Icon(Icons.short_text_rounded),
               ),
               autofocus: true,
-              initialValue: translation.text,
+              initialValue: label,
               validator: emptyValidator,
-              onChanged: (s) {
-                newText = s.trim();
-              },
+              onChanged: (s) => label = s.trim(),
             ),
           ),
         buildExplanationTile(context, 'Target node'),
         Provider.value(
           value: editor,
           child: NodeTile(
-            editor.story.nodes[result.targetNodeId],
+            editor.story.nodes[transition.targetNodeId],
             onTap: () => pickNode(
               context,
-              editor.story.nodes[result.targetNodeId],
+              editor.story.nodes[transition.targetNodeId],
             ).then((r) {
               if (r != null) {
-                setState(() {
-                  result.targetNodeId = r.id;
-                });
+                setState(() => transition.targetNodeId = r.id);
               }
             }),
           ),
@@ -109,19 +96,19 @@ Future<Transition?> showTransitionEditor(
           Provider.value(
             value: editor,
             builder: (context, _) {
-              final condition = result.condition;
-              void setOperator(CheckOperator? v) => setState(() {
-                    condition.operator = v ?? condition.operator;
-                  });
+              final condition = transition.condition;
+              void setOperator(CheckOperator? v) => setState(
+                    () => condition.operator = v ?? condition.operator,
+                  );
               return Column(
                 children: [
                   buildExplanationTile(context, 'Cell-based condition'),
                   CellTile(
                     editor.story.cells[condition.cellId],
                     onTap: () => pickCell(context).then(
-                      (v) => setState(() {
-                        condition.cellId = v?.id ?? condition.cellId;
-                      }),
+                      (v) => setState(
+                        () => condition.cellId = v?.id ?? condition.cellId,
+                      ),
                     ),
                   ),
                   RadioListTile<CheckOperator>(
@@ -161,9 +148,7 @@ Future<Transition?> showTransitionEditor(
                         ),
                         autofocus: true,
                         initialValue: condition.value,
-                        onChanged: (s) {
-                          condition.value = s.trim();
-                        },
+                        onChanged: (s) => condition.value = s.trim(),
                       ),
                     ),
                 ],

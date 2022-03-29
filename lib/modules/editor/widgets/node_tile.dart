@@ -1,6 +1,5 @@
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
-import 'package:andax/models/translation_asset.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -38,12 +37,7 @@ class NodeTile extends StatelessWidget {
     final actor = editor.story.actors[node!.actorId];
     return ListTile(
       onTap: onTap,
-      title: Text(
-        MessageTranslation.getText(
-          editor.translation,
-          node!.id,
-        ),
-      ),
+      title: Text(editor.tr.node(node)),
       subtitle: editor.story.startNodeId == node!.id || actor != null
           ? Row(
               children: [
@@ -68,10 +62,7 @@ class NodeTile extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    ActorTranslation.getName(
-                      editor.translation,
-                      actor.id,
-                    ),
+                    editor.tr.actor(actor),
                     style: Theme.of(context).textTheme.caption,
                   ),
                 ],

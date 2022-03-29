@@ -1,20 +1,33 @@
-import 'package:andax/models/translation_asset.dart';
+import 'package:andax/models/cell.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import 'actor.dart';
+import 'node.dart';
+import 'transition.dart';
 
 part 'translation.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Translation {
   String language;
-  final Map<String, TranslationAsset> assets;
+  final Map<String, String> assets;
 
   Translation({
-    required this.language,
-    Map<String, TranslationAsset>? assets,
-  }) : assets = assets ?? {};
+    this.language = '',
+    Map<String, String> assets = const {},
+  }) : assets = Map<String, String>.of(assets);
 
-  TranslationAsset? operator [](String id) => assets[id];
-  void operator []=(String id, TranslationAsset asset) => assets[id] = asset;
+  String? operator [](String? id) => assets[id];
+  void operator []=(String id, String asset) => assets[id] = asset;
+
+  String node(Node? n) => this[n?.id] ?? '[❌NODE]';
+  String transition(Transition? t) => this[t?.id] ?? '[❌TRANSITION]';
+  String actor(Actor? a) => this[a?.id] ?? '[❌ACTOR]';
+  String cell(Cell? c) => this[c?.id] ?? '[❌CELL]';
+
+  String get title => this['title'] ?? '[❌TITLE]';
+  String get description => this['description'] ?? '[❌DESCRIPTION]';
+  String get tags => this['tags'] ?? '[❌TAGS]';
 
   factory Translation.fromJson(Map<String, dynamic> json) =>
       _$TranslationFromJson(json);

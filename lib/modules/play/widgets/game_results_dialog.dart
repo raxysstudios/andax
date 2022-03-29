@@ -1,5 +1,4 @@
 import 'package:andax/models/cell.dart';
-import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/play/screens/play.dart';
 import 'package:andax/shared/extensions.dart';
 import 'package:andax/shared/widgets/snackbar_manager.dart';
@@ -8,20 +7,16 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 String _cellsToText(PlayScreenState play) {
-  final translation = play.widget.translation;
-  var text = (StoryTranslation.get(translation)?.title ?? '') + '\n';
-
+  var text = play.tr.title + '\n';
   for (final cell in play.cells.values) {
-    text += '\n' +
-        MessageTranslation.getText(translation, cell.id).titleCase +
-        ': ';
+    text += '\n${play.tr.cell(cell).titleCase}: ';
     switch (cell.display) {
       case CellDisplay.check:
         text += cell.value.isEmpty ? '✔️' : '❌';
         break;
       case CellDisplay.range:
         text += cell.value;
-        if (cell.max != double.infinity) text += ' / ' + cell.max.toString();
+        if (cell.max != double.infinity) text += ' / ${cell.max}';
         break;
       default:
         text += cell.value;
@@ -49,12 +44,7 @@ Future<void> showGameResultsDialog(
                     in play.cells.values.where((c) => c.display != null)) ...[
                   ListTile(
                     dense: true,
-                    title: Text(
-                      MessageTranslation.getText(
-                        play.widget.translation,
-                        cell.id,
-                      ).titleCase,
-                    ),
+                    title: Text(play.tr.cell(cell).titleCase),
                     trailing: Builder(
                       builder: (context) {
                         final text = cell.value;

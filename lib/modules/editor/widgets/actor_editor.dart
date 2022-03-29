@@ -1,5 +1,4 @@
 import 'package:andax/models/actor.dart';
-import 'package:andax/models/translation_asset.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,41 +10,36 @@ Future<Actor?> showActorEditor(
   Actor? value,
 ]) {
   final editor = context.read<StoryEditorState>();
-  final Actor result;
-  final ActorTranslation translation;
+  final Actor actor;
+  String name;
 
   if (value == null) {
     final id = editor.uuid.v4();
-    result = Actor(id);
-    translation = ActorTranslation(
-      id,
-      name: 'Actor #${editor.story.actors.length + 1}',
-    );
+    actor = Actor(id);
+    name = 'Actor #${editor.story.actors.length + 1}';
   } else {
-    result = Actor.fromJson(value.toJson());
-    translation = ActorTranslation.get(editor.translation, result.id)!;
+    actor = Actor.fromJson(value.toJson());
+    name = editor.tr.actor(actor);
   }
 
-  String newName = translation.name;
   return showEditorSheet<Actor>(
     context: context,
     title: value == null ? 'Create actor' : 'Edit actor',
     initial: value,
     onSave: () {
-      translation.name = newName;
-      editor.story.actors[result.id] = result;
-      editor.translation[result.id] = translation;
-      return result;
+      editor.story.actors[actor.id] = actor;
+      editor.tr[actor.id] = name;
+      return actor;
     },
     onDelete: value == null
         ? null
         : () {
             editor.story.actors.remove(value.id);
-            editor.translation.assets.remove(value.id);
+            editor.tr.assets.remove(value.id);
           },
     builder: (context, setState) {
       void setType(ActorType? v) => setState(() {
-            result.type = v ?? result.type;
+            actor.type = v ?? actor.type;
           });
       return [
         ListTile(
@@ -55,11 +49,9 @@ Future<Actor?> showActorEditor(
               prefixIcon: Icon(Icons.label_rounded),
             ),
             autofocus: true,
-            initialValue: translation.name,
+            initialValue: name,
             validator: emptyValidator,
-            onChanged: (s) {
-              newName = s.trim();
-            },
+            onChanged: (s) => name = s.trim(),
           ),
         ),
         buildExplanationTile(
@@ -69,7 +61,7 @@ Future<Actor?> showActorEditor(
         ),
         RadioListTile<ActorType>(
           value: ActorType.npc,
-          groupValue: result.type,
+          groupValue: actor.type,
           onChanged: setType,
           secondary: const Icon(Icons.smart_toy_rounded),
           title: const Text('Computer actor'),
@@ -77,7 +69,7 @@ Future<Actor?> showActorEditor(
         ),
         RadioListTile<ActorType>(
           value: ActorType.player,
-          groupValue: result.type,
+          groupValue: actor.type,
           onChanged: setType,
           secondary: const Icon(Icons.face_rounded),
           title: const Text('Player actor'),

@@ -2,7 +2,6 @@ import 'package:andax/models/actor.dart';
 import 'package:andax/models/cell_write.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/transition.dart';
-import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/editor/utils/node.dart';
 import 'package:andax/modules/editor/utils/pickers.dart';
 import 'package:andax/modules/editor/widgets/transition_editor.dart';
@@ -41,15 +40,10 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
   void initState() {
     super.initState();
     if (node.actorId == null &&
-        MessageTranslation.getText(
-          context.read<StoryEditorState>().translation,
-          node.id,
-        ).isEmpty) {
+        (context.read<StoryEditorState>().tr[node.id]?.isEmpty ?? false)) {
       SchedulerBinding.instance?.addPostFrameCallback(
         (_) => pickActor(context, node).then(
-          (r) => setState(() {
-            node.actorId = r?.id;
-          }),
+          (r) => setState(() => node.actorId = r?.id),
         ),
       );
     }
@@ -77,6 +71,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
                   ? null
                   : () => showActorEditor(context, actor)
                       .then((r) => setState(() {})),
+              allowNarrator: true,
             );
           },
         ),
@@ -89,27 +84,19 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
               prefixIcon: Icon(Icons.notes_rounded),
             ),
             autofocus: true,
-            initialValue: MessageTranslation.get(
-              editor.translation,
-              node.id,
-            )?.text,
-            onChanged: (s) {
-              MessageTranslation.get(
-                editor.translation,
-                node.id,
-              )?.text = s.trim();
-            },
+            initialValue: editor.tr.node(node),
+            onChanged: (s) => editor.tr[node.id] = s.trim(),
           ),
         ),
         const ListTile(
           leading: Icon(Icons.image_rounded),
           title: Text('Select image'),
-          subtitle: Text('<NOT IMPLEMENTED>'),
+          subtitle: Text('[NOT IMPLEMENTED]'),
         ),
         const ListTile(
           leading: Icon(Icons.audiotrack_rounded),
           title: Text('Select audio'),
-          subtitle: Text('<NOT IMPLEMENTED>'),
+          subtitle: Text('[NOT IMPLEMENTED]'),
         ),
       ],
     );
@@ -163,19 +150,11 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
           for (var i = 0; i < transitions.length; i++)
             ListTile(
               title: Text(
-                MessageTranslation.getText(
-                  editor.translation,
-                  transitions[i].targetNodeId,
-                ),
+                editor.tr[transitions[i].targetNodeId] ?? '[❌NODE]',
               ),
-              subtitle: editor.translation[transitions[i].id] == null
+              subtitle: editor.tr[transitions[i].id] == null
                   ? null
-                  : Text(
-                      MessageTranslation.getText(
-                        editor.translation,
-                        transitions[i].id,
-                      ),
-                    ),
+                  : Text(editor.tr.transition(transitions[i])),
               onTap: () => showTransitionEditor(
                 context,
                 node,
@@ -212,8 +191,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
                         : Icons.remove_circle_outline_rounded,
               ),
               title: Text(write.value),
-              subtitle: Text(MessageTranslation.getText(
-                  editor.translation, write.targetCellId)),
+              subtitle: Text(editor.tr[write.targetCellId] ?? '[❌CELL]'),
               onTap: () => showCellWrite(
                 context,
                 node,

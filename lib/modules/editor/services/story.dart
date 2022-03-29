@@ -21,9 +21,9 @@ Future<void> uploadStory(StoryEditorState editor) async {
   final tdb = sdb.doc(sid).collection('translations');
   var tid = editor.info?.translationID;
   if (tid == null) {
-    tid = await tdb.add(editor.translation.toJson()).then((r) => r.id);
+    tid = await tdb.add(editor.tr.toJson()).then((r) => r.id);
   } else {
-    await tdb.doc(tid).update(editor.translation.toJson());
+    await tdb.doc(tid).update(editor.tr.toJson());
   }
   await tdb.doc(tid).update({
     'metaData.lastUpdateAt': FieldValue.serverTimestamp(),
@@ -32,8 +32,8 @@ Future<void> uploadStory(StoryEditorState editor) async {
 
   final adb = tdb.doc(tid).collection('assets');
   await Future.wait([
-    for (final entry in editor.translation.assets.entries)
-      adb.doc(entry.key).set(entry.value.toJson())
+    for (final entry in editor.tr.assets.entries)
+      adb.doc(entry.key).set(<String, String>{'text': entry.value})
   ]);
   editor.setState(() {
     editor.info ??= StoryInfo(

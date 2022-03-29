@@ -51,10 +51,28 @@ function storyDoc(storyID: string, translationID?: string):
   return db.doc(path);
 }
 
+/**
+ * Returns document reference by story and trabslation id.
+ * @param {object} collection Reference to translation assets.
+ * @param {string} assetID The ID of the asset document.
+ * @return {Promise<string>} The text content of the asset.
+**/
+async function getAssetText(
+    collection: firestore.CollectionReference,
+    assetID: string
+): Promise<string> {
+  const data = await collection
+      .doc(assetID)
+      .get()
+      .then((doc) => doc.data());
+  return data == null ? "" : data["text"] as string;
+}
+
+
 export const indexStories = functions
     .region("europe-central2")
     .firestore.document(
-        "stories/{storyID}/translations/{translationID}/assets/story"
+        "stories/{storyID}/translations/{translationID}"
     )
     .onWrite(async (change, context) => {
       const translationID = context.params.translationID;
@@ -63,7 +81,11 @@ export const indexStories = functions
         await index.deleteObject(translationID);
         return;
       }
-      const {title, description, tags} = change.after.data()!;
+      const assets = change.after.ref.collection("assets");
+      const title = await getAssetText(assets, "title");
+      const description = await getAssetText(assets, "description");
+      const tags = await getAssetText(assets, "tags");
+
       const story = await storyDoc(storyID)
           .get()
           .then((doc) => doc.data()!);
@@ -80,8 +102,10 @@ export const indexStories = functions
         language: translation.language,
         title,
         description,
-        tags,
       };
+      if (tags) {
+        entry["tags"] = tags.split(" ");
+      }
       if (change.before.exists) {
         await index.partialUpdateObject(
             entry,

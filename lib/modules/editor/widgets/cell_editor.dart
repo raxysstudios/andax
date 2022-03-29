@@ -1,5 +1,4 @@
 import 'package:andax/models/cell.dart';
-import 'package:andax/models/translation_asset.dart';
 import 'package:andax/modules/editor/utils/editor_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,42 +11,35 @@ Future<Cell?> showCellEditor(
   Cell? value,
 ]) {
   final editor = context.read<StoryEditorState>();
-  final Cell result;
-  final MessageTranslation translation;
+  final Cell cell;
+  String name;
 
   if (value == null) {
     final id = editor.uuid.v4();
-    result = Cell(id);
-    translation = MessageTranslation(
-      id,
-      text: 'Cell #${editor.story.cells.length + 1}',
-    );
+    cell = Cell(id);
+    name = 'Cell #${editor.story.cells.length + 1}';
   } else {
-    result = Cell.fromJson(value.toJson());
-    translation = MessageTranslation.get(editor.translation, result.id)!;
+    cell = Cell.fromJson(value.toJson());
+    name = editor.tr.cell(cell);
   }
 
-  String? newName = translation.text;
   return showEditorSheet<Cell>(
     context: context,
     title: value == null ? 'Create cell' : 'Edit cell',
     initial: value,
     onSave: () {
-      translation.text = newName;
-      editor.story.cells[result.id] = result;
-      editor.translation[result.id] = translation;
-      return result;
+      editor.story.cells[cell.id] = cell;
+      editor.tr[cell.id] = name;
+      return cell;
     },
     onDelete: value == null
         ? null
         : () {
             editor.story.cells.remove(value.id);
-            editor.translation.assets.remove(value.id);
+            editor.tr.assets.remove(value.id);
           },
     builder: (context, setState) {
-      void setDisplay(CellDisplay? v) => setState(() {
-            result.display = v;
-          });
+      void setDisplay(CellDisplay? v) => setState(() => cell.display = v);
       return [
         ListTile(
           title: TextFormField(
@@ -56,11 +48,9 @@ Future<Cell?> showCellEditor(
               prefixIcon: Icon(Icons.label_rounded),
             ),
             autofocus: true,
-            initialValue: translation.text,
+            initialValue: name,
             validator: emptyValidator,
-            onChanged: (s) {
-              newName = s.trim();
-            },
+            onChanged: (s) => name = s.trim(),
           ),
         ),
         ListTile(
@@ -70,9 +60,10 @@ Future<Cell?> showCellEditor(
               prefixIcon: Icon(Icons.score_rounded),
             ),
             autofocus: true,
-            initialValue: result.max.toString(),
+            initialValue:
+                cell.max == double.infinity ? '' : cell.max.toString(),
             onChanged: (s) =>
-                result.max = int.tryParse(s.trim()) ?? double.infinity,
+                cell.max = int.tryParse(s.trim()) ?? double.infinity,
             keyboardType: TextInputType.number,
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly
@@ -86,7 +77,7 @@ Future<Cell?> showCellEditor(
         ),
         RadioListTile<CellDisplay?>(
           value: null,
-          groupValue: result.display,
+          groupValue: cell.display,
           title: const Text('Hidden'),
           subtitle: const Text('Internal logic, not shown to player'),
           secondary: const Icon(Icons.visibility_off_rounded),
@@ -94,7 +85,7 @@ Future<Cell?> showCellEditor(
         ),
         RadioListTile<CellDisplay>(
           value: CellDisplay.check,
-          groupValue: result.display,
+          groupValue: cell.display,
           title: const Text('Check'),
           subtitle: const Text('Displays objectives, marks events'),
           secondary: const Icon(Icons.check_circle_rounded),
@@ -102,7 +93,7 @@ Future<Cell?> showCellEditor(
         ),
         RadioListTile<CellDisplay>(
           value: CellDisplay.range,
-          groupValue: result.display,
+          groupValue: cell.display,
           title: const Text('Range'),
           subtitle: const Text('For numeric scores, better with max value'),
           secondary: const Icon(Icons.short_text_rounded),
@@ -110,7 +101,7 @@ Future<Cell?> showCellEditor(
         ),
         RadioListTile<CellDisplay>(
           value: CellDisplay.text,
-          groupValue: result.display,
+          groupValue: cell.display,
           title: const Text('Text'),
           subtitle: const Text('Plain text, for general use'),
           secondary: const Icon(Icons.linear_scale_rounded),
