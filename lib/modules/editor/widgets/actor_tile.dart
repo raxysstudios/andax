@@ -10,6 +10,7 @@ class ActorTile extends StatelessWidget {
     this.onTap,
     this.onLongPress,
     this.selected = false,
+    this.allowNarrator = false,
     this.index,
     Key? key,
   }) : super(key: key);
@@ -18,6 +19,7 @@ class ActorTile extends StatelessWidget {
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
   final bool selected;
+  final bool allowNarrator;
   final int? index;
 
   int? getIndex(StoryEditorState editor) {
@@ -44,7 +46,11 @@ class ActorTile extends StatelessWidget {
                 ? Icons.smart_toy_rounded
                 : Icons.face_rounded,
       ),
-      title: Text(editor.tr.actor(actor)),
+      title: Text(
+        allowNarrator
+            ? editor.tr[actor?.id] ?? 'Narrator'
+            : editor.tr.actor(actor),
+      ),
       trailing: index == null
           ? null
           : Text(

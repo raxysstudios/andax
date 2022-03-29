@@ -71,6 +71,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
                   ? null
                   : () => showActorEditor(context, actor)
                       .then((r) => setState(() {})),
+              allowNarrator: true,
             );
           },
         ),

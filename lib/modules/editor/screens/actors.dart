@@ -46,7 +46,7 @@ class ActorsEditorScreen extends StatelessWidget {
                 [
                   ListTile(
                     leading: const Icon(Icons.person_outline_rounded),
-                    title: const Text('None'),
+                    title: const Text('Narrator'),
                     onTap: () => onSelect(null, false),
                   ),
                   const Divider(),
