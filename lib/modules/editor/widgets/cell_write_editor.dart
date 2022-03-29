@@ -14,14 +14,14 @@ Future<CellWrite?> showCellWrite(
   CellWrite? value,
 ]) async {
   final editor = context.read<StoryEditorState>();
-  CellWrite result;
+  CellWrite write;
 
   if (value == null) {
     final target = await pickCell(context);
     if (target == null) return value;
-    result = CellWrite(target.id);
+    write = CellWrite(target.id);
   } else {
-    result = CellWrite.fromJson(value.toJson());
+    write = CellWrite.fromJson(value.toJson());
   }
 
   return showEditorSheet<CellWrite>(
@@ -30,17 +30,16 @@ Future<CellWrite?> showCellWrite(
     initial: value,
     onSave: () {
       if (value == null) {
-        node.cellWrites.add(result);
+        node.cellWrites.add(write);
       } else {
-        node.cellWrites[node.cellWrites.indexOf(value)] = result;
+        node.cellWrites[node.cellWrites.indexOf(value)] = write;
       }
-      return result;
+      return write;
     },
     onDelete: value == null ? null : () => node.cellWrites.remove(value),
     builder: (_, setState) {
-      void setMode(CellWriteMode? v) => setState(() {
-            result.mode = v ?? result.mode;
-          });
+      void setMode(CellWriteMode? v) =>
+          setState(() => write.mode = v ?? write.mode);
       return [
         ListTile(
           title: TextFormField(
@@ -49,26 +48,22 @@ Future<CellWrite?> showCellWrite(
               prefixIcon: Icon(Icons.edit_rounded),
             ),
             autofocus: true,
-            initialValue: result.value,
+            initialValue: write.value,
             validator: emptyValidator,
-            onChanged: (s) {
-              result.value = s.trim();
-            },
+            onChanged: (s) => write.value = s.trim(),
           ),
         ),
         buildExplanationTile(context, 'Target cell'),
         Provider.value(
           value: editor,
           child: CellTile(
-            editor.story.cells[result.targetCellId],
+            editor.story.cells[write.targetCellId],
             onTap: () => pickCell(
               context,
-              editor.story.cells[result.targetCellId],
+              editor.story.cells[write.targetCellId],
             ).then((r) {
               if (r != null) {
-                setState(() {
-                  result.targetCellId = r.id;
-                });
+                setState(() => write.targetCellId = r.id);
               }
             }),
           ),
@@ -80,7 +75,7 @@ Future<CellWrite?> showCellWrite(
         ),
         RadioListTile<CellWriteMode?>(
           value: CellWriteMode.overwrite,
-          groupValue: result.mode,
+          groupValue: write.mode,
           title: const Text('Overwrite'),
           subtitle: const Text('Completely replaces old value'),
           secondary: const Icon(Icons.save_alt_rounded),
@@ -88,7 +83,7 @@ Future<CellWrite?> showCellWrite(
         ),
         RadioListTile<CellWriteMode?>(
           value: null,
-          groupValue: result.mode,
+          groupValue: write.mode,
           title: const Text('Add'),
           subtitle: const Text('Numerically adds to old value or 0'),
           secondary: const Icon(Icons.add_circle_outline_rounded),
@@ -96,7 +91,7 @@ Future<CellWrite?> showCellWrite(
         ),
         RadioListTile<CellWriteMode?>(
           value: null,
-          groupValue: result.mode,
+          groupValue: write.mode,
           title: const Text('Subtract'),
           subtitle: const Text('Numerically subtracts from old value or 0'),
           secondary: const Icon(Icons.remove_circle_outline_rounded),

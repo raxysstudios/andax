@@ -10,25 +10,26 @@ Future<Actor?> showActorEditor(
   Actor? value,
 ]) {
   final editor = context.read<StoryEditorState>();
-  final Actor result;
+  final Actor actor;
+  String name;
 
   if (value == null) {
     final id = editor.uuid.v4();
-    result = Actor(id);
-    editor.tr[id] = 'Actor #${editor.story.actors.length + 1}';
+    actor = Actor(id);
+    name = 'Actor #${editor.story.actors.length + 1}';
   } else {
-    result = Actor.fromJson(value.toJson());
+    actor = Actor.fromJson(value.toJson());
+    name = editor.tr.actor(actor);
   }
 
-  String newName = editor.tr.actor(result);
   return showEditorSheet<Actor>(
     context: context,
     title: value == null ? 'Create actor' : 'Edit actor',
     initial: value,
     onSave: () {
-      editor.story.actors[result.id] = result;
-      editor.tr[result.id] = newName;
-      return result;
+      editor.story.actors[actor.id] = actor;
+      editor.tr[actor.id] = name;
+      return actor;
     },
     onDelete: value == null
         ? null
@@ -38,7 +39,7 @@ Future<Actor?> showActorEditor(
           },
     builder: (context, setState) {
       void setType(ActorType? v) => setState(() {
-            result.type = v ?? result.type;
+            actor.type = v ?? actor.type;
           });
       return [
         ListTile(
@@ -48,9 +49,9 @@ Future<Actor?> showActorEditor(
               prefixIcon: Icon(Icons.label_rounded),
             ),
             autofocus: true,
-            initialValue: newName,
+            initialValue: name,
             validator: emptyValidator,
-            onChanged: (s) => newName = s.trim(),
+            onChanged: (s) => name = s.trim(),
           ),
         ),
         buildExplanationTile(
@@ -60,7 +61,7 @@ Future<Actor?> showActorEditor(
         ),
         RadioListTile<ActorType>(
           value: ActorType.npc,
-          groupValue: result.type,
+          groupValue: actor.type,
           onChanged: setType,
           secondary: const Icon(Icons.smart_toy_rounded),
           title: const Text('Computer actor'),
@@ -68,7 +69,7 @@ Future<Actor?> showActorEditor(
         ),
         RadioListTile<ActorType>(
           value: ActorType.player,
-          groupValue: result.type,
+          groupValue: actor.type,
           onChanged: setType,
           secondary: const Icon(Icons.face_rounded),
           title: const Text('Player actor'),
