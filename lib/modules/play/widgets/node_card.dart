@@ -24,9 +24,10 @@ class NodeCard extends StatelessWidget {
     if (text.isEmpty) return const SizedBox();
     if (actor == null) {
       return Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(16),
         child: MarkdownBody(
           data: text,
+          selectable: true,
           styleSheet: MarkdownStyleSheet(
             p: const TextStyle(
               fontSize: 16,
@@ -80,6 +81,7 @@ class NodeCard extends StatelessWidget {
               ),
             MarkdownBody(
               data: text,
+              selectable: true,
               styleSheet: MarkdownStyleSheet(
                 p: const TextStyle(
                   fontSize: 16,
