@@ -104,7 +104,10 @@ class PlayScreenState extends State<PlayScreen> {
     for (final transition in transitions) {
       if (transition.condition.check(cells)) {
         final node = nodes[transition.targetNodeId];
-        if (node != null) scheduleMove(node);
+        if (node != null) {
+          scheduleMove(node);
+          return;
+        }
       }
     }
   }
