@@ -26,7 +26,7 @@ Future<Transition?> showTransitionEditor(
     transition = Transition(
       id,
       targetNodeId: targetNode.id,
-      condition: node.input == NodeInputType.select
+      condition: node.input == NodeInputType.none
           ? CellCheck(cellId: '')
           : CellCheck(
               cellId: 'node',
