@@ -25,12 +25,15 @@ class NodeCard extends StatelessWidget {
     if (actor == null) {
       return Padding(
         padding: const EdgeInsets.all(8),
-        child: Text(
-          text,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 14,
-            fontStyle: FontStyle.italic,
+        child: MarkdownBody(
+          data: text,
+          styleSheet: MarkdownStyleSheet(
+            p: const TextStyle(
+              fontSize: 16,
+            ),
+            strong: const TextStyle(
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       );
