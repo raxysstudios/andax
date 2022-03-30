@@ -219,16 +219,13 @@ class PlayScreenState extends State<PlayScreen> {
                 if (finished)
                   slideUp(
                     Column(
-                      children: [
-                        const Divider(
+                      children: const [
+                        Divider(
                           height: 32,
-                          indent: 64,
-                          endIndent: 64,
+                          indent: 16,
+                          endIndent: 16,
                         ),
-                        Text(
-                          'End',
-                          style: theme.textTheme.headline6,
-                        ),
+                        Icon(Icons.done_all),
                       ],
                     ),
                   ),

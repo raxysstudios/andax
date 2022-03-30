@@ -22,78 +22,58 @@ class NodeCard extends StatelessWidget {
     final actor = play.actors[node.actorId];
     final text = play.tr.node(node);
     if (text.isEmpty) return const SizedBox();
-    if (actor == null) {
-      return Padding(
-        padding: const EdgeInsets.all(16),
-        child: MarkdownBody(
-          data: text,
-          selectable: true,
-          styleSheet: MarkdownStyleSheet(
-            p: const TextStyle(
-              fontSize: 16,
-            ),
-            strong: const TextStyle(
+
+    final thread = actor?.id == previousNode?.actorId;
+    final isPlayer = actor?.type == ActorType.player;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (actor == null && !thread) ...[
+          const SizedBox(height: 16),
+          const Text(
+            '• • •',
+            textAlign: TextAlign.center,
+            style: TextStyle(
               fontWeight: FontWeight.w500,
             ),
           ),
-        ),
-      );
-    }
-
-    final thread = actor.id == previousNode?.actorId;
-    final isPlayer = actor.type == ActorType.player;
-    return Card(
-      elevation: .5,
-      margin: isPlayer
-          ? EdgeInsets.fromLTRB(48, thread ? 4 : 16, 0, 0)
-          : EdgeInsets.fromLTRB(0, thread ? 4 : 16, 48, 0),
-      shape: isPlayer
-          ? const RoundedRectangleBorder(
-              borderRadius: BorderRadius.horizontal(
-                left: Radius.circular(4),
-              ),
-            )
-          : const RoundedRectangleBorder(
-              borderRadius: BorderRadius.horizontal(
-                right: Radius.circular(4),
-              ),
-            ),
-      child: Padding(
-        padding: isPlayer
-            ? const EdgeInsets.fromLTRB(8, 8, 20, 8)
-            : const EdgeInsets.fromLTRB(20, 8, 8, 8),
-        child: Column(
-          crossAxisAlignment:
-              isPlayer ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-          children: [
-            if (!thread)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(
-                  play.tr.actor(actor),
-                  style: TextStyle(
+        ],
+        Padding(
+          padding: isPlayer
+              ? const EdgeInsets.only(left: 96, right: 16)
+              : const EdgeInsets.only(left: 16, right: 96),
+          child: Column(
+            crossAxisAlignment:
+                isPlayer ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            children: [
+              if (actor != null && !thread)
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Text(
+                    play.tr.actor(actor),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                ),
+              const SizedBox(height: 8),
+              MarkdownBody(
+                data: text,
+                selectable: true,
+                styleSheet: MarkdownStyleSheet(
+                  p: const TextStyle(
+                    fontSize: 16,
+                  ),
+                  strong: const TextStyle(
                     fontWeight: FontWeight.w500,
-                    fontStyle: FontStyle.italic,
-                    color:
-                        isPlayer ? Theme.of(context).colorScheme.primary : null,
                   ),
                 ),
               ),
-            MarkdownBody(
-              data: text,
-              selectable: true,
-              styleSheet: MarkdownStyleSheet(
-                p: const TextStyle(
-                  fontSize: 16,
-                ),
-                strong: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }
