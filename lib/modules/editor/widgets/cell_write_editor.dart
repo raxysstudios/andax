@@ -73,7 +73,7 @@ Future<CellWrite?> showCellWrite(
           'Write mode',
           'Controls how the new value is set',
         ),
-        RadioListTile<CellWriteMode?>(
+        RadioListTile<CellWriteMode>(
           value: CellWriteMode.overwrite,
           groupValue: write.mode,
           title: const Text('Overwrite'),
@@ -81,16 +81,16 @@ Future<CellWrite?> showCellWrite(
           secondary: const Icon(Icons.save_alt_rounded),
           onChanged: setMode,
         ),
-        RadioListTile<CellWriteMode?>(
-          value: null,
+        RadioListTile<CellWriteMode>(
+          value: CellWriteMode.add,
           groupValue: write.mode,
           title: const Text('Add'),
           subtitle: const Text('Numerically adds to old value or 0'),
           secondary: const Icon(Icons.add_circle_outline_rounded),
           onChanged: setMode,
         ),
-        RadioListTile<CellWriteMode?>(
-          value: null,
+        RadioListTile<CellWriteMode>(
+          value: CellWriteMode.subtract,
           groupValue: write.mode,
           title: const Text('Subtract'),
           subtitle: const Text('Numerically subtracts from old value or 0'),
