@@ -56,7 +56,7 @@ Future<void> showGameResultsDialog(
                                   : Icons.check_circle_outline_rounded,
                             );
                           case CellDisplay.range:
-                            return Text('$text/${cell.max}');
+                            return Text('$text / ${cell.max}');
                           default:
                             return Text(text);
                         }
