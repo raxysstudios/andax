@@ -1,6 +1,7 @@
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
-import 'package:flutter/cupertino.dart';
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
@@ -35,18 +36,6 @@ class NodeCard extends StatelessWidget {
     }
     return b;
   }
-
-  static final Map<ActorType?, BorderRadius> _messageBorderRadius = {
-    null: BorderRadius.circular(4),
-    ActorType.player: const BorderRadius.horizontal(
-      left: Radius.circular(16),
-      right: Radius.circular(4),
-    ),
-    ActorType.npc: const BorderRadius.horizontal(
-      left: Radius.circular(4),
-      right: Radius.circular(16),
-    )
-  };
 
   @override
   Widget build(BuildContext context) {
