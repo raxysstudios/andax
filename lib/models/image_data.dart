@@ -9,6 +9,7 @@ class ImageData {
   String url;
   double height;
   BoxFit fit;
+  @JsonKey(fromJson: _alignmentFromJson, toJson: _alignmentToJson)
   Alignment alignment;
 
   ImageData({
@@ -22,4 +23,19 @@ class ImageData {
       _$ImageDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$ImageDataToJson(this);
+}
+
+final _$AlignmentEnumMap = {
+  Alignment.topCenter: 'topCenter',
+  Alignment.center: 'center',
+  Alignment.bottomCenter: 'bottomCenter',
+};
+Alignment _alignmentFromJson(String json) => _$AlignmentEnumMap.entries
+    .firstWhere(
+      (e) => e.value == json,
+      orElse: () => _$AlignmentEnumMap.entries.first,
+    )
+    .key;
+String _alignmentToJson(Alignment alignment) {
+  return _$AlignmentEnumMap[alignment] ?? 'center';
 }
