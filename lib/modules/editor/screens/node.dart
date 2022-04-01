@@ -58,14 +58,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
             return ActorTile(
               actor,
               onTap: () => pickActor(context, node).then(
-                (r) {
-                  if (r?.type != ActorType.player &&
-                      node.input == NodeInputType.select) {
-                    node.input = NodeInputType.random;
-                  }
-                  node.actorId = r?.id;
-                  setState(() {});
-                },
+                (r) => setState(() => node.actorId = r?.id),
               ),
               onLongPress: actor == null
                   ? null
