@@ -11,7 +11,8 @@ class GameResults extends StatelessWidget {
 
   String _cellsToText(PlayScreenState play) {
     var text = play.tr.title + '\n';
-    for (final cell in play.cells.values) {
+    final cells = play.cells.values.where((c) => c.display != null);
+    for (final cell in cells) {
       text += '\n${play.tr.cell(cell).titleCase}: ';
       switch (cell.display) {
         case CellDisplay.check:
