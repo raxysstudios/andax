@@ -1,7 +1,6 @@
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
@@ -75,17 +74,13 @@ class NodeCard extends StatelessWidget {
             children: [
               if (node.image != null)
                 Container(
+                  height: node.image!.height,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: NetworkImage(node.image!.url),
                       fit: node.image!.fit,
-                      alignment: isPlayer
-                          ? Alignment.centerRight
-                          : Alignment.centerLeft,
+                      alignment: node.image!.alignment,
                     ),
-                  ),
-                  constraints: const BoxConstraints(
-                    maxHeight: 224,
                   ),
                 ),
               Padding(
