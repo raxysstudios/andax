@@ -5,14 +5,13 @@ import 'package:andax/models/cell.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
-import 'package:andax/modules/play/utils/alert.dart';
 import 'package:andax/modules/play/utils/animator.dart';
+import 'package:andax/modules/play/utils/menu.dart';
 import 'package:andax/modules/play/widgets/game_results.dart';
 import 'package:andax/modules/play/widgets/transitions_chips.dart';
 import 'package:andax/modules/play/widgets/typing_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:pausable_timer/pausable_timer.dart';
 import 'package:provider/provider.dart';
 
@@ -44,7 +43,6 @@ class PlayScreenState extends State<PlayScreen> {
   };
   final List<Node> storyline = [];
 
-  bool get finished => storyline.last.transitions.isEmpty && !_timer.isActive;
   var _timer = PausableTimer(Duration.zero, () {});
   final _dial = ValueNotifier(false);
   final _scroll = ScrollController();
@@ -129,47 +127,30 @@ class PlayScreenState extends State<PlayScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Provider.value(
       value: this,
-      child: Builder(builder: (context) {
+      builder: (context, _) {
         return WillPopScope(
           onWillPop: () {
             _dial.value = true;
             return Future.value(false);
           },
           child: Scaffold(
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+              toolbarHeight: 0,
+            ),
             floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
             floatingActionButton: Padding(
               padding: const EdgeInsets.only(top: 16),
-              child: SpeedDial(
-                openCloseDial: _dial,
-                onOpen: _timer.pause,
-                onClose: _timer.start,
-                icon: Icons.menu_rounded,
-                backgroundColor: theme.colorScheme.primary,
-                foregroundColor: theme.colorScheme.onPrimary,
-                spaceBetweenChildren: 9,
-                switchLabelPosition: true,
+              child: FloatingActionButton.extended(
+                icon: const Icon(Icons.menu_rounded),
                 label: const Text('Menu'),
-                buttonSize: const Size.square(48),
-                spacing: 7,
-                direction: SpeedDialDirection.down,
-                children: [
-                  SpeedDialChild(
-                    child: const Icon(Icons.replay_rounded),
-                    label: 'Restart',
-                    onTap: () => showProgressAlert(context, reset),
-                  ),
-                  SpeedDialChild(
-                    child: const Icon(Icons.close_rounded),
-                    label: 'Exit',
-                    onTap: () => showProgressAlert(
-                      context,
-                      () => Navigator.pop(context),
-                    ),
-                  ),
-                ],
+                onPressed: () async {
+                  _timer.pause();
+                  await showPlayMenu(context);
+                  _timer.start();
+                },
               ),
             ),
             body: ListView(
@@ -189,9 +170,9 @@ class PlayScreenState extends State<PlayScreen> {
                         : null,
                   ),
                 ),
-                if (!_timer.isActive &&
-                    storyline.last.transitions.isNotEmpty &&
-                    storyline.last.input == NodeInputType.select)
+                if (_timer.isActive)
+                  const TypingIndicator()
+                else if (storyline.last.input == NodeInputType.select)
                   slideUp(
                     TransitionsChips(
                       transitions: storyline.last.transitions,
@@ -201,9 +182,8 @@ class PlayScreenState extends State<PlayScreen> {
                         attemptMove();
                       },
                     ),
-                  ),
-                if (_timer.isActive) const TypingIndicator(),
-                if (finished)
+                  )
+                else if (storyline.last.transitions.isEmpty)
                   slideUp(
                     Padding(
                       padding: const EdgeInsets.all(16),
@@ -215,12 +195,12 @@ class PlayScreenState extends State<PlayScreen> {
                         ],
                       ),
                     ),
-                  ),
+                  )
               ],
             ),
           ),
         );
-      }),
+      },
     );
   }
 }

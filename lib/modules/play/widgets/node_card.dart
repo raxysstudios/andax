@@ -16,6 +16,12 @@ class NodeCard extends StatelessWidget {
   final Node node;
   final Node? previousNode;
 
+  static const Map<ActorType?, EdgeInsets> _messagePadding = {
+    null: EdgeInsets.symmetric(horizontal: 16),
+    ActorType.player: EdgeInsets.only(left: 96, right: 16),
+    ActorType.npc: EdgeInsets.only(left: 16, right: 96)
+  };
+
   @override
   Widget build(BuildContext context) {
     final play = context.watch<PlayScreenState>();
@@ -24,7 +30,6 @@ class NodeCard extends StatelessWidget {
     if (text.isEmpty) return const SizedBox();
 
     final thread = actor?.id == previousNode?.actorId;
-    final isPlayer = actor?.type == ActorType.player;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -39,12 +44,11 @@ class NodeCard extends StatelessWidget {
           ),
         ],
         Padding(
-          padding: isPlayer
-              ? const EdgeInsets.only(left: 96, right: 16)
-              : const EdgeInsets.only(left: 16, right: 96),
+          padding: _messagePadding[actor?.type] ?? EdgeInsets.zero,
           child: Column(
-            crossAxisAlignment:
-                isPlayer ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            crossAxisAlignment: actor?.type == ActorType.player
+                ? CrossAxisAlignment.end
+                : CrossAxisAlignment.start,
             children: [
               if (actor != null && !thread)
                 Padding(

@@ -25,7 +25,6 @@ dependencies:
   badges: ^2.0.2
   provider: ^6.0.2
   url_launcher: ^6.0.20
-  flutter_speed_dial: ^5.0.0+1
   pausable_timer: ^1.0.0+4
 
 dev_dependencies:
