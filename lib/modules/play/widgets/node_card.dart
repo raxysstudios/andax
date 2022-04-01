@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
 import 'package:flutter/material.dart';
@@ -17,64 +19,115 @@ class NodeCard extends StatelessWidget {
   final Node? previousNode;
 
   static const Map<ActorType?, EdgeInsets> _messagePadding = {
-    null: EdgeInsets.symmetric(horizontal: 16),
-    ActorType.player: EdgeInsets.only(left: 96, right: 16),
-    ActorType.npc: EdgeInsets.only(left: 16, right: 96)
+    null: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+    ActorType.player: EdgeInsets.fromLTRB(96, 2, 8, 2),
+    ActorType.npc: EdgeInsets.fromLTRB(8, 2, 96, 2),
+  };
+
+  static final Map<ActorType?, BorderRadius> _messageBorderRadius = {
+    null: BorderRadius.circular(4),
+    ActorType.player: const BorderRadius.horizontal(
+      left: Radius.circular(16),
+      right: Radius.circular(4),
+    ),
+    ActorType.npc: const BorderRadius.horizontal(
+      left: Radius.circular(4),
+      right: Radius.circular(16),
+    )
   };
 
   @override
   Widget build(BuildContext context) {
     final play = context.watch<PlayScreenState>();
     final actor = play.actors[node.actorId];
-    final text = play.tr.node(node);
+    final text = play.tr.node(node, true);
     if (text.isEmpty) return const SizedBox();
 
+    var imgUrl = Random().nextDouble() < .5
+        ? ''
+        : 'https://cdna.artstation.com/p/assets/images/images/037/593/898/large/derek-laufman-art-shop.jpg?1620788395';
+
     final thread = actor?.id == previousNode?.actorId;
+    final isPlayer = actor?.type == ActorType.player;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (actor == null && !thread) ...[
-          const SizedBox(height: 16),
-          const Text(
-            '• • •',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-        Padding(
-          padding: _messagePadding[actor?.type] ?? EdgeInsets.zero,
-          child: Column(
-            crossAxisAlignment: actor?.type == ActorType.player
-                ? CrossAxisAlignment.end
-                : CrossAxisAlignment.start,
-            children: [
-              if (actor != null && !thread)
-                Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: Text(
-                    play.tr.actor(actor),
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                ),
-              const SizedBox(height: 8),
-              MarkdownBody(
-                data: text,
-                selectable: true,
-                styleSheet: MarkdownStyleSheet(
-                  p: const TextStyle(
-                    fontSize: 16,
-                  ),
-                  strong: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                  ),
+        if (!thread)
+          if (actor == null)
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                '• • •',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-            ],
+            )
+          else
+            const SizedBox(height: 16),
+        InkWell(
+          onTap: () {},
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: _messageBorderRadius[actor?.type],
+              color: Theme.of(context).colorScheme.surface,
+            ),
+            clipBehavior: Clip.antiAlias,
+            margin: _messagePadding[actor?.type]!,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (imgUrl.isNotEmpty)
+                  Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(imgUrl),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    constraints: const BoxConstraints(
+                      maxHeight: 224,
+                    ),
+                  ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: isPlayer
+                        ? CrossAxisAlignment.end
+                        : CrossAxisAlignment.start,
+                    children: [
+                      if (actor != null && !thread)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Text(
+                            play.tr.actor(actor),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                        ),
+                      if (text.isNotEmpty)
+                        MarkdownBody(
+                          data: text,
+                          styleSheet: MarkdownStyleSheet(
+                            p: const TextStyle(
+                              fontSize: 16,
+                            ),
+                            strong: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],
