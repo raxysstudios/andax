@@ -17,7 +17,7 @@ class NodeCard extends StatelessWidget {
   final Node node;
   final Node? previousNode;
 
-  static const Map<ActorType?, EdgeInsets> _messagePadding = {
+  static const _messagePadding = {
     null: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
     ActorType.player: EdgeInsets.fromLTRB(96, 2, 8, 2),
     ActorType.npc: EdgeInsets.fromLTRB(8, 2, 96, 2),

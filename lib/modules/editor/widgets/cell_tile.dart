@@ -13,7 +13,7 @@ class CellTile extends StatelessWidget {
   final Cell? cell;
   final VoidCallback? onTap;
 
-  static const Map<CellDisplay?, IconData> _displayIcon = {
+  static const _displayIcon = {
     null: Icons.visibility_off_rounded,
     CellDisplay.check: Icons.check_circle_rounded,
     CellDisplay.text: Icons.short_text_rounded,
