@@ -36,6 +36,19 @@ class NodeCard extends StatelessWidget {
     return b;
   }
 
+  Alignment _getAlignment(bool player, Alignment base) {
+    if (base == Alignment.topCenter) {
+      return player ? Alignment.topRight : Alignment.topLeft;
+    }
+    if (base == Alignment.center) {
+      return player ? Alignment.centerRight : Alignment.centerLeft;
+    }
+    if (base == Alignment.bottomCenter) {
+      return player ? Alignment.bottomLeft : Alignment.bottomRight;
+    }
+    return Alignment.center;
+  }
+
   @override
   Widget build(BuildContext context) {
     final play = context.watch<PlayScreenState>();
@@ -61,7 +74,7 @@ class NodeCard extends StatelessWidget {
               ),
             )
           else
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
             borderRadius: _getBorderRadius(actor, thread),
@@ -73,15 +86,11 @@ class NodeCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               if (node.image != null)
-                Container(
+                Image.network(
+                  node.image!.url,
                   height: node.image!.height,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(node.image!.url),
-                      fit: node.image!.fit,
-                      alignment: node.image!.alignment,
-                    ),
-                  ),
+                  fit: node.image!.fit,
+                  alignment: _getAlignment(isPlayer, node.image!.alignment),
                 ),
               Padding(
                 padding: const EdgeInsets.symmetric(
