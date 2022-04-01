@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
 import 'package:flutter/material.dart';
@@ -43,10 +41,6 @@ class NodeCard extends StatelessWidget {
     final text = play.tr.node(node, true);
     if (text.isEmpty) return const SizedBox();
 
-    var imgUrl = Random().nextDouble() < .5
-        ? ''
-        : 'https://cdna.artstation.com/p/assets/images/images/037/593/898/large/derek-laufman-art-shop.jpg?1620788395';
-
     final thread = actor?.id == previousNode?.actorId;
     final isPlayer = actor?.type == ActorType.player;
     return Column(
@@ -78,12 +72,15 @@ class NodeCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                if (imgUrl.isNotEmpty)
+                if (node.image != null)
                   Container(
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: NetworkImage(imgUrl),
-                        fit: BoxFit.cover,
+                        image: NetworkImage(node.image!.url),
+                        fit: node.image!.fit,
+                        alignment: isPlayer
+                            ? Alignment.centerRight
+                            : Alignment.centerLeft,
                       ),
                     ),
                     constraints: const BoxConstraints(

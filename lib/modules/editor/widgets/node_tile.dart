@@ -1,5 +1,6 @@
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
+import 'package:andax/shared/widgets/span_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -38,28 +39,26 @@ class NodeTile extends StatelessWidget {
     return ListTile(
       onTap: onTap,
       title: Text(editor.tr.node(node)),
-      subtitle: editor.story.startNodeId == node!.id || actor != null
-          ? Row(
+      subtitle: node == null
+          ? null
+          : Row(
               children: [
                 if (editor.story.startNodeId == node!.id)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: Icon(
-                      Icons.login_rounded,
-                      size: 16,
-                      color: Theme.of(context).textTheme.caption?.color,
-                    ),
+                  const SpanIcon(
+                    Icons.login_rounded,
+                    padding: EdgeInsets.only(right: 8),
+                  ),
+                if (node?.image != null)
+                  const SpanIcon(
+                    Icons.image_rounded,
+                    padding: EdgeInsets.only(right: 8),
                   ),
                 if (actor != null) ...[
-                  Padding(
+                  SpanIcon(
+                    actor.type == ActorType.npc
+                        ? Icons.smart_toy_rounded
+                        : Icons.face_rounded,
                     padding: const EdgeInsets.only(right: 4),
-                    child: Icon(
-                      actor.type == ActorType.npc
-                          ? Icons.smart_toy_rounded
-                          : Icons.face_rounded,
-                      size: 16,
-                      color: Theme.of(context).textTheme.caption?.color,
-                    ),
                   ),
                   Text(
                     editor.tr.actor(actor),
@@ -67,8 +66,7 @@ class NodeTile extends StatelessWidget {
                   ),
                 ],
               ],
-            )
-          : null,
+            ),
       trailing: Text(
         '#${getIndex(editor) + 1}',
         style: Theme.of(context).textTheme.subtitle2,

@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import '../screens/story.dart';
 import '../utils/pickers.dart';
 
-Future<CellWrite?> showCellWrite(
+Future<CellWrite?> showCellWriteEditor(
   BuildContext context,
   Node node, [
   CellWrite? value,

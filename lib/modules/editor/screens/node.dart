@@ -4,6 +4,7 @@ import 'package:andax/models/node.dart';
 import 'package:andax/models/transition.dart';
 import 'package:andax/modules/editor/utils/node.dart';
 import 'package:andax/modules/editor/utils/pickers.dart';
+import 'package:andax/modules/editor/widgets/image_data_editor.dart';
 import 'package:andax/modules/editor/widgets/transition_editor.dart';
 import 'package:andax/shared/extensions.dart';
 import 'package:andax/shared/widgets/options_button.dart';
@@ -88,10 +89,13 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
             onChanged: (s) => editor.tr[node.id] = s.trim(),
           ),
         ),
-        const ListTile(
-          leading: Icon(Icons.image_rounded),
-          title: Text('Select image'),
-          subtitle: Text('[NOT IMPLEMENTED]'),
+        ListTile(
+          leading: const Icon(Icons.image_rounded),
+          title: const Text('Image'),
+          subtitle: Text(node.image == null ? '[NO FILE]' : node.image!.url),
+          onTap: () => showImageDataEditor(context, node).then(
+            (r) => setState(() {}),
+          ),
         ),
         const ListTile(
           leading: Icon(Icons.audiotrack_rounded),
@@ -172,7 +176,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
     return Scaffold(
       primary: false,
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => showCellWrite(
+        onPressed: () => showCellWriteEditor(
           context,
           node,
         ).then((r) => setState(() {})),
@@ -192,7 +196,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
               ),
               title: Text(write.value),
               subtitle: Text(editor.tr[write.targetCellId] ?? '[❌CELL]'),
-              onTap: () => showCellWrite(
+              onTap: () => showCellWriteEditor(
                 context,
                 node,
                 write,
