@@ -7,7 +7,7 @@ import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/modules/play/utils/alert.dart';
 import 'package:andax/modules/play/utils/animator.dart';
-import 'package:andax/modules/play/widgets/game_results_dialog.dart';
+import 'package:andax/modules/play/widgets/game_results.dart';
 import 'package:andax/modules/play/widgets/transitions_chips.dart';
 import 'package:andax/modules/play/widgets/typing_indicator.dart';
 import 'package:flutter/material.dart';
@@ -84,14 +84,7 @@ class PlayScreenState extends State<PlayScreen> {
     cells['node']?.value = '';
     _timer.cancel();
 
-    if (node.transitions.isEmpty) {
-      PausableTimer(
-        const Duration(milliseconds: 500),
-        () => showGameResultsDialog(context, this),
-      ).start();
-      return;
-    }
-    if (node.input == NodeInputType.select) return;
+    if (node.input == NodeInputType.select || node.transitions.isEmpty) return;
     if (node.input == NodeInputType.random) {
       cells['node']?.value =
           Random().nextInt(node.transitions.length).toString();
@@ -176,12 +169,6 @@ class PlayScreenState extends State<PlayScreen> {
                       () => Navigator.pop(context),
                     ),
                   ),
-                  if (finished)
-                    SpeedDialChild(
-                      child: const Icon(Icons.query_stats_rounded),
-                      label: 'Results',
-                      onTap: () => showGameResultsDialog(context, this),
-                    ),
                 ],
               ),
             ),
@@ -218,15 +205,15 @@ class PlayScreenState extends State<PlayScreen> {
                 if (_timer.isActive) const TypingIndicator(),
                 if (finished)
                   slideUp(
-                    Column(
-                      children: const [
-                        Divider(
-                          height: 32,
-                          indent: 16,
-                          endIndent: 16,
-                        ),
-                        Icon(Icons.done_all),
-                      ],
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        children: const [
+                          Icon(Icons.done_all_rounded),
+                          SizedBox(height: 16),
+                          Card(child: GameResults()),
+                        ],
+                      ),
                     ),
                   ),
               ],
