@@ -155,7 +155,7 @@ class PlayScreenState extends State<PlayScreen> {
             ),
             body: ListView(
               controller: _scroll,
-              padding: const EdgeInsets.only(top: 98, bottom: 32),
+              padding: const EdgeInsets.only(top: 76, bottom: 32),
               children: [
                 for (var i = 0; i < storyline.length - 1; i++)
                   NodeCard(
