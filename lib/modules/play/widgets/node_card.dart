@@ -60,71 +60,68 @@ class NodeCard extends StatelessWidget {
             )
           else
             const SizedBox(height: 16),
-        InkWell(
-          onTap: () {},
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: _messageBorderRadius[actor?.type],
-              color: Theme.of(context).colorScheme.surface,
-            ),
-            clipBehavior: Clip.antiAlias,
-            margin: _messagePadding[actor?.type]!,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                if (node.image != null)
-                  Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(node.image!.url),
-                        fit: node.image!.fit,
-                        alignment: isPlayer
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
-                      ),
-                    ),
-                    constraints: const BoxConstraints(
-                      maxHeight: 224,
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: _messageBorderRadius[actor?.type],
+            color: Theme.of(context).colorScheme.surface,
+          ),
+          clipBehavior: Clip.antiAlias,
+          margin: _messagePadding[actor?.type]!,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (node.image != null)
+                Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(node.image!.url),
+                      fit: node.image!.fit,
+                      alignment: isPlayer
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
                     ),
                   ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: isPlayer
-                        ? CrossAxisAlignment.end
-                        : CrossAxisAlignment.start,
-                    children: [
-                      if (actor != null && !thread)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: Text(
-                            play.tr.actor(actor),
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                        ),
-                      if (text.isNotEmpty)
-                        MarkdownBody(
-                          data: text,
-                          styleSheet: MarkdownStyleSheet(
-                            p: const TextStyle(
-                              fontSize: 16,
-                            ),
-                            strong: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                    ],
+                  constraints: const BoxConstraints(
+                    maxHeight: 224,
                   ),
                 ),
-              ],
-            ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                child: Column(
+                  crossAxisAlignment: isPlayer
+                      ? CrossAxisAlignment.end
+                      : CrossAxisAlignment.start,
+                  children: [
+                    if (actor != null && !thread)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Text(
+                          play.tr.actor(actor),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                      ),
+                    if (text.isNotEmpty)
+                      MarkdownBody(
+                        data: text,
+                        styleSheet: MarkdownStyleSheet(
+                          p: const TextStyle(
+                            fontSize: 16,
+                          ),
+                          strong: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ],
