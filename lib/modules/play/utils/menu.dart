@@ -38,10 +38,7 @@ Future<void> showPlayMenu(BuildContext context) async {
               ListTile(
                 leading: const Icon(Icons.close_rounded),
                 title: const Text('Exit'),
-                onTap: () => showProgressAlert(
-                  context,
-                  () => Navigator.pop(context, true),
-                ),
+                onTap: () => Navigator.pop(context, true),
               ),
             ],
           ),
@@ -49,5 +46,10 @@ Future<void> showPlayMenu(BuildContext context) async {
       );
     },
   );
-  if (exit != null && exit) Navigator.pop(context);
+  if (exit != null && exit) {
+    showProgressAlert(
+      context,
+      () => Navigator.pop(context),
+    );
+  }
 }
