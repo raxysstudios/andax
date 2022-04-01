@@ -11,10 +11,7 @@ Future<void> showPlayMenu(BuildContext context) async {
     builder: (context) {
       return SingleChildScrollView(
         child: Card(
-          margin: const EdgeInsets.all(16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
+          margin: const EdgeInsets.all(8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

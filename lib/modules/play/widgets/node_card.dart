@@ -1,5 +1,6 @@
 import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +22,19 @@ class NodeCard extends StatelessWidget {
     ActorType.player: EdgeInsets.fromLTRB(96, 2, 8, 2),
     ActorType.npc: EdgeInsets.fromLTRB(8, 2, 96, 2),
   };
+
+  BorderRadius _getBorderRadius(Actor? actor, bool thread) {
+    var b = BorderRadius.circular(4);
+    const c = Radius.circular(16);
+    if (actor != null && !thread) {
+      if (actor.type == ActorType.player) {
+        b = b.copyWith(topLeft: c);
+      } else {
+        b = b.copyWith(topRight: c);
+      }
+    }
+    return b;
+  }
 
   static final Map<ActorType?, BorderRadius> _messageBorderRadius = {
     null: BorderRadius.circular(4),
@@ -62,7 +76,7 @@ class NodeCard extends StatelessWidget {
             const SizedBox(height: 16),
         Container(
           decoration: BoxDecoration(
-            borderRadius: _messageBorderRadius[actor?.type],
+            borderRadius: _getBorderRadius(actor, thread),
             color: Theme.of(context).colorScheme.surface,
           ),
           clipBehavior: Clip.antiAlias,
