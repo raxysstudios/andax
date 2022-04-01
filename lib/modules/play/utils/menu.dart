@@ -24,6 +24,7 @@ Future<void> showPlayMenu(BuildContext context) async {
                 subtitle: const Text('Playing now'),
                 onTap: () => Navigator.pop(context),
               ),
+              const Divider(),
               ListTile(
                 leading: const Icon(Icons.replay_rounded),
                 title: const Text('Restart'),
