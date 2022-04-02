@@ -15,7 +15,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:pausable_timer/pausable_timer.dart';
 import 'package:provider/provider.dart';
 
-import '../widgets/node_card.dart';
+import '../widgets/node_display.dart';
 
 class PlayScreen extends StatefulWidget {
   const PlayScreen({
@@ -151,12 +151,12 @@ class PlayScreenState extends State<PlayScreen> {
               padding: const EdgeInsets.only(top: 76, bottom: 32),
               children: [
                 for (var i = 0; i < storyline.length - 1; i++)
-                  NodeCard(
+                  NodeDisplay(
                     node: storyline[i],
                     previousNode: i > 0 ? storyline[i - 1] : null,
                   ),
                 slideUp(
-                  NodeCard(
+                  NodeDisplay(
                     node: storyline.last,
                     previousNode: storyline.length > 1
                         ? storyline[storyline.length - 2]
