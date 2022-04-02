@@ -103,7 +103,7 @@ export const indexStories = functions
         title,
         description,
         tags: tags.split(" "),
-        imageUrl: "",
+        imageUrl: story.coverUrl,
       };
 
       if (change.before.exists) {
