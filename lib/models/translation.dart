@@ -27,8 +27,8 @@ class Translation {
   String cell(Cell? c) => this[c?.id] ?? '[❌CELL]';
 
   String get title => this['title'] ?? '[❌TITLE]';
-  String get description => this['description'] ?? '[❌DESCRIPTION]';
-  String get tags => this['tags'] ?? '[❌TAGS]';
+  String? get description => this['description'];
+  String? get tags => this['tags'];
 
   factory Translation.fromJson(Map<String, dynamic> json) =>
       _$TranslationFromJson(json);

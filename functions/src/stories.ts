@@ -101,8 +101,10 @@ export const indexStories = functions
         translationAuthorID: translation.metaData.authorId,
         language: translation.language,
         title,
-        description,
       };
+      if (description) {
+        entry["description"] = description;
+      }
       if (tags) {
         entry["tags"] = tags.split(" ");
       }
