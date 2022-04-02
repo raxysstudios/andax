@@ -178,15 +178,14 @@ class PlayScreenState extends State<PlayScreen> {
                   )
                 else if (storyline.last.transitions.isEmpty)
                   slideUp(
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        children: const [
-                          Icon(Icons.done_all_rounded),
-                          SizedBox(height: 16),
-                          Card(child: GameResults()),
-                        ],
-                      ),
+                    Column(
+                      children: const [
+                        Padding(
+                          padding: EdgeInsets.all(16),
+                          child: Icon(Icons.done_all_rounded),
+                        ),
+                        GameResults(),
+                      ],
                     ),
                   )
               ],
