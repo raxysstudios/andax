@@ -104,6 +104,16 @@ class _InfoEditorScreenState extends State<InfoEditorScreen> {
             ),
             ListTile(
               title: TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Cover image url',
+                  prefixIcon: Icon(Icons.link_rounded),
+                ),
+                initialValue: editor.story.coverUrl,
+                onChanged: (s) => editor.story.coverUrl = s.trim(),
+              ),
+            ),
+            ListTile(
+              title: TextFormField(
                 maxLines: null,
                 decoration: const InputDecoration(
                   labelText: 'Story description',

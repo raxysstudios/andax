@@ -16,9 +16,11 @@ class Story {
   @JsonKey(toJson: _cellsToJson)
   Map<String, Cell> cells;
   String? startNodeId;
+  String coverUrl;
 
   Story({
     this.startNodeId,
+    this.coverUrl = '',
     List<Node> nodes = const [],
     List<Actor> actors = const [],
     List<Cell> cells = const [],
