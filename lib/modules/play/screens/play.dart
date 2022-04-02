@@ -44,19 +44,11 @@ class PlayScreenState extends State<PlayScreen> {
   final List<Node> storyline = [];
 
   var _timer = PausableTimer(Duration.zero, () {});
-  final _dial = ValueNotifier(false);
   final _scroll = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    _dial.addListener(() {
-      if (_dial.value) {
-        _timer.pause();
-      } else {
-        _timer.start();
-      }
-    });
     reset();
   }
 
@@ -125,6 +117,12 @@ class PlayScreenState extends State<PlayScreen> {
     setState(() {});
   }
 
+  void openMenu(BuildContext context) async {
+    _timer.pause();
+    await showPlayMenu(context);
+    _timer.start();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Provider.value(
@@ -132,7 +130,7 @@ class PlayScreenState extends State<PlayScreen> {
       builder: (context, _) {
         return WillPopScope(
           onWillPop: () {
-            _dial.value = true;
+            openMenu(context);
             return Future.value(false);
           },
           child: Scaffold(
@@ -145,11 +143,7 @@ class PlayScreenState extends State<PlayScreen> {
               padding: const EdgeInsets.only(top: 16),
               child: FloatingActionButton.small(
                 child: const Icon(Icons.menu_rounded),
-                onPressed: () async {
-                  _timer.pause();
-                  await showPlayMenu(context);
-                  _timer.start();
-                },
+                onPressed: () => openMenu(context),
               ),
             ),
             body: ListView(
