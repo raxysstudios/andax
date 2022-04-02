@@ -143,9 +143,8 @@ class PlayScreenState extends State<PlayScreen> {
             floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
             floatingActionButton: Padding(
               padding: const EdgeInsets.only(top: 16),
-              child: FloatingActionButton.extended(
-                icon: const Icon(Icons.menu_rounded),
-                label: const Text('Menu'),
+              child: FloatingActionButton.small(
+                child: const Icon(Icons.menu_rounded),
                 onPressed: () async {
                   _timer.pause();
                   await showPlayMenu(context);
