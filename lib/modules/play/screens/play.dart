@@ -98,10 +98,7 @@ class PlayScreenState extends State<PlayScreen> {
   void scheduleMove(Node node) {
     _timer = PausableTimer(
       Duration(
-        milliseconds: max(
-          500,
-          50 * tr.node(node).length,
-        ),
+        milliseconds: 1000 + 50 * tr.node(storyline.last).length,
       ),
       () {
         moveAt(node);
