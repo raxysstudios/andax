@@ -1,4 +1,3 @@
-import 'package:andax/models/actor.dart';
 import 'package:andax/models/cell_write.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/transition.dart';

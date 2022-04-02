@@ -62,7 +62,7 @@ Future<Actor?> showActorEditor(
             ),
             autofocus: true,
             initialValue: actor.avatarUrl,
-            onChanged: (s) => actor.avatarUrl = s.isEmpty ? null : s.trim(),
+            onChanged: (s) => actor.avatarUrl = s.trim(),
           ),
         ),
         buildExplanationTile(

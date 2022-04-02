@@ -51,9 +51,9 @@ class StoryInfo {
   final String translationID;
   final String translationAuthorID;
   final String title;
-  final String? description;
-  final List<String>? tags;
-  final String? imageUrl;
+  final String description;
+  final List<String> tags;
+  final String imageUrl;
   final int likes;
   final int views;
   @JsonKey(fromJson: _dateFromMillis)
@@ -65,12 +65,12 @@ class StoryInfo {
     required this.translationID,
     required this.translationAuthorID,
     required this.title,
-    this.description,
+    this.description = '',
     this.likes = 0,
     this.views = 0,
-    this.tags,
+    this.tags = const [],
     this.lastUpdateAt,
-    this.imageUrl,
+    this.imageUrl = '',
   });
 
   factory StoryInfo.fromAlgoliaHit(AlgoliaObjectSnapshot hit) {

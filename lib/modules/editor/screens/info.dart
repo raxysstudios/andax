@@ -110,13 +110,7 @@ class _InfoEditorScreenState extends State<InfoEditorScreen> {
                   prefixIcon: Icon(Icons.description_rounded),
                 ),
                 initialValue: editor.tr.description,
-                onChanged: (s) {
-                  if (s.isEmpty) {
-                    editor.tr.assets.remove('description');
-                  } else {
-                    editor.tr['description'] = s.trim();
-                  }
-                },
+                onChanged: (s) => editor.tr['description'] = s.trim(),
               ),
             ),
             ListTile(
@@ -126,13 +120,7 @@ class _InfoEditorScreenState extends State<InfoEditorScreen> {
                   prefixIcon: Icon(Icons.tag_rounded),
                 ),
                 initialValue: editor.tr['tags'],
-                onChanged: (s) {
-                  if (s.isEmpty) {
-                    editor.tr.assets.remove('tags');
-                  } else {
-                    editor.tr['tags'] = s.trim();
-                  }
-                },
+                onChanged: (s) => editor.tr['tags'] = s.trim(),
               ),
             ),
           ],

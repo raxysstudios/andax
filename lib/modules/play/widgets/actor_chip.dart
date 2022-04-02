@@ -20,10 +20,10 @@ class ActorChip extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(4),
         child: Chip(
-          avatar: actor.avatarUrl == null
+          avatar: actor.avatarUrl.isEmpty
               ? null
               : CircleAvatar(
-                  foregroundImage: NetworkImage(actor.avatarUrl!),
+                  foregroundImage: NetworkImage(actor.avatarUrl),
                   backgroundColor: Colors.transparent,
                 ),
           label: Text(

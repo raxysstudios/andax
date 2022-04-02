@@ -62,11 +62,11 @@ class StoryScreen extends StatelessWidget {
             pinned: true,
             forceElevated: true,
             leading: const RoundedBackButton(),
-            expandedHeight: info.imageUrl == null ? null : 3 * kToolbarHeight,
-            flexibleSpace: info.imageUrl == null
+            expandedHeight: info.imageUrl.isEmpty ? null : 3 * kToolbarHeight,
+            flexibleSpace: info.imageUrl.isEmpty
                 ? null
                 : FlexibleSpaceBar(
-                    background: GradientCoverImage(info.imageUrl!),
+                    background: GradientCoverImage(info.imageUrl),
                   ),
             actions: [
               Chip(
@@ -132,11 +132,11 @@ class StoryScreen extends StatelessWidget {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        if (info.description != null)
+                        if (info.description.isNotEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 16),
                             child: MarkdownBody(
-                              data: info.description!,
+                              data: info.description,
                               selectable: true,
                               styleSheet: MarkdownStyleSheet(
                                 p: const TextStyle(
@@ -164,7 +164,7 @@ class StoryScreen extends StatelessWidget {
                         fontSize: 14,
                       ),
                       children: [
-                        if (info.tags?.isNotEmpty ?? false) ...[
+                        if (info.tags.isNotEmpty) ...[
                           const WidgetSpan(
                             child: SpanIcon(
                               Icons.tag_rounded,

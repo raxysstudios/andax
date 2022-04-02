@@ -19,10 +19,10 @@ class StoryTile extends StatelessWidget {
       leading: AspectRatio(
         aspectRatio: 1,
         child: Card(
-          child: info.imageUrl == null
+          child: info.imageUrl.isEmpty
               ? const Icon(Icons.history_edu_rounded)
               : Image.network(
-                  info.imageUrl!,
+                  info.imageUrl,
                   fit: BoxFit.cover,
                 ),
         ),
@@ -49,7 +49,7 @@ class StoryTile extends StatelessWidget {
               ),
             ),
             TextSpan(text: info.likes.toString()),
-            if (info.tags?.isNotEmpty ?? false) ...[
+            if (info.tags.isNotEmpty) ...[
               const WidgetSpan(
                 child: SpanIcon(
                   Icons.tag_rounded,
