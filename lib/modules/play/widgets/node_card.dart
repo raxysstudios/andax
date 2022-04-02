@@ -26,6 +26,7 @@ class NodeCard extends StatelessWidget {
 
     final thread = actor?.id == previousNode?.actorId;
     final isPlayer = actor?.type == ActorType.player;
+    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -44,58 +45,62 @@ class NodeCard extends StatelessWidget {
           )
         else
           const SizedBox(height: 16),
-        Card(
-          elevation: .5,
-          shape: const RoundedRectangleBorder(),
-          margin: EdgeInsets.zero,
-          child: InkWell(
-            onTap: () {},
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                if (node.image != null)
-                  Image.network(
-                    node.image!.url,
-                    height: node.image!.height,
-                    fit: node.image!.fit,
-                    alignment: node.image!.alignment,
-                  ),
-                if (actor != null && !thread)
-                  Padding(
-                    padding:
-                        EdgeInsets.fromLTRB(16, 8, 16, text.isEmpty ? 8 : 0),
-                    child: Text(
-                      play.tr.actor(actor),
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: isPlayer
-                            ? Theme.of(context).colorScheme.primary
-                            : null,
+        if (node.image != null)
+          Image.network(
+            node.image!.url,
+            height: node.image!.height,
+            fit: node.image!.fit,
+            alignment: node.image!.alignment,
+          ),
+        if (actor != null && !thread)
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(4),
+              child: Chip(
+                avatar: actor.avatarUrl == null
+                    ? null
+                    : CircleAvatar(
+                        foregroundImage: NetworkImage(actor.avatarUrl!),
+                        backgroundColor: Colors.transparent,
                       ),
-                    ),
-                  ),
-                if (text.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    child: MarkdownBody(
-                      data: text,
-                      styleSheet: MarkdownStyleSheet(
-                        p: const TextStyle(
-                          fontSize: 16,
-                        ),
-                        strong: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
+                label: Text(
+                  play.tr.actor(actor),
+                ),
+                labelStyle: TextStyle(
+                  color: isPlayer ? theme.colorScheme.primary : null,
+                ),
+                backgroundColor: theme.scaffoldBackgroundColor,
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
             ),
           ),
-        ),
+        if (text.isNotEmpty)
+          Card(
+            elevation: .5,
+            shape: const RoundedRectangleBorder(),
+            margin: EdgeInsets.zero,
+            child: InkWell(
+              onTap: () {},
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                child: MarkdownBody(
+                  data: text,
+                  styleSheet: MarkdownStyleSheet(
+                    p: const TextStyle(
+                      fontSize: 16,
+                    ),
+                    strong: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
       ],
     );
   }

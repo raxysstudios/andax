@@ -25,6 +25,7 @@ class TransitionsChips extends StatelessWidget {
         children: [
           for (final transition in transitions)
             InputChip(
+              elevation: 1,
               onPressed: () => onTap(transition),
               label: Text(play.tr.transition(transition)),
             ),

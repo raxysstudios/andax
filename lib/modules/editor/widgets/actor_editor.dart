@@ -54,6 +54,17 @@ Future<Actor?> showActorEditor(
             onChanged: (s) => name = s.trim(),
           ),
         ),
+        ListTile(
+          title: TextFormField(
+            decoration: const InputDecoration(
+              labelText: 'Avatar file URL',
+              prefixIcon: Icon(Icons.link_rounded),
+            ),
+            autofocus: true,
+            initialValue: actor.avatarUrl,
+            onChanged: (s) => actor.avatarUrl = s.trim(),
+          ),
+        ),
         buildExplanationTile(
           context,
           'Actor mode',
