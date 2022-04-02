@@ -18,9 +18,8 @@ class TransitionsChips extends StatelessWidget {
   Widget build(BuildContext context) {
     final play = context.watch<PlayScreenState>();
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.all(8),
       child: Wrap(
-        alignment: WrapAlignment.end,
         spacing: 8,
         runSpacing: 8,
         children: [

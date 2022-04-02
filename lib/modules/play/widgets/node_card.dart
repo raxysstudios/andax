@@ -17,38 +17,6 @@ class NodeCard extends StatelessWidget {
   final Node node;
   final Node? previousNode;
 
-  static const _messagePadding = {
-    null: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-    ActorType.player: EdgeInsets.fromLTRB(96, 2, 8, 2),
-    ActorType.npc: EdgeInsets.fromLTRB(8, 2, 96, 2),
-  };
-
-  BorderRadius _getBorderRadius(Actor? actor, bool thread) {
-    var b = BorderRadius.circular(4);
-    const c = Radius.circular(16);
-    if (actor != null && !thread) {
-      if (actor.type == ActorType.player) {
-        b = b.copyWith(topLeft: c);
-      } else {
-        b = b.copyWith(topRight: c);
-      }
-    }
-    return b;
-  }
-
-  Alignment _getAlignment(bool player, Alignment base) {
-    if (base == Alignment.topCenter) {
-      return player ? Alignment.topRight : Alignment.topLeft;
-    }
-    if (base == Alignment.center) {
-      return player ? Alignment.centerRight : Alignment.centerLeft;
-    }
-    if (base == Alignment.bottomCenter) {
-      return player ? Alignment.bottomLeft : Alignment.bottomRight;
-    }
-    return Alignment.center;
-  }
-
   @override
   Widget build(BuildContext context) {
     final play = context.watch<PlayScreenState>();
@@ -61,74 +29,71 @@ class NodeCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (!thread)
-          if (actor == null)
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                '• • •',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                ),
+        if (thread)
+          const SizedBox(height: 2)
+        else if (actor == null)
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              '• • •',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
               ),
-            )
-          else
-            const SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: _getBorderRadius(actor, thread),
-            color: Theme.of(context).colorScheme.surface,
-          ),
-          clipBehavior: Clip.antiAlias,
-          margin: _messagePadding[actor?.type]!,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              if (node.image != null)
-                Image.network(
-                  node.image!.url,
-                  height: node.image!.height,
-                  fit: node.image!.fit,
-                  alignment: _getAlignment(isPlayer, node.image!.alignment),
-                ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                child: Column(
-                  crossAxisAlignment: isPlayer
-                      ? CrossAxisAlignment.end
-                      : CrossAxisAlignment.start,
-                  children: [
-                    if (actor != null && !thread)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Text(
-                          play.tr.actor(actor),
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
+            ),
+          )
+        else
+          const SizedBox(height: 16),
+        Card(
+          elevation: .5,
+          shape: const RoundedRectangleBorder(),
+          margin: EdgeInsets.zero,
+          child: InkWell(
+            onTap: () {},
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (node.image != null)
+                  Image.network(
+                    node.image!.url,
+                    height: node.image!.height,
+                    fit: node.image!.fit,
+                    alignment: node.image!.alignment,
+                  ),
+                if (actor != null && !thread)
+                  Padding(
+                    padding:
+                        EdgeInsets.fromLTRB(16, 8, 16, text.isEmpty ? 8 : 0),
+                    child: Text(
+                      play.tr.actor(actor),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: isPlayer
+                            ? Theme.of(context).colorScheme.primary
+                            : null,
+                      ),
+                    ),
+                  ),
+                if (text.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    child: MarkdownBody(
+                      data: text,
+                      styleSheet: MarkdownStyleSheet(
+                        p: const TextStyle(
+                          fontSize: 16,
+                        ),
+                        strong: const TextStyle(
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
-                    if (text.isNotEmpty)
-                      MarkdownBody(
-                        data: text,
-                        styleSheet: MarkdownStyleSheet(
-                          p: const TextStyle(
-                            fontSize: 16,
-                          ),
-                          strong: const TextStyle(
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ],
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ],
