@@ -138,7 +138,7 @@ class PlayScreenState extends State<PlayScreen> {
               automaticallyImplyLeading: false,
               toolbarHeight: 0,
             ),
-            floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
+            floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
             floatingActionButton: Padding(
               padding: const EdgeInsets.only(top: 16),
               child: FloatingActionButton.small(
