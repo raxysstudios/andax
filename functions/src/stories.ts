@@ -102,7 +102,7 @@ export const indexStories = functions
         language: translation.language,
         title,
         description,
-        tags: tags.split(" "),
+        tags: tags.split(" ").filter((t) => t),
         imageUrl: story.coverUrl,
       };
 
