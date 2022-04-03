@@ -18,14 +18,17 @@ class TransitionsChips extends StatelessWidget {
   Widget build(BuildContext context) {
     final play = context.watch<PlayScreenState>();
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 8,
+      ),
       child: Wrap(
-        alignment: WrapAlignment.end,
-        spacing: 8,
-        runSpacing: 8,
+        spacing: 16,
+        runSpacing: 16,
         children: [
           for (final transition in transitions)
             InputChip(
+              elevation: 1,
               onPressed: () => onTap(transition),
               label: Text(play.tr.transition(transition)),
             ),

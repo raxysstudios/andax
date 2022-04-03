@@ -47,7 +47,10 @@ class _NarrativeEditorScreenState extends State<NarrativeEditorScreen> {
       final choice = choices[node.id];
       final transition = choice == null
           ? transitions.first
-          : transitions.firstWhere((t) => t.id == choice);
+          : transitions.firstWhere(
+              (t) => t.id == choice,
+              orElse: () => transitions.first,
+            );
       node = story.nodes[transition.targetNodeId];
 
       if (thread.contains(node)) break;

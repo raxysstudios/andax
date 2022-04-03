@@ -1,9 +1,9 @@
-import 'package:andax/models/actor.dart';
 import 'package:andax/models/cell_write.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/transition.dart';
 import 'package:andax/modules/editor/utils/node.dart';
 import 'package:andax/modules/editor/utils/pickers.dart';
+import 'package:andax/modules/editor/widgets/image_data_editor.dart';
 import 'package:andax/modules/editor/widgets/transition_editor.dart';
 import 'package:andax/shared/extensions.dart';
 import 'package:andax/shared/widgets/options_button.dart';
@@ -39,8 +39,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
   @override
   void initState() {
     super.initState();
-    if (node.actorId == null &&
-        (context.read<StoryEditorState>().tr[node.id]?.isEmpty ?? false)) {
+    if (node.actorId == null && node.transitions.isEmpty) {
       SchedulerBinding.instance?.addPostFrameCallback(
         (_) => pickActor(context, node).then(
           (r) => setState(() => node.actorId = r?.id),
@@ -58,14 +57,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
             return ActorTile(
               actor,
               onTap: () => pickActor(context, node).then(
-                (r) {
-                  if (r?.type != ActorType.player &&
-                      node.input == NodeInputType.select) {
-                    node.input = NodeInputType.random;
-                  }
-                  node.actorId = r?.id;
-                  setState(() {});
-                },
+                (r) => setState(() => node.actorId = r?.id),
               ),
               onLongPress: actor == null
                   ? null
@@ -88,10 +80,13 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
             onChanged: (s) => editor.tr[node.id] = s.trim(),
           ),
         ),
-        const ListTile(
-          leading: Icon(Icons.image_rounded),
-          title: Text('Select image'),
-          subtitle: Text('[NOT IMPLEMENTED]'),
+        ListTile(
+          leading: const Icon(Icons.image_rounded),
+          title: const Text('Image'),
+          subtitle: Text(node.image == null ? '[NO FILE]' : node.image!.url),
+          onTap: () => showImageDataEditor(context, node).then(
+            (r) => setState(() {}),
+          ),
         ),
         const ListTile(
           leading: Icon(Icons.audiotrack_rounded),
@@ -172,7 +167,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
     return Scaffold(
       primary: false,
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => showCellWrite(
+        onPressed: () => showCellWriteEditor(
           context,
           node,
         ).then((r) => setState(() {})),
@@ -192,7 +187,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
               ),
               title: Text(write.value),
               subtitle: Text(editor.tr[write.targetCellId] ?? '[❌CELL]'),
-              onTap: () => showCellWrite(
+              onTap: () => showCellWriteEditor(
                 context,
                 node,
                 write,

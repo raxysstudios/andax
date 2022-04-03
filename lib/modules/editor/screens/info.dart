@@ -1,3 +1,4 @@
+import 'package:andax/modules/editor/utils/editor_sheet.dart';
 import 'package:andax/modules/home/screens/home.dart';
 import 'package:andax/shared/widgets/danger_dialog.dart';
 import 'package:andax/shared/widgets/loading_dialog.dart';
@@ -8,8 +9,15 @@ import 'package:provider/provider.dart';
 import '../screens/story.dart';
 import '../services/story.dart';
 
-class InfoEditorScreen extends StatelessWidget {
+class InfoEditorScreen extends StatefulWidget {
   const InfoEditorScreen({Key? key}) : super(key: key);
+
+  @override
+  State<InfoEditorScreen> createState() => _InfoEditorScreenState();
+}
+
+class _InfoEditorScreenState extends State<InfoEditorScreen> {
+  final form = GlobalKey<FormState>();
 
   void promptStoryDelete(
     BuildContext context,
@@ -51,6 +59,7 @@ class InfoEditorScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
+          if (!(form.currentState?.validate() ?? true)) return;
           if (editor.story.nodes.isEmpty) {
             showSnackbar(
               context,
@@ -65,51 +74,67 @@ class InfoEditorScreen extends StatelessWidget {
         icon: const Icon(Icons.upload_rounded),
         label: const Text('Save story'),
       ),
-      body: ListView(
-        padding: const EdgeInsets.only(bottom: 72),
-        children: [
-          ListTile(
-            title: TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Initial language',
-                prefixIcon: Icon(Icons.language_rounded),
+      body: Form(
+        key: form,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: ListView(
+          padding: const EdgeInsets.only(bottom: 72),
+          children: [
+            ListTile(
+              title: TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Initial language',
+                  prefixIcon: Icon(Icons.language_rounded),
+                ),
+                initialValue: editor.tr.language,
+                validator: emptyValidator,
+                onChanged: (s) => editor.tr.language = s.trim(),
               ),
-              initialValue: editor.tr.language,
-              onChanged: (s) => editor.tr.language = s.trim(),
             ),
-          ),
-          ListTile(
-            title: TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Story title',
-                prefixIcon: Icon(Icons.title_rounded),
+            ListTile(
+              title: TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Story title',
+                  prefixIcon: Icon(Icons.title_rounded),
+                ),
+                initialValue: editor.tr.title,
+                validator: emptyValidator,
+                onChanged: (s) => editor.tr['title'] = s.trim(),
               ),
-              initialValue: editor.tr.title,
-              onChanged: (s) => editor.tr['title'] = s.trim(),
             ),
-          ),
-          ListTile(
-            title: TextFormField(
-              maxLines: null,
-              decoration: const InputDecoration(
-                labelText: 'Story description',
-                prefixIcon: Icon(Icons.description_rounded),
+            ListTile(
+              title: TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Cover image url',
+                  prefixIcon: Icon(Icons.link_rounded),
+                ),
+                initialValue: editor.story.coverUrl,
+                onChanged: (s) => editor.story.coverUrl = s.trim(),
               ),
-              initialValue: editor.tr.description,
-              onChanged: (s) => editor.tr['description'] = s.trim(),
             ),
-          ),
-          ListTile(
-            title: TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Story tags',
-                prefixIcon: Icon(Icons.tag_rounded),
+            ListTile(
+              title: TextFormField(
+                maxLines: null,
+                decoration: const InputDecoration(
+                  labelText: 'Story description',
+                  prefixIcon: Icon(Icons.description_rounded),
+                ),
+                initialValue: editor.tr.description,
+                onChanged: (s) => editor.tr['description'] = s.trim(),
               ),
-              initialValue: editor.tr['tags'],
-              onChanged: (s) => editor.tr['tags'] = s.trim(),
             ),
-          ),
-        ],
+            ListTile(
+              title: TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Story tags',
+                  prefixIcon: Icon(Icons.tag_rounded),
+                ),
+                initialValue: editor.tr['tags'],
+                onChanged: (s) => editor.tr['tags'] = s.trim(),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

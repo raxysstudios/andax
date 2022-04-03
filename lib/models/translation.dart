@@ -20,14 +20,15 @@ class Translation {
   String? operator [](String? id) => assets[id];
   void operator []=(String id, String asset) => assets[id] = asset;
 
-  String node(Node? n) => this[n?.id] ?? '[❌NODE]';
+  String node(Node? n, {bool allowEmpty = false}) =>
+      this[n?.id] ?? (allowEmpty ? '' : '[❌NODE]');
   String transition(Transition? t) => this[t?.id] ?? '[❌TRANSITION]';
   String actor(Actor? a) => this[a?.id] ?? '[❌ACTOR]';
   String cell(Cell? c) => this[c?.id] ?? '[❌CELL]';
 
   String get title => this['title'] ?? '[❌TITLE]';
-  String get description => this['description'] ?? '[❌DESCRIPTION]';
-  String get tags => this['tags'] ?? '[❌TAGS]';
+  String? get description => this['description'];
+  String? get tags => this['tags'];
 
   factory Translation.fromJson(Map<String, dynamic> json) =>
       _$TranslationFromJson(json);

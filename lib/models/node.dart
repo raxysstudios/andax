@@ -1,4 +1,5 @@
 import 'package:andax/models/cell_write.dart';
+import 'package:andax/models/image_data.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'transition.dart';
@@ -15,12 +16,14 @@ class Node {
   List<Transition> transitions;
   List<CellWrite> cellWrites;
   NodeInputType input;
+  ImageData? image;
 
   Node(
     this.id, {
     this.actorId,
     List<Transition>? transitions,
     List<CellWrite>? cellWrites,
+    this.image,
     this.input = NodeInputType.random,
   })  : transitions = transitions ?? [],
         cellWrites = cellWrites ?? [];

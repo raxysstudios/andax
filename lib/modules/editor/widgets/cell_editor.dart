@@ -63,7 +63,7 @@ Future<Cell?> showCellEditor(
             initialValue:
                 cell.max == double.infinity ? '' : cell.max.toString(),
             onChanged: (s) =>
-                cell.max = int.tryParse(s.trim()) ?? double.infinity,
+                cell.max = num.tryParse(s.trim()) ?? double.infinity,
             keyboardType: TextInputType.number,
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly

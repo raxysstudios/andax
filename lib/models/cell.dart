@@ -26,9 +26,9 @@ class Cell {
       return;
     }
 
-    num n = int.tryParse(write.value) ?? 0;
+    num n = num.tryParse(write.value) ?? 0;
     if (write.mode == CellWriteMode.subtract) n *= -1;
-    n = (int.tryParse(value) ?? 0) + n;
+    n = (num.tryParse(value) ?? 0) + n;
     n = n.clamp(0, max);
     value = n.toString();
   }

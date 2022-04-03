@@ -19,9 +19,9 @@ type StoryRecord = {
   translationAuthorID: string,
   language: string,
   title: string,
-  imageUrl?:string,
-  description?: string,
-  tags?: string[],
+  imageUrl:string,
+  description: string,
+  tags: string[],
   lastUpdateAt?: number,
 };
 
@@ -102,10 +102,10 @@ export const indexStories = functions
         language: translation.language,
         title,
         description,
+        tags: tags.split(" ").filter((t) => t),
+        imageUrl: story.coverUrl,
       };
-      if (tags) {
-        entry["tags"] = tags.split(" ");
-      }
+
       if (change.before.exists) {
         await index.partialUpdateObject(
             entry,

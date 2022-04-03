@@ -26,7 +26,7 @@ Future<Transition?> showTransitionEditor(
     transition = Transition(
       id,
       targetNodeId: targetNode.id,
-      condition: node.input == NodeInputType.select
+      condition: node.input == NodeInputType.none
           ? CellCheck(cellId: '')
           : CellCheck(
               cellId: 'node',
@@ -34,7 +34,9 @@ Future<Transition?> showTransitionEditor(
               value: node.transitions.length.toString(),
             ),
     );
-    label = 'Transition #${node.transitions.length + 1}';
+    label = node.input == NodeInputType.select
+        ? 'Transition #${node.transitions.length + 1}'
+        : null;
   } else {
     transition = Transition.fromJson(value.toJson());
     label = node.input == NodeInputType.select

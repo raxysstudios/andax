@@ -8,10 +8,12 @@ enum ActorType { npc, player }
 class Actor {
   final String id;
   ActorType type;
+  String avatarUrl;
 
   Actor(
     this.id, {
     this.type = ActorType.npc,
+    this.avatarUrl = '',
   });
 
   factory Actor.fromJson(Map<String, dynamic> json) => _$ActorFromJson(json);

@@ -31,9 +31,9 @@ class CellCheck {
       case CheckOperator.equal:
         return x == value;
       case CheckOperator.less:
-        return (int.tryParse(x) ?? 0) < (int.tryParse(value) ?? 0);
+        return (num.tryParse(x) ?? 0) < (num.tryParse(value) ?? 0);
       case CheckOperator.greater:
-        return (int.tryParse(x) ?? 0) > (int.tryParse(value) ?? 0);
+        return (num.tryParse(x) ?? 0) > (num.tryParse(value) ?? 0);
     }
   }
 }

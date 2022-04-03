@@ -5,18 +5,17 @@ import 'package:andax/models/cell.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
-import 'package:andax/modules/play/utils/alert.dart';
 import 'package:andax/modules/play/utils/animator.dart';
-import 'package:andax/modules/play/widgets/game_results_dialog.dart';
+import 'package:andax/modules/play/utils/menu.dart';
+import 'package:andax/modules/play/widgets/game_results.dart';
 import 'package:andax/modules/play/widgets/transitions_chips.dart';
 import 'package:andax/modules/play/widgets/typing_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:pausable_timer/pausable_timer.dart';
 import 'package:provider/provider.dart';
 
-import '../widgets/node_card.dart';
+import '../widgets/node_display.dart';
 
 class PlayScreen extends StatefulWidget {
   const PlayScreen({
@@ -44,21 +43,13 @@ class PlayScreenState extends State<PlayScreen> {
   };
   final List<Node> storyline = [];
 
-  bool get finished => storyline.last.transitions.isEmpty && !_timer.isActive;
   var _timer = PausableTimer(Duration.zero, () {});
-  final _dial = ValueNotifier(false);
+  Node? _pending;
   final _scroll = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    _dial.addListener(() {
-      if (_dial.value) {
-        _timer.pause();
-      } else {
-        _timer.start();
-      }
-    });
     reset();
   }
 
@@ -82,16 +73,8 @@ class PlayScreenState extends State<PlayScreen> {
     }
     setState(() {});
     cells['node']?.value = '';
-    _timer.cancel();
 
-    if (node.transitions.isEmpty) {
-      PausableTimer(
-        const Duration(milliseconds: 500),
-        () => showGameResultsDialog(context, this),
-      ).start();
-      return;
-    }
-    if (node.input == NodeInputType.select) return;
+    if (node.input == NodeInputType.select || node.transitions.isEmpty) return;
     if (node.input == NodeInputType.random) {
       cells['node']?.value =
           Random().nextInt(node.transitions.length).toString();
@@ -100,110 +83,93 @@ class PlayScreenState extends State<PlayScreen> {
   }
 
   void attemptMove() {
-    final transitions = storyline.last.transitions;
-    for (final transition in transitions) {
+    final last = storyline.last;
+    for (final transition in last.transitions) {
       if (transition.condition.check(cells)) {
         final node = nodes[transition.targetNodeId];
-        if (node != null) scheduleMove(node);
+        if (node != null) {
+          setState(() {
+            _pending = node;
+            _timer = PausableTimer(
+              Duration(
+                milliseconds: 1000 + 50 * tr.node(last).length,
+              ),
+              acceptPending,
+            )..start();
+          });
+          return;
+        }
       }
     }
   }
 
-  void scheduleMove(Node node) {
-    _timer = PausableTimer(
-      Duration(
-        milliseconds: max(
-          500,
-          50 * tr.node(node).length,
-        ),
+  void acceptPending() {
+    final node = _pending;
+    if (node == null) return;
+    _timer.cancel();
+    _pending = null;
+    moveAt(node);
+    SchedulerBinding.instance?.addPostFrameCallback(
+      (_) => _scroll.animateTo(
+        _scroll.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.fastOutSlowIn,
       ),
-      () {
-        moveAt(node);
-        SchedulerBinding.instance?.addPostFrameCallback(
-          (_) => _scroll.animateTo(
-            _scroll.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 400),
-            curve: Curves.fastOutSlowIn,
-          ),
-        );
-      },
-    )..start();
-    setState(() {});
+    );
+  }
+
+  void openMenu(BuildContext context) async {
+    _timer.pause();
+    await showPlayMenu(context);
+    _timer.start();
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Provider.value(
       value: this,
-      child: Builder(builder: (context) {
+      builder: (context, _) {
         return WillPopScope(
           onWillPop: () {
-            _dial.value = true;
+            openMenu(context);
             return Future.value(false);
           },
           child: Scaffold(
-            floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
+            floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
             floatingActionButton: Padding(
               padding: const EdgeInsets.only(top: 16),
-              child: SpeedDial(
-                openCloseDial: _dial,
-                onOpen: _timer.pause,
-                onClose: _timer.start,
-                icon: Icons.menu_rounded,
-                backgroundColor: theme.colorScheme.primary,
-                foregroundColor: theme.colorScheme.onPrimary,
-                spaceBetweenChildren: 9,
-                switchLabelPosition: true,
-                label: const Text('Menu'),
-                buttonSize: const Size.square(48),
-                spacing: 7,
-                direction: SpeedDialDirection.down,
-                children: [
-                  SpeedDialChild(
-                    child: const Icon(Icons.replay_rounded),
-                    label: 'Restart',
-                    onTap: () => showProgressAlert(context, reset),
-                  ),
-                  SpeedDialChild(
-                    child: const Icon(Icons.close_rounded),
-                    label: 'Exit',
-                    onTap: () => showProgressAlert(
-                      context,
-                      () => Navigator.pop(context),
-                    ),
-                  ),
-                  if (finished)
-                    SpeedDialChild(
-                      child: const Icon(Icons.query_stats_rounded),
-                      label: 'Results',
-                      onTap: () => showGameResultsDialog(context, this),
-                    ),
-                ],
+              child: FloatingActionButton.small(
+                child: const Icon(Icons.menu_rounded),
+                onPressed: () => openMenu(context),
               ),
             ),
             body: ListView(
               controller: _scroll,
-              padding: const EdgeInsets.only(top: 98, bottom: 32),
+              padding: const EdgeInsets.only(top: 76, bottom: 32),
               children: [
                 for (var i = 0; i < storyline.length - 1; i++)
-                  NodeCard(
+                  NodeDisplay(
                     node: storyline[i],
                     previousNode: i > 0 ? storyline[i - 1] : null,
                   ),
                 slideUp(
-                  NodeCard(
+                  key: Key(storyline.last.id),
+                  child: NodeDisplay(
                     node: storyline.last,
                     previousNode: storyline.length > 1
                         ? storyline[storyline.length - 2]
                         : null,
                   ),
                 ),
-                if (!_timer.isActive &&
-                    storyline.last.transitions.isNotEmpty &&
-                    storyline.last.input == NodeInputType.select)
+                if (_timer.isActive)
                   slideUp(
-                    TransitionsChips(
+                    key: Key('${_pending?.id}_tp'),
+                    child: TypingIndicator(onTap: acceptPending),
+                  )
+                else if (storyline.last.input == NodeInputType.select)
+                  slideUp(
+                    key: Key('${storyline.last.id}_tr'),
+                    child: TransitionsChips(
                       transitions: storyline.last.transitions,
                       onTap: (t) {
                         cells['node']?.value =
@@ -211,21 +177,17 @@ class PlayScreenState extends State<PlayScreen> {
                         attemptMove();
                       },
                     ),
-                  ),
-                if (_timer.isActive) const TypingIndicator(),
-                if (finished)
+                  )
+                else if (storyline.last.transitions.isEmpty)
                   slideUp(
-                    Column(
-                      children: [
-                        const Divider(
-                          height: 32,
-                          indent: 64,
-                          endIndent: 64,
+                    key: const Key('end'),
+                    child: Column(
+                      children: const [
+                        Padding(
+                          padding: EdgeInsets.all(16),
+                          child: Icon(Icons.done_all_rounded),
                         ),
-                        Text(
-                          'End',
-                          style: theme.textTheme.headline6,
-                        ),
+                        GameResults(),
                       ],
                     ),
                   ),
@@ -233,7 +195,7 @@ class PlayScreenState extends State<PlayScreen> {
             ),
           ),
         );
-      }),
+      },
     );
   }
 }

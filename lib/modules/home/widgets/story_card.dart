@@ -24,14 +24,14 @@ class _StoryCardState extends State<StoryCard> {
         onTap: widget.onTap,
         child: Stack(
           children: [
-            widget.story.imageUrl == null
+            widget.story.imageUrl.isEmpty
                 ? const Padding(
                     padding: EdgeInsets.all(12),
                     child: Icon(Icons.history_edu_rounded),
                   )
                 : Positioned.fill(
                     child: GradientCoverImage(
-                      widget.story.imageUrl!,
+                      widget.story.imageUrl,
                       reversed: true,
                     ),
                   ),
