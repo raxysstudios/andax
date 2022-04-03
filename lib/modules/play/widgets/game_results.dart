@@ -48,7 +48,7 @@ class GameResults extends StatelessWidget {
               showSnackbar(
                 context,
                 Icons.content_copy_rounded,
-                'Copied tp clipboard!',
+                'Saved to clipboard!',
                 false,
               );
             },

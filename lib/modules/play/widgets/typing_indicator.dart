@@ -11,21 +11,21 @@ class TypingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const l = 5;
+    const steps = 5;
     return Padding(
       padding: const EdgeInsets.all(8),
       child: InputChip(
         onPressed: onTap,
         elevation: 1,
         label: MirrorAnimation<double>(
-          tween: Tween(begin: 0, end: l - 1),
+          tween: Tween(begin: 0, end: steps - 1),
           curve: Curves.easeInOut,
           duration: const Duration(milliseconds: 900),
           builder: (context, child, tween) {
             final j = tween.round();
             return Text(
               Iterable.generate(
-                l,
+                steps,
                 (i) => i == j ? '•' : ' ',
               ).join(' '),
             );

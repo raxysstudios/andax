@@ -21,7 +21,7 @@ class NodeDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     final play = context.watch<PlayScreenState>();
     final actor = play.actors[node.actorId];
-    final text = play.tr.node(node, true);
+    final text = play.tr.node(node, allowEmpty: true);
     if (text.isEmpty) return const SizedBox();
 
     final thread = actor?.id == previousNode?.actorId;
