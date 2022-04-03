@@ -14,7 +14,6 @@ class MessageCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: .5,
       shape: const RoundedRectangleBorder(),
       margin: EdgeInsets.zero,
       child: InkWell(

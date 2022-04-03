@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:simple_animations/simple_animations.dart';
 
-Widget slideUp(Widget child) {
+Widget slideUp({required Widget child, Key? key}) {
   return PlayAnimation<double>(
+    key: key,
     tween: Tween(begin: 0, end: 1),
     curve: Curves.easeInOutQuad,
     duration: const Duration(milliseconds: 200),

@@ -44,6 +44,7 @@ class PlayScreenState extends State<PlayScreen> {
   final List<Node> storyline = [];
 
   var _timer = PausableTimer(Duration.zero, () {});
+  Node? _pending;
   final _scroll = ScrollController();
 
   @override
@@ -72,7 +73,6 @@ class PlayScreenState extends State<PlayScreen> {
     }
     setState(() {});
     cells['node']?.value = '';
-    _timer.cancel();
 
     if (node.input == NodeInputType.select || node.transitions.isEmpty) return;
     if (node.input == NodeInputType.random) {
@@ -83,35 +83,39 @@ class PlayScreenState extends State<PlayScreen> {
   }
 
   void attemptMove() {
-    final transitions = storyline.last.transitions;
-    for (final transition in transitions) {
+    final last = storyline.last;
+    for (final transition in last.transitions) {
       if (transition.condition.check(cells)) {
         final node = nodes[transition.targetNodeId];
         if (node != null) {
-          scheduleMove(node);
+          setState(() {
+            _pending = node;
+            _timer = PausableTimer(
+              Duration(
+                milliseconds: 1000 + 50 * tr.node(last).length,
+              ),
+              acceptPending,
+            )..start();
+          });
           return;
         }
       }
     }
   }
 
-  void scheduleMove(Node node) {
-    _timer = PausableTimer(
-      Duration(
-        milliseconds: 1000 + 50 * tr.node(storyline.last).length,
+  void acceptPending() {
+    final node = _pending;
+    if (node == null) return;
+    _timer.cancel();
+    _pending = null;
+    moveAt(node);
+    SchedulerBinding.instance?.addPostFrameCallback(
+      (_) => _scroll.animateTo(
+        _scroll.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.fastOutSlowIn,
       ),
-      () {
-        moveAt(node);
-        SchedulerBinding.instance?.addPostFrameCallback(
-          (_) => _scroll.animateTo(
-            _scroll.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 400),
-            curve: Curves.fastOutSlowIn,
-          ),
-        );
-      },
-    )..start();
-    setState(() {});
+    );
   }
 
   void openMenu(BuildContext context) async {
@@ -131,10 +135,6 @@ class PlayScreenState extends State<PlayScreen> {
             return Future.value(false);
           },
           child: Scaffold(
-            appBar: AppBar(
-              automaticallyImplyLeading: false,
-              toolbarHeight: 0,
-            ),
             floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
             floatingActionButton: Padding(
               padding: const EdgeInsets.only(top: 16),
@@ -153,7 +153,8 @@ class PlayScreenState extends State<PlayScreen> {
                     previousNode: i > 0 ? storyline[i - 1] : null,
                   ),
                 slideUp(
-                  NodeDisplay(
+                  key: Key(storyline.last.id),
+                  child: NodeDisplay(
                     node: storyline.last,
                     previousNode: storyline.length > 1
                         ? storyline[storyline.length - 2]
@@ -161,10 +162,14 @@ class PlayScreenState extends State<PlayScreen> {
                   ),
                 ),
                 if (_timer.isActive)
-                  const TypingIndicator()
+                  slideUp(
+                    key: Key('${_pending?.id}_tp'),
+                    child: TypingIndicator(onTap: acceptPending),
+                  )
                 else if (storyline.last.input == NodeInputType.select)
                   slideUp(
-                    TransitionsChips(
+                    key: Key('${storyline.last.id}_tr'),
+                    child: TransitionsChips(
                       transitions: storyline.last.transitions,
                       onTap: (t) {
                         cells['node']?.value =
@@ -175,7 +180,8 @@ class PlayScreenState extends State<PlayScreen> {
                   )
                 else if (storyline.last.transitions.isEmpty)
                   slideUp(
-                    Column(
+                    key: const Key('end'),
+                    child: Column(
                       children: const [
                         Padding(
                           padding: EdgeInsets.all(16),
@@ -184,7 +190,7 @@ class PlayScreenState extends State<PlayScreen> {
                         GameResults(),
                       ],
                     ),
-                  )
+                  ),
               ],
             ),
           ),
