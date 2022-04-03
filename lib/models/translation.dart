@@ -20,7 +20,7 @@ class Translation {
   String? operator [](String? id) => assets[id];
   void operator []=(String id, String asset) => assets[id] = asset;
 
-  String node(Node? n, [bool allowEmpty = false]) =>
+  String node(Node? n, {bool allowEmpty = false}) =>
       this[n?.id] ?? (allowEmpty ? '' : '[❌NODE]');
   String transition(Transition? t) => this[t?.id] ?? '[❌TRANSITION]';
   String actor(Actor? a) => this[a?.id] ?? '[❌ACTOR]';
