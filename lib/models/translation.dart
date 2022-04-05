@@ -7,7 +7,7 @@ import 'transition.dart';
 
 part 'translation.g.dart';
 
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable()
 class Translation {
   String language;
   final Map<String, String> assets;
