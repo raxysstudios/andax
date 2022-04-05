@@ -26,6 +26,7 @@ dependencies:
   provider: ^6.0.2
   url_launcher: ^6.0.20
   pausable_timer: ^1.0.0+4
+  freezed_annotation: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -34,6 +35,7 @@ dev_dependencies:
   flutter_lints: ^1.0.4
   build_runner: ^2.1.7
   json_serializable: ^6.1.4
+  freezed: ^1.1.1
 
 flutter_icons:
   image_path: "assets/icon.png"

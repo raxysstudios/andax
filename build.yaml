@@ -17,3 +17,12 @@ targets:
           generic_argument_factories: false
           ignore_unannotated: false
           include_if_null: true
+      freezed:
+        options:
+          # defaults shown
+          # Docs: https://pub.dev/documentation/freezed_annotation/latest/freezed_annotation/Freezed-class.html
+          fallback_union: null
+          maybe_when: true
+          maybe_map: true
+          union_key: runtimeType
+          union_value_case: none
