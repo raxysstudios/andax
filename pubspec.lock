@@ -767,7 +767,7 @@ packages:
       name: twitter_login
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.1"
+    version: "4.1.0"
   typed_data:
     dependency: transitive
     description:
