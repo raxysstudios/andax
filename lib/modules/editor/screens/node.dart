@@ -88,10 +88,14 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
             (r) => setState(() {}),
           ),
         ),
-        const ListTile(
-          leading: Icon(Icons.audiotrack_rounded),
-          title: Text('Select audio'),
-          subtitle: Text('[NOT IMPLEMENTED]'),
+        ListTile(
+          leading: const Icon(Icons.audiotrack_rounded),
+          title: TextFormField(
+            maxLines: null,
+            decoration: const InputDecoration(labelText: 'Audio URL'),
+            initialValue: editor.tr.audio(node),
+            onChanged: (s) => editor.tr[node.id + '_audio'] = s.trim(),
+          ),
         ),
       ],
     );
