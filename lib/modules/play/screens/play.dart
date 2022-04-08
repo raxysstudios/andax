@@ -10,6 +10,7 @@ import 'package:andax/modules/play/utils/menu.dart';
 import 'package:andax/modules/play/widgets/game_results.dart';
 import 'package:andax/modules/play/widgets/transitions_chips.dart';
 import 'package:andax/modules/play/widgets/typing_indicator.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:pausable_timer/pausable_timer.dart';
@@ -46,6 +47,7 @@ class PlayScreenState extends State<PlayScreen> {
   var _timer = PausableTimer(Duration.zero, () {});
   Node? _pending;
   final _scroll = ScrollController();
+  final audioPlayer = AudioPlayer();
 
   @override
   void initState() {
@@ -70,6 +72,11 @@ class PlayScreenState extends State<PlayScreen> {
     storyline.add(node);
     for (final write in node.cellWrites) {
       cells[write.targetCellId]?.apply(write);
+    }
+    final audioUrl = tr.audio(node) ?? '';
+    if (audioUrl.isNotEmpty) {
+      audioPlayer.stop();
+      audioPlayer.play(audioUrl);
     }
     setState(() {});
     cells['node']?.value = '';
