@@ -69,11 +69,11 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
         ),
         const Divider(),
         ListTile(
+          leading: const Icon(Icons.notes_rounded),
           title: TextFormField(
             maxLines: null,
             decoration: const InputDecoration(
               labelText: 'Message text',
-              prefixIcon: Icon(Icons.notes_rounded),
             ),
             autofocus: true,
             initialValue: editor.tr.node(node),
