@@ -25,6 +25,7 @@ class Translation {
   String transition(Transition? t) => this[t?.id] ?? '[❌TRANSITION]';
   String actor(Actor? a) => this[a?.id] ?? '[❌ACTOR]';
   String cell(Cell? c) => this[c?.id] ?? '[❌CELL]';
+  String? audio(Node? n) => this['${n?.id}_audio'];
 
   String get title => this['title'] ?? '[❌TITLE]';
   String? get description => this['description'];
