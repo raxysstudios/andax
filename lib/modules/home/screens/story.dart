@@ -3,6 +3,7 @@ import 'package:andax/modules/editor/screens/story.dart';
 import 'package:andax/modules/home/widgets/gradient_cover_image.dart';
 import 'package:andax/modules/home/widgets/like_chip.dart';
 import 'package:andax/modules/play/screens/play.dart';
+import 'package:andax/modules/translation/screens/translations.dart';
 import 'package:andax/shared/services/story_loader.dart';
 import 'package:andax/shared/utils.dart';
 import 'package:andax/shared/widgets/options_button.dart';
@@ -88,6 +89,16 @@ class StoryScreen extends StatelessWidget {
                     OptionItem.simple(
                       Icons.translate_rounded,
                       'Add translation',
+                      () => Navigator.push<void>(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return TranslationsScreen(
+                              info: info,
+                            );
+                          },
+                        ),
+                      ),
                     ),
                     if (user.uid == info.storyAuthorID)
                       OptionItem.simple(
