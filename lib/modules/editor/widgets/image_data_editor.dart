@@ -21,10 +21,10 @@ Future<ImageData?> showImageDataEditor(BuildContext context, Node node) async {
           );
       return [
         ListTile(
+          leading: const Icon(Icons.link_rounded),
           title: TextFormField(
             decoration: const InputDecoration(
               labelText: 'Image file URL',
-              prefixIcon: Icon(Icons.link_rounded),
             ),
             autofocus: true,
             initialValue: image.url,
