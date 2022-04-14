@@ -6,11 +6,11 @@ import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/modules/play/utils/animator.dart';
+import 'package:andax/modules/play/utils/audio_controller.dart';
 import 'package:andax/modules/play/utils/menu.dart';
 import 'package:andax/modules/play/widgets/game_results.dart';
 import 'package:andax/modules/play/widgets/transitions_chips.dart';
 import 'package:andax/modules/play/widgets/typing_indicator.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:pausable_timer/pausable_timer.dart';
@@ -47,7 +47,7 @@ class PlayScreenState extends State<PlayScreen> {
   var _timer = PausableTimer(Duration.zero, () {});
   Node? _pending;
   final _scroll = ScrollController();
-  final audioPlayer = AudioPlayer();
+  final audio = AudioController();
 
   @override
   void initState() {
@@ -73,12 +73,9 @@ class PlayScreenState extends State<PlayScreen> {
     for (final write in node.cellWrites) {
       cells[write.targetCellId]?.apply(write);
     }
-    final audioUrl = tr.audio(node) ?? '';
-    if (audioUrl.isNotEmpty) {
-      if (audioPlayer.state == PlayerState.PLAYING) {
-        audioPlayer.stop();
-      }
-      audioPlayer.play(audioUrl);
+    final aUrl = tr.audio(node);
+    if (aUrl.isNotEmpty) {
+      audio.play(aUrl, node.id);
     }
     setState(() {});
     cells['node']?.value = '';
