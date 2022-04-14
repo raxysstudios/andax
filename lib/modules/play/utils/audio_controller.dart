@@ -30,6 +30,23 @@ class AudioController with ChangeNotifier {
     player.play(url);
   }
 
+  void toggle(String url, [String? key]) async {
+    if (key == this.key) {
+      if (playing) {
+        pause();
+      } else if (position == duration) {
+        seek(0);
+      } else {
+        resume();
+      }
+    } else {
+      play(url, key);
+    }
+  }
+
+  void pause() => player.pause();
+  void resume() => player.resume();
+
   Future<void> seek(int mils) async {
     _position = mils;
     await player.seek(

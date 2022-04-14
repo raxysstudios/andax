@@ -1,5 +1,4 @@
 import 'package:andax/models/node.dart';
-import 'package:andax/modules/play/utils/animator.dart';
 import 'package:andax/modules/play/widgets/actor_chip.dart';
 import 'package:andax/modules/play/widgets/audio_slider.dart';
 import 'package:andax/modules/play/widgets/message_card.dart';
@@ -8,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../screens/play.dart';
-import '../utils/audio_controller.dart';
 
 class NodeDisplay extends StatelessWidget {
   const NodeDisplay({
@@ -25,7 +23,6 @@ class NodeDisplay extends StatelessWidget {
     final play = context.watch<PlayScreenState>();
     final actor = play.actors[node.actorId];
     final text = play.tr.node(node, allowEmpty: true);
-    final aUrl = play.tr.audio(node);
     final audio = play.audio;
     if (text.isEmpty) return const SizedBox();
 
@@ -59,7 +56,10 @@ class NodeDisplay extends StatelessWidget {
         if (text.isNotEmpty)
           MessageCard(
             text,
-            onTap: aUrl.isEmpty ? null : () => audio.play(aUrl, node.id),
+            onTap: () {
+              final aUrl = play.tr.audio(node);
+              if (aUrl.isNotEmpty) audio.toggle(aUrl, node.id);
+            },
           ),
         ChangeNotifierProvider.value(
           value: audio,
