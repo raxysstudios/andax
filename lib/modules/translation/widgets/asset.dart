@@ -1,6 +1,5 @@
 import 'package:andax/modules/translation/screens/translation_editor.dart';
 import 'package:andax/modules/translation/services/assets.dart';
-import 'package:andax/modules/translation/services/translations.dart';
 import 'package:andax/shared/widgets/loading_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
