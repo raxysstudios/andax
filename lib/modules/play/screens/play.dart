@@ -75,7 +75,9 @@ class PlayScreenState extends State<PlayScreen> {
     }
     final audioUrl = tr.audio(node) ?? '';
     if (audioUrl.isNotEmpty) {
-      audioPlayer.stop();
+      if (audioPlayer.state == PlayerState.PLAYING) {
+        audioPlayer.stop();
+      }
       audioPlayer.play(audioUrl);
     }
     setState(() {});
