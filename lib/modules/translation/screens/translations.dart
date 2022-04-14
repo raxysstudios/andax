@@ -78,6 +78,33 @@ class _TranslationsScreenState extends State<TranslationsScreen> {
   }
 
   void openEditor() async {
+    var tl = '';
+    if (this.target == null) {
+      AlertDialog(
+        title: const Text('Create translation'),
+        content: TextField(
+          onChanged: (s) => tl = s.trim(),
+          decoration: const InputDecoration(
+            labelText: 'Translation language',
+          ),
+        ),
+        actions: [
+          TextButton.icon(
+            onPressed: () {
+              tl = '';
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.cancel_rounded),
+            label: const Text('Cancel'),
+          ),
+          TextButton.icon(
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(Icons.check_rounded),
+            label: const Text('Confirm'),
+          ),
+        ],
+      );
+    }
     late final Story narrative;
     late final Translation base;
     late final Translation target;
@@ -87,7 +114,7 @@ class _TranslationsScreenState extends State<TranslationsScreen> {
         narrative = await loadNarrative(this.base);
         base = await loadTranslation(this.base);
         target = this.target == null
-            ? Translation()
+            ? Translation(language: tl)
             : await loadTranslation(this.target!);
       })(),
     );
