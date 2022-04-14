@@ -5,7 +5,6 @@ import 'package:andax/modules/translation/services/translations.dart';
 import 'package:andax/shared/services/story_loader.dart';
 import 'package:andax/shared/widgets/loading_dialog.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
-import 'package:andax/shared/widgets/snackbar_manager.dart';
 import 'package:flutter/material.dart';
 
 class TranslationsScreen extends StatefulWidget {
@@ -21,17 +20,18 @@ class TranslationsScreen extends StatefulWidget {
 }
 
 class _TranslationsScreenState extends State<TranslationsScreen> {
-  List<StoryInfo>? stories;
+  List<StoryInfo>? translations;
   late StoryInfo base;
-  StoryInfo? target;
+  late StoryInfo target;
 
   @override
   void initState() {
     super.initState();
     getAllTranslations(widget.info.storyID).then(
       (s) => setState(() {
-        stories = s;
+        translations = s;
         base = s.first;
+        target = base;
       }),
     );
   }
@@ -46,10 +46,7 @@ class _TranslationsScreenState extends State<TranslationsScreen> {
           actions: [
             TextButton.icon(
               onPressed: () {
-                setState(() {
-                  base = info;
-                  if (target == info) target = null;
-                });
+                setState(() => base = info);
                 Navigator.pop(context);
               },
               icon: const Icon(Icons.source_rounded),
@@ -57,15 +54,7 @@ class _TranslationsScreenState extends State<TranslationsScreen> {
             ),
             TextButton.icon(
               onPressed: () {
-                if (info == base) {
-                  showSnackbar(
-                    context,
-                    Icons.warning_rounded,
-                    'Aready set as base',
-                  );
-                } else {
-                  setState(() => target = info);
-                }
+                setState(() => target = info);
                 Navigator.pop(context);
               },
               icon: const Icon(Icons.translate_rounded),
@@ -78,33 +67,6 @@ class _TranslationsScreenState extends State<TranslationsScreen> {
   }
 
   void openEditor() async {
-    var tl = '';
-    if (this.target == null) {
-      AlertDialog(
-        title: const Text('Create translation'),
-        content: TextField(
-          onChanged: (s) => tl = s.trim(),
-          decoration: const InputDecoration(
-            labelText: 'Translation language',
-          ),
-        ),
-        actions: [
-          TextButton.icon(
-            onPressed: () {
-              tl = '';
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.cancel_rounded),
-            label: const Text('Cancel'),
-          ),
-          TextButton.icon(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.check_rounded),
-            label: const Text('Confirm'),
-          ),
-        ],
-      );
-    }
     late final Story narrative;
     late final Translation base;
     late final Translation target;
@@ -113,9 +75,7 @@ class _TranslationsScreenState extends State<TranslationsScreen> {
       (() async {
         narrative = await loadNarrative(this.base);
         base = await loadTranslation(this.base);
-        target = this.target == null
-            ? Translation(language: tl)
-            : await loadTranslation(this.target!);
+        target = await loadTranslation(this.target);
       })(),
     );
     await Navigator.push<void>(
@@ -139,30 +99,41 @@ class _TranslationsScreenState extends State<TranslationsScreen> {
       appBar: AppBar(
         leading: const RoundedBackButton(),
         title: const Text('Select trasnlations'),
+        actions: [
+          if (translations != null)
+            IconButton(
+              icon: const Icon(Icons.note_add_rounded),
+              onPressed: () async {
+                final info = await showLoadingDialog(
+                  context,
+                  createTranslation(
+                    context,
+                    widget.info,
+                  ),
+                );
+                if (info != null) setState(() => translations!.add(info));
+              },
+            ),
+          const SizedBox(width: 4),
+        ],
       ),
-      floatingActionButton: stories == null
+      floatingActionButton: translations == null
           ? null
           : FloatingActionButton.extended(
               onPressed: openEditor,
-              icon: Icon(
-                target == null
-                    ? Icons.note_add_rounded
-                    : Icons.edit_note_rounded,
-              ),
-              label: Text(
-                target == null ? 'Add translation' : 'Edit trasnlation',
-              ),
+              icon: const Icon(Icons.edit_note_rounded),
+              label: const Text('Edit trasnlation'),
             ),
       body: ListView(
         children: [
-          if (stories == null)
+          if (translations == null)
             const ListTile(
               leading: CircularProgressIndicator(),
               title: Text('Look for translations'),
               subtitle: Text('Please, wait...'),
             )
           else ...[
-            for (final s in stories!)
+            for (final s in translations!)
               ListTile(
                 leading: s == base
                     ? const Icon(Icons.source_rounded)
