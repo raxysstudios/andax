@@ -11,6 +11,12 @@ Future<String?> showAssetEditor(
 }) {
   final editor = context.read<TranslationEditorState>();
   AssetOverwrite? asset = editor.changes[id];
+  if (asset != null) {
+    asset = pending.firstWhere(
+      (e) => e.key == asset?.key && e.value == asset?.value,
+      orElse: () => asset!,
+    );
+  }
 
   return showEditorSheet<String>(
     context: context,
