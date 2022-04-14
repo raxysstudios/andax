@@ -1,6 +1,7 @@
 import 'package:andax/models/node.dart';
 import 'package:andax/modules/play/utils/animator.dart';
 import 'package:andax/modules/play/widgets/actor_chip.dart';
+import 'package:andax/modules/play/widgets/audio_slider.dart';
 import 'package:andax/modules/play/widgets/message_card.dart';
 
 import 'package:flutter/material.dart';
@@ -63,32 +64,7 @@ class NodeDisplay extends StatelessWidget {
         ChangeNotifierProvider.value(
           value: audio,
           builder: (context, _) {
-            var v = 0;
-            var drag = false;
-            return StatefulBuilder(
-              builder: (context, setState) {
-                final audio = context.watch<AudioController>();
-                if (!drag) v = audio.position;
-                if (audio.key != node.id) return const SizedBox();
-                return slideUp(
-                  key: Key(audio.key),
-                  child: Slider(
-                    value: v.toDouble(),
-                    max: audio.duration.toDouble(),
-                    onChanged: (s) => setState(() {
-                      drag = true;
-                      v = s.toInt();
-                    }),
-                    onChangeEnd: (s) async {
-                      await audio.seek(s.toInt());
-                      setState(() {
-                        drag = false;
-                      });
-                    },
-                  ),
-                );
-              },
-            );
+            return AudioSlider(node);
           },
         ),
       ],
