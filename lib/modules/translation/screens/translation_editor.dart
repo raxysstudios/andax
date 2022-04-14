@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/modules/editor/utils/editor_sheet.dart';
@@ -27,19 +29,16 @@ class TranslationEditorScreen extends StatefulWidget {
 }
 
 class TranslationEditorState extends State<TranslationEditorScreen> {
-  StoryInfo get i => widget.info;
-  Story get n => widget.narrative;
-  Translation get b => widget.base;
-  Translation get t => widget.target;
+  StoryInfo get info => widget.info;
+  Story get narrative => widget.narrative;
+  Translation get base => widget.base;
+  Translation get target => widget.target;
 
-  late final Map<String, MapEntry<String, String>?> changes;
-  late final bool exists;
+  final changes = <String, AssetOverwrite?>{};
 
   @override
-  void initState() {
-    super.initState();
-    exists = t.language.isNotEmpty;
-    changes = {for (final k in t.assets.keys) k: null};
+  void setState(void Function() fn) {
+    super.setState(fn);
   }
 
   @override
@@ -64,17 +63,20 @@ class TranslationEditorState extends State<TranslationEditorScreen> {
                 children: [
                   ListTile(
                     leading: const Icon(Icons.language_rounded),
-                    title: Text(t.language),
+                    title: Text(target.language),
                   ),
                   buildExplanationTile(context, 'General info'),
-                  const Asset('title', icon: Icons.title_rounded),
-                  const Asset('description', icon: Icons.description_rounded),
-                  const Asset('tags', icon: Icons.tag_rounded),
+                  Asset(
+                    'title',
+                    icon: Icons.title_rounded,
+                  ),
+                  Asset('description', icon: Icons.description_rounded),
+                  Asset('tags', icon: Icons.tag_rounded),
                   buildExplanationTile(context, 'Actors'),
-                  for (final aid in n.actors.keys)
+                  for (final aid in narrative.actors.keys)
                     Asset(aid, icon: Icons.person_rounded),
                   buildExplanationTile(context, 'Cells'),
-                  for (final cid in n.cells.entries
+                  for (final cid in narrative.cells.entries
                       .where((e) => e.value.display != null)
                       .map((e) => e.key))
                     Asset(cid, icon: Icons.article_rounded)
