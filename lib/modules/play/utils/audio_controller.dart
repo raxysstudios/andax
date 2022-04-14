@@ -23,11 +23,16 @@ class AudioController with ChangeNotifier {
   }
 
   void play(String url, [String? key]) async {
-    await player.stop();
     _position = 0;
     _url = url;
     _key = key ?? url;
-    player.play(url);
+    await player.stop();
+    await player.play(url);
+  }
+
+  void stop() async {
+    _url = '';
+    await player.stop();
   }
 
   void toggle(String url, [String? key]) async {

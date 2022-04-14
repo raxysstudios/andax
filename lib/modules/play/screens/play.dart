@@ -74,7 +74,9 @@ class PlayScreenState extends State<PlayScreen> {
       cells[write.targetCellId]?.apply(write);
     }
     final aUrl = tr.audio(node);
-    if (aUrl.isNotEmpty) {
+    if (aUrl.isEmpty) {
+      audio.stop();
+    } else {
       audio.play(aUrl, node.id);
     }
     setState(() {});
@@ -89,21 +91,33 @@ class PlayScreenState extends State<PlayScreen> {
   }
 
   void attemptMove() {
+    void launchTimer(int mils) {
+      setState(() {
+        _timer = PausableTimer(
+          Duration(
+            milliseconds: 1000 + mils,
+          ),
+          acceptPending,
+        )..start();
+      });
+    }
+
     final last = storyline.last;
     for (final transition in last.transitions) {
       if (transition.condition.check(cells)) {
         final node = nodes[transition.targetNodeId];
+        setState(() => _pending = node);
         if (node != null) {
-          setState(() {
-            _pending = node;
-            _timer = PausableTimer(
-              Duration(
-                milliseconds: 1000 + 50 * tr.node(last).length,
-              ),
-              acceptPending,
-            )..start();
-          });
-          return;
+          final textDur = 50 * tr.node(last).length;
+          if (audio.url.isEmpty) {
+            launchTimer(textDur);
+          } else {
+            audio.player.getDuration().then(
+                  (_) => launchTimer(
+                    max(audio.duration, textDur),
+                  ),
+                );
+          }
         }
       }
     }
