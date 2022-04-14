@@ -6,23 +6,6 @@ import 'package:provider/provider.dart';
 
 import 'asset_editor.dart';
 
-class AssetOverwrite {
-  AssetOverwrite(this.id, this.text);
-
-  final String id;
-  final String text;
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other.runtimeType != runtimeType) return false;
-    return other is AssetOverwrite && id == other.id && text == other.text;
-  }
-
-  @override
-  int get hashCode => '$id $text'.hashCode;
-}
-
 class Asset extends StatelessWidget {
   const Asset(
     this.id, {
@@ -36,7 +19,7 @@ class Asset extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final editor = context.watch<TranslationEditorState>();
-    final change = editor.changes[id]?.text;
+    final change = editor.changes[id]?.value;
     final base = editor.base[id];
     final target = change ?? editor.target[id];
     return ListTile(

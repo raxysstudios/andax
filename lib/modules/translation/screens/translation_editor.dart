@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 
 import '../widgets/asset.dart';
 
+typedef AssetOverwrite = MapEntry<String, String>;
+
 class TranslationEditorScreen extends StatefulWidget {
   const TranslationEditorScreen({
     required this.info,

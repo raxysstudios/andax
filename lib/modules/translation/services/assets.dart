@@ -1,6 +1,7 @@
 import 'package:andax/models/story.dart';
-import 'package:andax/modules/translation/widgets/asset.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../screens/translation_editor.dart';
 
 Future<List<AssetOverwrite>> getPendingAssets(StoryInfo info, String id) async {
   final q = await FirebaseFirestore.instance

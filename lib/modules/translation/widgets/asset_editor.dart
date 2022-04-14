@@ -1,5 +1,4 @@
 import 'package:andax/modules/editor/utils/editor_sheet.dart';
-import 'package:andax/modules/translation/widgets/asset.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -45,7 +44,7 @@ Future<String?> showAssetEditor(
             value: a,
             groupValue: asset,
             onChanged: pickPending,
-            title: Text(a.text),
+            title: Text(a.value),
           ),
       ];
     },
