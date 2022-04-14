@@ -111,7 +111,13 @@ class _TranslationsScreenState extends State<TranslationsScreen> {
                     widget.info,
                   ),
                 );
-                if (info != null) setState(() => translations!.add(info));
+                if (info != null) {
+                  setState(() {
+                    translations!.add(info);
+                    target = info;
+                  });
+                  openEditor();
+                }
               },
             ),
           const SizedBox(width: 4),
