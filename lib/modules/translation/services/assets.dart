@@ -16,6 +16,22 @@ Future<List<AssetOverwrite>> getPendingAssets(StoryInfo info, String id) async {
   ];
 }
 
+Future<AssetOverwrite> addPendingAsset(
+  StoryInfo info,
+  String targetId,
+  String text,
+) async {
+  final doc = await FirebaseFirestore.instance
+      .collection(
+    'stories/${info.storyID}/translations/${info.translationID}/pending',
+  )
+      .add(<String, String>{
+    'text': text,
+    'target': targetId,
+  });
+  return AssetOverwrite(doc.id, text);
+}
+
 Future<void> applyAssetChanges(
   StoryInfo info,
   Map<String, AssetOverwrite> changes,

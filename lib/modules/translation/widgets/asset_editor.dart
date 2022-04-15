@@ -1,4 +1,6 @@
 import 'package:andax/modules/editor/utils/editor_sheet.dart';
+import 'package:andax/modules/translation/services/assets.dart';
+import 'package:andax/shared/widgets/loading_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +20,7 @@ Future<void> showAssetEditor(
     );
   }
 
+  var newTranslation = '';
   return showEditorSheet<void>(
     context: context,
     title: 'Select asset',
@@ -41,6 +44,29 @@ Future<void> showAssetEditor(
           groupValue: asset,
           onChanged: pickPending,
           title: Text(editor.target[id] ?? ''),
+        ),
+        buildExplanationTile(context, 'Suggest translation'),
+        ListTile(
+          leading: TextFormField(
+            onChanged: (s) => newTranslation = s.trim(),
+          ),
+          trailing: IconButton(
+            onPressed: () async {
+              if (newTranslation.isNotEmpty) {
+                final asset = await showLoadingDialog(
+                  context,
+                  addPendingAsset(
+                    editor.info,
+                    id,
+                    newTranslation,
+                  ),
+                );
+                pickPending(asset);
+                Navigator.pop(context);
+              }
+            },
+            icon: const Icon(Icons.add_circle_rounded),
+          ),
         ),
         buildExplanationTile(context, 'Pending translations'),
         for (final a in pending)
