@@ -18,8 +18,8 @@ Future<StoryInfo?> createTranslation(
   String language,
   String title,
 ) async {
-  final user = FirebaseAuth.instance.currentUser;
-  if (user == null || language.isEmpty) return null;
+  final uid = FirebaseAuth.instance.currentUser?.uid;
+  if (uid == null) return null;
 
   final doc = await showLoadingDialog(
     context,
@@ -30,7 +30,7 @@ Future<StoryInfo?> createTranslation(
         'language': language,
         'metaData': {
           'lastUpdateAt': FieldValue.serverTimestamp(),
-          'authorId': user.uid,
+          'authorId': uid,
         }
       });
       await doc
@@ -45,7 +45,7 @@ Future<StoryInfo?> createTranslation(
     storyID: info.storyID,
     storyAuthorID: info.storyAuthorID,
     translationID: doc.id,
-    translationAuthorID: user.uid,
+    translationAuthorID: uid,
     title: title,
   );
 }
