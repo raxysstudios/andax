@@ -43,7 +43,7 @@ Future<T?> showEditorSheet<T>({
   required BuildContext context,
   required String title,
   T? initial,
-  required ValueGetter<T> onSave,
+  ValueGetter<T>? onSave,
   VoidCallback? onDelete,
   required List<Widget> Function(
     BuildContext context,
@@ -85,15 +85,17 @@ Future<T?> showEditorSheet<T>({
               const SizedBox(width: 4),
             ],
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              if (form.currentState?.validate() ?? false) {
-                Navigator.pop(context, true);
-              }
-            },
-            child: const Icon(Icons.done_all_rounded),
-            tooltip: 'Save',
-          ),
+          floatingActionButton: onSave == null
+              ? null
+              : FloatingActionButton(
+                  onPressed: () {
+                    if (form.currentState?.validate() ?? false) {
+                      Navigator.pop(context, true);
+                    }
+                  },
+                  child: const Icon(Icons.done_all_rounded),
+                  tooltip: 'Save',
+                ),
           body: StatefulBuilder(
             builder: (context, setState) {
               return Form(
@@ -112,6 +114,6 @@ Future<T?> showEditorSheet<T>({
     },
   );
   if (keep == null) return initial;
-  if (keep) return onSave();
+  if (keep) return onSave?.call();
   return null;
 }

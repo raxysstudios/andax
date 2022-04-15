@@ -4,13 +4,13 @@ import 'package:provider/provider.dart';
 
 import '../screens/translation_editor.dart';
 
-Future<String?> showAssetEditor(
+Future<void> showAssetEditor(
   BuildContext context, {
   required String id,
   required List<AssetOverwrite> pending,
 }) {
   final editor = context.read<TranslationEditorState>();
-  AssetOverwrite? asset = editor.changes[id];
+  var asset = editor.changes[id];
   if (asset != null) {
     asset = pending.firstWhere(
       (e) => e.key == asset?.key && e.value == asset?.value,
@@ -18,20 +18,18 @@ Future<String?> showAssetEditor(
     );
   }
 
-  return showEditorSheet<String>(
+  return showEditorSheet<void>(
     context: context,
     title: 'Select asset',
-    initial: id,
-    onSave: () {
-      if (asset == null) {
-        editor.changes.remove(id);
-      } else {
-        editor.changes[id] = asset;
-      }
-      return id;
-    },
     builder: (context, setState) {
-      void pickPending(AssetOverwrite? a) => setState(() => asset = a);
+      void pickPending(AssetOverwrite? a) => setState(() {
+            asset = a;
+            if (asset == null) {
+              editor.changes.remove(id);
+            } else {
+              editor.changes[id] = asset;
+            }
+          });
 
       return [
         ListTile(
