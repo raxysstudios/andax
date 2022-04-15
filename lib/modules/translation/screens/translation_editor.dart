@@ -63,8 +63,9 @@ class TranslationEditorState extends State<TranslationEditorScreen> {
                 leading: const RoundedBackButton(),
                 title: const Text('Translations editor'),
               ),
-              floatingActionButton: FirebaseAuth.instance.currentUser?.uid ==
-                      info.translationAuthorID
+              floatingActionButton: changes.isNotEmpty &&
+                      FirebaseAuth.instance.currentUser?.uid ==
+                          info.translationAuthorID
                   ? FloatingActionButton(
                       onPressed: () async {
                         await showLoadingDialog(
