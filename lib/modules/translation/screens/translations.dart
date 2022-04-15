@@ -2,6 +2,7 @@ import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/modules/translation/screens/translation_editor.dart';
 import 'package:andax/modules/translation/services/translations.dart';
+import 'package:andax/modules/translation/widgets/translation_creator.dart';
 import 'package:andax/shared/services/story_loader.dart';
 import 'package:andax/shared/widgets/loading_dialog.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
@@ -104,14 +105,22 @@ class _TranslationsScreenState extends State<TranslationsScreen> {
             IconButton(
               icon: const Icon(Icons.note_add_rounded),
               onPressed: () async {
-                final info = await createTranslation(
-                  context,
-                  widget.info,
-                );
-                if (info != null) {
-                  target = info;
-                  await openEditor();
-                  Navigator.pop(context);
+                final data = await showTranslationCreator(context);
+                if (data != null) {
+                  final info = await showLoadingDialog(
+                    context,
+                    createTranslation(
+                      context,
+                      widget.info,
+                      data.key,
+                      data.value,
+                    ),
+                  );
+                  if (info != null) {
+                    target = info;
+                    await openEditor();
+                    Navigator.pop(context);
+                  }
                 }
               },
             ),

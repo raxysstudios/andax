@@ -15,50 +15,9 @@ Future<List<StoryInfo>> getAllTranslations(String storyId) async {
 Future<StoryInfo?> createTranslation(
   BuildContext context,
   StoryInfo info,
+  String language,
+  String title,
 ) async {
-  var language = '';
-  var title = '';
-  await showDialog<void>(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text('Create translation'),
-        content: SingleChildScrollView(
-          child: Column(
-            children: [
-              TextField(
-                onChanged: (s) => language = s.trim(),
-                decoration: const InputDecoration(
-                  labelText: 'Translation language',
-                ),
-              ),
-              TextField(
-                onChanged: (s) => title = s.trim(),
-                decoration: const InputDecoration(
-                  labelText: 'Translated title',
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton.icon(
-            onPressed: () {
-              language = '';
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.cancel_rounded),
-            label: const Text('Cancel'),
-          ),
-          TextButton.icon(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.check_rounded),
-            label: const Text('Confirm'),
-          ),
-        ],
-      );
-    },
-  );
   final user = FirebaseAuth.instance.currentUser;
   if (user == null || language.isEmpty) return null;
 
