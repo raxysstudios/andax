@@ -1,3 +1,4 @@
+import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/modules/editor/utils/editor_sheet.dart';
@@ -95,7 +96,15 @@ class TranslationEditorState extends State<TranslationEditorScreen> {
                   for (final cid in narrative.cells.entries
                       .where((e) => e.value.display != null)
                       .map((e) => e.key))
-                    Asset(cid, icon: Icons.article_rounded)
+                    Asset(cid, icon: Icons.article_rounded),
+                  buildExplanationTile(context, 'Nodes'),
+                  for (final n in narrative.nodes.values) ...[
+                    Asset(n.id, icon: Icons.chat_bubble_rounded),
+                    if (n.input == NodeInputType.select)
+                      for (final t in n.transitions)
+                        Asset(t.id, icon: Icons.call_split_rounded),
+                    const Divider(indent: 64),
+                  ],
                 ],
               ),
             ),
