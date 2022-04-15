@@ -1,10 +1,11 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/modules/editor/utils/editor_sheet.dart';
+import 'package:andax/modules/translation/services/assets.dart';
 import 'package:andax/shared/widgets/danger_dialog.dart';
+import 'package:andax/shared/widgets/loading_dialog.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -36,7 +37,7 @@ class TranslationEditorState extends State<TranslationEditorScreen> {
   Translation get base => widget.base;
   Translation get target => widget.target;
 
-  final changes = <String, AssetOverwrite?>{};
+  final changes = <String, AssetOverwrite>{};
 
   @override
   void setState(void Function() fn) {
@@ -61,6 +62,19 @@ class TranslationEditorState extends State<TranslationEditorScreen> {
                 leading: const RoundedBackButton(),
                 title: const Text('Translations editor'),
               ),
+              floatingActionButton: FirebaseAuth.instance.currentUser?.uid ==
+                      info.translationAuthorID
+                  ? FloatingActionButton(
+                      onPressed: () async {
+                        await showLoadingDialog(
+                          context,
+                          applyAssetChanges(info, changes),
+                        );
+                        Navigator.pop(context);
+                      },
+                      child: const Icon(Icons.upload_rounded),
+                    )
+                  : null,
               body: ListView(
                 children: [
                   ListTile(
@@ -68,11 +82,11 @@ class TranslationEditorState extends State<TranslationEditorScreen> {
                     title: Text(target.language),
                   ),
                   buildExplanationTile(context, 'General info'),
-                  Asset(
-                    'title',
-                    icon: Icons.title_rounded,
-                  ),
+                  // ignore: prefer_const_constructors
+                  Asset('title', icon: Icons.title_rounded),
+                  // ignore: prefer_const_constructors
                   Asset('description', icon: Icons.description_rounded),
+                  // ignore: prefer_const_constructors
                   Asset('tags', icon: Icons.tag_rounded),
                   buildExplanationTile(context, 'Actors'),
                   for (final aid in narrative.actors.keys)

@@ -66,7 +66,7 @@ class _TranslationsScreenState extends State<TranslationsScreen> {
     );
   }
 
-  void openEditor() async {
+  Future<void> openEditor() async {
     late final Story narrative;
     late final Translation base;
     late final Translation target;
@@ -83,7 +83,7 @@ class _TranslationsScreenState extends State<TranslationsScreen> {
       MaterialPageRoute(
         builder: (context) {
           return TranslationEditorScreen(
-            info: widget.info,
+            info: this.target,
             narrative: narrative,
             base: base,
             target: target,
@@ -112,11 +112,9 @@ class _TranslationsScreenState extends State<TranslationsScreen> {
                   ),
                 );
                 if (info != null) {
-                  setState(() {
-                    translations!.add(info);
-                    target = info;
-                  });
-                  openEditor();
+                  target = info;
+                  await openEditor();
+                  Navigator.pop(context);
                 }
               },
             ),
@@ -126,7 +124,10 @@ class _TranslationsScreenState extends State<TranslationsScreen> {
       floatingActionButton: translations == null
           ? null
           : FloatingActionButton.extended(
-              onPressed: openEditor,
+              onPressed: () async {
+                await openEditor();
+                Navigator.pop(context);
+              },
               icon: const Icon(Icons.edit_note_rounded),
               label: const Text('Edit trasnlation'),
             ),

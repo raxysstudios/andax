@@ -27,7 +27,7 @@ Future<void> showAssetEditor(
             if (asset == null) {
               editor.changes.remove(id);
             } else {
-              editor.changes[id] = asset;
+              editor.changes[id] = asset!;
             }
           });
 
