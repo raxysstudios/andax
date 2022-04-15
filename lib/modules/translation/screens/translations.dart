@@ -104,12 +104,9 @@ class _TranslationsScreenState extends State<TranslationsScreen> {
             IconButton(
               icon: const Icon(Icons.note_add_rounded),
               onPressed: () async {
-                final info = await showLoadingDialog(
+                final info = await createTranslation(
                   context,
-                  createTranslation(
-                    context,
-                    widget.info,
-                  ),
+                  widget.info,
                 );
                 if (info != null) {
                   target = info;

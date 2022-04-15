@@ -1,5 +1,6 @@
 import 'package:andax/models/story.dart';
 import 'package:andax/shared/utils.dart';
+import 'package:andax/shared/widgets/loading_dialog.dart';
 import 'package:andax/store.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,21 +23,23 @@ Future<StoryInfo?> createTranslation(
     builder: (context) {
       return AlertDialog(
         title: const Text('Create translation'),
-        content: Column(
-          children: [
-            TextField(
-              onChanged: (s) => language = s.trim(),
-              decoration: const InputDecoration(
-                labelText: 'Translation language',
+        content: SingleChildScrollView(
+          child: Column(
+            children: [
+              TextField(
+                onChanged: (s) => language = s.trim(),
+                decoration: const InputDecoration(
+                  labelText: 'Translation language',
+                ),
               ),
-            ),
-            TextField(
-              onChanged: (s) => title = s.trim(),
-              decoration: const InputDecoration(
-                labelText: 'Translated title',
+              TextField(
+                onChanged: (s) => title = s.trim(),
+                decoration: const InputDecoration(
+                  labelText: 'Translated title',
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         actions: [
           TextButton.icon(
@@ -59,13 +62,19 @@ Future<StoryInfo?> createTranslation(
   final user = FirebaseAuth.instance.currentUser;
   if (user == null || language.isEmpty) return null;
 
-  final doc = await FirebaseFirestore.instance
-      .collection('stories/${info.storyID}/translations')
-      .add(<String, dynamic>{
-    'language': language,
-    'metaData.lastUpdateAt': FieldValue.serverTimestamp(),
-    'metaData.authorId': user.uid,
-  });
+  final doc = await showLoadingDialog(
+    context,
+    FirebaseFirestore.instance
+        .collection('stories/${info.storyID}/translations')
+        .add(<String, dynamic>{
+      'language': language,
+      'metaData': {
+        'lastUpdateAt': FieldValue.serverTimestamp(),
+        'authorId': user.uid,
+      }
+    }),
+  );
+  if (doc == null) return null;
   return StoryInfo(
     storyID: info.storyID,
     storyAuthorID: info.storyAuthorID,
