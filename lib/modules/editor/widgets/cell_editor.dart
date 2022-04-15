@@ -42,10 +42,10 @@ Future<Cell?> showCellEditor(
       void setDisplay(CellDisplay? v) => setState(() => cell.display = v);
       return [
         ListTile(
+          leading: const Icon(Icons.label_rounded),
           title: TextFormField(
             decoration: const InputDecoration(
               labelText: 'Cell name',
-              prefixIcon: Icon(Icons.label_rounded),
             ),
             autofocus: true,
             initialValue: name,
@@ -54,10 +54,10 @@ Future<Cell?> showCellEditor(
           ),
         ),
         ListTile(
+          leading: const Icon(Icons.score_rounded),
           title: TextFormField(
             decoration: const InputDecoration(
               labelText: 'Cell max numeric value',
-              prefixIcon: Icon(Icons.score_rounded),
             ),
             autofocus: true,
             initialValue:

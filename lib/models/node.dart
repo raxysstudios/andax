@@ -9,7 +9,7 @@ part 'node.g.dart';
 enum EndingType { win, loss }
 enum NodeInputType { random, select, none }
 
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable()
 class Node {
   final String id;
   String? actorId;
