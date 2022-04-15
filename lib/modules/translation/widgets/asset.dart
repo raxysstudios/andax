@@ -36,6 +36,7 @@ class Asset extends StatelessWidget {
           context,
           id: id,
           pending: pending ?? [],
+          icon: icon,
         );
         editor.setState(() {});
       },

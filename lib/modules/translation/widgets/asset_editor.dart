@@ -10,6 +10,7 @@ Future<void> showAssetEditor(
   BuildContext context, {
   required String id,
   required List<AssetOverwrite> pending,
+  IconData? icon,
 }) {
   final editor = context.read<TranslationEditorState>();
   var asset = editor.changes[id];
@@ -36,6 +37,7 @@ Future<void> showAssetEditor(
 
       return [
         ListTile(
+          leading: icon == null ? null : Icon(icon),
           title: Text(editor.base[id] ?? ''),
         ),
         buildExplanationTile(context, 'Accepted translation'),
@@ -47,7 +49,7 @@ Future<void> showAssetEditor(
         ),
         buildExplanationTile(context, 'Suggest translation'),
         ListTile(
-          leading: TextFormField(
+          title: TextFormField(
             onChanged: (s) => newTranslation = s.trim(),
           ),
           trailing: IconButton(
