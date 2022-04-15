@@ -64,15 +64,22 @@ Future<StoryInfo?> createTranslation(
 
   final doc = await showLoadingDialog(
     context,
-    FirebaseFirestore.instance
-        .collection('stories/${info.storyID}/translations')
-        .add(<String, dynamic>{
-      'language': language,
-      'metaData': {
-        'lastUpdateAt': FieldValue.serverTimestamp(),
-        'authorId': user.uid,
-      }
-    }),
+    (() async {
+      final doc = await FirebaseFirestore.instance
+          .collection('stories/${info.storyID}/translations')
+          .add(<String, dynamic>{
+        'language': language,
+        'metaData': {
+          'lastUpdateAt': FieldValue.serverTimestamp(),
+          'authorId': user.uid,
+        }
+      });
+      await doc
+          .collection('assets')
+          .doc('title')
+          .set(<String, String>{'text': title});
+      return doc;
+    })(),
   );
   if (doc == null) return null;
   return StoryInfo(
