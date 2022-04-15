@@ -12,7 +12,7 @@ Future<List<AssetOverwrite>> getPendingAssets(StoryInfo info, String id) async {
       .get();
   return [
     for (final d in q.docs)
-      AssetOverwrite(id, d.data()['text'] as String? ?? '')
+      AssetOverwrite(d.id, d.data()['text'] as String? ?? '')
   ];
 }
 
