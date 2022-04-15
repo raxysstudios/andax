@@ -6,6 +6,7 @@ import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/modules/play/utils/animator.dart';
+import 'package:andax/modules/play/utils/audio_controller.dart';
 import 'package:andax/modules/play/utils/menu.dart';
 import 'package:andax/modules/play/widgets/game_results.dart';
 import 'package:andax/modules/play/widgets/transitions_chips.dart';
@@ -46,6 +47,7 @@ class PlayScreenState extends State<PlayScreen> {
   var _timer = PausableTimer(Duration.zero, () {});
   Node? _pending;
   final _scroll = ScrollController();
+  final audio = AudioController();
 
   @override
   void initState() {
@@ -71,6 +73,12 @@ class PlayScreenState extends State<PlayScreen> {
     for (final write in node.cellWrites) {
       cells[write.targetCellId]?.apply(write);
     }
+    final aUrl = tr.audio(node);
+    if (aUrl.isEmpty) {
+      audio.stop();
+    } else {
+      audio.play(aUrl, node.id);
+    }
     setState(() {});
     cells['node']?.value = '';
 
@@ -83,21 +91,33 @@ class PlayScreenState extends State<PlayScreen> {
   }
 
   void attemptMove() {
+    void launchTimer(int mils) {
+      setState(() {
+        _timer = PausableTimer(
+          Duration(
+            milliseconds: 1000 + mils,
+          ),
+          acceptPending,
+        )..start();
+      });
+    }
+
     final last = storyline.last;
     for (final transition in last.transitions) {
       if (transition.condition.check(cells)) {
         final node = nodes[transition.targetNodeId];
+        setState(() => _pending = node);
         if (node != null) {
-          setState(() {
-            _pending = node;
-            _timer = PausableTimer(
-              Duration(
-                milliseconds: 1000 + 50 * tr.node(last).length,
-              ),
-              acceptPending,
-            )..start();
-          });
-          return;
+          final textDur = 50 * tr.node(last).length;
+          if (audio.url.isEmpty) {
+            launchTimer(textDur);
+          } else {
+            audio.player.getDuration().then(
+                  (_) => launchTimer(
+                    max(audio.duration, textDur),
+                  ),
+                );
+          }
         }
       }
     }

@@ -81,10 +81,10 @@ class _InfoEditorScreenState extends State<InfoEditorScreen> {
           padding: const EdgeInsets.only(bottom: 72),
           children: [
             ListTile(
+              leading: const Icon(Icons.language_rounded),
               title: TextFormField(
                 decoration: const InputDecoration(
                   labelText: 'Initial language',
-                  prefixIcon: Icon(Icons.language_rounded),
                 ),
                 initialValue: editor.tr.language,
                 validator: emptyValidator,
@@ -92,10 +92,10 @@ class _InfoEditorScreenState extends State<InfoEditorScreen> {
               ),
             ),
             ListTile(
+              leading: const Icon(Icons.title_rounded),
               title: TextFormField(
                 decoration: const InputDecoration(
                   labelText: 'Story title',
-                  prefixIcon: Icon(Icons.title_rounded),
                 ),
                 initialValue: editor.tr.title,
                 validator: emptyValidator,
@@ -103,31 +103,31 @@ class _InfoEditorScreenState extends State<InfoEditorScreen> {
               ),
             ),
             ListTile(
+              leading: const Icon(Icons.link_rounded),
               title: TextFormField(
                 decoration: const InputDecoration(
                   labelText: 'Cover image url',
-                  prefixIcon: Icon(Icons.link_rounded),
                 ),
                 initialValue: editor.story.coverUrl,
                 onChanged: (s) => editor.story.coverUrl = s.trim(),
               ),
             ),
             ListTile(
+              leading: const Icon(Icons.description_rounded),
               title: TextFormField(
                 maxLines: null,
                 decoration: const InputDecoration(
                   labelText: 'Story description',
-                  prefixIcon: Icon(Icons.description_rounded),
                 ),
                 initialValue: editor.tr.description,
                 onChanged: (s) => editor.tr['description'] = s.trim(),
               ),
             ),
             ListTile(
+              leading: const Icon(Icons.tag_rounded),
               title: TextFormField(
                 decoration: const InputDecoration(
                   labelText: 'Story tags',
-                  prefixIcon: Icon(Icons.tag_rounded),
                 ),
                 initialValue: editor.tr['tags'],
                 onChanged: (s) => editor.tr['tags'] = s.trim(),

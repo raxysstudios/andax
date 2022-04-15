@@ -42,10 +42,10 @@ Future<CellWrite?> showCellWriteEditor(
           setState(() => write.mode = v ?? write.mode);
       return [
         ListTile(
+          leading: const Icon(Icons.edit_rounded),
           title: TextFormField(
             decoration: const InputDecoration(
               labelText: 'Write value',
-              prefixIcon: Icon(Icons.edit_rounded),
             ),
             autofocus: true,
             initialValue: write.value,

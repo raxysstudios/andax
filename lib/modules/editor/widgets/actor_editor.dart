@@ -43,10 +43,10 @@ Future<Actor?> showActorEditor(
           });
       return [
         ListTile(
+          leading: const Icon(Icons.label_rounded),
           title: TextFormField(
             decoration: const InputDecoration(
               labelText: 'Actor name',
-              prefixIcon: Icon(Icons.label_rounded),
             ),
             autofocus: true,
             initialValue: name,
@@ -55,10 +55,10 @@ Future<Actor?> showActorEditor(
           ),
         ),
         ListTile(
+          leading: const Icon(Icons.link_rounded),
           title: TextFormField(
             decoration: const InputDecoration(
               labelText: 'Avatar file URL',
-              prefixIcon: Icon(Icons.link_rounded),
             ),
             autofocus: true,
             initialValue: actor.avatarUrl,

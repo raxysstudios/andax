@@ -69,11 +69,11 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
         ),
         const Divider(),
         ListTile(
+          leading: const Icon(Icons.notes_rounded),
           title: TextFormField(
             maxLines: null,
             decoration: const InputDecoration(
               labelText: 'Message text',
-              prefixIcon: Icon(Icons.notes_rounded),
             ),
             autofocus: true,
             initialValue: editor.tr.node(node),
@@ -88,10 +88,14 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
             (r) => setState(() {}),
           ),
         ),
-        const ListTile(
-          leading: Icon(Icons.audiotrack_rounded),
-          title: Text('Select audio'),
-          subtitle: Text('[NOT IMPLEMENTED]'),
+        ListTile(
+          leading: const Icon(Icons.audiotrack_rounded),
+          title: TextFormField(
+            maxLines: null,
+            decoration: const InputDecoration(labelText: 'Audio URL'),
+            initialValue: editor.tr.audio(node),
+            onChanged: (s) => editor.tr[node.id + '_audio'] = s.trim(),
+          ),
         ),
       ],
     );

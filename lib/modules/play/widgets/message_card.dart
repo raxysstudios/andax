@@ -5,10 +5,12 @@ class MessageCard extends StatelessWidget {
   const MessageCard(
     this.text, {
     this.onTap,
+    this.onLongPress,
     Key? key,
   }) : super(key: key);
 
   final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
   final String text;
 
   @override
@@ -18,6 +20,7 @@ class MessageCard extends StatelessWidget {
       margin: EdgeInsets.zero,
       child: InkWell(
         onTap: onTap,
+        onLongPress: onLongPress,
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 16,

@@ -1,5 +1,6 @@
 import 'package:andax/models/node.dart';
 import 'package:andax/modules/play/widgets/actor_chip.dart';
+import 'package:andax/modules/play/widgets/audio_slider.dart';
 import 'package:andax/modules/play/widgets/message_card.dart';
 
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class NodeDisplay extends StatelessWidget {
     final play = context.watch<PlayScreenState>();
     final actor = play.actors[node.actorId];
     final text = play.tr.node(node, allowEmpty: true);
+    final audio = play.audio;
     if (text.isEmpty) return const SizedBox();
 
     final thread = actor?.id == previousNode?.actorId;
@@ -54,8 +56,17 @@ class NodeDisplay extends StatelessWidget {
         if (text.isNotEmpty)
           MessageCard(
             text,
-            onTap: () {},
+            onTap: () {
+              final aUrl = play.tr.audio(node);
+              if (aUrl.isNotEmpty) audio.toggle(aUrl, node.id);
+            },
           ),
+        ChangeNotifierProvider.value(
+          value: audio,
+          builder: (context, _) {
+            return AudioSlider(node);
+          },
+        ),
       ],
     );
   }

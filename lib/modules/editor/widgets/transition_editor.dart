@@ -68,10 +68,10 @@ Future<Transition?> showTransitionEditor(
       return [
         if (label != null)
           ListTile(
+            leading: const Icon(Icons.short_text_rounded),
             title: TextFormField(
               decoration: const InputDecoration(
                 labelText: 'Transition text',
-                prefixIcon: Icon(Icons.short_text_rounded),
               ),
               autofocus: true,
               initialValue: label,
@@ -143,10 +143,10 @@ Future<Transition?> showTransitionEditor(
                   ),
                   if (condition.operator != CheckOperator.pass)
                     ListTile(
+                      leading: const Icon(Icons.turned_in_rounded),
                       title: TextFormField(
                         decoration: const InputDecoration(
                           labelText: 'Comparison value',
-                          prefixIcon: Icon(Icons.turned_in_rounded),
                         ),
                         autofocus: true,
                         initialValue: condition.value,
