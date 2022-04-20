@@ -24,7 +24,7 @@ Future<void> showAssetEditor(
   var newTranslation = '';
   return showEditorSheet<void>(
     context: context,
-    title: 'Select asset',
+    title: 'Pick translation',
     builder: (context, setState) {
       void pickPending(AssetOverwrite? a) => setState(() {
             asset = a;
@@ -50,6 +50,7 @@ Future<void> showAssetEditor(
         buildExplanationTile(context, 'Suggest translation'),
         ListTile(
           title: TextFormField(
+            maxLines: null,
             onChanged: (s) => newTranslation = s.trim(),
           ),
           trailing: IconButton(

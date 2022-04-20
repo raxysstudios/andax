@@ -98,7 +98,7 @@ class TranslationEditorState extends State<TranslationEditorScreen> {
                       .where((e) => e.value.display != null)
                       .map((e) => e.key))
                     Asset(cid, icon: Icons.article_rounded),
-                  buildExplanationTile(context, 'Nodes'),
+                  buildExplanationTile(context, 'Narrative'),
                   for (final n in narrative.nodes.values) ...[
                     Asset(n.id, icon: Icons.chat_bubble_rounded),
                     if (n.input == NodeInputType.select)

@@ -135,7 +135,7 @@ class _TranslationsScreenState extends State<TranslationsScreen> {
                 Navigator.pop(context);
               },
               icon: const Icon(Icons.edit_note_rounded),
-              label: const Text('Edit trasnlation'),
+              label: const Text('Edit translation'),
             ),
       body: ListView(
         children: [
