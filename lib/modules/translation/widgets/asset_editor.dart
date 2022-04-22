@@ -4,7 +4,7 @@ import 'package:andax/shared/widgets/loading_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../screens/translation_editor.dart';
+import '../screens/translations.dart';
 
 Future<void> showAssetEditor(
   BuildContext context, {

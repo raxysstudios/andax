@@ -1,13 +1,19 @@
+import 'package:andax/models/story.dart';
 import 'package:andax/modules/editor/utils/editor_sheet.dart';
 import 'package:flutter/material.dart';
 
-Future<MapEntry<String, String>?> showTranslationCreator(BuildContext context) {
+import '../services/translations.dart';
+
+Future<StoryInfo?> showTranslationCreator(
+  BuildContext context,
+  StoryInfo base,
+) async {
   var language = '';
   var title = '';
-  return showEditorSheet<MapEntry<String, String>>(
+  return await showEditorSheet<Future<StoryInfo?>>(
     context: context,
     title: 'Create translation',
-    onSave: () => MapEntry(language, title),
+    onSave: () => createTranslation(context, base, language, title),
     builder: (context, setState) {
       return [
         ListTile(

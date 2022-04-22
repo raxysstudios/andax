@@ -56,6 +56,7 @@ class StoryInfo {
   final String description;
   final List<String> tags;
   final String imageUrl;
+  final String language;
   final int likes;
   final int views;
   @JsonKey(fromJson: _dateFromMillis)
@@ -67,6 +68,7 @@ class StoryInfo {
     required this.translationID,
     required this.translationAuthorID,
     required this.title,
+    required this.language,
     this.description = '',
     this.likes = 0,
     this.views = 0,
