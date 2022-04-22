@@ -41,11 +41,6 @@ class TranslationEditorState extends State<TranslationEditorScreen> {
   final changes = <String, AssetOverwrite>{};
 
   @override
-  void setState(void Function() fn) {
-    super.setState(fn);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Provider.value(
       value: this,
