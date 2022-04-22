@@ -34,7 +34,7 @@ class _AudioSliderState extends State<AudioSlider> {
     return slideUp(
       key: Key(audio.key),
       child: Slider(
-        value: value.toDouble(),
+        value: value < audio.duration ? value.toDouble() : 0,
         max: audio.duration.toDouble(),
         onChanged: (s) => setState(() {
           drag = true;
