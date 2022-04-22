@@ -1,5 +1,6 @@
 import 'package:algolia/algolia.dart';
 import 'package:andax/models/story.dart';
+import 'package:andax/shared/utils.dart';
 import 'package:andax/store.dart';
 
 String _generateFilter(
@@ -41,8 +42,4 @@ Future<List<StoryInfo>> getStories(
   if (hitsPerPage != null) query = query.setHitsPerPage(hitsPerPage);
   final qs = await query.getObjects();
   return storiesFromSnapshot(qs);
-}
-
-List<StoryInfo> storiesFromSnapshot(AlgoliaQuerySnapshot qs) {
-  return qs.hits.map((h) => StoryInfo.fromAlgoliaHit(h)).toList();
 }

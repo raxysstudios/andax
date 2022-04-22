@@ -74,14 +74,6 @@ class StoryCategoryList extends StatelessWidget {
           appBar: AppBar(
             leading: const RoundedBackButton(),
             title: Text(title.titleCase),
-            actions: [
-              IconButton(
-                onPressed: () => showSearchSheet(context),
-                icon: const Icon(Icons.search_rounded),
-                tooltip: 'Search stories',
-              ),
-              const SizedBox(width: 4),
-            ],
           ),
           body: PagingList<StoryInfo>(
             onRequest: (p, l) => getStories(index, page: p),

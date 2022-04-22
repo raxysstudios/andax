@@ -6,6 +6,8 @@ import '../screens/story.dart';
 
 Future<void> uploadStory(StoryEditorState editor) async {
   final uid = FirebaseAuth.instance.currentUser?.uid;
+  if (uid == null) return;
+
   final sdb = FirebaseFirestore.instance.collection('stories');
   var sid = editor.info?.storyID;
   if (sid == null) {
@@ -35,15 +37,16 @@ Future<void> uploadStory(StoryEditorState editor) async {
     for (final entry in editor.tr.assets.entries)
       adb.doc(entry.key).set(<String, String>{'text': entry.value})
   ]);
-  editor.setState(() {
-    editor.info ??= StoryInfo(
+  editor.setState(
+    () => editor.info ??= StoryInfo(
       storyID: sid!,
-      storyAuthorID: '',
+      storyAuthorID: uid,
       translationID: tid!,
-      translationAuthorID: '',
-      title: '',
-    );
-  });
+      translationAuthorID: uid,
+      title: editor.tr.title,
+      language: editor.tr.language,
+    ),
+  );
 }
 
 Future<void> deleteStory(StoryEditorState editor) async {
