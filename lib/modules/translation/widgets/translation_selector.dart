@@ -37,9 +37,10 @@ Future<StoryInfo?> showTranslationSelector(
             return ListTile(
               title: Text(item.title),
               subtitle: Text(item.language),
-              trailing:
-                  item == target ? const Icon(Icons.assignment_rounded) : null,
-              onTap: item == target ? null : () => Navigator.pop(context, item),
+              trailing: item.translationID == target.translationID
+                  ? const Icon(Icons.assignment_rounded)
+                  : null,
+              onTap: () => Navigator.pop(context, item),
             );
           },
         ),
