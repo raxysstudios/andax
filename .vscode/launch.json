@@ -8,7 +8,7 @@
             "name": "andax",
             "request": "launch",
             "type": "dart",
-            "args": ["--web-port", "80"]
+            "args": ["--web-port", "80", "--web-renderer", "html"],
         },
         {
             "name": "andax (profile mode)",
