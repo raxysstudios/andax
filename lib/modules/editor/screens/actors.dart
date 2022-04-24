@@ -28,14 +28,14 @@ class ActorsEditorScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const RoundedBackButton(),
-        title: const Text('Story actors'),
+        title: const Text('Story character'),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => showActorEditor(
           context,
         ).then((r) => onSelect(r, true)),
         icon: const Icon(Icons.person_add_rounded),
-        label: const Text('Add actor'),
+        label: const Text('Add a character'),
       ),
       body: CustomScrollView(
         controller: scroll,

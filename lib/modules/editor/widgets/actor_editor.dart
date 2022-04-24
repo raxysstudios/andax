@@ -16,7 +16,7 @@ Future<Actor?> showActorEditor(
   if (value == null) {
     final id = editor.uuid.v4();
     actor = Actor(id);
-    name = 'Actor #${editor.story.actors.length + 1}';
+    name = 'Character #${editor.story.actors.length + 1}';
   } else {
     actor = Actor.fromJson(value.toJson());
     name = editor.tr.actor(actor);
@@ -24,7 +24,7 @@ Future<Actor?> showActorEditor(
 
   return showEditorSheet<Actor>(
     context: context,
-    title: value == null ? 'Create actor' : 'Edit actor',
+    title: value == null ? 'Create a character' : 'Edit character',
     initial: value,
     onSave: () {
       editor.story.actors[actor.id] = actor;
@@ -46,7 +46,7 @@ Future<Actor?> showActorEditor(
           leading: const Icon(Icons.label_rounded),
           title: TextFormField(
             decoration: const InputDecoration(
-              labelText: 'Actor name',
+              labelText: 'Character name',
             ),
             autofocus: true,
             initialValue: name,
@@ -67,7 +67,7 @@ Future<Actor?> showActorEditor(
         ),
         buildExplanationTile(
           context,
-          'Actor mode',
+          'Character mode',
           'Sets the look of its messages, restricts some options for them.',
         ),
         RadioListTile<ActorType>(
@@ -75,7 +75,7 @@ Future<Actor?> showActorEditor(
           groupValue: actor.type,
           onChanged: setType,
           secondary: const Icon(Icons.smart_toy_rounded),
-          title: const Text('Computer actor'),
+          title: const Text('Computer character'),
           subtitle: const Text('Follows the narrative'),
         ),
         RadioListTile<ActorType>(
@@ -83,7 +83,7 @@ Future<Actor?> showActorEditor(
           groupValue: actor.type,
           onChanged: setType,
           secondary: const Icon(Icons.face_rounded),
-          title: const Text('Player actor'),
+          title: const Text('Player character'),
           subtitle: const Text('Controlled by the player'),
         ),
       ];

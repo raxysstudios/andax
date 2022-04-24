@@ -121,7 +121,7 @@ class StoryEditorState extends State<StoryEditorScreen> {
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.groups_rounded),
-                    label: 'Actors',
+                    label: 'Characters',
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.library_books_rounded),
