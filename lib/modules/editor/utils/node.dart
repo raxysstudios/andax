@@ -15,7 +15,7 @@ Future<Node> editNode(
     final id = editor.uuid.v4();
     node = Node(id);
     editor.story.nodes[id] = node;
-    editor.tr[id] = 'Node #${editor.story.nodes.length}';
+    editor.tr[id] = 'Message #${editor.story.nodes.length}';
   }
   await Navigator.push<void>(
     context,
@@ -36,7 +36,7 @@ void deleteNode(
   Node node, [
   VoidCallback? onDone,
 ]) async {
-  if (await showDangerDialog(context, 'Delete node?')) {
+  if (await showDangerDialog(context, 'Delete message?')) {
     final editor = context.read<StoryEditorState>();
     editor.story.nodes.remove(node.id);
     editor.tr.assets.remove(node.id);

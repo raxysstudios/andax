@@ -31,7 +31,7 @@ class NodeTile extends StatelessWidget {
   Widget build(BuildContext context) {
     if (node == null) {
       return const ListTile(
-        title: Text('[MISSING NODE]'),
+        title: Text('[MISSING MESSAGE]'),
       );
     }
     final editor = context.watch<StoryEditorState>();

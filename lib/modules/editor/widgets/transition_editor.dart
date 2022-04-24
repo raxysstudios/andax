@@ -79,7 +79,7 @@ Future<Transition?> showTransitionEditor(
               onChanged: (s) => label = s.trim(),
             ),
           ),
-        buildExplanationTile(context, 'Target node'),
+        buildExplanationTile(context, 'Target message'),
         Provider.value(
           value: editor,
           child: NodeTile(

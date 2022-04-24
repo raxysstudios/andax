@@ -149,7 +149,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
           for (var i = 0; i < transitions.length; i++)
             ListTile(
               title: Text(
-                editor.tr[transitions[i].targetNodeId] ?? '[❌NODE]',
+                editor.tr[transitions[i].targetNodeId] ?? '[❌MESSAGE]',
               ),
               subtitle: editor.tr[transitions[i].id] == null
                   ? null
@@ -209,13 +209,13 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
     return Scaffold(
       appBar: AppBar(
         leading: const RoundedBackButton(icon: Icons.done_all_rounded),
-        title: const Text('Node editor'),
+        title: const Text('Messages editor'),
         actions: [
           OptionsButton(
             [
               OptionItem.simple(
                 Icons.delete_rounded,
-                'Delete node',
+                'Delete message',
                 () => deleteNode(
                   context,
                   node,
