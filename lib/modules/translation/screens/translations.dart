@@ -85,7 +85,7 @@ class TranslationEditorState extends State<TranslationEditorScreen> {
                   Asset('description', icon: Icons.description_rounded),
                   // ignore: prefer_const_constructors
                   Asset('tags', icon: Icons.tag_rounded),
-                  buildExplanationTile(context, 'Actors'),
+                  buildExplanationTile(context, 'Characters'),
                   for (final aid in narrative.actors.keys)
                     Asset(aid, icon: Icons.person_rounded),
                   buildExplanationTile(context, 'Cells'),

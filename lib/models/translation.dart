@@ -21,9 +21,9 @@ class Translation {
   void operator []=(String id, String asset) => assets[id] = asset;
 
   String node(Node? n, {bool allowEmpty = false}) =>
-      this[n?.id] ?? (allowEmpty ? '' : '[❌NODE]');
+      this[n?.id] ?? (allowEmpty ? '' : '[❌MESSAGE]');
   String transition(Transition? t) => this[t?.id] ?? '[❌TRANSITION]';
-  String actor(Actor? a) => this[a?.id] ?? '[❌ACTOR]';
+  String actor(Actor? a) => this[a?.id] ?? '[❌CHARACTER]';
   String cell(Cell? c) => this[c?.id] ?? '[❌CELL]';
   String audio(Node? n) => this['${n?.id}_audio'] ?? '';
 

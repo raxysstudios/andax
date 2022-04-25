@@ -96,7 +96,7 @@ class _NarrativeEditorScreenState extends State<NarrativeEditorScreen> {
           setState(() {});
         },
         icon: const Icon(Icons.add_circle_rounded),
-        label: const Text('Add node'),
+        label: const Text('Add a message'),
       ),
       body: ListView.builder(
         padding: const EdgeInsets.only(bottom: 76),
