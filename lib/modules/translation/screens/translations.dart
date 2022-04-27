@@ -1,8 +1,9 @@
 import 'package:andax/models/node.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
-import 'package:andax/modules/editor/utils/editor_sheet.dart';
 import 'package:andax/modules/translation/services/assets.dart';
+import 'package:andax/shared/extensions.dart';
+import 'package:andax/shared/widgets/column_card.dart';
 import 'package:andax/shared/widgets/danger_dialog.dart';
 import 'package:andax/shared/widgets/loading_dialog.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
@@ -40,8 +41,12 @@ class TranslationEditorState extends State<TranslationEditorScreen> {
 
   final changes = <String, AssetOverwrite>{};
 
+  var _page = 0;
+  final _paging = PageController();
+
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Provider.value(
       value: this,
       child: Builder(
@@ -56,7 +61,23 @@ class TranslationEditorState extends State<TranslationEditorScreen> {
             child: Scaffold(
               appBar: AppBar(
                 leading: const RoundedBackButton(),
-                title: const Text('Translations editor'),
+                title: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Translations\n',
+                        style: textTheme.headline6,
+                      ),
+                      TextSpan(
+                        text: target.language.titleCase,
+                        style: TextStyle(
+                          color: textTheme.caption?.color,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
               floatingActionButton: changes.isNotEmpty &&
                       FirebaseAuth.instance.currentUser?.uid ==
@@ -72,36 +93,100 @@ class TranslationEditorState extends State<TranslationEditorScreen> {
                       child: const Icon(Icons.upload_rounded),
                     )
                   : null,
-              body: ListView(
+              body: PageView(
+                controller: _paging,
+                physics: const NeverScrollableScrollPhysics(),
                 children: [
-                  ListTile(
-                    leading: const Icon(Icons.language_rounded),
-                    title: Text(target.language),
+                  ListView(
+                    padding: const EdgeInsets.only(bottom: 76),
+                    children: [
+                      const ColumnCard(
+                        title: 'Info',
+                        children: [
+                          Asset('title', icon: Icons.title_rounded),
+                          // ignore: prefer_const_constructors
+                          Asset('description', icon: Icons.description_rounded),
+                          // ignore: prefer_const_constructors
+                          Asset('tags', icon: Icons.tag_rounded),
+                        ],
+                      ),
+                      ColumnCard(
+                        title: 'Characters',
+                        children: [
+                          for (final aid in narrative.actors.keys)
+                            Asset(aid, icon: Icons.person_rounded),
+                        ],
+                      ),
+                      ColumnCard(
+                        title: 'Cells',
+                        children: [
+                          for (final cid in narrative.cells.entries
+                              .where((e) => e.value.display != null)
+                              .map((e) => e.key))
+                            Asset(cid, icon: Icons.article_rounded),
+                        ],
+                      ),
+                    ],
                   ),
-                  buildExplanationTile(context, 'General info'),
-                  // ignore: prefer_const_constructors
-                  Asset('title', icon: Icons.title_rounded),
-                  // ignore: prefer_const_constructors
-                  Asset('description', icon: Icons.description_rounded),
-                  // ignore: prefer_const_constructors
-                  Asset('tags', icon: Icons.tag_rounded),
-                  buildExplanationTile(context, 'Characters'),
-                  for (final aid in narrative.actors.keys)
-                    Asset(aid, icon: Icons.person_rounded),
-                  buildExplanationTile(context, 'Cells'),
-                  for (final cid in narrative.cells.entries
-                      .where((e) => e.value.display != null)
-                      .map((e) => e.key))
-                    Asset(cid, icon: Icons.article_rounded),
-                  buildExplanationTile(context, 'Narrative'),
-                  for (final n in narrative.nodes.values) ...[
-                    Asset(n.id, icon: Icons.chat_bubble_rounded),
-                    if (n.input == NodeInputType.select)
-                      for (final t in n.transitions)
-                        Asset(t.id, icon: Icons.call_split_rounded),
-                    const Divider(indent: 64),
-                  ],
+                  ListView(
+                    padding: const EdgeInsets.only(bottom: 76),
+                    children: [
+                      for (final n in narrative.nodes.values)
+                        ColumnCard(
+                          children: [
+                            Asset(n.id, icon: Icons.chat_bubble_rounded),
+                            if (n.input == NodeInputType.select)
+                              for (final t in n.transitions)
+                                Asset(t.id, icon: Icons.call_split_rounded),
+                            const Divider(indent: 64),
+                          ],
+                        ),
+                    ],
+                  ),
                 ],
+              ),
+              bottomNavigationBar: BottomNavigationBar(
+                selectedItemColor: textTheme.bodyText1?.color,
+                unselectedItemColor: textTheme.caption?.color,
+                items: const [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.info_rounded),
+                    label: 'General',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.message_rounded),
+                    label: 'Messages',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.play_arrow_rounded),
+                    label: 'Play',
+                  ),
+                ],
+                currentIndex: _page,
+                onTap: (i) {
+                  if (i == 2) {
+                    // Navigator.push<void>(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) {
+                    //       return PlayScreen(
+                    //         story: story,
+                    //         translation: tr,
+                    //       );
+                    //     },
+                    //   ),
+                    // );
+                    return;
+                  }
+                  setState(() {
+                    _page = i;
+                    _paging.animateToPage(
+                      i,
+                      duration: const Duration(milliseconds: 250),
+                      curve: standardEasing,
+                    );
+                  });
+                },
               ),
             ),
           );
