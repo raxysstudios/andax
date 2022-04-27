@@ -5,15 +5,17 @@ class ColumnCard extends StatelessWidget {
     required this.children,
     this.title,
     this.subtitle,
-    this.divider = true,
+    this.divider = const Divider(),
     this.margin = const EdgeInsets.only(top: 12),
+    this.padding = EdgeInsets.zero,
     Key? key,
   }) : super(key: key);
 
   final EdgeInsets margin;
+  final EdgeInsets padding;
   final String? title;
   final String? subtitle;
-  final bool divider;
+  final Widget? divider;
   final List<Widget> children;
 
   @override
@@ -22,34 +24,37 @@ class ColumnCard extends StatelessWidget {
     return Card(
       margin: margin,
       shape: const RoundedRectangleBorder(),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (title != null || subtitle != null) ...[
-            const SizedBox(height: 8),
-            if (title != null)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
-                child: Text(
-                  title!,
-                  style: theme.bodyText1,
+      child: Padding(
+        padding: padding,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (title != null || subtitle != null) ...[
+              const SizedBox(height: 8),
+              if (title != null)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+                  child: Text(
+                    title!,
+                    style: theme.bodyText1,
+                  ),
                 ),
-              ),
-            if (subtitle != null)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
-                child: Text(
-                  subtitle!,
-                  style: theme.bodyText2,
+              if (subtitle != null)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+                  child: Text(
+                    subtitle!,
+                    style: theme.bodyText2,
+                  ),
                 ),
-              ),
-            const SizedBox(height: 12),
+              const SizedBox(height: 12),
+            ],
+            if (divider != null)
+              for (final c in children) ...[c, divider!]
+            else
+              ...children,
           ],
-          if (divider)
-            for (final c in children) ...[c, const Divider()]
-          else
-            ...children,
-        ],
+        ),
       ),
     );
   }
