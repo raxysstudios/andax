@@ -1,5 +1,5 @@
 import 'package:andax/models/cell.dart';
-import 'package:andax/modules/editor/utils/editor_sheet.dart';
+import 'package:andax/shared/widgets/editor_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';

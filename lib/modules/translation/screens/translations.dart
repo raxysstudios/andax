@@ -11,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../services/play.dart';
 import '../widgets/asset.dart';
 
 typedef AssetOverwrite = MapEntry<String, String>;
@@ -43,6 +44,11 @@ class TranslationEditorState extends State<TranslationEditorScreen> {
 
   var _page = 0;
   final _paging = PageController();
+
+  @override
+  void setState(void Function() fn) {
+    super.setState(fn);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -132,15 +138,20 @@ class TranslationEditorState extends State<TranslationEditorScreen> {
                     padding: const EdgeInsets.only(bottom: 76),
                     children: [
                       for (final n in narrative.nodes.values)
-                        ColumnCard(
-                          children: [
-                            Asset(n.id, icon: Icons.chat_bubble_rounded),
-                            if (n.input == NodeInputType.select)
-                              for (final t in n.transitions)
-                                Asset(t.id, icon: Icons.call_split_rounded),
-                            const Divider(indent: 64),
-                          ],
-                        ),
+                        Builder(builder: (context) {
+                          final hasText = base[n.id]?.isNotEmpty ?? false;
+                          final selectable = n.input == NodeInputType.select;
+                          if (!hasText && !selectable) return const SizedBox();
+                          return ColumnCard(
+                            children: [
+                              if (hasText)
+                                Asset(n.id, icon: Icons.chat_bubble_rounded),
+                              if (selectable)
+                                for (final t in n.transitions)
+                                  Asset(t.id, icon: Icons.call_split_rounded),
+                            ],
+                          );
+                        }),
                     ],
                   ),
                 ],
@@ -165,18 +176,12 @@ class TranslationEditorState extends State<TranslationEditorScreen> {
                 currentIndex: _page,
                 onTap: (i) {
                   if (i == 2) {
-                    // Navigator.push<void>(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) {
-                    //       return PlayScreen(
-                    //         story: story,
-                    //         translation: tr,
-                    //       );
-                    //     },
-                    //   ),
-                    // );
-                    return;
+                    return playTranslation(
+                      context,
+                      narrative,
+                      target,
+                      changes,
+                    );
                   }
                   setState(() {
                     _page = i;

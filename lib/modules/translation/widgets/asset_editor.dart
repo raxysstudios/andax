@@ -1,10 +1,10 @@
-import 'package:andax/modules/editor/utils/editor_sheet.dart';
-import 'package:andax/modules/translation/services/assets.dart';
+import 'package:andax/shared/widgets/editor_sheet.dart';
 import 'package:andax/shared/widgets/loading_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../screens/translations.dart';
+import '../services/assets.dart';
 
 Future<void> showAssetEditor(
   BuildContext context, {

@@ -2,8 +2,8 @@ import 'package:andax/models/actor.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../shared/widgets/editor_sheet.dart';
 import '../screens/story.dart';
-import '../utils/editor_sheet.dart';
 
 Future<Actor?> showActorEditor(
   BuildContext context, [

@@ -163,6 +163,7 @@ class PlayScreenState extends State<PlayScreen> {
                 onPressed: () => openMenu(context),
               ),
             ),
+            appBar: AppBar(toolbarHeight: 0),
             body: ListView(
               controller: _scroll,
               padding: const EdgeInsets.only(top: 76, bottom: 32),

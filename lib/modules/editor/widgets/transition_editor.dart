@@ -1,9 +1,9 @@
 import 'package:andax/models/cell_check.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/models/transition.dart';
-import 'package:andax/modules/editor/utils/editor_sheet.dart';
 import 'package:andax/modules/editor/widgets/cell_tile.dart';
 import 'package:andax/modules/editor/widgets/node_tile.dart';
+import 'package:andax/shared/widgets/editor_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

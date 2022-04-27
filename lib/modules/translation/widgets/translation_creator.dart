@@ -1,5 +1,5 @@
 import 'package:andax/models/story.dart';
-import 'package:andax/modules/editor/utils/editor_sheet.dart';
+import 'package:andax/shared/widgets/editor_sheet.dart';
 import 'package:flutter/material.dart';
 
 import '../services/translations.dart';

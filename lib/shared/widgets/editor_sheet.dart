@@ -56,12 +56,14 @@ Future<T?> showEditorSheet<T>({
     context: context,
     builder: (context, scroll) {
       return WillPopScope(
-        onWillPop: () => showDangerDialog(
-          context,
-          'Discard usaved edits?',
-          confirmText: 'Discard',
-          rejectText: 'Stay',
-        ),
+        onWillPop: () => onSave == null
+            ? Future.value(true)
+            : showDangerDialog(
+                context,
+                'Discard usaved edits?',
+                confirmText: 'Discard',
+                rejectText: 'Stay',
+              ),
         child: Scaffold(
           appBar: AppBar(
             leading: const RoundedBackButton(),
