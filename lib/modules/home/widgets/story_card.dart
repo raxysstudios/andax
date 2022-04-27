@@ -25,31 +25,28 @@ class _StoryCardState extends State<StoryCard> {
         child: Stack(
           children: [
             widget.story.imageUrl.isEmpty
-                ? const Padding(
-                    padding: EdgeInsets.all(12),
-                    child: Icon(Icons.history_edu_rounded),
+                ? Align(
+                    alignment: Alignment.bottomRight,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Icon(
+                        Icons.history_edu_rounded,
+                        color: Theme.of(context).textTheme.caption?.color,
+                      ),
+                    ),
                   )
                 : Positioned.fill(
-                    child: GradientCoverImage(
-                      widget.story.imageUrl,
-                      reversed: true,
-                    ),
+                    child: GradientCoverImage(widget.story.imageUrl),
                   ),
             Positioned.fill(
               child: Padding(
                 padding: const EdgeInsets.all(8),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.story.title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  widget.story.title,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ),
