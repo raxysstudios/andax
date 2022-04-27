@@ -7,6 +7,7 @@ import 'package:andax/modules/translation/services/translations.dart';
 import 'package:andax/shared/services/story_loader.dart';
 import 'package:andax/shared/utils.dart';
 import 'package:andax/shared/widgets/column_card.dart';
+import 'package:andax/shared/widgets/markdown_text.dart';
 import 'package:andax/shared/widgets/options_button.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:andax/shared/widgets/span_icon.dart';
@@ -140,21 +141,7 @@ class StoryScreen extends StatelessWidget {
                       ),
                     ),
                     if (info.description.isNotEmpty)
-                      MarkdownBody(
-                        data: info.description,
-                        selectable: true,
-                        styleSheet: MarkdownStyleSheet(
-                          p: const TextStyle(
-                            fontSize: 16,
-                          ),
-                          strong: const TextStyle(
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        onTapLink: (_, link, __) {
-                          if (link != null) launch(link);
-                        },
-                      ),
+                      MarkdownText(info.description),
                   ],
                 ),
                 Padding(
