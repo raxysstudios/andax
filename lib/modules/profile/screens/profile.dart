@@ -1,8 +1,6 @@
 import 'package:andax/models/story.dart';
-import 'package:andax/modules/home/utils/sheets.dart';
-import 'package:andax/modules/home/widgets/story_tile.dart';
-import 'package:andax/shared/widgets/paging_list.dart';
-import 'package:andax/shared/widgets/rounded_back_button.dart';
+import 'package:andax/modules/profile/services/sheets.dart';
+import 'package:andax/shared/widgets/column_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -59,39 +57,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget buildStoriesTile(
-    IconData icon,
-    String title,
-    int? count,
-    Future<List<StoryInfo>> Function(int page, StoryInfo? last) getter,
-  ) {
-    return ListTile(
-      leading: Icon(icon),
-      title: Text(title),
-      trailing: loadingChip(count),
-      onTap: () => Navigator.push<void>(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Scaffold(
-            appBar: AppBar(
-              leading: const RoundedBackButton(),
-              title: Text(title),
-            ),
-            body: PagingList<StoryInfo>(
-              onRequest: getter,
-              builder: (context, info, index) {
-                return StoryTile(
-                  info,
-                  onTap: () => showStorySheet(context, info),
-                );
-              },
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,45 +81,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
             title: Text(user.displayName ?? '[no name]'),
             subtitle: Text(user.email ?? '[no email]'),
           ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.favorite_rounded),
-            title: const Text('Liked stories'),
-            trailing: loadingChip(likes),
-            onTap: () => Navigator.push<void>(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Scaffold(
-                  appBar: AppBar(
-                    leading: const RoundedBackButton(),
-                    title: const Text('Liked Stories'),
-                  ),
-                  body: PagingList<LikeItem>(
-                    onRequest: (i, s) => getLikes(user, i, s),
-                    builder: (context, item, index) {
-                      return StoryTile(
-                        item.value,
-                        onTap: () => showStorySheet(context, item.value),
-                      );
-                    },
-                  ),
+          ColumnCard(
+            title: 'Library',
+            divider: null,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.favorite_rounded),
+                title: const Text('Liked stories'),
+                trailing: loadingChip(likes),
+                onTap: () => showLikedStories(context, user),
+              ),
+              ListTile(
+                leading: const Icon(Icons.history_edu_rounded),
+                title: const Text('Created stories'),
+                trailing: loadingChip(stories),
+                onTap: () => showGenericStoriesList(
+                  context,
+                  'Created stories',
+                  (i, s) => getStories(user, i, s),
                 ),
               ),
-            ),
+              ListTile(
+                leading: const Icon(Icons.translate_rounded),
+                title: const Text('Created translations'),
+                trailing: loadingChip(translations),
+                onTap: () => showGenericStoriesList(
+                  context,
+                  'Created translations',
+                  (i, s) => getTranslations(user, i, s),
+                ),
+              ),
+            ],
           ),
-          buildStoriesTile(
-            Icons.history_edu_rounded,
-            'Created stories',
-            stories,
-            (i, s) => getStories(user, i, s),
-          ),
-          buildStoriesTile(
-            Icons.translate_rounded,
-            'Created translations',
-            translations,
-            (i, s) => getTranslations(user, i, s),
-          ),
-          const Divider(),
         ],
       ),
     );
