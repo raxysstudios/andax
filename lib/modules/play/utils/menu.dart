@@ -5,42 +5,31 @@ import 'package:provider/provider.dart';
 
 Future<void> showPlayMenu(BuildContext context) async {
   final play = context.read<PlayScreenState>();
-  final exit = await showModalBottomSheet<bool>(
+  final exit = await showDialog<bool>(
     context: context,
-    backgroundColor: Colors.transparent,
     builder: (context) {
-      return SingleChildScrollView(
-        child: Card(
-          margin: const EdgeInsets.all(8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ListTile(
-                leading: const Icon(Icons.play_arrow_rounded),
-                title: Text(
-                  play.tr.title,
-                  style: Theme.of(context).textTheme.headline6,
-                ),
-                subtitle: const Text('Playing now'),
-                onTap: () => Navigator.pop(context),
-              ),
-              const Divider(),
-              ListTile(
-                leading: const Icon(Icons.replay_rounded),
-                title: const Text('Restart'),
-                onTap: () {
-                  Navigator.pop(context);
-                  showProgressAlert(context, play.reset);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.close_rounded),
-                title: const Text('Exit'),
-                onTap: () => Navigator.pop(context, true),
-              ),
-            ],
+      return SimpleDialog(
+        title: Text(play.tr.title),
+        children: [
+          ListTile(
+            leading: const Icon(Icons.play_arrow_rounded),
+            title: const Text('Resume'),
+            onTap: () => Navigator.pop(context),
           ),
-        ),
+          ListTile(
+            leading: const Icon(Icons.replay_rounded),
+            title: const Text('Restart'),
+            onTap: () {
+              Navigator.pop(context);
+              showProgressAlert(context, play.reset);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.close_rounded),
+            title: const Text('Exit'),
+            onTap: () => Navigator.pop(context, true),
+          ),
+        ],
       );
     },
   );

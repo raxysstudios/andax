@@ -1,7 +1,5 @@
 import 'package:andax/shared/widgets/markdown_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class MessageCard extends StatelessWidget {
   const MessageCard(

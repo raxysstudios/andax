@@ -18,6 +18,16 @@ class ColumnCard extends StatelessWidget {
   final Widget? divider;
   final List<Widget> children;
 
+  List<Widget> applySpacing() {
+    if (divider == null) return children;
+
+    final widgets = [
+      for (final c in children) ...[c, divider!],
+    ];
+    widgets.removeLast();
+    return widgets;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).textTheme;
@@ -49,10 +59,7 @@ class ColumnCard extends StatelessWidget {
                 ),
               const SizedBox(height: 12),
             ],
-            if (divider != null)
-              for (final c in children) ...[c, divider!]
-            else
-              ...children,
+            ...applySpacing(),
           ],
         ),
       ),
