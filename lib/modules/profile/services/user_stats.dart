@@ -12,22 +12,21 @@ Future<List<LikeItem>> getLikes(
 ) async {
   var query = FirebaseFirestore.instance
       .collection('users/${user.uid}/likes')
-      // This seems to break `startAfterDocument`: https://github.com/FirebaseExtended/flutterfire/issues/7946
-      // .orderBy('date', descending: true)
+      .orderBy('date', descending: true)
       .limit(20);
   if (last != null) query = query.startAfterDocument(last.key);
 
-  final likes = await query.get().then((r) => r.docs);
+  final likes = await query.get().then((r) => r.docs).then(
+        (docs) => {
+          for (final d in docs) d.data()['translationID'] as String: d,
+        },
+      );
   if (likes.isEmpty) return [];
-
   final stories = await algolia.instance
       .index('stories')
       .query('')
       .filters(
-        likes
-            .map((l) => l.data()['translationID'] as String)
-            .map((t) => 'translationID:$t')
-            .join(' OR '),
+        likes.keys.map((t) => 'translationID:$t').join(' OR '),
       )
       .getObjects()
       .then(
@@ -36,11 +35,12 @@ Future<List<LikeItem>> getLikes(
       .then((ss) => ({for (final s in ss) s.translationID: s}));
 
   return [
-    for (final like in likes)
-      MapEntry(
-        like,
-        stories[like.data()['translationID'] as String]!,
-      )
+    for (var e in likes.entries)
+      if (stories[e.key] != null)
+        MapEntry(
+          e.value,
+          stories[e.key]!,
+        )
   ];
 }
 
