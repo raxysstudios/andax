@@ -18,31 +18,15 @@ Future<List<LikeItem>> getLikes(
   if (last != null) query = query.startAfterDocument(last.key);
 
   final likes = await query.get().then((r) => r.docs).then(
-        (docs) => {
-          for (final d in docs) d.data()['translationID'] as String: d,
-        },
+        (docs) => {for (final d in docs) d.id: d},
       );
-  if (likes.isEmpty) return [];
   final stories = await algolia.instance
       .index('stories')
-      .query('')
-      .filters(
-        likes.keys.map((t) => 'translationID:$t').join(' OR '),
-      )
-      .getObjects()
-      .then(
-        (s) => s.hits.map((h) => StoryInfo.fromAlgoliaHit(h)),
-      )
-      .then((ss) => ({for (final s in ss) s.translationID: s}));
+      .getObjectsByIds(likes.keys.toList())
+      .then((s) => s.map(StoryInfo.fromAlgoliaHit))
+      .catchError((dynamic e) => <StoryInfo>[]);
 
-  return [
-    for (var e in likes.entries)
-      if (stories[e.key] != null)
-        MapEntry(
-          e.value,
-          stories[e.key]!,
-        )
-  ];
+  return stories.map((s) => MapEntry(likes[s.translationID]!, s)).toList();
 }
 
 Future<List<StoryInfo>> getStories(
@@ -54,7 +38,11 @@ Future<List<StoryInfo>> getStories(
   var query = algolia.instance
       .index('stories')
       .query('')
-      .filters('storyAuthorID:${user.uid}')
+      .filters(
+        'storyAuthorID:${user.uid}',
+      )
+      .setFacetingAfterDistinct()
+      .setDistinct(value: 1)
       .setPage(page);
   if (hitsPerPage != null) query = query.setHitsPerPage(hitsPerPage);
 
@@ -92,6 +80,8 @@ Future<int> updateStories(User user) {
       .query('')
       .filters('storyAuthorID:${user.uid}')
       .setHitsPerPage(0)
+      .setFacetingAfterDistinct()
+      .setDistinct(value: 1)
       .getObjects()
       .then((r) => r.nbHits);
 }

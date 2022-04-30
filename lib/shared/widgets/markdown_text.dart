@@ -23,7 +23,12 @@ class MarkdownText extends StatelessWidget {
         ),
       ),
       onTapLink: (_, link, __) {
-        if (link != null) launch(link);
+        if (link != null) {
+          launchUrl(
+            Uri.parse(link),
+            mode: LaunchMode.externalApplication,
+          );
+        }
       },
     );
   }
