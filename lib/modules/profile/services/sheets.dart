@@ -1,9 +1,9 @@
 import 'package:andax/models/story.dart';
 import 'package:andax/modules/home/utils/sheets.dart';
-import 'package:andax/modules/home/widgets/story_tile.dart';
 import 'package:andax/shared/widgets/paging_list.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:andax/shared/widgets/scrollable_modal_sheet.dart';
+import 'package:andax/shared/widgets/story_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +23,7 @@ Future<void> showLikedStories(BuildContext context, User user) {
           builder: (context, setState) {
             return PagingList<LikeItem>(
               scroll: scroll,
-              onRequest: (i, s) => getLikes(user, i, s),
+              onRequest: (i, s) => getLikes(user, page: i, last: s),
               builder: (context, item, index) {
                 return StoryTile(
                   item.value,
@@ -49,7 +49,7 @@ Future<void> showGenericStoriesList(
       return Scaffold(
         appBar: AppBar(
           leading: const RoundedBackButton(),
-          title: const Text('Liked stories'),
+          title: Text(title),
         ),
         body: StatefulBuilder(
           builder: (context, setState) {

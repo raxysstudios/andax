@@ -1,11 +1,11 @@
 import 'package:andax/models/story.dart';
 import 'package:andax/modules/editor/screens/story.dart';
 import 'package:andax/modules/home/widgets/raxys_logo.dart';
-import 'package:andax/modules/home/widgets/story_category_list.dart';
-import 'package:andax/modules/home/widgets/story_tile.dart';
 import 'package:andax/modules/profile/screens/auth_gate.dart';
 import 'package:andax/shared/extensions.dart';
 import 'package:andax/shared/widgets/loading_builder.dart';
+import 'package:andax/shared/widgets/stories_shelf.dart';
+import 'package:andax/shared/widgets/story_tile.dart';
 import 'package:andax/store.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -81,15 +81,25 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.only(bottom: 76),
         child: Column(
           children: [
-            const StoryCategoryList(
+            StoriesShelf(
               icon: Icons.whatshot_rounded,
               title: 'trending',
-              index: 'stories_trending',
+              getter: getStories('stories_trending', hitsPerPage: 10),
+              onTitleTap: () => showCategorySheet(
+                context,
+                'trending',
+                'stories_trending',
+              ),
             ),
-            const StoryCategoryList(
+            StoriesShelf(
               icon: Icons.thumb_up_rounded,
               title: 'popular',
-              index: 'stories',
+              getter: getStories('stories', hitsPerPage: 10),
+              onTitleTap: () => showCategorySheet(
+                context,
+                'popular',
+                'stories',
+              ),
             ),
             ListTile(
               leading: const Icon(Icons.explore_rounded),

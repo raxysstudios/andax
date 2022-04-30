@@ -1,6 +1,6 @@
 import 'package:andax/models/story.dart';
 import 'package:andax/modules/profile/services/sheets.dart';
-import 'package:andax/shared/widgets/column_card.dart';
+import 'package:andax/shared/widgets/stories_shelf.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -46,16 +46,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ]);
   }
 
-  Widget loadingChip(int? value) {
-    return Chip(
-      label: value == null
-          ? const SizedBox.square(
-              dimension: 16,
-              child: CircularProgressIndicator(),
-            )
-          : Text(value.toString()),
-    );
-  }
+  Widget loadingChip(int? value) => value == null
+      ? const SizedBox.square(
+          dimension: 16,
+          child: CircularProgressIndicator(),
+        )
+      : Chip(
+          label: Text(value.toString()),
+        );
 
   @override
   Widget build(BuildContext context) {
@@ -81,37 +79,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
             title: Text(user.displayName ?? '[no name]'),
             subtitle: Text(user.email ?? '[no email]'),
           ),
-          ColumnCard(
-            title: 'Library',
-            divider: null,
-            children: [
-              ListTile(
-                leading: const Icon(Icons.favorite_rounded),
-                title: const Text('Liked stories'),
-                trailing: loadingChip(likes),
-                onTap: () => showLikedStories(context, user),
-              ),
-              ListTile(
-                leading: const Icon(Icons.history_edu_rounded),
-                title: const Text('Created stories'),
-                trailing: loadingChip(stories),
-                onTap: () => showGenericStoriesList(
-                  context,
-                  'Created stories',
-                  (i, s) => getStories(user, i, s),
-                ),
-              ),
-              ListTile(
-                leading: const Icon(Icons.translate_rounded),
-                title: const Text('Created translations'),
-                trailing: loadingChip(translations),
-                onTap: () => showGenericStoriesList(
-                  context,
-                  'Created translations',
-                  (i, s) => getTranslations(user, i, s),
-                ),
-              ),
-            ],
+          StoriesShelf(
+            icon: Icons.favorite_rounded,
+            title: 'Liked stories',
+            trailing: loadingChip(likes),
+            onTitleTap: () => showLikedStories(context, user),
+            getter: getLikes(user, hitsPerPage: 10).then(
+              (ls) => ls.map((e) => e.value).toList(),
+            ),
+          ),
+          StoriesShelf(
+            icon: Icons.history_edu_rounded,
+            title: 'Your stories',
+            trailing: loadingChip(stories),
+            onTitleTap: () => showGenericStoriesList(
+              context,
+              'Your stories',
+              (i, s) => getStories(user, page: i, last: s),
+            ),
+            getter: getStories(user, hitsPerPage: 10),
+          ),
+          StoriesShelf(
+            icon: Icons.translate_rounded,
+            title: 'Your translations',
+            trailing: loadingChip(translations),
+            onTitleTap: () => showGenericStoriesList(
+              context,
+              'Your translations',
+              (i, s) => getTranslations(user, page: i, last: s),
+            ),
+            getter: getTranslations(user, hitsPerPage: 10),
           ),
         ],
       ),
