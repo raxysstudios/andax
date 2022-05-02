@@ -37,6 +37,7 @@ class NodeTile extends StatelessWidget {
     final editor = context.watch<StoryEditorState>();
     final actor = editor.story.actors[node!.actorId];
     return ListTile(
+      minVerticalPadding: 12,
       onTap: onTap,
       title: Text(editor.tr.node(node)),
       subtitle: node == null

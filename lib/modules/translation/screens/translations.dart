@@ -62,6 +62,7 @@ class TranslationEditorState extends State<TranslationEditorScreen> {
               context,
               'Leave editor? Unsaved progress will be lost!',
               confirmText: 'Exit',
+              confirmIcon: Icons.close_rounded,
               rejectText: 'Stay',
             ),
             child: Scaffold(
