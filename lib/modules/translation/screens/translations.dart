@@ -128,22 +128,24 @@ class TranslationEditorState extends State<TranslationEditorScreen> {
                           Asset('tags', icon: Icons.tag_rounded),
                         ],
                       ),
-                      ColumnCard(
-                        title: 'Characters',
-                        children: [
-                          for (final aid in narrative.actors.keys)
-                            Asset(aid, icon: Icons.person_rounded),
-                        ],
-                      ),
-                      ColumnCard(
-                        title: 'Cells',
-                        children: [
-                          for (final cid in narrative.cells.entries
-                              .where((e) => e.value.display != null)
-                              .map((e) => e.key))
-                            Asset(cid, icon: Icons.article_rounded),
-                        ],
-                      ),
+                      if (narrative.actors.isNotEmpty)
+                        ColumnCard(
+                          title: 'Characters',
+                          children: [
+                            for (final aid in narrative.actors.keys)
+                              Asset(aid, icon: Icons.person_rounded),
+                          ],
+                        ),
+                      if (narrative.cells.isNotEmpty)
+                        ColumnCard(
+                          title: 'Cells',
+                          children: [
+                            for (final cid in narrative.cells.entries
+                                .where((e) => e.value.display != null)
+                                .map((e) => e.key))
+                              Asset(cid, icon: Icons.article_rounded),
+                          ],
+                        ),
                     ],
                   ),
                   ListView(
