@@ -95,7 +95,7 @@ class PlayScreenState extends State<PlayScreen> {
       setState(() {
         _timer = PausableTimer(
           Duration(
-            milliseconds: 1000 + mils,
+            milliseconds: 500 + mils,
           ),
           acceptPending,
         )..start();
@@ -110,7 +110,7 @@ class PlayScreenState extends State<PlayScreen> {
         if (node != null) {
           final textDur = last.input == NodeInputType.select
               ? 0
-              : 50 * tr.node(last).length;
+              : 25 * tr.node(last).length;
           if (audio.url.isEmpty) {
             launchTimer(textDur);
           } else {
