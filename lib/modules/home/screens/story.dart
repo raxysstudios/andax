@@ -127,9 +127,7 @@ class StoryScreen extends StatelessWidget {
             delegate: SliverChildListDelegate(
               [
                 ColumnCard(
-                  divider: const SizedBox(
-                    height: 8,
-                  ),
+                  divider: const SizedBox(height: 8),
                   padding: const EdgeInsets.all(16),
                   children: [
                     Text(

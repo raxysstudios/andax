@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 Future<void> showPlayMenu(BuildContext context) async {
   final play = context.read<PlayScreenState>();
+  final finished = play.storyline.last.transitions.isEmpty;
   final exit = await showDialog<bool>(
     context: context,
     builder: (context) {
@@ -21,7 +22,11 @@ Future<void> showPlayMenu(BuildContext context) async {
             title: const Text('Restart'),
             onTap: () {
               Navigator.pop(context);
-              showProgressAlert(context, play.reset);
+              if (finished) {
+                play.reset();
+              } else {
+                showProgressAlert(context, play.reset);
+              }
             },
           ),
           ListTile(
@@ -34,9 +39,13 @@ Future<void> showPlayMenu(BuildContext context) async {
     },
   );
   if (exit != null && exit) {
-    showProgressAlert(
-      context,
-      () => Navigator.pop(context),
-    );
+    if (play.storyline.last.transitions.isEmpty) {
+      Navigator.pop(context);
+    } else {
+      showProgressAlert(
+        context,
+        () => Navigator.pop(context),
+      );
+    }
   }
 }

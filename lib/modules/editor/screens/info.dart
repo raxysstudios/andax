@@ -70,7 +70,15 @@ class _InfoEditorScreenState extends State<InfoEditorScreen> {
             return;
           }
           await showLoadingDialog(context, uploadStory(editor));
-          showSnackbar(context, Icons.cloud_done_rounded, 'Uploaded!');
+          if (await showDangerDialog(
+            context,
+            'Story is uploaded!',
+            confirmText: 'Finish',
+            confirmIcon: Icons.done_all,
+            rejectText: 'Continue editing',
+          )) {
+            Navigator.pop(context);
+          }
         },
         icon: const Icon(Icons.upload_rounded),
         label: const Text('Save story'),

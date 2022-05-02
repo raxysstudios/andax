@@ -94,7 +94,15 @@ class TranslationEditorState extends State<TranslationEditorScreen> {
                           context,
                           applyAssetChanges(info, changes),
                         );
-                        Navigator.pop(context);
+                        if (await showDangerDialog(
+                          context,
+                          'Translation is uploaded!',
+                          confirmText: 'Finish',
+                          confirmIcon: Icons.done_all,
+                          rejectText: 'Continue editing',
+                        )) {
+                          Navigator.pop(context);
+                        }
                       },
                       child: const Icon(Icons.upload_rounded),
                     )
@@ -106,9 +114,12 @@ class TranslationEditorState extends State<TranslationEditorScreen> {
                   ListView(
                     padding: const EdgeInsets.only(bottom: 76),
                     children: [
-                      const ColumnCard(
+                      // ignore: prefer_const_constructors
+                      ColumnCard(
                         title: 'Info',
+                        // ignore: prefer_const_literals_to_create_immutables
                         children: [
+                          // ignore: prefer_const_constructors
                           Asset('title', icon: Icons.title_rounded),
                           // ignore: prefer_const_constructors
                           Asset('description', icon: Icons.description_rounded),

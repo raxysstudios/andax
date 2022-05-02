@@ -23,6 +23,7 @@ class Asset extends StatelessWidget {
     final base = editor.base[id];
     final target = change ?? editor.target[id];
     return ListTile(
+      minVerticalPadding: 12,
       leading: icon == null ? null : Icon(icon),
       title: target == null ? null : Text(target),
       subtitle: base == null ? null : Text(base),
