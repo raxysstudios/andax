@@ -108,7 +108,9 @@ class PlayScreenState extends State<PlayScreen> {
         final node = nodes[transition.targetNodeId];
         setState(() => _pending = node);
         if (node != null) {
-          final textDur = 50 * tr.node(last).length;
+          final textDur = last.input == NodeInputType.select
+              ? 0
+              : 50 * tr.node(last).length;
           if (audio.url.isEmpty) {
             launchTimer(textDur);
           } else {
