@@ -205,12 +205,21 @@ class PlayScreenState extends State<PlayScreen> {
                   slideUp(
                     key: const Key('end'),
                     child: Column(
-                      children: const [
-                        Padding(
-                          padding: EdgeInsets.all(16),
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.fromLTRB(8, 16, 8, 8),
                           child: Icon(Icons.done_all_rounded),
                         ),
-                        GameResults(),
+                        const GameResults(),
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: ElevatedButton.icon(
+                            onPressed: () => Navigator.pop(context),
+                            icon: const Icon(Icons.exit_to_app_rounded),
+                            label: const Text('Finish'),
+                          ),
+                        ),
                       ],
                     ),
                   ),
