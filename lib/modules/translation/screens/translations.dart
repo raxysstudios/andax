@@ -148,19 +148,18 @@ class TranslationEditorState extends State<TranslationEditorScreen> {
                     children: [
                       for (final n in narrative.nodes.values)
                         Builder(builder: (context) {
-                          final hasText = base[n.id]?.isNotEmpty ?? false;
-                          final hasAudio =
-                              base[n.id + '_audio']?.isNotEmpty ?? false;
+                          final empty = (base[n.id]?.isEmpty ?? true) ||
+                              (base[n.id + '_audio']?.isEmpty ?? true);
                           final selectable = n.input == NodeInputType.select;
-                          if (!hasText && !selectable && !hasAudio) {
+                          if (empty && !selectable) {
                             return const SizedBox();
                           }
                           return ColumnCard(
                             children: [
-                              if (hasText)
+                              if (!empty) ...[
                                 Asset(n.id, icon: Icons.chat_bubble_rounded),
-                              if (hasAudio)
                                 Asset(n.id, icon: Icons.audiotrack_rounded),
+                              ],
                               if (selectable)
                                 for (final t in n.transitions)
                                   Asset(t.id, icon: Icons.call_split_rounded),
