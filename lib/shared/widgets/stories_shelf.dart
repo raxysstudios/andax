@@ -10,7 +10,7 @@ class StoriesShelf extends StatelessWidget {
   const StoriesShelf({
     required this.icon,
     required this.title,
-    required this.getter,
+    required this.stories,
     this.trailing = const Icon(Icons.arrow_forward_rounded),
     this.onTitleTap,
     Key? key,
@@ -20,7 +20,7 @@ class StoriesShelf extends StatelessWidget {
   final VoidCallback? onTitleTap;
   final IconData icon;
   final String title;
-  final Future<List<StoryInfo>> getter;
+  final Future<List<StoryInfo>> stories;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class StoriesShelf extends StatelessWidget {
           onTap: onTitleTap,
         ),
         LoadingBuilder<List<StoryInfo>>(
-          future: getter,
+          future: stories,
           builder: (context, infos) {
             if (infos.isEmpty) return const SizedBox();
             return SizedBox(

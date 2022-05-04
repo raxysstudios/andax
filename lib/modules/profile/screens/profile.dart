@@ -84,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             title: 'Liked stories',
             trailing: loadingChip(likes),
             onTitleTap: () => showLikedStories(context, user),
-            getter: getLikes(user, hitsPerPage: 10).then(
+            stories: getLikes(user, hitsPerPage: 10).then(
               (ls) => ls.map((e) => e.value).toList(),
             ),
           ),
@@ -97,7 +97,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               'Your stories',
               (i, s) => getStories(user, page: i, last: s),
             ),
-            getter: getStories(user, hitsPerPage: 10),
+            stories: getStories(user, hitsPerPage: 10),
           ),
           StoriesShelf(
             icon: Icons.translate_rounded,
@@ -108,7 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               'Your translations',
               (i, s) => getTranslations(user, page: i, last: s),
             ),
-            getter: getTranslations(user, hitsPerPage: 10),
+            stories: getTranslations(user, hitsPerPage: 10),
           ),
         ],
       ),

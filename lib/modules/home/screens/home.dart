@@ -84,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
             StoriesShelf(
               icon: Icons.whatshot_rounded,
               title: 'trending',
-              getter: getStories('stories_trending', hitsPerPage: 10),
+              stories: getStories('stories_trending', hitsPerPage: 10),
               onTitleTap: () => showCategorySheet(
                 context,
                 'trending',
@@ -94,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
             StoriesShelf(
               icon: Icons.thumb_up_rounded,
               title: 'popular',
-              getter: getStories('stories', hitsPerPage: 10),
+              stories: getStories('stories', hitsPerPage: 10),
               onTitleTap: () => showCategorySheet(
                 context,
                 'popular',
