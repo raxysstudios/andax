@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intersperse/intersperse.dart';
 
 class ColumnCard extends StatelessWidget {
   const ColumnCard({
@@ -17,16 +18,6 @@ class ColumnCard extends StatelessWidget {
   final String? subtitle;
   final Widget? divider;
   final List<Widget> children;
-
-  List<Widget> applySpacing() {
-    if (divider == null) return children;
-
-    final widgets = [
-      for (final c in children) ...[c, divider!],
-    ];
-    widgets.removeLast();
-    return widgets;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +50,9 @@ class ColumnCard extends StatelessWidget {
                 ),
               const SizedBox(height: 12),
             ],
-            ...applySpacing(),
+            ...divider == null || children.isEmpty
+                ? children
+                : intersperse(divider!, children)
           ],
         ),
       ),
