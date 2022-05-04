@@ -7,7 +7,8 @@ import '../screens/translations.dart';
 import 'asset_editor.dart';
 
 class Asset extends StatelessWidget {
-  const Asset(
+  // ignore: prefer_const_constructors_in_immutables
+  Asset(
     this.id, {
     this.icon,
     Key? key,

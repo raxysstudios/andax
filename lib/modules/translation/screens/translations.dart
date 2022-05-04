@@ -115,16 +115,11 @@ class TranslationEditorState extends State<TranslationEditorScreen> {
                   ListView(
                     padding: const EdgeInsets.only(bottom: 76),
                     children: [
-                      // ignore: prefer_const_constructors
                       ColumnCard(
                         title: 'Info',
-                        // ignore: prefer_const_literals_to_create_immutables
                         children: [
-                          // ignore: prefer_const_constructors
                           Asset('title', icon: Icons.title_rounded),
-                          // ignore: prefer_const_constructors
                           Asset('description', icon: Icons.description_rounded),
-                          // ignore: prefer_const_constructors
                           Asset('tags', icon: Icons.tag_rounded),
                         ],
                       ),
