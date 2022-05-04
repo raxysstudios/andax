@@ -1,5 +1,3 @@
-import 'package:andax/models/node.dart';
-import 'package:andax/modules/play/screens/play.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -7,9 +5,16 @@ import '../utils/animator.dart';
 import '../utils/audio_controller.dart';
 
 class AudioSlider extends StatefulWidget {
-  const AudioSlider(this.node, {Key? key}) : super(key: key);
+  const AudioSlider(
+    this.url, {
+    this.collapsable = true,
+    this.playerKey,
+    Key? key,
+  }) : super(key: key);
 
-  final Node node;
+  final String url;
+  final bool collapsable;
+  final String? playerKey;
 
   @override
   State<AudioSlider> createState() => _AudioSliderState();
@@ -22,10 +27,8 @@ class _AudioSliderState extends State<AudioSlider> {
   @override
   Widget build(BuildContext context) {
     final audio = context.watch<AudioController>();
-    final play = context.watch<PlayScreenState>();
     if (!drag) value = audio.position;
-    if (play.tr.audio(widget.node).isEmpty) return const SizedBox();
-    if (audio.key != widget.node.id) {
+    if (widget.collapsable && audio.key != (widget.playerKey ?? widget.url)) {
       return Container(
         color: Theme.of(context).colorScheme.primary,
         constraints: const BoxConstraints(minHeight: 3),
