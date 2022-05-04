@@ -1,6 +1,6 @@
 import 'package:andax/models/image_data.dart';
 import 'package:andax/models/node.dart';
-import 'package:andax/modules/editor/utils/editor_sheet.dart';
+import 'package:andax/shared/widgets/editor_sheet.dart';
 import 'package:flutter/material.dart';
 
 Future<ImageData?> showImageDataEditor(BuildContext context, Node node) async {

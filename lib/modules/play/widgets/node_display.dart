@@ -21,10 +21,13 @@ class NodeDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final play = context.watch<PlayScreenState>();
+    final audioPlayer = play.audio;
     final actor = play.actors[node.actorId];
     final text = play.tr.node(node, allowEmpty: true);
-    final audio = play.audio;
-    if (text.isEmpty) return const SizedBox();
+    final audio = play.tr.audio(node);
+    if (node.image == null && text.isEmpty && audio.isEmpty) {
+      return const SizedBox();
+    }
 
     final thread = actor?.id == previousNode?.actorId;
     return Column(
@@ -58,15 +61,19 @@ class NodeDisplay extends StatelessWidget {
             text,
             onTap: () {
               final aUrl = play.tr.audio(node);
-              if (aUrl.isNotEmpty) audio.toggle(aUrl, node.id);
+              if (aUrl.isNotEmpty) audioPlayer.toggle(aUrl, node.id);
             },
           ),
-        ChangeNotifierProvider.value(
-          value: audio,
-          builder: (context, _) {
-            return AudioSlider(node);
-          },
-        ),
+        if (audio.isNotEmpty)
+          ChangeNotifierProvider.value(
+            value: audioPlayer,
+            builder: (context, _) {
+              return AudioSlider(
+                audio,
+                collapsible: text.isNotEmpty,
+              );
+            },
+          ),
       ],
     );
   }

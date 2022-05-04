@@ -1,27 +1,26 @@
 import 'package:andax/models/story.dart';
-import 'package:andax/modules/home/services/searching.dart';
 import 'package:andax/modules/home/utils/sheets.dart';
-import 'package:andax/modules/home/widgets/story_tile.dart';
 import 'package:andax/shared/extensions.dart';
 import 'package:andax/shared/widgets/loading_builder.dart';
-import 'package:andax/shared/widgets/paging_list.dart';
-import 'package:andax/shared/widgets/rounded_back_button.dart';
-import 'package:andax/shared/widgets/scrollable_modal_sheet.dart';
 import 'package:flutter/material.dart';
 
 import 'story_card.dart';
 
-class StoryCategoryList extends StatelessWidget {
-  const StoryCategoryList({
+class StoriesShelf extends StatelessWidget {
+  const StoriesShelf({
     required this.icon,
     required this.title,
-    required this.index,
+    required this.stories,
+    this.trailing = const Icon(Icons.arrow_forward_rounded),
+    this.onTitleTap,
     Key? key,
   }) : super(key: key);
 
+  final Widget? trailing;
+  final VoidCallback? onTitleTap;
   final IconData icon;
   final String title;
-  final String index;
+  final Future<List<StoryInfo>> stories;
 
   @override
   Widget build(BuildContext context) {
@@ -34,12 +33,13 @@ class StoryCategoryList extends StatelessWidget {
             title.titleCase,
             style: Theme.of(context).textTheme.headline6,
           ),
-          trailing: const Icon(Icons.arrow_forward_rounded),
-          onTap: () => showCategorySheet(context, title, index),
+          trailing: trailing,
+          onTap: onTitleTap,
         ),
         LoadingBuilder<List<StoryInfo>>(
-          future: getStories(index, hitsPerPage: 10),
+          future: stories,
           builder: (context, infos) {
+            if (infos.isEmpty) return const SizedBox();
             return SizedBox(
               height: 128,
               child: ListView.builder(
@@ -59,35 +59,6 @@ class StoryCategoryList extends StatelessWidget {
           },
         ),
       ],
-    );
-  }
-
-  Future<void> showCategorySheet(
-    BuildContext context,
-    String title,
-    String index,
-  ) async {
-    await showScrollableModalSheet<void>(
-      context: context,
-      builder: (context, scroll) {
-        return Scaffold(
-          appBar: AppBar(
-            leading: const RoundedBackButton(),
-            title: Text(title.titleCase),
-          ),
-          body: PagingList<StoryInfo>(
-            onRequest: (p, l) => getStories(index, page: p),
-            maxPages: 5,
-            scroll: scroll,
-            builder: (context, info, index) {
-              return StoryTile(
-                info,
-                onTap: () => showStorySheet(context, info),
-              );
-            },
-          ),
-        );
-      },
     );
   }
 }

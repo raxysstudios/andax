@@ -23,8 +23,7 @@ class TransitionsChips extends StatelessWidget {
         vertical: 8,
       ),
       child: Wrap(
-        spacing: 16,
-        runSpacing: 16,
+        spacing: 8,
         children: [
           for (final transition in transitions)
             InputChip(

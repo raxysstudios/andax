@@ -29,7 +29,7 @@ Future<StoryInfo?> showTranslationSelector(
       return Scaffold(
         appBar: AppBar(
           leading: const RoundedBackButton(),
-          title: const Text('Select translation to edit'),
+          title: const Text('Select base translation'),
         ),
         body: PagingList<StoryInfo>(
           onRequest: (i, s) => _getTranslations(i, target.storyID),
@@ -38,7 +38,7 @@ Future<StoryInfo?> showTranslationSelector(
               title: Text(item.title),
               subtitle: Text(item.language),
               trailing: item.translationID == target.translationID
-                  ? const Icon(Icons.assignment_rounded)
+                  ? const Icon(Icons.translate_rounded)
                   : null,
               onTap: () => Navigator.pop(context, item),
             );

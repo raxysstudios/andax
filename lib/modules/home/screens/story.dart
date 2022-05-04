@@ -6,14 +6,14 @@ import 'package:andax/modules/play/screens/play.dart';
 import 'package:andax/modules/translation/services/translations.dart';
 import 'package:andax/shared/services/story_loader.dart';
 import 'package:andax/shared/utils.dart';
+import 'package:andax/shared/widgets/column_card.dart';
+import 'package:andax/shared/widgets/markdown_text.dart';
 import 'package:andax/shared/widgets/options_button.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:andax/shared/widgets/span_icon.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class StoryScreen extends StatelessWidget {
   const StoryScreen(
@@ -126,41 +126,19 @@ class StoryScreen extends StatelessWidget {
           SliverList(
             delegate: SliverChildListDelegate(
               [
-                Card(
-                  margin: const EdgeInsets.all(8),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          info.title,
-                          style: textTheme.headline5?.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        if (info.description.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16),
-                            child: MarkdownBody(
-                              data: info.description,
-                              selectable: true,
-                              styleSheet: MarkdownStyleSheet(
-                                p: const TextStyle(
-                                  fontSize: 16,
-                                ),
-                                strong: const TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              onTapLink: (_, link, __) {
-                                if (link != null) launch(link);
-                              },
-                            ),
-                          )
-                      ],
+                ColumnCard(
+                  divider: const SizedBox(height: 8),
+                  padding: const EdgeInsets.all(16),
+                  children: [
+                    Text(
+                      info.title,
+                      style: textTheme.headline5?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
+                    if (info.description.isNotEmpty)
+                      MarkdownText(info.description),
+                  ],
                 ),
                 Padding(
                   padding: const EdgeInsets.all(16),

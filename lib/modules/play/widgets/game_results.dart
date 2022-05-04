@@ -33,6 +33,7 @@ class GameResults extends StatelessWidget {
   Widget build(BuildContext context) {
     final play = context.watch<PlayScreenState>();
     final cells = play.cells.values.where((c) => c.display != null);
+    if (cells.isEmpty) return const SizedBox();
     return Column(
       children: [
         ListTile(

@@ -1,5 +1,5 @@
+import 'package:andax/shared/widgets/markdown_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 
 class MessageCard extends StatelessWidget {
   const MessageCard(
@@ -26,17 +26,7 @@ class MessageCard extends StatelessWidget {
             horizontal: 16,
             vertical: 8,
           ),
-          child: MarkdownBody(
-            data: text,
-            styleSheet: MarkdownStyleSheet(
-              p: const TextStyle(
-                fontSize: 16,
-              ),
-              strong: const TextStyle(
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
+          child: MarkdownText(text),
         ),
       ),
     );

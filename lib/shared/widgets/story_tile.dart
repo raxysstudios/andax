@@ -19,6 +19,7 @@ class StoryTile extends StatelessWidget {
       leading: AspectRatio(
         aspectRatio: 1,
         child: Card(
+          margin: EdgeInsets.zero,
           child: info.imageUrl.isEmpty
               ? const Icon(Icons.history_edu_rounded)
               : Image.network(

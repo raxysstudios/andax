@@ -7,7 +7,8 @@ import '../screens/translations.dart';
 import 'asset_editor.dart';
 
 class Asset extends StatelessWidget {
-  const Asset(
+  // ignore: prefer_const_constructors_in_immutables
+  Asset(
     this.id, {
     this.icon,
     Key? key,
@@ -23,6 +24,7 @@ class Asset extends StatelessWidget {
     final base = editor.base[id];
     final target = change ?? editor.target[id];
     return ListTile(
+      minVerticalPadding: 12,
       leading: icon == null ? null : Icon(icon),
       title: target == null ? null : Text(target),
       subtitle: base == null ? null : Text(base),
