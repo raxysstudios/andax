@@ -70,7 +70,7 @@ class NodeDisplay extends StatelessWidget {
             builder: (context, _) {
               return AudioSlider(
                 audio,
-                collapsable: text.isNotEmpty,
+                collapsible: text.isNotEmpty,
               );
             },
           ),

@@ -7,13 +7,13 @@ import '../utils/audio_controller.dart';
 class AudioSlider extends StatefulWidget {
   const AudioSlider(
     this.url, {
-    this.collapsable = true,
+    this.collapsible = true,
     this.playerKey,
     Key? key,
   }) : super(key: key);
 
   final String url;
-  final bool collapsable;
+  final bool collapsible;
   final String? playerKey;
 
   @override
@@ -28,7 +28,7 @@ class _AudioSliderState extends State<AudioSlider> {
   Widget build(BuildContext context) {
     final audio = context.watch<AudioController>();
     if (!drag) value = audio.position;
-    if (widget.collapsable && audio.key != (widget.playerKey ?? widget.url)) {
+    if (widget.collapsible && audio.key != (widget.playerKey ?? widget.url)) {
       return Container(
         color: Theme.of(context).colorScheme.primary,
         constraints: const BoxConstraints(minHeight: 3),
