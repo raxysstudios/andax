@@ -45,17 +45,12 @@ class _PagingListState<T> extends State<PagingList<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () => Future.sync(
-        () => paging.refresh(),
-      ),
-      child: PagedListView<int, T>(
-        shrinkWrap: true,
-        pagingController: paging,
-        scrollController: widget.scroll,
-        builderDelegate: PagedChildBuilderDelegate(
-          itemBuilder: widget.builder,
-        ),
+    return PagedListView<int, T>(
+      shrinkWrap: true,
+      pagingController: paging,
+      scrollController: widget.scroll,
+      builderDelegate: PagedChildBuilderDelegate(
+        itemBuilder: widget.builder,
       ),
     );
   }

@@ -4,17 +4,20 @@ import 'package:algolia/algolia.dart';
 import 'package:andax/models/story.dart';
 import 'package:andax/modules/home/services/searching.dart';
 import 'package:andax/modules/home/utils/sheets.dart';
-import 'package:andax/shared/extensions.dart';
 import 'package:andax/shared/utils.dart';
 import 'package:andax/shared/widgets/paging_list.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:andax/shared/widgets/story_tile.dart';
-import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({Key? key}) : super(key: key);
+  const SearchScreen({
+    this.scroll,
+    Key? key,
+  }) : super(key: key);
+
+  final ScrollController? scroll;
 
   @override
   _SearchScreenState createState() => _SearchScreenState();
@@ -71,48 +74,59 @@ class _SearchScreenState extends State<SearchScreen> {
         title: TextField(
           controller: textController,
           autofocus: true,
-          decoration: InputDecoration(
-            hintText: 'Search',
+          decoration: const InputDecoration(
+            hintText: 'Type title, description, tags',
             border: InputBorder.none,
-            suffixIcon: textController.text.isEmpty
-                ? null
-                : IconButton(
-                    onPressed: textController.clear,
-                    icon: const Icon(Icons.clear_rounded),
-                  ),
           ),
         ),
         actions: [
-          Badge(
-            ignorePointer: true,
-            animationType: BadgeAnimationType.fade,
-            position: BadgePosition.topEnd(top: 0, end: 0),
-            badgeColor: Theme.of(context).colorScheme.primary,
-            badgeContent: Icon(sort.icon, size: 16),
-            child: PopupMenuButton<_SortMode>(
-              icon: const Icon(Icons.sort_rounded),
-              onSelected: (s) {
-                sort = s;
-                updateQuery();
-              },
-              itemBuilder: (context) {
-                return [
-                  for (final sort in sorts)
-                    PopupMenuItem(
-                      value: sort,
-                      child: ListTile(
-                        leading: Icon(sort.icon),
-                        title: Text(sort.text.titleCase),
-                      ),
-                    ),
-                ];
-              },
+          if (textController.text.isNotEmpty)
+            IconButton(
+              onPressed: textController.clear,
+              icon: const Icon(Icons.clear_rounded),
             ),
-          ),
           const SizedBox(width: 4),
         ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(48),
+          child: SizedBox(
+            height: 48,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Text(
+                      'Sort by',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+                for (final s in sorts)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: InputChip(
+                      avatar: Icon(s.icon),
+                      label: Text(s.text),
+                      selected: sort == s,
+                      onSelected: (t) {
+                        if (t) {
+                          sort = s;
+                          updateQuery();
+                        }
+                      },
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
       ),
       body: PagingList<StoryInfo>(
+        scroll: widget.scroll,
         controller: pagingController,
         onRequest: (p, l) async {
           final qs = await query.setPage(p).getObjects();
