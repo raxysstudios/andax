@@ -4,13 +4,13 @@ import 'package:andax/modules/home/widgets/raxys_logo.dart';
 import 'package:andax/modules/profile/screens/auth_gate.dart';
 import 'package:andax/shared/extensions.dart';
 import 'package:andax/shared/widgets/paging_list.dart';
-import 'package:andax/shared/widgets/stories_shelf.dart';
 import 'package:andax/shared/widgets/story_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../services/searching.dart';
 import '../utils/sheets.dart';
+import '../widgets/stories_shelf.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
