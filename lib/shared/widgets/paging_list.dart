@@ -50,6 +50,7 @@ class _PagingListState<T> extends State<PagingList<T>> {
         () => paging.refresh(),
       ),
       child: PagedListView<int, T>(
+        shrinkWrap: true,
         pagingController: paging,
         scrollController: widget.scroll,
         builderDelegate: PagedChildBuilderDelegate(
