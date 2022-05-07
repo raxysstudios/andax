@@ -31,11 +31,11 @@ class OptionItem {
 class OptionsButton extends StatelessWidget {
   const OptionsButton(
     this.options, {
-    this.icon = Icons.more_vert_outlined,
+    this.icon = const Icon(Icons.more_vert_outlined),
     Key? key,
   }) : super(key: key);
 
-  final IconData icon;
+  final Widget icon;
   final List<OptionItem> options;
 
   PopupMenuEntry<int> getMenuEntry(int i) {
@@ -53,7 +53,7 @@ class OptionsButton extends StatelessWidget {
     return ListTileTheme(
       data: const ListTileThemeData(horizontalTitleGap: 0),
       child: PopupMenuButton<int>(
-        icon: Icon(icon),
+        icon: icon,
         onSelected: (i) => options[i].onTap?.call(),
         itemBuilder: (context) {
           return [

@@ -1,6 +1,6 @@
 import 'package:andax/models/story.dart';
 import 'package:andax/modules/editor/screens/story.dart';
-import 'package:andax/modules/home/widgets/raxys_logo.dart';
+import 'package:andax/modules/home/widgets/raxys_button.dart';
 import 'package:andax/modules/profile/screens/auth_gate.dart';
 import 'package:andax/shared/extensions.dart';
 import 'package:andax/shared/widgets/paging_list.dart';
@@ -36,10 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
-        leading: const RaxysLogo(
-          opacity: .1,
-          scale: 3,
-        ),
+        leading: const RaxysButton(),
         title: const Text('Ændax'),
         actions: [
           IconButton(
