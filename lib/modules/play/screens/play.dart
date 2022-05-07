@@ -95,7 +95,7 @@ class PlayScreenState extends State<PlayScreen> {
       setState(() {
         _timer = PausableTimer(
           Duration(
-            milliseconds: 500 + mils,
+            milliseconds: 1000 + mils,
           ),
           acceptPending,
         )..start();
