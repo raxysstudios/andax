@@ -30,11 +30,17 @@ class _AudioSliderState extends State<AudioSlider> {
       children: [
         IconButton(
           onPressed: () => setState(
-            () => current
-                ? audio.playing
-                    ? audio.pause()
-                    : audio.resume()
-                : audio.play(widget.url, widget.playerKey),
+            () {
+              if (current) {
+                if (audio.playing) {
+                  audio.pause();
+                } else {
+                  audio.resume();
+                }
+              } else {
+                audio.play(widget.url, widget.playerKey);
+              }
+            }
           ),
           icon: Icon(
             current & audio.playing
