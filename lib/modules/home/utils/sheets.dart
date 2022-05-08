@@ -10,8 +10,8 @@ import 'package:flutter/material.dart';
 
 import '../services/searching.dart';
 
-Future<void> showStorySheet(BuildContext context, StoryInfo info) async {
-  await showScrollableModalSheet<void>(
+Future<void> showStorySheet(BuildContext context, StoryInfo info) {
+  return showScrollableModalSheet<void>(
     context: context,
     builder: (context, scroll) {
       return StoryScreen(
@@ -22,11 +22,11 @@ Future<void> showStorySheet(BuildContext context, StoryInfo info) async {
   );
 }
 
-Future<void> showSearchSheet(BuildContext context) async {
-  await showScrollableModalSheet<void>(
+Future<void> showSearchSheet(BuildContext context) {
+  return showScrollableModalSheet<void>(
     context: context,
     builder: (context, scroll) {
-      return const SearchScreen();
+      return SearchScreen(scroll: scroll);
     },
   );
 }

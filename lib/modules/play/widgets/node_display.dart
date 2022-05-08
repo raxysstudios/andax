@@ -56,21 +56,14 @@ class NodeDisplay extends StatelessWidget {
             alignment: node.image!.alignment,
           ),
         if (actor != null && !thread) ActorChip(actor),
-        if (text.isNotEmpty)
-          MessageCard(
-            text,
-            onTap: () {
-              final aUrl = play.tr.audio(node);
-              if (aUrl.isNotEmpty) audioPlayer.toggle(aUrl, node.id);
-            },
-          ),
+        if (text.isNotEmpty) MessageCard(text),
         if (audio.isNotEmpty)
           ChangeNotifierProvider.value(
             value: audioPlayer,
             builder: (context, _) {
               return AudioSlider(
                 audio,
-                collapsible: text.isNotEmpty,
+                playerKey: node.id,
               );
             },
           ),

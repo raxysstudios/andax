@@ -1,17 +1,16 @@
 import 'package:andax/models/story.dart';
 import 'package:andax/modules/editor/screens/story.dart';
-import 'package:andax/modules/home/widgets/raxys_logo.dart';
+import 'package:andax/modules/home/widgets/raxys_button.dart';
 import 'package:andax/modules/profile/screens/auth_gate.dart';
 import 'package:andax/shared/extensions.dart';
-import 'package:andax/shared/widgets/loading_builder.dart';
-import 'package:andax/shared/widgets/stories_shelf.dart';
+import 'package:andax/shared/widgets/paging_list.dart';
 import 'package:andax/shared/widgets/story_tile.dart';
-import 'package:andax/store.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../services/searching.dart';
 import '../utils/sheets.dart';
+import '../widgets/stories_shelf.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -22,6 +21,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   User? get user => FirebaseAuth.instance.currentUser;
+  final scroll = ScrollController();
 
   @override
   void initState() {
@@ -36,10 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
-        leading: const RaxysLogo(
-          opacity: .1,
-          scale: 3,
-        ),
+        leading: const RaxysButton(),
         title: const Text('Ændax'),
         actions: [
           IconButton(
@@ -79,6 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(bottom: 76),
+        controller: scroll,
         child: Column(
           children: [
             StoriesShelf(
@@ -91,16 +89,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 'stories_trending',
               ),
             ),
-            StoriesShelf(
-              icon: Icons.thumb_up_rounded,
-              title: 'popular',
-              stories: getStories('stories', hitsPerPage: 10),
-              onTitleTap: () => showCategorySheet(
-                context,
-                'popular',
-                'stories',
-              ),
-            ),
             ListTile(
               leading: const Icon(Icons.explore_rounded),
               horizontalTitleGap: 0,
@@ -108,31 +96,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 'explore'.titleCase,
                 style: Theme.of(context).textTheme.headline6,
               ),
-              trailing: const Icon(Icons.search_rounded),
-              onTap: () => showSearchSheet(context),
             ),
-            LoadingBuilder<List<StoryInfo>>(
-              future: algolia
-                  .index('stories_explore')
-                  .query('')
-                  .setHitsPerPage(0)
-                  .getObjects()
-                  .then((r) {
-                return getStories(
-                  'stories_explore',
-                  page: r.nbHits ~/ 30,
-                  hitsPerPage: 30,
-                );
-              }),
-              builder: (context, infos) {
-                return Column(
-                  children: [
-                    for (var info in infos)
-                      StoryTile(
-                        info,
-                        onTap: () => showStorySheet(context, info),
-                      )
-                  ],
+            PagingList<StoryInfo>(
+              onRequest: (p, l) => getStories('stories_explore', page: p),
+              maxPages: 5,
+              scroll: scroll,
+              builder: (context, info, index) {
+                return StoryTile(
+                  info,
+                  onTap: () => showStorySheet(context, info),
                 );
               },
             ),
