@@ -35,8 +35,7 @@ class RaxysButton extends StatelessWidget {
               var info = 'Loading...';
               final package = snapshot.data;
               if (package != null) {
-                info = ['v' + package.version, 'b' + package.buildNumber]
-                    .join(' • ');
+                info = 'v${package.version} • b${package.buildNumber}';
               }
               return ListTile(
                 leading: const Padding(
