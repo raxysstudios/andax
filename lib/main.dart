@@ -7,7 +7,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 
+import 'modules/home/screens/onboarding.dart';
 import 'modules/home/screens/splash.dart';
+import 'modules/home/utils/onboarding.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,10 +33,17 @@ class App extends StatelessWidget {
       home: SplashScreen(
         title: 'ÆNDAX',
         future: initStore(),
-        onLoaded: (context) => Navigator.pushReplacement<void, void>(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-        ),
+        onLoaded: (context) async {
+          final onboarding = await needsOnboarding();
+          Navigator.pushReplacement<void, void>(
+            context,
+            MaterialPageRoute(
+              builder: (context) => onboarding == null
+                  ? const HomeScreen()
+                  : OnboardingScreen(onboarding),
+            ),
+          );
+        },
       ),
     );
   }

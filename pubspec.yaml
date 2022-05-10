@@ -28,6 +28,7 @@ dependencies:
   audioplayers: ^0.20.1
   intersperse: ^2.0.0
   package_info_plus: ^1.4.2
+  shared_preferences: ^2.0.13
 
 dev_dependencies:
   flutter_test:

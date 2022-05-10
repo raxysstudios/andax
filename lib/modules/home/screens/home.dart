@@ -36,7 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        titleSpacing: 0,
         leading: const RaxysButton(),
         title: const Text('Ændax'),
         actions: [
@@ -93,7 +92,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             ListTile(
               leading: const Icon(Icons.explore_rounded),
-              horizontalTitleGap: 0,
               title: Text(
                 'explore'.titleCase,
                 style: Theme.of(context).textTheme.headline6,
