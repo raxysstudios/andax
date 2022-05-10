@@ -11,6 +11,8 @@ final kGoogleClientId = kIsWeb || Platform.isAndroid
 
 final List<ProviderConfiguration> providerConfigs = [
   const EmailProviderConfiguration(),
-  GoogleProviderConfiguration(clientId: kGoogleClientId),
-  const AppleProviderConfiguration(),
+  if (kIsWeb || !Platform.isIOS) ...[
+    GoogleProviderConfiguration(clientId: kGoogleClientId),
+    const AppleProviderConfiguration(),
+  ],
 ];
