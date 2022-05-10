@@ -1,6 +1,7 @@
 import 'package:andax/models/story.dart';
 import 'package:andax/modules/profile/services/sheets.dart';
 import 'package:andax/shared/widgets/column_card.dart';
+import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -59,8 +60,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: const RoundedBackButton(),
         title: const Text('Profile'),
-        automaticallyImplyLeading: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.logout_rounded),

@@ -1,5 +1,6 @@
 import 'package:andax/models/story.dart';
 import 'package:andax/modules/editor/screens/story.dart';
+import 'package:andax/modules/home/utils/auth.dart';
 import 'package:andax/modules/home/widgets/gradient_cover_image.dart';
 import 'package:andax/modules/home/widgets/like_chip.dart';
 import 'package:andax/modules/play/screens/play.dart';
@@ -84,40 +85,46 @@ class StoryScreen extends StatelessWidget {
                     Icons.report_rounded,
                     'Report',
                   ),
-                  if (user != null) ...[
-                    OptionItem.divider(),
-                    OptionItem.simple(
-                      Icons.translate_rounded,
-                      'New translation',
+                  OptionItem.divider(),
+                  OptionItem.simple(
+                    Icons.translate_rounded,
+                    'New translation',
+                    () => ensureSignIn(
+                      context,
                       () => addTranslation(context, info),
+                      'Sign in to translate this story',
                     ),
-                    OptionItem.simple(
-                      Icons.translate_rounded,
-                      'Edit translation',
+                  ),
+                  OptionItem.simple(
+                    Icons.translate_rounded,
+                    'Edit translation',
+                    () => ensureSignIn(
+                      context,
                       () => selectBaseTranslation(context, info),
+                      'Sign in to translate this story',
                     ),
-                    if (user.uid == info.storyAuthorID)
-                      OptionItem.simple(
-                        Icons.edit_rounded,
-                        'Edit story',
-                        () => loadStory(
+                  ),
+                  if (user?.uid == info.storyAuthorID)
+                    OptionItem.simple(
+                      Icons.edit_rounded,
+                      'Edit story',
+                      () => loadStory(
+                        context,
+                        info,
+                        (s, t) => Navigator.push<void>(
                           context,
-                          info,
-                          (s, t) => Navigator.push<void>(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return StoryEditorScreen(
-                                  story: s,
-                                  translation: t,
-                                  info: info,
-                                );
-                              },
-                            ),
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return StoryEditorScreen(
+                                story: s,
+                                translation: t,
+                                info: info,
+                              );
+                            },
                           ),
                         ),
                       ),
-                  ],
+                    ),
                 ],
               ),
               const SizedBox(width: 4),

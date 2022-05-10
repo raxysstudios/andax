@@ -1,11 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 import 'profile.dart';
 import 'sign_in.dart';
 
 class AuthGate extends StatelessWidget {
-  const AuthGate({Key? key}) : super(key: key);
+  const AuthGate({
+    this.openProfile = true,
+    Key? key,
+  }) : super(key: key);
+
+  final bool openProfile;
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +22,11 @@ class AuthGate extends StatelessWidget {
           // User is not signed in
           return const SignInScreen();
         }
-
-        final user = snapshot.data!;
-        return ProfileScreen(user);
+        if (openProfile) return ProfileScreen(snapshot.data!);
+        SchedulerBinding.instance?.addPostFrameCallback(
+          (_) => Navigator.pop(context),
+        );
+        return const SizedBox();
       },
     );
   }
