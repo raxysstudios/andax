@@ -1,4 +1,5 @@
 import 'package:andax/models/story.dart';
+import 'package:andax/shared/utils.dart';
 import 'package:andax/shared/widgets/span_icon.dart';
 import 'package:flutter/material.dart';
 
@@ -49,6 +50,15 @@ class StoryTile extends StatelessWidget {
               ),
             ),
             TextSpan(text: info.likes.toString()),
+            if (info.tags.isNotEmpty) ...[
+              const WidgetSpan(
+                child: SpanIcon(
+                  Icons.tag_rounded,
+                  padding: EdgeInsets.only(left: 4, right: 2),
+                ),
+              ),
+              TextSpan(text: info.tags.first),
+            ],
           ],
         ),
       ),
