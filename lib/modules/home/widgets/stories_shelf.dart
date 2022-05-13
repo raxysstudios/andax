@@ -28,7 +28,6 @@ class StoriesShelf extends StatelessWidget {
       children: [
         ListTile(
           leading: Icon(icon),
-          horizontalTitleGap: 0,
           title: Text(
             title.titleCase,
             style: Theme.of(context).textTheme.headline6,

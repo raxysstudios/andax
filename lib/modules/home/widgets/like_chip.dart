@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/auth.dart';
+
 class LikeChip extends StatefulWidget {
   const LikeChip(
     this.info, {
@@ -61,21 +63,19 @@ class _LikeChipState extends State<LikeChip> {
   @override
   Widget build(BuildContext context) {
     final likes = widget.info.likes + (liked ? 1 : 0) - (initialLike ? 1 : 0);
-    if (user == null) {
-      return Chip(
-          avatar: const Icon(Icons.favorite_border_rounded),
-          label: Text(likes.toString()),
-          backgroundColor: Colors.transparent);
-    }
     return InputChip(
       avatar: Icon(
         liked ? Icons.favorite_rounded : Icons.favorite_border_rounded,
       ),
       label: Text(likes.toString()),
-      onPressed: () => setState(() {
-        liked = !liked;
-        toggleLike(liked);
-      }),
+      onPressed: () => ensureSignIn(
+        context,
+        () => setState(() {
+          liked = !liked;
+          toggleLike(liked);
+        }),
+        'Sign in to like this story',
+      ),
     );
   }
 }

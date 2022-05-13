@@ -40,7 +40,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
   void initState() {
     super.initState();
     if (node.actorId == null && node.transitions.isEmpty) {
-      SchedulerBinding.instance?.addPostFrameCallback(
+      SchedulerBinding.instance.addPostFrameCallback(
         (_) => pickActor(context, node).then(
           (r) => setState(() => node.actorId = r?.id),
         ),

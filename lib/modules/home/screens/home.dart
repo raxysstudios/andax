@@ -1,5 +1,6 @@
 import 'package:andax/models/story.dart';
 import 'package:andax/modules/editor/screens/story.dart';
+import 'package:andax/modules/home/utils/auth.dart';
 import 'package:andax/modules/home/widgets/raxys_button.dart';
 import 'package:andax/modules/profile/screens/auth_gate.dart';
 import 'package:andax/shared/extensions.dart';
@@ -35,7 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        titleSpacing: 0,
         leading: const RaxysButton(),
         title: const Text('Ændax'),
         actions: [
@@ -54,26 +54,27 @@ class _HomeScreenState extends State<HomeScreen> {
               );
               setState(() {});
             },
-            icon: Icon(user == null ? Icons.login : Icons.person_rounded),
+            icon: Icon(
+              user == null ? Icons.login_rounded : Icons.person_rounded,
+            ),
           ),
           const SizedBox(width: 4),
         ],
       ),
-      floatingActionButton: user == null
-          ? null
-          : FloatingActionButton.extended(
-              onPressed: () async {
-                await Navigator.push<void>(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const StoryEditorScreen(),
-                  ),
-                );
-                setState(() {});
-              },
-              icon: const Icon(Icons.create_rounded),
-              label: const Text('Create'),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => ensureSignIn(
+          context,
+          () => Navigator.push<void>(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const StoryEditorScreen(),
             ),
+          ).then((_) => setState(() {})),
+          'Sign in to create a story',
+        ),
+        icon: const Icon(Icons.create_rounded),
+        label: const Text('Create'),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(bottom: 76),
         controller: scroll,
@@ -91,7 +92,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             ListTile(
               leading: const Icon(Icons.explore_rounded),
-              horizontalTitleGap: 0,
               title: Text(
                 'explore'.titleCase,
                 style: Theme.of(context).textTheme.headline6,
