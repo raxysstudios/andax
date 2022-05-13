@@ -71,20 +71,10 @@ class StoryScreen extends StatelessWidget {
                     background: GradientCoverImage(info.imageUrl),
                   ),
             actions: [
-              Chip(
-                avatar: const Icon(Icons.visibility_rounded),
-                label: Text(info.views.toString()),
-                backgroundColor: Colors.transparent,
-              ),
-              const SizedBox(width: 8),
               LikeChip(info),
               const SizedBox(width: 8),
               OptionsButton(
                 [
-                  OptionItem.simple(
-                    Icons.report_rounded,
-                    'Report',
-                  ),
                   OptionItem.divider(),
                   OptionItem.simple(
                     Icons.translate_rounded,
@@ -154,8 +144,16 @@ class StoryScreen extends StatelessWidget {
                     text: TextSpan(
                       style: textTheme.caption?.copyWith(
                         fontSize: 14,
+                        height: 1.5,
                       ),
                       children: [
+                        const WidgetSpan(
+                          child: SpanIcon(
+                            Icons.visibility_rounded,
+                            padding: EdgeInsets.only(right: 4),
+                          ),
+                        ),
+                        TextSpan(text: '${info.views}\n'),
                         if (info.tags.isNotEmpty) ...[
                           const WidgetSpan(
                             child: SpanIcon(
@@ -163,7 +161,7 @@ class StoryScreen extends StatelessWidget {
                               padding: EdgeInsets.only(right: 4),
                             ),
                           ),
-                          TextSpan(text: prettyTags(info.tags)! + '\n\n'),
+                          TextSpan(text: prettyTags(info.tags)! + '\n'),
                         ],
                         if (info.lastUpdateAt != null) ...[
                           const WidgetSpan(

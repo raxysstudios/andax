@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:andax/models/story.dart';
 import 'package:andax/modules/profile/services/sheets.dart';
 import 'package:andax/shared/widgets/column_card.dart';
@@ -6,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../services/display_name.dart';
 import '../services/user_stats.dart';
 
 typedef LikeItem = MapEntry<DocumentSnapshot, StoryInfo>;
@@ -20,14 +23,23 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  User get user => widget._user;
+  late User user;
   int? likes;
   int? stories;
   int? translations;
+  late StreamSubscription<User?> _userSubscription;
 
   @override
   void initState() {
     super.initState();
+    user = widget._user;
+    _userSubscription = FirebaseAuth.instance.userChanges().listen((newUser) {
+      setState(() {
+        if (newUser != null) {
+          user = newUser;
+        }
+      });
+    });
     Future.wait([
       updateLikes(user).then(
         (r) => setState(() {
@@ -45,6 +57,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         }),
       ),
     ]);
+  }
+
+  @override
+  void dispose() {
+    _userSubscription.cancel();
+    super.dispose();
   }
 
   Widget loadingChip(int? value) => value == null
@@ -79,6 +97,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             title: Text(user.displayName ?? '[no name]'),
             subtitle: Text(user.email ?? '[no email]'),
+            trailing: const Icon(Icons.edit_rounded),
+            onTap: () => editDisplayName(context, user),
           ),
           ColumnCard(
             title: 'Library',

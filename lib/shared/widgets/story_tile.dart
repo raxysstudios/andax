@@ -1,5 +1,4 @@
 import 'package:andax/models/story.dart';
-import 'package:andax/shared/utils.dart';
 import 'package:andax/shared/widgets/span_icon.dart';
 import 'package:flutter/material.dart';
 
@@ -57,7 +56,7 @@ class StoryTile extends StatelessWidget {
                   padding: EdgeInsets.only(left: 4, right: 2),
                 ),
               ),
-              TextSpan(text: prettyTags(info.tags)),
+              TextSpan(text: info.tags.first),
             ],
           ],
         ),

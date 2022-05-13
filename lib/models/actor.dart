@@ -2,17 +2,13 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'actor.g.dart';
 
-enum ActorType { npc, player }
-
 @JsonSerializable()
 class Actor {
   final String id;
-  ActorType type;
   String avatarUrl;
 
   Actor(
     this.id, {
-    this.type = ActorType.npc,
     this.avatarUrl = '',
   });
 

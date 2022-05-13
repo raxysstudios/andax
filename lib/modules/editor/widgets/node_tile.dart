@@ -1,4 +1,3 @@
-import 'package:andax/models/actor.dart';
 import 'package:andax/models/node.dart';
 import 'package:andax/shared/widgets/span_icon.dart';
 import 'package:flutter/material.dart';
@@ -55,11 +54,9 @@ class NodeTile extends StatelessWidget {
                     padding: EdgeInsets.only(right: 8),
                   ),
                 if (actor != null) ...[
-                  SpanIcon(
-                    actor.type == ActorType.npc
-                        ? Icons.smart_toy_rounded
-                        : Icons.face_rounded,
-                    padding: const EdgeInsets.only(right: 4),
+                  const SpanIcon(
+                    Icons.person_rounded,
+                    padding: EdgeInsets.only(right: 4),
                   ),
                   Text(
                     editor.tr.actor(actor),
