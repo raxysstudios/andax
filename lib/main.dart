@@ -34,7 +34,7 @@ class App extends StatelessWidget {
         title: 'ÆNDAX',
         future: initStore(),
         onLoaded: (context) async {
-          final onboarding = await needsOnboarding();
+          final onboarding = await checkOnboarding();
           Navigator.pushReplacement<void, void>(
             context,
             MaterialPageRoute(

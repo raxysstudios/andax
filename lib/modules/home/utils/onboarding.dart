@@ -2,7 +2,7 @@ import 'package:andax/models/story.dart';
 import 'package:andax/store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<StoryInfo?> needsOnboarding() async {
+Future<StoryInfo?> checkOnboarding() async {
   final prefs = await SharedPreferences.getInstance();
   final onboarded = prefs.getBool('onboarded') ?? false;
   if (onboarded) return null;
