@@ -67,7 +67,6 @@ class _LikeChipState extends State<LikeChip> {
       avatar: Icon(
         liked ? Icons.favorite_rounded : Icons.favorite_border_rounded,
       ),
-      elevation: liked ? 3 : 0,
       label: Text(likes.toString()),
       onPressed: () => ensureSignIn(
         context,
