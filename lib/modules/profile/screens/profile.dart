@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:andax/models/story.dart';
 import 'package:andax/modules/profile/services/sheets.dart';
 import 'package:andax/shared/widgets/column_card.dart';
@@ -21,18 +23,23 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  User get user => widget._user;
+  late User user;
   int? likes;
   int? stories;
   int? translations;
+  late StreamSubscription<User?> _userSubscription;
 
   @override
   void initState() {
     super.initState();
-    FirebaseAuth.instance.userChanges().listen((event) => setState(() {
-          print('CHANGED');
-          // this fires but the UI doesn't update
-        }));
+    user = widget._user;
+    _userSubscription = FirebaseAuth.instance.userChanges().listen((newUser) {
+      setState(() {
+        if (newUser != null) {
+          user = newUser;
+        }
+      });
+    });
     Future.wait([
       updateLikes(user).then(
         (r) => setState(() {
@@ -50,6 +57,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         }),
       ),
     ]);
+  }
+
+  @override
+  void dispose() {
+    _userSubscription.cancel();
+    super.dispose();
   }
 
   Widget loadingChip(int? value) => value == null
