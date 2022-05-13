@@ -75,10 +75,6 @@ class StoryScreen extends StatelessWidget {
               const SizedBox(width: 8),
               OptionsButton(
                 [
-                  OptionItem.simple(
-                    Icons.report_rounded,
-                    'Report',
-                  ),
                   OptionItem.divider(),
                   OptionItem.simple(
                     Icons.translate_rounded,
