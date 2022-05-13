@@ -7,9 +7,10 @@ Future<StoryInfo?> checkOnboarding() async {
   final onboarded = prefs.getBool('onboarded') ?? false;
   if (onboarded) return null;
 
+  const id = 'STXZlBw4mA3culnp0tYi';
   final obj = await algolia
       .index('stories')
-      .getObjectsByIds(['STXZlBw4mA3culnp0tYi'])
+      .getObjectsByIds([id])
       .then((s) => s.map(StoryInfo.fromAlgoliaHit))
       .catchError((dynamic e) => <StoryInfo>[]);
   return obj.isEmpty ? null : obj.first;
