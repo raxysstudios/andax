@@ -7,8 +7,8 @@ import 'package:andax/models/story.dart';
 import 'package:andax/models/translation.dart';
 import 'package:andax/modules/play/utils/animator.dart';
 import 'package:andax/modules/play/utils/audio_controller.dart';
-import 'package:andax/modules/play/utils/menu.dart';
 import 'package:andax/modules/play/widgets/game_results.dart';
+import 'package:andax/modules/play/widgets/menu_button.dart';
 import 'package:andax/modules/play/widgets/transitions_chips.dart';
 import 'package:andax/modules/play/widgets/typing_indicator.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +16,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:pausable_timer/pausable_timer.dart';
 import 'package:provider/provider.dart';
 
+import '../utils/alert.dart';
 import '../widgets/node_display.dart';
 
 class PlayScreen extends StatefulWidget {
@@ -140,12 +141,6 @@ class PlayScreenState extends State<PlayScreen> {
     );
   }
 
-  void openMenu(BuildContext context) async {
-    _timer.pause();
-    await showPlayMenu(context);
-    _timer.start();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Provider.value(
@@ -153,17 +148,19 @@ class PlayScreenState extends State<PlayScreen> {
       builder: (context, _) {
         return WillPopScope(
           onWillPop: () {
-            openMenu(context);
+            _timer.pause();
+            showProgressAlert(
+              context,
+              () => Navigator.pop(context),
+            );
+            _timer.start();
             return Future.value(false);
           },
           child: Scaffold(
             floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
-            floatingActionButton: Padding(
-              padding: const EdgeInsets.only(top: 16),
-              child: FloatingActionButton.small(
-                child: const Icon(Icons.menu_rounded),
-                onPressed: () => openMenu(context),
-              ),
+            floatingActionButton: const Padding(
+              padding: EdgeInsets.only(top: 16),
+              child: MenuButton(),
             ),
             appBar: AppBar(toolbarHeight: 0),
             body: ListView(
