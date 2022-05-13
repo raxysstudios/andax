@@ -23,7 +23,7 @@ class AuthGate extends StatelessWidget {
           return const SignInScreen();
         }
         if (openProfile) return ProfileScreen(snapshot.data!);
-        SchedulerBinding.instance?.addPostFrameCallback(
+        SchedulerBinding.instance.addPostFrameCallback(
           (_) => Navigator.pop(context),
         );
         return const SizedBox();

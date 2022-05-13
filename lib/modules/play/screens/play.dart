@@ -132,7 +132,7 @@ class PlayScreenState extends State<PlayScreen> {
     _timer.cancel();
     _pending = null;
     moveAt(node);
-    SchedulerBinding.instance?.addPostFrameCallback(
+    SchedulerBinding.instance.addPostFrameCallback(
       (_) => _scroll.animateTo(
         _scroll.position.maxScrollExtent,
         duration: const Duration(milliseconds: 400),
