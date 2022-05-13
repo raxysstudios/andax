@@ -60,6 +60,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         icon: const Icon(Icons.play_arrow_rounded),
         label: const Text('Play'),
       ),
+      appBar: AppBar(toolbarHeight: 0),
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -84,17 +85,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   padding: const EdgeInsets.all(16),
                   children: [
                     Text(
-                      // info.title,
-                      'Onboarding',
+                      info.title,
                       style: textTheme.headline5?.copyWith(
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     if (info.description.isNotEmpty)
-                      // MarkdownText(info.description),
-                      const MarkdownText(
-                        'Hello, and welcome to Andax! In this app you can play text-based interactive stories. The stories can help you to practice languages, familiarize with cultures, learn about places, or anything in-between. You can also create and share your own stories.\n\nThis introductory story will show you some of the fundamental concepts of Andax.',
-                      ),
+                      MarkdownText(info.description),
                   ],
                 ),
               ],
