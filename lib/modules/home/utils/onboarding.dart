@@ -9,7 +9,7 @@ Future<StoryInfo?> needsOnboarding() async {
 
   final obj = await algolia
       .index('stories')
-      .getObjectsByIds(['onboarding'])
+      .getObjectsByIds(['STXZlBw4mA3culnp0tYi'])
       .then((s) => s.map(StoryInfo.fromAlgoliaHit))
       .catchError((dynamic e) => <StoryInfo>[]);
   return obj.isEmpty ? null : obj.first;
