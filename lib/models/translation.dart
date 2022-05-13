@@ -11,6 +11,9 @@ part 'translation.g.dart';
 class Translation {
   String language;
   final Map<String, String> assets;
+  static const missingTranslationLong = '_No translation available.'
+      ' Please report the error to the authors of this story._';
+  static const missingTranslationShort = '[Translation unavailable!]';
 
   Translation({
     this.language = '',
@@ -20,14 +23,13 @@ class Translation {
   String? operator [](String? id) => assets[id];
   void operator []=(String id, String asset) => assets[id] = asset;
 
-  String node(Node? n, {bool allowEmpty = false}) =>
-      this[n?.id] ?? (allowEmpty ? '' : '[❌MESSAGE]');
-  String transition(Transition? t) => this[t?.id] ?? '[❌TRANSITION]';
-  String actor(Actor? a) => this[a?.id] ?? '[❌CHARACTER]';
-  String cell(Cell? c) => this[c?.id] ?? '[❌CELL]';
+  String node(Node? n) => this[n?.id] ?? missingTranslationLong;
+  String transition(Transition? t) => this[t?.id] ?? missingTranslationShort;
+  String actor(Actor? a) => this[a?.id] ?? missingTranslationShort;
+  String cell(Cell? c) => this[c?.id] ?? missingTranslationShort;
   String audio(Node? n) => this['${n?.id}_audio'] ?? '';
 
-  String get title => this['title'] ?? '[❌TITLE]';
+  String get title => this['title'] ?? missingTranslationShort;
   String? get description => this['description'];
   String? get tags => this['tags'];
 
