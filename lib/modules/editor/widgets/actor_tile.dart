@@ -39,13 +39,7 @@ class ActorTile extends StatelessWidget {
     return ListTile(
       onTap: onTap,
       onLongPress: onLongPress,
-      leading: Icon(
-        actor == null
-            ? Icons.person_outline_rounded
-            : actor!.type == ActorType.npc
-                ? Icons.smart_toy_rounded
-                : Icons.face_rounded,
-      ),
+      leading: const Icon(Icons.person_rounded),
       title: Text(
         allowNarrator
             ? editor.tr[actor?.id] ?? 'Narrator'

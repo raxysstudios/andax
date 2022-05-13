@@ -29,11 +29,6 @@ class ActorChip extends StatelessWidget {
           label: Text(
             context.watch<PlayScreenState>().tr.actor(actor),
           ),
-          labelStyle: TextStyle(
-            color: actor.type == ActorType.player
-                ? theme.colorScheme.primary
-                : null,
-          ),
           backgroundColor: theme.scaffoldBackgroundColor,
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         ),

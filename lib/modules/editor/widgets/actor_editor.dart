@@ -38,9 +38,6 @@ Future<Actor?> showActorEditor(
             editor.tr.assets.remove(value.id);
           },
     builder: (context, setState) {
-      void setType(ActorType? v) => setState(() {
-            actor.type = v ?? actor.type;
-          });
       return [
         ListTile(
           leading: const Icon(Icons.label_rounded),
@@ -65,27 +62,7 @@ Future<Actor?> showActorEditor(
             onChanged: (s) => actor.avatarUrl = s.trim(),
           ),
         ),
-        buildExplanationTile(
-          context,
-          'Character mode',
-          'Sets the look of its messages, restricts some options for them.',
-        ),
-        RadioListTile<ActorType>(
-          value: ActorType.npc,
-          groupValue: actor.type,
-          onChanged: setType,
-          secondary: const Icon(Icons.smart_toy_rounded),
-          title: const Text('Computer character'),
-          subtitle: const Text('Follows the narrative'),
-        ),
-        RadioListTile<ActorType>(
-          value: ActorType.player,
-          groupValue: actor.type,
-          onChanged: setType,
-          secondary: const Icon(Icons.face_rounded),
-          title: const Text('Player character'),
-          subtitle: const Text('Controlled by the player'),
-        ),
+       
       ];
     },
   );
