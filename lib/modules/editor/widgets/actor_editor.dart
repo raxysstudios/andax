@@ -62,7 +62,6 @@ Future<Actor?> showActorEditor(
             onChanged: (s) => actor.avatarUrl = s.trim(),
           ),
         ),
-       
       ];
     },
   );
