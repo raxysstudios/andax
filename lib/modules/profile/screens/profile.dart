@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../services/display_name.dart';
 import '../services/user_stats.dart';
 
 typedef LikeItem = MapEntry<DocumentSnapshot, StoryInfo>;
@@ -28,6 +29,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
+    FirebaseAuth.instance.userChanges().listen((event) => setState(() {
+          print('CHANGED');
+          // this fires but the UI doesn't update
+        }));
     Future.wait([
       updateLikes(user).then(
         (r) => setState(() {
@@ -79,6 +84,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             title: Text(user.displayName ?? '[no name]'),
             subtitle: Text(user.email ?? '[no email]'),
+            trailing: const Icon(Icons.edit_rounded),
+            onTap: () => editDisplayName(context, user),
           ),
           ColumnCard(
             title: 'Library',
