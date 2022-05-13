@@ -33,7 +33,7 @@ Future<void> ensureSignIn(
         context,
         MaterialPageRoute(
           builder: (context) => const AuthGate(
-            openProfile: false,
+            popAfterLogin: true,
           ),
         ),
       );

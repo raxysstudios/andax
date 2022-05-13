@@ -7,11 +7,11 @@ import 'sign_in.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({
-    this.openProfile = true,
+    this.popAfterLogin = false,
     Key? key,
   }) : super(key: key);
 
-  final bool openProfile;
+  final bool popAfterLogin;
 
   @override
   Widget build(BuildContext context) {
@@ -22,11 +22,13 @@ class AuthGate extends StatelessWidget {
           // User is not signed in
           return const SignInScreen();
         }
-        if (openProfile) return ProfileScreen(snapshot.data!);
-        SchedulerBinding.instance.addPostFrameCallback(
-          (_) => Navigator.pop(context),
-        );
-        return const SizedBox();
+        if (popAfterLogin) {
+          SchedulerBinding.instance.addPostFrameCallback(
+            (_) => Navigator.pop(context),
+          );
+          return const SizedBox();
+        }
+        return ProfileScreen(snapshot.data!);
       },
     );
   }
