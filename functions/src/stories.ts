@@ -236,7 +236,11 @@ export const deleteStory = functions
       const translations = await storyRef.collection("translations").get();
       for (const translation of translations.docs) {
         const assets = await translation.ref.collection("assets").get();
-        await Promise.all(assets.docs.map((asset) => asset.ref.delete()));
+        const pendings = await translation.ref.collection("pending").get();
+        await Promise.all([
+          ...assets.docs.map((asset) => asset.ref.delete()),
+          ...pendings.docs.map((pending) => pending.ref.delete()),
+        ]);
         await translation.ref.delete();
       }
       const likes = await db.collectionGroup("likes")
