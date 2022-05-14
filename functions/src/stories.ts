@@ -2,6 +2,11 @@
 import algoliasearch from "algoliasearch";
 import * as functions from "firebase-functions";
 import {firestore} from "firebase-admin";
+import type {
+  CollectionReference,
+  DocumentReference,
+  Timestamp,
+} from "firebase-admin/firestore";
 
 const index = algoliasearch(
     functions.config().algolia.app,
@@ -28,7 +33,7 @@ type StoryRecord = {
 type MetaData = {
   authorID: string,
   contributorsIDs?: string[],
-  lastUpdateAt?: firestore.Timestamp,
+  lastUpdateAt?: Timestamp,
   imageUrl?:string,
   likes?: number,
   views?: number,
@@ -36,14 +41,37 @@ type MetaData = {
   status?: "public" | "unlisted" | "private" | "pending"
 };
 
+type StoryDoc = {
+  actors: Array<{avatarUrl: string; id: string}>;
+  coverUrl: string;
+  metaData: {
+    authorId: string,
+    lastUpdateAt?: Timestamp,
+  };
+  startNodeId: string|null;
+}
+
+type TranslationDoc = {
+  language: string;
+  metaData: {
+    authorId: string;
+    lastUpdateAt?: Timestamp;
+    likes: number;
+    views: number;
+    lastIndexedViews: number | null;
+  };
+};
+
+function storyDoc(storyID: string): DocumentReference<StoryDoc>;
+function storyDoc(storyID: string, translationID: string):
+  DocumentReference<TranslationDoc>;
 /**
  * Returns document reference by story and trabslation id.
  * @param {string} storyID The ID of the story document.
  * @param {string} translationID The ID of the translation document.
  * @return {object} The document reference.
 **/
-function storyDoc(storyID: string, translationID?: string):
-  firestore.DocumentReference<firestore.DocumentData> {
+function storyDoc(storyID: string, translationID?: string) {
   let path = "stories/" + storyID;
   if (translationID) {
     path += "/translations/" + translationID;
@@ -58,7 +86,7 @@ function storyDoc(storyID: string, translationID?: string):
  * @return {Promise<string>} The text content of the asset.
 **/
 async function getAssetText(
-    collection: firestore.CollectionReference,
+    collection: CollectionReference,
     assetID: string
 ): Promise<string> {
   const data = await collection
@@ -191,4 +219,32 @@ export const countLikes = functions
         await db.doc("users/" + context.params.userID)
             .update({"likes": value});
       }
+    });
+
+export const deleteStory = functions
+    .region("europe-central2")
+    .https.onCall(async (storyId: string, context) => {
+      const storyRef = storyDoc(storyId);
+      const story = await storyRef.get();
+      if (context.auth?.uid !== story.data()?.metaData.authorId) {
+        throw new functions.https.HttpsError(
+            "permission-denied",
+            "Only the author can delete the story"
+        );
+      }
+      const translations = await storyRef.collection("translations").get();
+      for (const translation of translations.docs) {
+        const assets = await translation.ref.collection("assets").get();
+        const pendings = await translation.ref.collection("pending").get();
+        await Promise.all([
+          ...assets.docs.map((asset) => asset.ref.delete()),
+          ...pendings.docs.map((pending) => pending.ref.delete()),
+        ]);
+        await translation.ref.delete();
+      }
+      const likes = await db.collectionGroup("likes")
+          .where("storyID", "==", storyId).get();
+      await Promise.all(likes.docs.map((like) => like.ref.delete()));
+
+      await storyRef.delete();
     });
