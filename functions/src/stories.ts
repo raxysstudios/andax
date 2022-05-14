@@ -4,7 +4,6 @@ import * as functions from "firebase-functions";
 import {firestore} from "firebase-admin";
 import type {
   CollectionReference,
-  DocumentData,
   DocumentReference,
   Timestamp,
 } from "firebase-admin/firestore";
