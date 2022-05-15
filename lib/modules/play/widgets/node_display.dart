@@ -23,8 +23,9 @@ class NodeDisplay extends StatelessWidget {
     final play = context.watch<PlayScreenState>();
     final audioPlayer = play.audio;
     final actor = play.actors[node.actorId];
-    final text = play.tr.node(node, allowEmpty: true);
     final audio = play.tr.audio(node);
+    final hasContent = audio.isNotEmpty || node.image != null;
+    final text = play.tr.node(node, allowEmpty: hasContent);
     if (node.image == null && text.isEmpty && audio.isEmpty) {
       return const SizedBox();
     }
