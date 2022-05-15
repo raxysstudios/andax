@@ -23,7 +23,8 @@ class Translation {
   String? operator [](String? id) => assets[id];
   void operator []=(String id, String asset) => assets[id] = asset;
 
-  String node(Node? n) => this[n?.id] ?? missingTranslationLong;
+  String node(Node? n, {bool allowEmpty = false}) =>
+      this[n?.id] ?? (allowEmpty ? '' : missingTranslationLong);
   String transition(Transition? t) => this[t?.id] ?? missingTranslationShort;
   String actor(Actor? a) => this[a?.id] ?? missingTranslationShort;
   String cell(Cell? c) => this[c?.id] ?? missingTranslationShort;
