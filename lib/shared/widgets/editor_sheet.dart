@@ -95,8 +95,8 @@ Future<T?> showEditorSheet<T>({
                       Navigator.pop(context, true);
                     }
                   },
-                  child: const Icon(Icons.done_all_rounded),
                   tooltip: 'Save',
+                  child: const Icon(Icons.done_all_rounded),
                 ),
           body: StatefulBuilder(
             builder: (context, setState) {
