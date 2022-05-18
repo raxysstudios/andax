@@ -25,7 +25,7 @@ class NarrativeEditorScreen extends StatefulWidget {
   final bool allowInteractive;
 
   @override
-  _NarrativeEditorScreenState createState() => _NarrativeEditorScreenState();
+  State<NarrativeEditorScreen> createState() => _NarrativeEditorScreenState();
 }
 
 class _NarrativeEditorScreenState extends State<NarrativeEditorScreen> {

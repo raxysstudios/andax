@@ -13,7 +13,7 @@ class StoryCard extends StatefulWidget {
   final VoidCallback? onTap;
 
   @override
-  _StoryCardState createState() => _StoryCardState();
+  State<StoryCard> createState() => _StoryCardState();
 }
 
 class _StoryCardState extends State<StoryCard> {

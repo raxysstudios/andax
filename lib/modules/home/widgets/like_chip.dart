@@ -14,7 +14,7 @@ class LikeChip extends StatefulWidget {
   final StoryInfo info;
 
   @override
-  _LikeChipState createState() => _LikeChipState();
+  State<LikeChip> createState() => _LikeChipState();
 }
 
 class _LikeChipState extends State<LikeChip> {
