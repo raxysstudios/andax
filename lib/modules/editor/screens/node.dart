@@ -94,7 +94,7 @@ class _NodeEditorScreenState extends State<NodeEditorScreen>
             maxLines: null,
             decoration: const InputDecoration(labelText: 'Audio URL'),
             initialValue: editor.tr.audio(node),
-            onChanged: (s) => editor.tr[node.id + '_audio'] = s.trim(),
+            onChanged: (s) => editor.tr['${node.id}_audio'] = s.trim(),
           ),
         ),
       ],

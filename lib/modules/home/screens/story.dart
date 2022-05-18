@@ -161,7 +161,7 @@ class StoryScreen extends StatelessWidget {
                               padding: EdgeInsets.only(right: 4),
                             ),
                           ),
-                          TextSpan(text: prettyTags(info.tags)! + '\n'),
+                          TextSpan(text: '${prettyTags(info.tags)!}\n'),
                         ],
                         if (info.lastUpdateAt != null) ...[
                           const WidgetSpan(

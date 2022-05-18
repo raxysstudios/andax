@@ -21,7 +21,7 @@ class TypingIndicator extends StatelessWidget {
         builder: (context, child, tween) {
           final j = tween.round();
           return Text(
-            'Typing' + '.' * j,
+            'Typing${'.' * j}',
             style: italic,
           );
         },
