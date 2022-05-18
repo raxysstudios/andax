@@ -1,8 +1,10 @@
-import 'package:andax/shared/widgets/loading_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-Future<void> editDisplayName(BuildContext context, User user) async {
+/// Displays a dialog that allows the user to change their display name.
+///
+/// Returns `null` if the user cancelled the operation, or the new name instead.
+Future<String?> promptDisplayNameChange(BuildContext context, User user) async {
   final form = GlobalKey<FormState>();
   var name = '';
   final save = await showDialog<bool>(
@@ -38,9 +40,7 @@ Future<void> editDisplayName(BuildContext context, User user) async {
     },
   );
   if (save ?? false) {
-    await showLoadingDialog(
-      context,
-      user.updateDisplayName(name),
-    );
+    return name;
   }
+  return null;
 }

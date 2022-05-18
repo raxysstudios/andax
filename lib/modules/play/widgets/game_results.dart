@@ -46,6 +46,8 @@ class GameResults extends StatelessWidget {
               await Clipboard.setData(
                 ClipboardData(text: _cellsToText(play)),
               );
+              // I guess using context here is fine since clipboard writing should be fast enough
+              // ignore: use_build_context_synchronously
               showSnackbar(
                 context,
                 Icons.content_copy_rounded,

@@ -95,6 +95,7 @@ class TranslationEditorState extends State<TranslationEditorScreen> {
                           context,
                           applyAssetChanges(info, changes),
                         );
+                        if (!mounted) return;
                         if (await showDangerDialog(
                           context,
                           'Translation is uploaded!',
