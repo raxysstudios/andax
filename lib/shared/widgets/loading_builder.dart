@@ -31,7 +31,7 @@ class LoadingBuilder<T> extends StatelessWidget {
           }
           return const Text('An unknown error occurred');
         }
-        return builder(context, snapshot.data!);
+        return builder(context, snapshot.data as T);
       },
     );
   }
