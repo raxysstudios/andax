@@ -22,7 +22,7 @@ jobs:
         run: |
           flutter pub get
           flutter pub run build_runner build
-          flutter build web
+          flutter build web --web-renderer html
 
       - name: Deploy 📦
         uses: FirebaseExtended/action-hosting-deploy@v0
