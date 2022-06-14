@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:andax/models/story.dart';
 import 'package:andax/modules/profile/services/sheets.dart';
 import 'package:andax/shared/widgets/column_card.dart';
+import 'package:andax/shared/widgets/loading_dialog.dart';
 import 'package:andax/shared/widgets/rounded_back_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -98,7 +99,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
             title: Text(user.displayName ?? '[no name]'),
             subtitle: Text(user.email ?? '[no email]'),
             trailing: const Icon(Icons.edit_rounded),
-            onTap: () => editDisplayName(context, user),
+            onTap: () async {
+              final name = await promptDisplayNameChange(context, user);
+              if (name != null && mounted) {
+                await showLoadingDialog(
+                  context,
+                  user.updateDisplayName(name),
+                );
+              }
+            },
           ),
           ColumnCard(
             title: 'Library',

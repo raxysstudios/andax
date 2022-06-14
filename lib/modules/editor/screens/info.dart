@@ -29,7 +29,9 @@ class _InfoEditorScreenState extends State<InfoEditorScreen> {
       'Completely delete the story and all of its translations?',
     );
     if (confirmed) {
+      if (!mounted) return;
       await showLoadingDialog(context, deleteStory(editor));
+      if (!mounted) return;
       Navigator.pushReplacement<void, void>(
         context,
         MaterialPageRoute(
@@ -70,6 +72,7 @@ class _InfoEditorScreenState extends State<InfoEditorScreen> {
             return;
           }
           await showLoadingDialog(context, uploadStory(editor));
+          if (!mounted) return;
           if (await showDangerDialog(
             context,
             'Story is uploaded!',

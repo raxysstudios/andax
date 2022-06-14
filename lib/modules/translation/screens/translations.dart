@@ -95,6 +95,7 @@ class TranslationEditorState extends State<TranslationEditorScreen> {
                           context,
                           applyAssetChanges(info, changes),
                         );
+                        if (!mounted) return;
                         if (await showDangerDialog(
                           context,
                           'Translation is uploaded!',
@@ -149,7 +150,7 @@ class TranslationEditorState extends State<TranslationEditorScreen> {
                       for (final n in narrative.nodes.values)
                         Builder(builder: (context) {
                           final content = (base[n.id]?.isNotEmpty ?? false) ||
-                              (base[n.id + '_audio']?.isNotEmpty ?? false);
+                              (base['${n.id}_audio']?.isNotEmpty ?? false);
                           final selectable = n.input == NodeInputType.select;
                           if (!content && !selectable) {
                             return const SizedBox();
@@ -159,7 +160,7 @@ class TranslationEditorState extends State<TranslationEditorScreen> {
                               if (content) ...[
                                 Asset(n.id, icon: Icons.chat_bubble_rounded),
                                 Asset(
-                                  n.id + '_audio',
+                                  '${n.id}_audio',
                                   icon: Icons.audiotrack_rounded,
                                 ),
                               ],
