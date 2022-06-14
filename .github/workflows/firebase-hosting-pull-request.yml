@@ -39,7 +39,7 @@ jobs:
         run: dart format . -o none --set-exit-if-changed
 
       - name: Build 🛠️
-        run: flutter build web
+        run: flutter build web --web-renderer html
 
       - name: Deploy 📦
         uses: FirebaseExtended/action-hosting-deploy@v0
