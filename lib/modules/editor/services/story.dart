@@ -54,6 +54,7 @@ Future<void> deleteStory(StoryEditorState editor) async {
   final info = editor.info;
   if (info == null) return;
   final callDeleteStory =
-      FirebaseFunctions.instance.httpsCallable('deleteStory');
+      FirebaseFunctions.instanceFor(region: 'europe-central2')
+          .httpsCallable('deleteStory');
   await callDeleteStory(info.storyID);
 }
